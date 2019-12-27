@@ -1,6 +1,13 @@
 
 import unittest
 import alphabet
+import controller
+
+class TestGrascii2Regex(unittest.TestCase):
+
+    def test_abak(self):
+        print(controller.grascii2regex('ABAK', 1))
+#        self.assertEqual(controller.grascii2regex('ABAK'))
 
 class TestGrascii(unittest.TestCase):
 

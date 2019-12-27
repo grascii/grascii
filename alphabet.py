@@ -112,40 +112,42 @@ def determine_pending_symbols(tokens = tokens):
  
 def make_tokens(grascii, tokens = token_trie, max_length = 3):
 
-    def pop_stack():
-        nonlocal stack
+    def process_deque(clear = False):
+        nonlocal dq
         nonlocal result
         nonlocal pending_symbols
 
-        temp_token = ''.join(stack)
-        if temp_token in tokens:
+        temp_token = ''.join(dq)
+        print(dq)
+        if temp_token in tokens and (temp_token not in pending_symbols or clear):
             result.append(temp_token)
-            stack = []
-        elif stack[-1] not in pending_symbols:
-            char = stack.pop()
-            if stack:
-                pop_stack()
+            dq = deque()
+        elif dq[-1] not in pending_symbols:
+            char = dq.pop()
+            if dq:
+                process_deque(clear = True)
             result.append(char)
         elif not tokens.keys(temp_token):
-            char = stack.popleft()
+            char = dq.popleft()
             result.append(char)
-            pop_stack()
+            process_deque()
 
     result = []
     pending_symbols = determine_pending_symbols(tokens)
-    stack = deque()
+    dq = deque()
     for char in grascii:
         if char not in alphabet:
             raise Exception()
         if char in pending_symbols:
-            stack.append(char)
-        elif stack:
-            stack.append(char)
-            pop_stack()
+            dq.append(char)
+            process_deque()
+        elif dq:
+            dq.append(char)
+            process_deque()
         elif char in tokens:
             result.append(char)
-    if stack:
-        pop_stack()
+    if dq:
+        process_deque(clear = True)
     return result
 
 

@@ -23,6 +23,16 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(alphabet.make_tokens('DFLRNTGBSRM'), ['DF', 'L','R', 'NT', 'G', 'B', 'S', 'R', 'M'])
         self.assertEqual(alphabet.make_tokens('TJNDSTD'), ['T', 'JND', 'S', 'TD'])
 
+    def test_blended_token(self):
+        self.assertEqual(alphabet.make_tokens('NTD'), ['NT', 'D'])
+        self.assertEqual(alphabet.make_tokens('SSS'), ['SS', 'S'])
+        self.assertEqual(alphabet.make_tokens('MMN'), ['MM', 'N'])
+        self.assertEqual(alphabet.make_tokens('PNDMN'), ['PND', 'MN'])
+        self.assertEqual(alphabet.make_tokens('TDDNT'), ['TD', 'DN', 'T'])
+
+    def test_modifiers(self):
+        self.assertEqual(alphabet.make_tokens('GA,T'), ['G', 'A', ',', 'T'])
+
     def test_invalid_character(self):
         self.assertRaises(Exception, alphabet.make_tokens, 'MaT')
 

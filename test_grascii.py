@@ -20,7 +20,7 @@ class TestTokenizer(unittest.TestCase):
     def test_multicharacter_tokens(self):
         self.assertEqual(alphabet.make_tokens('SPNDICH'), ['S', 'PND', 'I', 'CH'])
         self.assertEqual(alphabet.make_tokens('ATHLF'), ['A', 'TH', 'L', 'F'])
-        self.assertEqual(alphabet.make_tokens('DFLRNTGBSRM'), ['D', 'F', 'L','R', 'NT', 'G', 'B', 'S', 'R', 'M'])
+        self.assertEqual(alphabet.make_tokens('DFLRNTGBSRM'), ['DF', 'L','R', 'NT', 'G', 'B', 'S', 'R', 'M'])
 
     def test_invalid_character(self):
         self.assertRaises(Exception, alphabet.make_tokens, 'MaT')

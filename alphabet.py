@@ -1,4 +1,6 @@
 
+import marisa_trie
+from collections import deque
 
 alphabet = {'A',
             'B',
@@ -95,6 +97,8 @@ tokens = {'A',
             '.',
             '?'}
 
+token_trie = marisa_trie.Trie(tokens)
+
 def determine_pending_symbols(tokens = tokens):
     pending_symbols = set()
     for item in tokens:
@@ -106,7 +110,7 @@ def determine_pending_symbols(tokens = tokens):
 
 
  
-def make_tokens(grascii, tokens = tokens, max_length = 3):
+def make_tokens(grascii, tokens = token_trie, max_length = 3):
 
     def pop_stack():
         nonlocal stack
@@ -119,13 +123,17 @@ def make_tokens(grascii, tokens = tokens, max_length = 3):
             stack = []
         elif stack[-1] not in pending_symbols:
             char = stack.pop()
-            pop_stack()
+            if stack:
+                pop_stack()
             result.append(char)
-
+        elif not tokens.keys(temp_token):
+            char = stack.popleft()
+            result.append(char)
+            pop_stack()
 
     result = []
     pending_symbols = determine_pending_symbols(tokens)
-    stack = []
+    stack = deque()
     for char in grascii:
         if char not in alphabet:
             raise Exception()
@@ -136,7 +144,8 @@ def make_tokens(grascii, tokens = tokens, max_length = 3):
             pop_stack()
         elif char in tokens:
             result.append(char)
-    pop_stack()
+    if stack:
+        pop_stack()
     return result
 
 

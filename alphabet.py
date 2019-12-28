@@ -118,7 +118,6 @@ def make_tokens(grascii, tokens = token_trie, max_length = 3):
         nonlocal pending_symbols
 
         temp_token = ''.join(dq)
-        print(dq)
         if temp_token in tokens and (temp_token not in pending_symbols or clear):
             result.append(temp_token)
             dq = deque()

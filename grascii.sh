@@ -64,7 +64,7 @@ fi
 
 ## end arg parsing
 
-regex="$(python3 controller.py -m1 $1)"
+regex="$(python3 controller.py -m$m $1)"
 echo $regex
 
 grep $regex $d

@@ -42,6 +42,9 @@ def generate_regex(tokens, match_level):
                     builder.append('[{}]*'.format(annotations[prev_token]))
                 except KeyError:
                     raise Exception
+            elif token == "'" or token == '_':
+                builder.append(token)
+                builder.append('?')
             else:
                 equiv = equivalents.get(token)
                 if equiv is not None:

@@ -1,0 +1,63 @@
+
+start : _preroot? _root _postroot?
+_preroot : prefix DISJOINER
+_postroot : DISJOINER suffix
+DISJOINER : "^"
+
+_root : _letter | _root "-"? _letter
+
+prefix : _root 
+suffix : _root
+
+_letter : consonant | vowel
+
+consonant : STANDARD_CONSONANT
+	| BLENDED_CONSONANT
+	| DIRECTED_CONSONANT
+
+STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
+	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" 
+	| "J" | "SH"
+
+BLENDED_CONSONANT : "TN" | "TM" | "TM" | "DM"
+	| "NT" | "MT" | "ND" | "MD"
+	| "DF" | "DV" | "TV" 
+	| "JNT" | "JND" | "PND" | "PNT"
+	| "SS" | "XS"
+	| "MN" | "MM"
+	| "DT" | "TD" | "DD"
+
+DIRECTED_CONSONANT : DIRECTED_CONSONANT_TERM DIRECTION?
+
+DIRECTED_CONSONANT_TERM : "S" | "TH"
+DIRECTION : ")" | "("
+
+vowel : ASPIRATE? ( circle_vowel | hook_vowel | diphthong ) UNDERBAR? 
+
+ASPIRATE : "'"
+UNDERBAR : "_"
+
+circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
+
+CIRCLE_VOWEL : "A" | "E"
+CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|"
+
+hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
+HOOK_VOWEL : "O" | "U"
+HOOK_VOWEL_MODIFIER : "." | ","
+
+diphthong : DIPHTHONG
+DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,7 +5,7 @@
 //
 // refine aspirates: before after root, before consonants
 //
-// add NG NK, S, Z ?
+// add NG NK, X, Z ?
 // Hook vowel orientation
 // W placement
 // intersection?
@@ -28,9 +28,13 @@ suffix : _root
 
 _letter : consonant | ( ASPIRATE? vowel )
 
-consonant : STANDARD_CONSONANT
+consonant : standard_consonant
 	| BLENDED_CONSONANT
 	| DIRECTED_CONSONANT
+
+standard_consonant : STANDARD_CONSONANT | NGK
+
+NGK : "NG" | "NK"
 
 STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
 	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" 

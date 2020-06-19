@@ -1,7 +1,7 @@
 from functools import reduce
 import re
 
-from lark import Lark, Visitor, Transformer, Discard, Token
+from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
 class ShowTraversal(Visitor):
@@ -45,11 +45,19 @@ p = Lark.open("grascii.lark",
               ambiguity="explicit")
 
 # test = "PNTS)`"
-test = "ABAK"
+# test = "ABAK"
+test = ""
+while True:
+    test = input("Enter search: ").upper()
+    if (test == ""):
+        continue
+    try:
+        tree = p.parse(test)
+        break
+    except UnexpectedInput as e:
+        print("Syntax Error")
+        print(e.get_context(test))
 
-test = input("Enter search: ")
-
-tree = p.parse(test)
 # print(tree.pretty())
 
 def interpretationToString(interp):

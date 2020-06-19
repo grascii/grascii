@@ -4,11 +4,6 @@ import re
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-class ShowTraversal(Visitor):
-    def __default__(self, tree):
-        print(tree)
-        return tree
-
 class MyTrans(Transformer):
     def start(self, children):
         result = list()
@@ -49,7 +44,7 @@ p = Lark.open("grascii.lark",
 test = ""
 while True:
     test = input("Enter search: ").upper()
-    if (test == ""):
+    if test == "":
         continue
     try:
         tree = p.parse(test)
@@ -127,22 +122,3 @@ for line in dictionary:
         input(line)
 
 print("Results:", results)
-    
-
-
-
-    
-
-# for x in CollapseAmbiguities().transform(tree):
-    # tokens = MyTrans().transform(x)
-    # print(tokens)
-    # print()
-    # print("".join(tokens))
-
-
-# ShowTraversal().visit(tree)
-
-
-
-
-# print(p.parse("NTN").pretty())

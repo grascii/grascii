@@ -4,12 +4,12 @@ _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 DISJOINER : "^"
 
-_root : _letter | _root "-"? _letter
+_root : _letter | ASPIRATE | _root "-"? _letter
 
 prefix : _root 
 suffix : _root
 
-_letter : consonant | vowel
+_letter : consonant | ( ASPIRATE? vowel )
 
 consonant : STANDARD_CONSONANT
 	| BLENDED_CONSONANT
@@ -32,7 +32,7 @@ DIRECTED_CONSONANT : DIRECTED_CONSONANT_TERM DIRECTION?
 DIRECTED_CONSONANT_TERM : "S" | "TH"
 DIRECTION : ")" | "("
 
-vowel : ASPIRATE? ( circle_vowel | hook_vowel | diphthong ) UNDERBAR? 
+vowel : ( circle_vowel | hook_vowel | diphthong ) UNDERBAR? 
 
 ASPIRATE : "'"
 UNDERBAR : "_"
@@ -46,7 +46,9 @@ hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
 HOOK_VOWEL : "O" | "U"
 HOOK_VOWEL_MODIFIER : "." | ","
 
-diphthong : DIPHTHONG
+diphthong : DIPHTHONG | (I I_MODIFIERS*)
+I : "I"
+I_MODIFIERS : "~" | "|"
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 
 

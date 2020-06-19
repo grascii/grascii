@@ -36,8 +36,8 @@ def generate_regex(tokens, match_level):
         builder = []
         builder.append('^')
         for token in tokens:
-            if token == '**':
-                prev_token = builder[-1]
+            if token[0] == '*':
+                prev_token = token[1:]
                 try:
                     builder.append('[{}]*'.format(annotations[prev_token]))
                 except KeyError:
@@ -53,6 +53,29 @@ def generate_regex(tokens, match_level):
                     builder.append(token)
         builder.append('\\s')
         return ''.join(builder)
+    elif match_level == 3:
+        builder = []
+        builder.append('^')
+        for token in tokens:
+            if token[0] == '*':
+                prev_token = token[1:]
+                try:
+                    builder.append('[{}]*'.format(annotations[prev_token]))
+                    builder.append('[-^]?')
+                except KeyError:
+                    raise Exception
+            elif token == "'" or token == '_':
+                builder.append(token)
+                builder.append('?')
+            else:
+                equiv = equivalents.get(token)
+                if equiv is not None:
+                    builder.append('({}|{})'.format(token, equiv))
+                else:
+                    builder.append(token)
+        builder.append('\\s')
+        return ''.join(builder)
+
 
                 
             

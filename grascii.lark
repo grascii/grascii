@@ -1,10 +1,27 @@
 
+// todo
+// move terms to rules to allow for ambigation resolution
+// with overlapping terminals
+//
+// refine aspirates: before after root, before consonants
+//
+// add NG NK, S, Z ?
+// Hook vowel orientation
+// W placement
+// intersection?
+// priorities?
+// S, TH, SH alt. pronunciations
+
+
+
+
+
 start : _preroot? _root _postroot?
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 DISJOINER : "^"
 
-_root : _letter | ASPIRATE | _root "-"? _letter
+_root : (_letter | ASPIRATE | _root "-"? _letter) ASPIRATE?
 
 prefix : _root 
 suffix : _root
@@ -19,7 +36,7 @@ STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
 	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" 
 	| "J" | "SH"
 
-BLENDED_CONSONANT : "TN" | "TM" | "TM" | "DM"
+BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "NT" | "MT" | "ND" | "MD"
 	| "DF" | "DV" | "TV" 
 	| "JNT" | "JND" | "PND" | "PNT"

@@ -31,7 +31,7 @@ SH - CH - J
 
 TH - TN,DN - NM,DM
    \
-    NT,DN - MT,MD
+    NT,ND - MT,MD
 
 DF,DV,TV
 

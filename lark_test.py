@@ -1,3 +1,4 @@
+from functools import reduce
 
 from lark import Lark, Visitor, Transformer, Discard, Token
 from lark.visitors import CollapseAmbiguities
@@ -39,14 +40,36 @@ p = Lark.open("grascii.lark",
               parser="earley",
               ambiguity="explicit")
 
-test = "O,,,A"
+test = "PNT"
+# test = "ABAK"
 tree = p.parse(test)
 # print(tree.pretty())
-for x in CollapseAmbiguities().transform(tree):
-    print(x)
-    tokens = MyTrans().transform(x)
-    print(tokens)
-    print()
+
+def interpretationToString(interp):
+    def reducer(string, token):
+        if isinstance(token, set):
+            for char in token:
+                string += char
+        else:
+            string += "-" + token 
+        return string
+
+    return reduce(reducer, interp, "")[1:]
+
+trees = CollapseAmbiguities().transform(tree)
+trans = MyTrans()
+interpretations = [trans.transform(x) for x in trees]
+
+print("Interpretations: ", len(interpretations))
+print("0: all")
+for i, interp in enumerate(interpretations):
+    print(i + 1, ":", interpretationToString(interp))
+    
+
+# for x in CollapseAmbiguities().transform(tree):
+    # tokens = MyTrans().transform(x)
+    # print(tokens)
+    # print()
     # print("".join(tokens))
 
 

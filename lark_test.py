@@ -75,11 +75,28 @@ trees = CollapseAmbiguities().transform(tree)
 trans = MyTrans()
 interpretations = [trans.transform(x) for x in trees]
 
-print("Interpretations: ", len(interpretations))
-print("Choose an interpretation")
-print("0: all")
-for i, interp in enumerate(interpretations):
-    print(str(i + 1) + ":", interpretationToString(interp))
+index = -1
+if len(interpretations) == 1:
+    print()
+    print("Found 1 possible interpretation")
+    print("Beginning search")
+    index = 0
+else:
+    print("Interpretations: ", len(interpretations))
+    print()
+    print("0: all")
+    for i, interp in enumerate(interpretations):
+        print(str(i + 1) + ":", interpretationToString(interp))
+
+    while True:
+        try:
+          index = int(input("Choose an interpretation to use in the search:"))
+          if index < 0 or index > len(interpretations):
+              continue
+          break
+        except ValueError:
+            continue
+
 
 def makeRegex(interp):
     def reducer(builder, token):
@@ -95,16 +112,21 @@ def makeRegex(interp):
 
     return "".join(regex)
 
-first = makeRegex(interpretations[0])
+# first = makeRegex(interpretations[0])
+first = makeRegex(interpretations[index - 1])
 
 # first = "A*"
 print(first)
 
+results = 0
 pattern = re.compile(first);
 dictionary = open("./grascii_dict1916.txt", "r")
 for line in dictionary:
     if pattern.search(line):
+        results += 1
         input(line)
+
+print("Results:", results)
     
 
 

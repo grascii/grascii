@@ -46,6 +46,9 @@ p = Lark.open("grascii.lark",
 
 # test = "PNTS)`"
 test = "ABAK"
+
+test = input("Enter search: ")
+
 tree = p.parse(test)
 # print(tree.pretty())
 
@@ -71,15 +74,18 @@ for i, interp in enumerate(interpretations):
     print(str(i + 1) + ":", interpretationToString(interp))
 
 def makeRegex(interp):
-    def reducer(string, token):
+    def reducer(builder, token):
         if isinstance(token, set):
             for char in token:
-                string += char
+                builder.append(char)
         else:
-            string += token 
-        return string
+            builder.append(token)
+        return builder
 
-    return reduce(reducer, interp, "")
+    regex = reduce(reducer, interp, ["^"])
+    regex.append("\\s")
+
+    return "".join(regex)
 
 first = makeRegex(interpretations[0])
 

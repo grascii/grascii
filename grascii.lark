@@ -30,15 +30,14 @@ _letter : consonant | ( ASPIRATE? vowel )
 
 consonant : standard_consonant
 	| BLENDED_CONSONANT
-	| DIRECTED_CONSONANT
+	| distinguishable_consonant
 
 standard_consonant : STANDARD_CONSONANT | NGK
 
 NGK : "NG" | "NK"
 
 STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
-	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" 
-	| "J" | "SH"
+	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" | "J"
 
 BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "NT" | "MT" | "ND" | "MD"
@@ -47,6 +46,11 @@ BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "SS" | "XS"
 	| "MN" | "MM"
 	| "DT" | "TD" | "DD"
+
+distinguishable_consonant : ( DIRECTED_CONSONANT | SH ) OBLIQUE?
+
+SH : "SH"
+OBLIQUE : "`"
 
 DIRECTED_CONSONANT : DIRECTED_CONSONANT_TERM DIRECTION?
 

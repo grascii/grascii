@@ -29,7 +29,7 @@ suffix : _root
 _letter : consonant | ( ASPIRATE? vowel )
 
 consonant : standard_consonant
-	| BLENDED_CONSONANT
+	| blended_consonant
 	| distinguishable_consonant
 
 standard_consonant : STANDARD_CONSONANT | NGK
@@ -38,6 +38,8 @@ NGK : "NG" | "NK"
 
 STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
 	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" | "J"
+
+blended_consonant : BLENDED_CONSONANT
 
 BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "NT" | "MT" | "ND" | "MD"

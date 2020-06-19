@@ -47,14 +47,14 @@ BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "MN" | "MM"
 	| "DT" | "TD" | "DD"
 
-distinguishable_consonant : ( DIRECTED_CONSONANT | SH ) OBLIQUE?
+distinguishable_consonant : ( directed_consonant | SH ) OBLIQUE?
 
 SH : "SH"
 OBLIQUE : "`"
 
-DIRECTED_CONSONANT : DIRECTED_CONSONANT_TERM DIRECTION?
+directed_consonant : DIRECTED_CONSONANT DIRECTION?
 
-DIRECTED_CONSONANT_TERM : "S" | "TH"
+DIRECTED_CONSONANT : "S" | "TH"
 DIRECTION : ")" | "("
 
 vowel : circle_vowel | hook_vowel | diphthong 

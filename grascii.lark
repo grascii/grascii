@@ -53,7 +53,7 @@ DIRECTED_CONSONANT : DIRECTED_CONSONANT_TERM DIRECTION?
 DIRECTED_CONSONANT_TERM : "S" | "TH"
 DIRECTION : ")" | "("
 
-vowel : ( circle_vowel | hook_vowel | diphthong ) UNDERBAR? 
+vowel : circle_vowel | hook_vowel | diphthong 
 
 ASPIRATE : "'"
 UNDERBAR : "_"
@@ -61,15 +61,15 @@ UNDERBAR : "_"
 circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
 
 CIRCLE_VOWEL : "A" | "E"
-CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|"
+CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | UNDERBAR
 
 hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
 HOOK_VOWEL : "O" | "U"
-HOOK_VOWEL_MODIFIER : "." | ","
+HOOK_VOWEL_MODIFIER : "." | "," | UNDERBAR
 
-diphthong : DIPHTHONG | (I I_MODIFIERS*)
+diphthong : ( DIPHTHONG UNDERBAR? ) | ( I I_MODIFIERS* )
 I : "I"
-I_MODIFIERS : "~" | "|"
+I_MODIFIERS : "~" | "|" | UNDERBAR
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 
 

@@ -1,0 +1,118 @@
+
+Word -> Root
+Word -> PreRoot Root
+Word -> Root PostRoot
+Word -> PreRoot Root PostRoot
+
+PreRoot -> Prefix Disjoiner
+PostRoot -> Disjoiner Suffix
+
+Prefix -> Aspirate
+Prefix -> Aspirate Aspirate
+
+Suffix -> Aspirate
+
+Disjoiner -> ^
+
+Root -> Letter
+Root -> Letter Root
+Root -> Letter Boundary Root
+
+Boundary -> -
+
+Letter -> SoftLetter
+Letter -> HardLetter
+
+HardLetter -> Consonant
+HardLetter -> Vowel
+
+Consonant -> DirectedConsonant
+DirectedConsonant -> DirectedConsonantTerm )
+DirectedConsonant -> DirectedConsonantTerm (
+DirectedConsonantTerm -> S
+DirectedConsonantTerm -> TH
+
+Consonant -> BlendedConsonant
+
+BlendedConsonant -> TN
+BlendedConsonant -> DN
+BlendedConsonant -> TM
+BlendedConsonant -> DM
+
+BlendedConsonant -> NT
+BlendedConsonant -> MT
+BlendedConsonant -> ND
+BlendedConsonant -> MD
+
+BlendedConsonant -> DF
+BlendedConsonant -> DV
+BlendedConsonant -> TV
+
+BlendedConsonant -> JNT
+BlendedConsonant -> JND
+BlendedConsonant -> PND
+BlendedConsonant -> PNT
+
+BlendedConsonant -> SS
+BlendedConsonant -> XS
+
+BlendedConsonant -> MN
+BlendedConsonant -> MM
+
+BlendedConsonant -> DT
+BlendedConsonant -> TD
+BlendedConsonant -> DD
+
+Consonant -> K
+Consonant -> G
+Consonant -> R
+Consonant -> L
+Consonant -> N
+Consonant -> M
+Consonant -> T
+Consonant -> D
+Consonant -> P
+Consonant -> B
+Consonant -> F
+Consonant -> V
+Consonant -> CH
+Consonant -> J
+Consonant -> SH
+Consonant -> NG
+Consonant -> NK
+
+Consonant -> X
+Consonant -> Z
+
+SoftLetter -> Aspirate
+Aspirate -> ' (H)
+SoftLetter -> _ (W)
+
+Vowel -> LoopVowel
+Vowel -> HookVowel
+Vowel -> Diphthong
+
+LoopVowel -> LoopVowel LoopVowelModifier
+LoopVowel -> A
+LoopVowel -> E
+LoopVowel -> I
+
+LoopVowelModifier -> .
+LoopVowelModifier -> ,
+LoopVowelModifier -> ~
+LoopVowelModifier -> |
+
+HookVowel -> HookVowel HookVowelModifier
+HookVowel -> O
+HookVowel -> U
+
+HookVowelModifier -> .
+HookVowelModifier -> ,
+
+Diphthong -> EU
+Diphthong -> AU
+Diphthong -> OI
+Diphthong -> A&'
+Diphthong -> A&E
+
+

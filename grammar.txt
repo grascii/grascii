@@ -7,10 +7,10 @@ Word -> PreRoot Root PostRoot
 PreRoot -> Prefix Disjoiner
 PostRoot -> Disjoiner Suffix
 
-Prefix -> Aspirate
-Prefix -> Aspirate Aspirate
+Prefix -> Aspirate Root
+Prefix -> Aspirate Aspirate Root
 
-Suffix -> Aspirate
+Suffix -> Root Aspirate
 
 Disjoiner -> ^
 
@@ -84,34 +84,38 @@ Consonant -> NK
 Consonant -> X
 Consonant -> Z
 
-SoftLetter -> Aspirate
-Aspirate -> ' (H)
-SoftLetter -> _ (W)
+Aspirate -> '
 
+// could get multiple asps and bars
+Vowel -> Aspirate Vowel
+Vowel -> Vowel UnderBar
 Vowel -> LoopVowel
 Vowel -> HookVowel
 Vowel -> Diphthong
 
-LoopVowel -> LoopVowel LoopVowelModifier
-LoopVowel -> A
-LoopVowel -> E
-LoopVowel -> I
+UnderBar -> W
 
-LoopVowelModifier -> .
-LoopVowelModifier -> ,
+LoopVowel -> LoopVowel LoopVowelModifier
+LoopVowel -> StandardLoopVowel VowelModifier
+StandardLoopVowel -> StandardLoopVowel VowelModifier
+
+LoopVowel -> I
+StandardLoopVowel -> A
+StandardLoopVowel -> E
+
 LoopVowelModifier -> ~
 LoopVowelModifier -> |
 
-HookVowel -> HookVowel HookVowelModifier
+HookVowel -> HookVowel VowelModifier
 HookVowel -> O
 HookVowel -> U
 
-HookVowelModifier -> .
-HookVowelModifier -> ,
+VowelModifier -> .
+VowelModifier -> ,
 
 Diphthong -> EU
 Diphthong -> AU
-Diphthong -> OI
+Diphthong -> OE
 Diphthong -> A&'
 Diphthong -> A&E
 

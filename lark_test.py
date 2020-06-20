@@ -63,14 +63,21 @@ def interpretationToString(interp):
             for char in token:
                 string += char
         else:
-            string += "-" + token 
+            if string and string[-1] != "^" and token != "^":
+                string += "-"
+
+            string += token 
         return string
 
-    return reduce(reducer, interp, "")[1:]
+    return reduce(reducer, interp, "")
 
 trees = CollapseAmbiguities().transform(tree)
 trans = MyTrans()
 interpretations = [trans.transform(x) for x in trees]
+print(interpretations)
+
+interps = { interpretationToString(interp): interp for interp in interpretations }
+interpretations = list(interps.values())
 
 index = -1
 if len(interpretations) == 1:

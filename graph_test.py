@@ -100,7 +100,16 @@ def getNeighbors(stroke, distance):
     return neighbors
 
 print(getNeighbors("DN", 2))
-print("|".join(getNeighbors("S", 2)))
 
 
+def getAltsRegex(stroke, distance):
+    neighbors = getNeighbors(stroke, distance)
+    flattened = []
+    for neighbor in neighbors:
+        for symbol in neighbor:
+            flattened.append(symbol)
+
+    return "(" + "|".join(flattened) + ")"
+
+print(getAltsRegex("D", 1))
 

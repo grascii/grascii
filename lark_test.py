@@ -121,10 +121,15 @@ def makeRegex(interp):
 
 
 patterns = list()
+starting_letters = set()
 if index > 0:
     patterns.append(re.compile(makeRegex(interpretations[index - 1])))
+    starting_letters.add(interpretationToString(interpretations[index - 1])[0])
 else:
-    patterns = [re.compile(makeRegex(interp)) for interp in interpretations]
+    for interp in interpretations:
+        patterns.append(re.compile(makeRegex(interp)))
+        starting_letters.add(interpretationToString(interp[0]))
+    # patterns = [re.compile(makeRegex(interp)) for interp in interpretations]
 
 # first = makeRegex(interpretations[0])
 first = makeRegex(interpretations[index - 1])
@@ -134,13 +139,17 @@ print(first)
 
 results = 0
 # pattern = re.compile(first);
-dictionary = open("./grascii_dict1916.txt", "r")
-for line in dictionary:
-    for pattern in patterns:
-        if pattern.search(line):
-            results += 1
-            input(line)
-            break
+# dictionary = open("./grascii_dict1916.txt", "r")
+
+dict_path = "./dict/"
+for item in starting_letters:
+    with open(dict_path + item, "r") as dictionary:
+        for line in dictionary:
+            for pattern in patterns:
+                if pattern.search(line):
+                    results += 1
+                    input(line)
+                    break
 
 
 print("Results:", results)

@@ -81,5 +81,26 @@ g.add_edges_from(trans_edges)
 g.add_nodes_from(disconnected_nodes)
 
 
+# print(g.nodes)
+# print(g.edges)
+# print([a for a in nx.neighbors(g, getNode("S"))])
+
+
+def getNeighbors(stroke, distance):
+    neighbors = set()
+    start = getNode(stroke)
+    neighbors.add(start)
+    while distance > 0:
+        new = list()
+        for node in neighbors:
+            new += nx.neighbors(g, node)
+        neighbors |= set([item for item in new])
+        distance -= 1
+
+    return neighbors
+
+print(getNeighbors("DN", 2))
+print("|".join(getNeighbors("S", 2)))
+
 
 

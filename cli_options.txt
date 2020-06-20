@@ -1,0 +1,39 @@
+
+-d, --dict
+  dictionary file
+  default: grascii_dict1916.txt
+
+-u, --uncertainty int [0-2]
+  uncertainty
+  default: 0
+
+-v, --verbose
+  turn on verbosity
+
+-i, --interactive
+  interactive mode
+
+-m --ignore-modifiers
+
+-a --ignore-aspirates
+
+-l --interpretation-limit int
+  default 1
+  0 is all
+
+-b --ignore-boundaries
+
+-r --regex string
+  custom regex to search
+
+-s --search-mode {start, word, contains}
+  default: word
+
+-h --help
+
+-g --generic
+  generic search
+
+
+
+

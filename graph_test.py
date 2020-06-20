@@ -112,6 +112,10 @@ def getAltsRegex(stroke, distance):
         else:
             flattened.append(neighbor)
 
+    if distance > 0:
+        for i, symbol in enumerate(flattened):
+            flattened[i] += getModifiers(symbol)
+
     if len(flattened) > 1:
         return "(" + "|".join(flattened) + ")"
     return flattened[0]
@@ -129,8 +133,8 @@ modifiers = {
         "OE" : "_?",
         "A&'" : "_?",
         "A&E" : "_?",
-        "S" : "[\\(\\)]?,?",
-        "TH" : "[\\(\\)]?,?",
+        "S" : "[)(]?,?",
+        "TH" : "[)(]?,?",
         "SH" : ",?"
         }
 

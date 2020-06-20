@@ -104,7 +104,7 @@ def makeRegex(interp):
                     builder.append(char)
                 builder.append("]*")
         else:
-            builder.append(getAltsRegex(token, 0))
+            builder.append(getAltsRegex(token, 1))
         return builder
 
     regex = reduce(reducer, interp, ["^"])

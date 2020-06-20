@@ -1,21 +1,32 @@
 
-
-
-
 import string
 
-
-path = "./dict_test.txt"
+# path = "./dict_test.txt"
+path = "./grascii_dict1916.txt"
 dest = "./dict/"
 
-# use parser to check syntax
+"""
+add option to use parser for syntax check
+add werror: treat warnings as errors
+warnings still add line, errors skip them
+allow continue for line with more than 2 tokens
+spell check?
+add file to warnings
 
-out = open(dest + "A", "w")
+add dest options
+add file input options
+
+track entry count by letter
+clear dest dir before writing
+sort alphabetically?
+
+"""
+
 
 out_files = {}
 def getOutputfile(grascii):
     index = 0
-    while index < len(grascii) and grascii[index] not in string.ascii_uppercase :
+    while index < len(grascii) and grascii[index] not in string.ascii_uppercase:
         index += 1
     if index == len(grascii):
         raise Exception()

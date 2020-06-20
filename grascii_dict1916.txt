@@ -1,3 +1,6 @@
+
+# Begin A's
+# Page 1 Column 1
 ABAK Aback
 ABAF Abaft
 ABAND Abandon
@@ -14,7 +17,6 @@ ABDEK Abdicate
 ABDEKSH Abdication
 ABDOM Abdomen
 ABDUK Abduct
-
 ABDUKSH Abduction
 ABERNT Aberrant
 ABERASH Aberration
@@ -26,6 +28,7 @@ ABI Abide
 A^B Ability
 ABJ Abject
 
+# Page 1 Column 2
 ABJU Abjure
 ABLASH Ablation
 ABLATV Ablative
@@ -53,3 +56,33 @@ ABRES Abreast
 ABREJ Abridge
 ABREJM Abridgment
 ABROD Abroad
+
+# Page 1 Column 3
+abrog abrogate
+abrogsh abrogation
+abrp abrupt
+abrpn abruptness
+abss abscess
+absknd abscond
+abs absence
+abse absentee
+abso absolute
+absolsh absolution
+absol absolve
+absob absorb
+absopsh absorption
+abstn abstain
+abstmus abstemious
+abstmusn abstemiousness
+abstnens abstinence
+ab^k abstract
+ab^kt abstracted
+ab^ksh abstraction
+ab^us abstruse
+absed absurd
+absede absurdity
+abndns abundance
+abndn abundant
+abeu abuse
+abeusv abusive
+

@@ -50,12 +50,16 @@ BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "MN" | "MM"
 	| "DT" | "TD" | "DD"
 
-distinguishable_consonant : ( directed_consonant | SH ) OBLIQUE?
+distinguishable_consonant : directed_consonant | sh
+
+
 
 SH : "SH"
 OBLIQUE : ","
 
-directed_consonant : DIRECTED_CONSONANT DIRECTION?
+sh : SH OBLIQUE?
+
+directed_consonant : DIRECTED_CONSONANT DIRECTION? OBLIQUE?
 
 DIRECTED_CONSONANT : "S" | "TH"
 DIRECTION : ")" | "("

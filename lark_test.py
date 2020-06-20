@@ -23,8 +23,11 @@ class MyTrans(Transformer):
     def diphthong(self, children):
         return children[0], set(children[1:])
     
-    # def distinguishable_consonant(self, children):
-        # return children[0], set(children[1:])
+    def directed_consonant(self, children):
+        return children[0], set(children[1:])
+     
+    def sh(self, children):
+        return children[0], set(children[1:])
 
     def __default__(self, data, children, meta):
         result = list()
@@ -102,16 +105,16 @@ else:
             continue
 
 
-def makeRegex(interp):
+def makeRegex(interp, distance):
     def reducer(builder, token):
         if isinstance(token, set):
-            if token:
+            if token and distance == 0:
                 builder.append("[")
                 for char in token:
                     builder.append(char)
                 builder.append("]*")
         else:
-            builder.append(getAltsRegex(token, 1))
+            builder.append(getAltsRegex(token, distance))
         return builder
 
     regex = reduce(reducer, interp, ["^"])
@@ -122,17 +125,18 @@ def makeRegex(interp):
 
 patterns = list()
 starting_letters = set()
+distance = 0
 if index > 0:
-    patterns.append(re.compile(makeRegex(interpretations[index - 1])))
+    patterns.append(re.compile(makeRegex(interpretations[index - 1], distance)))
     starting_letters.add(interpretationToString(interpretations[index - 1])[0])
 else:
     for interp in interpretations:
-        patterns.append(re.compile(makeRegex(interp)))
+        patterns.append(re.compile(makeRegex(interp, distance)))
         starting_letters.add(interpretationToString(interp[0]))
     # patterns = [re.compile(makeRegex(interp)) for interp in interpretations]
 
 # first = makeRegex(interpretations[0])
-first = makeRegex(interpretations[index - 1])
+first = makeRegex(interpretations[index - 1], distance)
 
 # first = "A*"
 print(first)

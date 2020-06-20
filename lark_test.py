@@ -4,6 +4,8 @@ import re
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
+from graph_test import *
+
 class MyTrans(Transformer):
     def start(self, children):
         result = list()
@@ -96,10 +98,12 @@ else:
 def makeRegex(interp):
     def reducer(builder, token):
         if isinstance(token, set):
+            builder.append("[")
             for char in token:
                 builder.append(char)
+            builder.append("]*")
         else:
-            builder.append(token)
+            builder.append(getAltsRegex(token, 1))
         return builder
 
     regex = reduce(reducer, interp, ["^"])

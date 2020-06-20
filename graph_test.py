@@ -99,19 +99,22 @@ def getNeighbors(stroke, distance):
 
     return neighbors
 
-print(getNeighbors("DN", 2))
+# print(getNeighbors("DN", 2))
 
 
 def getAltsRegex(stroke, distance):
     neighbors = getNeighbors(stroke, distance)
     flattened = []
     for neighbor in neighbors:
-        for symbol in neighbor:
-            flattened.append(symbol)
+        if isinstance(neighbor, tuple):
+            for symbol in neighbor:
+                flattened.append(symbol)
+        else:
+            flattened.append(neighbor)
 
     return "(" + "|".join(flattened) + ")"
 
-print(getAltsRegex("D", 1))
+# print(getAltsRegex("ND", 1))
 
 modifiers = {
         "A" : "[.,~|_]*",
@@ -135,5 +138,5 @@ def getModifiers(stroke):
     except KeyError:
         return ""
 
-print(getModifiers("S"))
+# print(getModifiers("S"))
 

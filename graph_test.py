@@ -1,5 +1,6 @@
 
 import networkx as nx
+import re
 
 equiv_nodes = {
         "TD" : ("TD", "DT", "DD"),
@@ -103,6 +104,8 @@ def getNeighbors(stroke, distance):
 
 
 def getAltsRegex(stroke, distance):
+    if getNode(stroke) not in g.nodes:
+        return re.escape(stroke)
     neighbors = getNeighbors(stroke, distance)
     flattened = []
     for neighbor in neighbors:

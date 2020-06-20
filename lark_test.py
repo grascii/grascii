@@ -98,12 +98,13 @@ else:
 def makeRegex(interp):
     def reducer(builder, token):
         if isinstance(token, set):
-            builder.append("[")
-            for char in token:
-                builder.append(char)
-            builder.append("]*")
+            if token:
+                builder.append("[")
+                for char in token:
+                    builder.append(char)
+                builder.append("]*")
         else:
-            builder.append(getAltsRegex(token, 1))
+            builder.append(getAltsRegex(token, 0))
         return builder
 
     regex = reduce(reducer, interp, ["^"])

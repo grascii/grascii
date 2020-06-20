@@ -112,7 +112,9 @@ def getAltsRegex(stroke, distance):
         else:
             flattened.append(neighbor)
 
-    return "(" + "|".join(flattened) + ")"
+    if len(flattened) > 1:
+        return "(" + "|".join(flattened) + ")"
+    return flattened[0]
 
 # print(getAltsRegex("ND", 1))
 

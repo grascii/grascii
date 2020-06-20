@@ -119,6 +119,13 @@ def makeRegex(interp):
 
     return "".join(regex)
 
+
+patterns = list()
+if index > 0:
+    patterns.append(re.compile(makeRegex(interpretations[index - 1])))
+else:
+    patterns = [re.compile(makeRegex(interp)) for interp in interpretations]
+
 # first = makeRegex(interpretations[0])
 first = makeRegex(interpretations[index - 1])
 
@@ -126,11 +133,14 @@ first = makeRegex(interpretations[index - 1])
 print(first)
 
 results = 0
-pattern = re.compile(first);
+# pattern = re.compile(first);
 dictionary = open("./grascii_dict1916.txt", "r")
 for line in dictionary:
-    if pattern.search(line):
-        results += 1
-        input(line)
+    for pattern in patterns:
+        if pattern.search(line):
+            results += 1
+            input(line)
+            break
+
 
 print("Results:", results)

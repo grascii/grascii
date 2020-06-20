@@ -86,3 +86,33 @@ abndn abundant
 abeu abuse
 abeusv abusive
 
+# Page 2 Column 1
+abtm abutment
+abtl abuttal
+abesml abysmal
+abes abyss
+akadmek academic
+akadm^ke academically
+akadmsh academician
+akadme academy
+aksed accede
+aksedns accedence
+aksel accelerate
+akselsh acceleration
+aksel^r accelerator
+aksent accent
+aksentut accentuate
+aksentsh accentuation
+aks( accept
+aks( acceptance
+aks(^b acceptability
+aks(b acceptable
+aks(sh acceptation
+aks(s access
+aks(s accessible
+aks(s^b accessibility
+aksesh accession
+aksre accessory
+aks accident
+aks^l accidental
+akla acclaim

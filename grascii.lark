@@ -79,7 +79,7 @@ I : "I"
 I_MODIFIERS : "~" | "|" | UNDERBAR
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 
-
+%ignore " "
 
 
 

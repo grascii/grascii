@@ -53,7 +53,7 @@ BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 distinguishable_consonant : ( directed_consonant | SH ) OBLIQUE?
 
 SH : "SH"
-OBLIQUE : "`"
+OBLIQUE : ","
 
 directed_consonant : DIRECTED_CONSONANT DIRECTION?
 

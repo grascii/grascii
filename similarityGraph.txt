@@ -29,7 +29,7 @@ SH - CH - J
  S - P  - B
 
 
-TH - TN,DN - NM,DM
+TH - TN,DN - TM,DM
    \
     NT,ND - MT,MD
 

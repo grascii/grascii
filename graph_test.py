@@ -113,3 +113,27 @@ def getAltsRegex(stroke, distance):
 
 print(getAltsRegex("D", 1))
 
+modifiers = {
+        "A" : "[.,~|_]*",
+        "E" : "[.,~|_]*",
+        "I" : "[~|_]*",
+        "O" : "[.,_]*",
+        "U" : "[.,_]*",
+        "EU" : "_?",
+        "AU" : "_?",
+        "OE" : "_?",
+        "A&'" : "_?",
+        "A&E" : "_?",
+        "S" : "[\\(\\)]?,?",
+        "TH" : "[\\(\\)]?,?",
+        "SH" : ",?"
+        }
+
+def getModifiers(stroke):
+    try:
+        return modifiers[stroke]
+    except KeyError:
+        return ""
+
+print(getModifiers("S"))
+

@@ -2,7 +2,7 @@
 import string
 
 # path = "./dict_test.txt"
-path = "./grascii_dict1916.txt"
+path = "./dsrc/grascii_dict1916.txt"
 dest = "./dict/"
 
 """
@@ -41,7 +41,7 @@ def getOutputfile(grascii):
         return result
     except KeyError:
         out_files[char] = open(dest + char, "w")
-        entry_counts[char] = 0
+        entry_counts[char] = 1
         return out_files[char]
 
 try:

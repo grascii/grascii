@@ -22,8 +22,11 @@ sort alphabetically?
 
 """
 
+warnings = 0
+errors = 0
 
 out_files = {}
+entry_counts = {}
 def getOutputfile(grascii):
     index = 0
     while index < len(grascii) and grascii[index] not in string.ascii_uppercase:
@@ -33,9 +36,12 @@ def getOutputfile(grascii):
 
     char = grascii[index]
     try:
-        return out_files[char]
+        result = out_files[char]
+        entry_counts[char] += 1
+        return result
     except KeyError:
         out_files[char] = open(dest + char, "w")
+        entry_counts[char] = 0
         return out_files[char]
 
 try:
@@ -48,6 +54,7 @@ try:
                 if len(pair) != 2:
                     print("W: Line", i, "Wrong number of words")
                     print(line.strip())
+                    warnings += 1
                     continue
                 grascii = pair[0]
                 word = pair[1]
@@ -59,4 +66,11 @@ try:
 finally:
     for f in out_files.values():
         f.close()
+
+print("Finished Build")
+print(warnings, "warnings")
+print(errors, "errors")
+print()
+for key, val in entry_counts.items():
+    print("Wrote", val, "entries to", dest + key)
 

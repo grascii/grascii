@@ -51,6 +51,11 @@ try:
             if pair:
                 if pair[0][0] == "#":
                     continue
+                if pair[0] == "?":
+                    print("W: Line", i, "uncertainty")
+                    print(line.strip())
+                    pair.pop(0)
+                    warnings += 1
                 if len(pair) != 2:
                     print("W: Line", i, "Wrong number of words")
                     print(line.strip())
@@ -67,6 +72,8 @@ finally:
     for f in out_files.values():
         f.close()
 
+if warnings or errors:
+    print()
 print("Finished Build")
 print(warnings, "warnings")
 print(errors, "errors")

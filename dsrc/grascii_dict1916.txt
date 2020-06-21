@@ -108,9 +108,9 @@ aks( acceptance
 aks(^b acceptability
 aks(b acceptable
 aks(sh acceptation
-aks(s access
-aks(s accessible
-aks(s^b accessibility
+? aks(s access
+? aks(s accessible
+? aks(s^b accessibility
 aksesh accession
 aksre accessory
 aks accident

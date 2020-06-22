@@ -41,13 +41,13 @@ def create_parser():
               parser="earley",
               ambiguity="explicit")
 
-def run_interactive(parser):
+def run_interactive(parser, args):
     tree = get_grascii_search(parser)
     parses = flatten_tree(tree)
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
-    patterns, starting_letters = generate_patterns(interpretations, index)
+    patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
     results = perform_search(patterns, starting_letters)
     count = 0
     for result in results:
@@ -60,11 +60,18 @@ def get_grascii_search(parser):
         search = input("Enter search: ").upper()
         if search == "":
             continue
-        try:
-            return parser.parse(search)
-        except UnexpectedInput as e:
-            print("Syntax Error")
-            print(e.get_context(search))
+        result = parse_grascii(parser, search)
+        if not result:
+            continue
+        return result
+
+def parse_grascii(parser, grascii):
+    try:
+        return parser.parse(grascii)
+    except UnexpectedInput as e:
+        print("Syntax Error")
+        print(e.get_context(grascii))
+        return False
 
 def flatten_tree(parse_tree):
     trees = CollapseAmbiguities().transform(parse_tree)
@@ -153,13 +160,37 @@ def perform_search(patterns, starting_letters, dict_path="./dict/"):
 if __name__ == "__main__":
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
     
+    aparse.add_argument("-g", "--grascii", help="the grascii string to search for", default="")
+    aparse.add_argument("-u", "--uncertainty", type=int, choices=range(3),
+            help="the uncertainty of the search term", default=0)
     aparse.add_argument("-i", "--interactive", action="store_true",
             help="run in interactive mode")
+    aparse.add_argument("-v", "--verbose", action="store_true",
+            help="turn on verbose output")
     args = aparse.parse_args()
 
+    p = create_parser()
     if args.interactive:
-        p = create_parser()
-        run_interactive(p)
+        run_interactive(p, args)
     else:
-        print("non interactive")
+        if args.grascii == "":
+            print("expected value for -g, --grascii")
+            exit(2)
+
+        tree = parse_grascii(p, args.grascii.upper())
+        if not tree:
+            exit()
+
+        parses = flatten_tree(tree)
+        display_interpretations = get_unique_interpretations(parses)
+        interpretations = list(display_interpretations.values())
+
+        index = 1 #choose_interpretation(interpretations)
+        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+        results = perform_search(patterns, starting_letters)
+        count = 0
+        for result in results:
+            print(result.strip())
+            count += 1
+        print("Results:", count)
 

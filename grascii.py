@@ -36,25 +36,38 @@ class GrasciiFlattener(Transformer):
         return result
 
 
-p = Lark.open("grascii.lark",
+def create_parser():
+    return Lark.open("grascii.lark",
               parser="earley",
               ambiguity="explicit")
 
-# test = "PNTS)`"
-# test = "ABAK"
-test = ""
-while True:
-    test = input("Enter search: ").upper()
-    if test == "":
-        continue
-    try:
-        tree = p.parse(test)
-        break
-    except UnexpectedInput as e:
-        print("Syntax Error")
-        print(e.get_context(test))
+p = create_parser()
 
-# print(tree.pretty())
+def run_interactive():
+    tree = get_grascii_search()
+    parses = flatten_tree(tree)
+    display_interpretations = get_unique_interpretations(parses)
+    interpretations = list(display_interpretations.values())
+    index = choose_interpretation(interpretations)
+
+def get_grascii_search():
+    while True:
+        search = input("Enter search: ").upper()
+        if search == "":
+            continue
+        try:
+            return p.parse(search)
+        except UnexpectedInput as e:
+            print("Syntax Error")
+            print(e.get_context(search))
+
+def flatten_tree(parse_tree):
+    trees = CollapseAmbiguities().transform(parse_tree)
+    trans = GrasciiFlattener()
+    return [trans.transform(tree) for tree in trees]
+
+
+run_interactive()
 
 def interpretationToString(interp):
     def reducer(string, token):
@@ -70,35 +83,61 @@ def interpretationToString(interp):
 
     return reduce(reducer, interp, "")
 
-trees = CollapseAmbiguities().transform(tree)
-trans = GrasciiFlattener()
-interpretations = [trans.transform(x) for x in trees]
-print(interpretations)
+def choose_interpretation(interpretations):
+    if len(interpretations) == 1:
+        print()
+        print("Found 1 possible interpretation")
+        print("Beginning search")
+        return 0
+    else:
+        print("Interpretations: ", len(interpretations))
+        print()
+        print("0: all")
+        for i, interp in enumerate(interpretations):
+            print(str(i + 1) + ":", interpretationToString(interp))
 
-interps = { interpretationToString(interp): interp for interp in interpretations }
-interpretations = list(interps.values())
+        while True:
+            try:
+              index = int(input("Choose an interpretation to use in the search:"))
+              if index >= 0 and index <= len(interpretations):
+                  return index
+            except ValueError:
+                continue
 
-index = -1
-if len(interpretations) == 1:
-    print()
-    print("Found 1 possible interpretation")
-    print("Beginning search")
-    index = 0
-else:
-    print("Interpretations: ", len(interpretations))
-    print()
-    print("0: all")
-    for i, interp in enumerate(interpretations):
-        print(str(i + 1) + ":", interpretationToString(interp))
 
-    while True:
-        try:
-          index = int(input("Choose an interpretation to use in the search:"))
-          if index < 0 or index > len(interpretations):
-              continue
-          break
-        except ValueError:
-            continue
+# trees = CollapseAmbiguities().transform(tree)
+# trans = GrasciiFlattener()
+# interpretations = [trans.transform(x) for x in trees]
+# print(interpretations)
+
+def get_unique_interpretations(flattened_parses):
+    return {interpretationToString(interp): interp for interp in flattened_parses}
+
+
+# interps = { interpretationToString(interp): interp for interp in interpretations }
+# interpretations = list(interps.values())
+
+# index = -1
+# if len(interpretations) == 1:
+    # print()
+    # print("Found 1 possible interpretation")
+    # print("Beginning search")
+    # index = 0
+# else:
+    # print("Interpretations: ", len(interpretations))
+    # print()
+    # print("0: all")
+    # for i, interp in enumerate(interpretations):
+        # print(str(i + 1) + ":", interpretationToString(interp))
+
+    # while True:
+        # try:
+          # index = int(input("Choose an interpretation to use in the search:"))
+          # if index < 0 or index > len(interpretations):
+              # continue
+          # break
+        # except ValueError:
+            # continue
 
 
 def makeRegex(interp, distance):

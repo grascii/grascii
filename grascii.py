@@ -49,7 +49,7 @@ def run_interactive(parser):
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
     patterns, starting_letters = generate_patterns(interpretations, index)
-    results = perform_search(patterns, starting_letters, is_interactive=True)
+    results = perform_search(patterns, starting_letters)
     count = 0
     for result in results:
         input(result)
@@ -73,18 +73,17 @@ def flatten_tree(parse_tree):
     return [trans.transform(tree) for tree in trees]
 
 def interpretationToString(interp):
-    def reducer(string, token):
+    def reducer(builder, token):
         if isinstance(token, set):
             for char in token:
-                string += char
+                builder.append(char)
         else:
-            if string and string[-1] != "^" and token != "^":
-                string += "-"
+            if builder and builder[-1] != "^" and token != "^":
+                builder.append("-")
+            builder.append(token)
+        return builder
 
-            string += token 
-        return string
-
-    return reduce(reducer, interp, "")
+    return "".join(reduce(reducer, interp, []))
 
 def choose_interpretation(interpretations):
     if len(interpretations) == 1:
@@ -139,21 +138,14 @@ def generate_patterns(interpretations, index = 1, distance = 0):
             starting_letters.add(interpretationToString(interp[0]))
     return patterns, starting_letters
 
-def perform_search(patterns, starting_letters, dict_path="./dict/", is_interactive=False):
-    results = 0
+def perform_search(patterns, starting_letters, dict_path="./dict/"):
     for item in starting_letters:
         with open(dict_path + item, "r") as dictionary:
             for line in dictionary:
                 for pattern in patterns:
                     if pattern.search(line):
-                        results += 1
                         yield line
-                        # if is_interactive:
-                            # input(line)
-                        # else:
-                            # print(line.strip())
                         break
-    # return results
 
 p = create_parser()
 run_interactive(p)

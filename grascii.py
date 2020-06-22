@@ -68,8 +68,6 @@ def flatten_tree(parse_tree):
     trans = GrasciiFlattener()
     return [trans.transform(tree) for tree in trees]
 
-
-
 def interpretationToString(interp):
     def reducer(string, token):
         if isinstance(token, set):
@@ -105,41 +103,8 @@ def choose_interpretation(interpretations):
             except ValueError:
                 continue
 
-
-# trees = CollapseAmbiguities().transform(tree)
-# trans = GrasciiFlattener()
-# interpretations = [trans.transform(x) for x in trees]
-# print(interpretations)
-
 def get_unique_interpretations(flattened_parses):
     return {interpretationToString(interp): interp for interp in flattened_parses}
-
-
-# interps = { interpretationToString(interp): interp for interp in interpretations }
-# interpretations = list(interps.values())
-
-# index = -1
-# if len(interpretations) == 1:
-    # print()
-    # print("Found 1 possible interpretation")
-    # print("Beginning search")
-    # index = 0
-# else:
-    # print("Interpretations: ", len(interpretations))
-    # print()
-    # print("0: all")
-    # for i, interp in enumerate(interpretations):
-        # print(str(i + 1) + ":", interpretationToString(interp))
-
-    # while True:
-        # try:
-          # index = int(input("Choose an interpretation to use in the search:"))
-          # if index < 0 or index > len(interpretations):
-              # continue
-          # break
-        # except ValueError:
-            # continue
-
 
 def makeRegex(interp, distance):
     def reducer(builder, token):
@@ -158,7 +123,6 @@ def makeRegex(interp, distance):
 
     return "".join(regex)
 
-
 def generate_patterns(interpretations, index = 1, distance = 0):
     patterns = list()
     starting_letters = set()
@@ -170,28 +134,6 @@ def generate_patterns(interpretations, index = 1, distance = 0):
             patterns.append(re.compile(makeRegex(interp, distance)))
             starting_letters.add(interpretationToString(interp[0]))
     return patterns, starting_letters
-
-# patterns = list()
-# starting_letters = set()
-# distance = 0
-# if index > 0:
-    # patterns.append(re.compile(makeRegex(interpretations[index - 1], distance)))
-    # starting_letters.add(interpretationToString(interpretations[index - 1])[0])
-# else:
-    # for interp in interpretations:
-        # patterns.append(re.compile(makeRegex(interp, distance)))
-        # starting_letters.add(interpretationToString(interp[0]))
-
-    # patterns = [re.compile(makeRegex(interp)) for interp in interpretations]
-
-# first = makeRegex(interpretations[0])
-# first = makeRegex(interpretations[index - 1], distance)
-
-# first = "A*"
-# print(first)
-
-# pattern = re.compile(first);
-# dictionary = open("./grascii_dict1916.txt", "r")
 
 def perform_search(patterns, starting_letters, dict_path="./dict/", is_interactive=False):
     results = 0
@@ -208,17 +150,5 @@ def perform_search(patterns, starting_letters, dict_path="./dict/", is_interacti
                         break
     return results
 
-# dict_path = "./dict/"
-# for item in starting_letters:
-    # with open(dict_path + item, "r") as dictionary:
-        # for line in dictionary:
-            # for pattern in patterns:
-                # if pattern.search(line):
-                    # results += 1
-                    # input(line)
-                    # break
-
-
-# print("Results:", results)
 p = create_parser()
 run_interactive(p)

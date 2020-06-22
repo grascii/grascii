@@ -140,12 +140,15 @@ def generate_patterns(interpretations, index = 1, distance = 0):
 
 def perform_search(patterns, starting_letters, dict_path="./dict/"):
     for item in starting_letters:
-        with open(dict_path + item, "r") as dictionary:
-            for line in dictionary:
-                for pattern in patterns:
-                    if pattern.search(line):
-                        yield line
-                        break
+        try:
+            with open(dict_path + item, "r") as dictionary:
+                for line in dictionary:
+                    for pattern in patterns:
+                        if pattern.search(line):
+                            yield line
+                            break
+        except FileNotFoundError:
+            print("Error: Could not find", dict_path + item)
 
 p = create_parser()
 run_interactive(p)

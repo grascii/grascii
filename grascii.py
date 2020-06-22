@@ -50,7 +50,11 @@ def run_interactive(parser):
     index = choose_interpretation(interpretations)
     patterns, starting_letters = generate_patterns(interpretations, index)
     results = perform_search(patterns, starting_letters, is_interactive=True)
-    print("Results:", results)
+    count = 0
+    for result in results:
+        input(result)
+        count += 1
+    print("Results:", count)
 
 def get_grascii_search(parser):
     while True:
@@ -143,12 +147,13 @@ def perform_search(patterns, starting_letters, dict_path="./dict/", is_interacti
                 for pattern in patterns:
                     if pattern.search(line):
                         results += 1
-                        if is_interactive:
-                            input(line)
-                        else:
-                            print(line.strip())
+                        yield line
+                        # if is_interactive:
+                            # input(line)
+                        # else:
+                            # print(line.strip())
                         break
-    return results
+    # return results
 
 p = create_parser()
 run_interactive(p)

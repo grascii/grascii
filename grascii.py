@@ -7,6 +7,14 @@ from lark.visitors import CollapseAmbiguities
 from graph_test import *
 
 class MyTrans(Transformer):
+
+    def __init__(self):
+        self.circle_vowel = self.group_modifiers
+        self.hook_vowel = self.group_modifiers
+        self.diphthong = self.group_modifiers
+        self.directed_consonant = self.group_modifiers
+        self.sh = self.group_modifiers
+
     def start(self, children):
         result = list()
         for child in children:
@@ -14,20 +22,23 @@ class MyTrans(Transformer):
                 result.append(token)
         return result
 
-    def circle_vowel(self, children):
+    def group_modifiers(self, children):
         return children[0], set(children[1:])
 
-    def hook_vowel(self, children):
-        return children[0], set(children[1:])
+    # def circle_vowel(self, children):
+        # return children[0], set(children[1:])
+
+    # def hook_vowel(self, children):
+        # return children[0], set(children[1:])
     
-    def diphthong(self, children):
-        return children[0], set(children[1:])
+    # def diphthong(self, children):
+        # return children[0], set(children[1:])
     
-    def directed_consonant(self, children):
-        return children[0], set(children[1:])
+    # def directed_consonant(self, children):
+        # return children[0], set(children[1:])
      
-    def sh(self, children):
-        return children[0], set(children[1:])
+    # def sh(self, children):
+        # return children[0], set(children[1:])
 
     def __default__(self, data, children, meta):
         result = list()

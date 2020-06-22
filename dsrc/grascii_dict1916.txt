@@ -79,8 +79,8 @@ ab^k abstract
 ab^kt abstracted
 ab^ksh abstraction
 ab^us abstruse
-absed absurd
-absede absurdity
+? absed absurd
+? absede absurdity
 abndns abundance
 abndn abundant
 abeu abuse

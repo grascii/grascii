@@ -6,7 +6,7 @@ from lark.visitors import CollapseAmbiguities
 
 from graph_test import *
 
-class MyTrans(Transformer):
+class GrasciiFlattener(Transformer):
 
     def __init__(self):
         self.circle_vowel = self.group_modifiers
@@ -24,21 +24,6 @@ class MyTrans(Transformer):
 
     def group_modifiers(self, children):
         return children[0], set(children[1:])
-
-    # def circle_vowel(self, children):
-        # return children[0], set(children[1:])
-
-    # def hook_vowel(self, children):
-        # return children[0], set(children[1:])
-    
-    # def diphthong(self, children):
-        # return children[0], set(children[1:])
-    
-    # def directed_consonant(self, children):
-        # return children[0], set(children[1:])
-     
-    # def sh(self, children):
-        # return children[0], set(children[1:])
 
     def __default__(self, data, children, meta):
         result = list()
@@ -86,7 +71,7 @@ def interpretationToString(interp):
     return reduce(reducer, interp, "")
 
 trees = CollapseAmbiguities().transform(tree)
-trans = MyTrans()
+trans = GrasciiFlattener()
 interpretations = [trans.transform(x) for x in trees]
 print(interpretations)
 

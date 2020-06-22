@@ -1,5 +1,6 @@
 from functools import reduce
 import re
+import argparse
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
@@ -35,12 +36,10 @@ class GrasciiFlattener(Transformer):
                     result.append(token)
         return result
 
-
 def create_parser():
     return Lark.open("grascii.lark",
               parser="earley",
               ambiguity="explicit")
-
 
 def run_interactive(parser):
     tree = get_grascii_search(parser)
@@ -150,5 +149,17 @@ def perform_search(patterns, starting_letters, dict_path="./dict/"):
         except FileNotFoundError:
             print("Error: Could not find", dict_path + item)
 
-p = create_parser()
-run_interactive(p)
+
+if __name__ == "__main__":
+    aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
+    
+    aparse.add_argument("-i", "--interactive", action="store_true",
+            help="run in interactive mode")
+    args = aparse.parse_args()
+
+    if args.interactive:
+        p = create_parser()
+        run_interactive(p)
+    else:
+        print("non interactive")
+

@@ -41,22 +41,24 @@ def create_parser():
               parser="earley",
               ambiguity="explicit")
 
-p = create_parser()
 
-def run_interactive():
-    tree = get_grascii_search()
+def run_interactive(parser):
+    tree = get_grascii_search(parser)
     parses = flatten_tree(tree)
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
+    patterns, starting_letters = generate_patterns(interpretations, index)
+    results = perform_search(patterns, starting_letters, is_interactive=True)
+    print("Results:", results)
 
-def get_grascii_search():
+def get_grascii_search(parser):
     while True:
         search = input("Enter search: ").upper()
         if search == "":
             continue
         try:
-            return p.parse(search)
+            return parser.parse(search)
         except UnexpectedInput as e:
             print("Syntax Error")
             print(e.get_context(search))
@@ -67,7 +69,6 @@ def flatten_tree(parse_tree):
     return [trans.transform(tree) for tree in trees]
 
 
-run_interactive()
 
 def interpretationToString(interp):
     def reducer(string, token):
@@ -158,37 +159,66 @@ def makeRegex(interp, distance):
     return "".join(regex)
 
 
-patterns = list()
-starting_letters = set()
-distance = 0
-if index > 0:
-    patterns.append(re.compile(makeRegex(interpretations[index - 1], distance)))
-    starting_letters.add(interpretationToString(interpretations[index - 1])[0])
-else:
-    for interp in interpretations:
-        patterns.append(re.compile(makeRegex(interp, distance)))
-        starting_letters.add(interpretationToString(interp[0]))
+def generate_patterns(interpretations, index = 1, distance = 0):
+    patterns = list()
+    starting_letters = set()
+    if index > 0:
+        patterns.append(re.compile(makeRegex(interpretations[index - 1], distance)))
+        starting_letters.add(interpretationToString(interpretations[index - 1])[0])
+    else:
+        for interp in interpretations:
+            patterns.append(re.compile(makeRegex(interp, distance)))
+            starting_letters.add(interpretationToString(interp[0]))
+    return patterns, starting_letters
+
+# patterns = list()
+# starting_letters = set()
+# distance = 0
+# if index > 0:
+    # patterns.append(re.compile(makeRegex(interpretations[index - 1], distance)))
+    # starting_letters.add(interpretationToString(interpretations[index - 1])[0])
+# else:
+    # for interp in interpretations:
+        # patterns.append(re.compile(makeRegex(interp, distance)))
+        # starting_letters.add(interpretationToString(interp[0]))
+
     # patterns = [re.compile(makeRegex(interp)) for interp in interpretations]
 
 # first = makeRegex(interpretations[0])
-first = makeRegex(interpretations[index - 1], distance)
+# first = makeRegex(interpretations[index - 1], distance)
 
 # first = "A*"
-print(first)
+# print(first)
 
-results = 0
 # pattern = re.compile(first);
 # dictionary = open("./grascii_dict1916.txt", "r")
 
-dict_path = "./dict/"
-for item in starting_letters:
-    with open(dict_path + item, "r") as dictionary:
-        for line in dictionary:
-            for pattern in patterns:
-                if pattern.search(line):
-                    results += 1
-                    input(line)
-                    break
+def perform_search(patterns, starting_letters, dict_path="./dict/", is_interactive=False):
+    results = 0
+    for item in starting_letters:
+        with open(dict_path + item, "r") as dictionary:
+            for line in dictionary:
+                for pattern in patterns:
+                    if pattern.search(line):
+                        results += 1
+                        if is_interactive:
+                            input(line)
+                        else:
+                            print(line.strip())
+                        break
+    return results
+
+# dict_path = "./dict/"
+# for item in starting_letters:
+    # with open(dict_path + item, "r") as dictionary:
+        # for line in dictionary:
+            # for pattern in patterns:
+                # if pattern.search(line):
+                    # results += 1
+                    # input(line)
+                    # break
 
 
-print("Results:", results)
+# print("Results:", results)
+p = create_parser()
+run_interactive(p)

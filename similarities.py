@@ -25,7 +25,7 @@ equiv_nodes = {
         "JND" : ("PNT", "PND", "JNT", "JND"),
         }
 
-def getNode(stroke):
+def get_node(stroke):
     try:
         return equiv_nodes[stroke]
     except KeyError:
@@ -34,8 +34,8 @@ def getNode(stroke):
 disconnected_nodes = [
         ("O"),
         ("U"),
-        getNode("PNT"),
-        getNode("DF")
+        get_node("PNT"),
+        get_node("DF")
         ]
 
 
@@ -75,21 +75,15 @@ edges = [
         ("TH", "NT"),
         ]
 
-trans_edges = [(getNode(edge[0]), getNode(edge[1])) for edge in edges]
+trans_edges = [(get_node(edge[0]), get_node(edge[1])) for edge in edges]
 
 g = nx.Graph()
 g.add_edges_from(trans_edges)
 g.add_nodes_from(disconnected_nodes)
 
-
-# print(g.nodes)
-# print(g.edges)
-# print([a for a in nx.neighbors(g, getNode("S"))])
-
-
-def getNeighbors(stroke, distance):
+def get_neighbors(stroke, distance):
     neighbors = set()
-    start = getNode(stroke)
+    start = get_node(stroke)
     neighbors.add(start)
     while distance > 0:
         new = list()
@@ -100,13 +94,10 @@ def getNeighbors(stroke, distance):
 
     return neighbors
 
-# print(getNeighbors("DN", 2))
-
-
-def getAltsRegex(stroke, distance):
-    if getNode(stroke) not in g.nodes:
+def get_alt_regex(stroke, distance):
+    if get_node(stroke) not in g.nodes:
         return re.escape(stroke)
-    neighbors = getNeighbors(stroke, distance)
+    neighbors = get_neighbors(stroke, distance)
     flattened = []
     for neighbor in neighbors:
         if isinstance(neighbor, tuple):
@@ -117,13 +108,12 @@ def getAltsRegex(stroke, distance):
 
     if distance > 0:
         for i, symbol in enumerate(flattened):
-            flattened[i] += getModifiers(symbol)
+            flattened[i] += get_modifiers(symbol)
 
     if len(flattened) > 1:
         return "(" + "|".join(flattened) + ")"
     return flattened[0]
 
-# print(getAltsRegex("ND", 1))
 
 modifiers = {
         "A" : "[.,~|_]*",
@@ -141,11 +131,10 @@ modifiers = {
         "SH" : ",?"
         }
 
-def getModifiers(stroke):
+def get_modifiers(stroke):
     try:
         return modifiers[stroke]
     except KeyError:
         return ""
 
-# print(getModifiers("S"))
 

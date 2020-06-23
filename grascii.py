@@ -5,7 +5,7 @@ import argparse
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from graph_test import *
+from graph_test import get_alt_regex
 
 class GrasciiFlattener(Transformer):
 
@@ -124,7 +124,7 @@ def makeRegex(interp, distance):
                     builder.append(char)
                 builder.append("]*")
         else:
-            builder.append(getAltsRegex(token, distance))
+            builder.append(get_alt_regex(token, distance))
         return builder
 
     regex = reduce(reducer, interp, ["^"])

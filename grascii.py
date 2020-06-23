@@ -160,7 +160,9 @@ def perform_search(patterns, starting_letters, dict_path="./dict/"):
 if __name__ == "__main__":
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
     
-    aparse.add_argument("-g", "--grascii", help="the grascii string to search for", default="")
+    aparse.add_argument("-g", "--grascii", help="the grascii string to search for")
+    aparse.add_argument("-r", "--regex", help="a custom regular expression \
+            to use in the search")
     aparse.add_argument("-u", "--uncertainty", type=int, choices=range(3),
             help="the uncertainty of the search term", default=0)
     aparse.add_argument("-i", "--interactive", action="store_true",
@@ -173,20 +175,25 @@ if __name__ == "__main__":
     if args.interactive:
         run_interactive(p, args)
     else:
-        if args.grascii == "":
+        if args.grascii is None and args.regex is None:
             print("expected value for -g, --grascii")
             exit(2)
 
-        tree = parse_grascii(p, args.grascii.upper())
-        if not tree:
-            exit()
+        if args.grascii is None:
+            patterns = [re.compile(args.regex.upper())]
+            starting_letters = {"A"}
+        else:
+            tree = parse_grascii(p, args.grascii.upper())
+            if not tree:
+                exit()
 
-        parses = flatten_tree(tree)
-        display_interpretations = get_unique_interpretations(parses)
-        interpretations = list(display_interpretations.values())
+            parses = flatten_tree(tree)
+            display_interpretations = get_unique_interpretations(parses)
+            interpretations = list(display_interpretations.values())
 
-        index = 1 #choose_interpretation(interpretations)
-        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+            index = 1 #choose_interpretation(interpretations)
+            patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+             
         results = perform_search(patterns, starting_letters)
         count = 0
         for result in results:

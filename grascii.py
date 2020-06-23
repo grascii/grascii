@@ -1,11 +1,12 @@
 from functools import reduce
 import re
+import sys
 import argparse
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from graph_test import get_alt_regex
+from similarities import get_alt_regex
 
 class GrasciiFlattener(Transformer):
 
@@ -157,7 +158,7 @@ def perform_search(patterns, starting_letters, dict_path="./dict/"):
             print("Error: Could not find", dict_path + item)
 
 
-if __name__ == "__main__":
+def main(arguments):
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
     
     aparse.add_argument("-g", "--grascii", help="the grascii string to search for")
@@ -208,4 +209,7 @@ if __name__ == "__main__":
             print(result.strip())
             count += 1
         print("Results:", count)
+
+if __name__ == "__main__":
+    main(sys.argv)
 

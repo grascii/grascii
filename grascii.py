@@ -171,20 +171,28 @@ if __name__ == "__main__":
             help="turn on verbose output")
     args = aparse.parse_args()
 
+    vprint = print if args.verbose else lambda *a, **k: None
+
     p = create_parser()
     if args.interactive:
+        vprint("Running in interactive mode")
         run_interactive(p, args)
     else:
         if args.grascii is None and args.regex is None:
             print("expected value for -g, --grascii")
+            vprint("exiting")
             exit(2)
 
         if args.grascii is None:
+            vprint("searching with custom regular expression:", args.regex.upper())
             patterns = [re.compile(args.regex.upper())]
             starting_letters = {"A"}
         else:
+            vprint("parsing grascii", args.grascii.upper())
             tree = parse_grascii(p, args.grascii.upper())
             if not tree:
+                vprint("parsing failed")
+                vprint("exiting")
                 exit()
 
             parses = flatten_tree(tree)

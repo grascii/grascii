@@ -3,6 +3,7 @@ import sys
 import string
 import argparse
 import pathlib
+import time
 
 
 """
@@ -60,6 +61,8 @@ def main(arguments):
 
     args = aparse.parse_args(arguments)
 
+    start_time = time.perf_counter()
+
     warnings = 0
     errors = 0
 
@@ -100,9 +103,11 @@ def main(arguments):
         for f in out_files.values():
             f.close()
 
+    end_time = time.perf_counter();
+
     if warnings or errors:
         print()
-    print("Finished Build")
+    print("Finished Build in", end_time - start_time, "seconds")
     print(warnings, "warnings")
     print(errors, "errors")
     print()

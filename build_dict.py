@@ -1,9 +1,7 @@
 
+import sys
 import string
 
-# path = "./dict_test.txt"
-path = "./dsrc/grascii_dict1916.txt"
-dest = "./dict/"
 
 """
 add option to use parser for syntax check
@@ -22,62 +20,70 @@ sort alphabetically?
 
 """
 
-warnings = 0
-errors = 0
+def main(args):
+    # path = "./dict_test.txt"
+    # path = "./dsrc/grascii_dict1916.txt"
+    path = "./dsrc/z.txt"
+    dest = "./dict/"
 
-out_files = {}
-entry_counts = {}
-def getOutputfile(grascii):
-    index = 0
-    while index < len(grascii) and grascii[index] not in string.ascii_uppercase:
-        index += 1
-    if index == len(grascii):
-        raise Exception()
+    warnings = 0
+    errors = 0
 
-    char = grascii[index]
+    out_files = {}
+    entry_counts = {}
+    def getOutputfile(grascii):
+        index = 0
+        while index < len(grascii) and grascii[index] not in string.ascii_uppercase:
+            index += 1
+        if index == len(grascii):
+            raise Exception()
+
+        char = grascii[index]
+        try:
+            result = out_files[char]
+            entry_counts[char] += 1
+            return result
+        except KeyError:
+            out_files[char] = open(dest + char, "w")
+            entry_counts[char] = 1
+            return out_files[char]
+
     try:
-        result = out_files[char]
-        entry_counts[char] += 1
-        return result
-    except KeyError:
-        out_files[char] = open(dest + char, "w")
-        entry_counts[char] = 1
-        return out_files[char]
+        with open(path, "r") as src:
+            for i, line in enumerate(src):
+                pair = line.split()
+                if pair:
+                    if pair[0][0] == "#":
+                        continue
+                    if pair[0] == "?":
+                        print("W: Line", i, "uncertainty")
+                        print(line.strip())
+                        pair.pop(0)
+                        warnings += 1
+                    if len(pair) != 2:
+                        print("W: Line", i, "Wrong number of words")
+                        print(line.strip())
+                        warnings += 1
+                        continue
+                    grascii = pair[0]
+                    word = pair[1]
+                    grascii = grascii.upper()
+                    word = word.capitalize()
+                    out = getOutputfile(grascii)
+                    out.write(grascii + " ")
+                    out.write(word + "\n")
+    finally:
+        for f in out_files.values():
+            f.close()
 
-try:
-    with open(path, "r") as src:
-        for i, line in enumerate(src):
-            pair = line.split()
-            if pair:
-                if pair[0][0] == "#":
-                    continue
-                if pair[0] == "?":
-                    print("W: Line", i, "uncertainty")
-                    print(line.strip())
-                    pair.pop(0)
-                    warnings += 1
-                if len(pair) != 2:
-                    print("W: Line", i, "Wrong number of words")
-                    print(line.strip())
-                    warnings += 1
-                    continue
-                grascii = pair[0]
-                word = pair[1]
-                grascii = grascii.upper()
-                word = word.capitalize()
-                out = getOutputfile(grascii)
-                out.write(grascii + " ")
-                out.write(word + "\n")
-finally:
-    for f in out_files.values():
-        f.close()
-
-if warnings or errors:
+    if warnings or errors:
+        print()
+    print("Finished Build")
+    print(warnings, "warnings")
+    print(errors, "errors")
     print()
-print("Finished Build")
-print(warnings, "warnings")
-print(errors, "errors")
-print()
-for key, val in entry_counts.items():
-    print("Wrote", val, "entries to", dest + key)
+    for key, val in entry_counts.items():
+        print("Wrote", val, "entries to", dest + key)
 
+if __name__ == "__main__":
+    main(sys.argv)

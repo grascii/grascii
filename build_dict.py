@@ -2,6 +2,7 @@
 import sys
 import string
 import argparse
+import pathlib
 
 
 """
@@ -41,7 +42,7 @@ def get_output_file(dest, grascii):
         entry_counts[char] += 1
         return result
     except KeyError:
-        out_files[char] = open(dest + char, "w")
+        out_files[char] = pathlib.Path(dest, char).open("w")
         entry_counts[char] = 1
         return out_files[char]
 
@@ -61,6 +62,8 @@ def main(arguments):
 
     warnings = 0
     errors = 0
+
+    pathlib.Path(args.output).mkdir(parents=True, exist_ok=True)
 
     try:
         for file_name in args.infiles:
@@ -99,7 +102,7 @@ def main(arguments):
     print(errors, "errors")
     print()
     for key, val in entry_counts.items():
-        print("Wrote", val, "entries to", args.output + key)
+        print("Wrote", val, "entries to", pathlib.PurePath(args.output, key))
 
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -5,6 +5,8 @@ import argparse
 import pathlib
 import time
 
+from lark import Lark, UnexpectedInput
+
 
 """
 add option to use parser for syntax check
@@ -69,6 +71,8 @@ def main(arguments):
     out_dir = pathlib.Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    p = Lark.open("grascii.lark", parser="earley")
+
     if args.clean:
         for entry in out_dir.iterdir():
             entry.unlink()
@@ -92,10 +96,15 @@ def main(arguments):
                             print(line.strip())
                             warnings += 1
                             continue
-                        grascii = pair[0]
-                        word = pair[1]
-                        grascii = grascii.upper()
-                        word = word.capitalize()
+                        grascii = pair[0].upper()
+                        word = pair[1].capitalize()
+                        try:
+                            p.parse(grascii)
+                        except UnexpectedInput:
+                            print("E: Line", i, "failed to parse", grascii)
+                            print(line.strip())
+                            errors += 1
+                            continue
                         out = get_output_file(args.output, grascii)
                         out.write(grascii + " ")
                         out.write(word + "\n")

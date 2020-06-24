@@ -1,6 +1,7 @@
 
 import sys
 import string
+import argparse
 
 
 """
@@ -46,34 +47,41 @@ def get_output_file(grascii):
 
 def main(arguments):
 
+    aparse = argparse.ArgumentParser(description="Build the grascii dictionary")
+    aparse.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
+            help="the files to package")
+
+    args = aparse.parse_args(arguments)
+
     warnings = 0
     errors = 0
 
-
     try:
-        with open(path, "r") as src:
-            for i, line in enumerate(src):
-                pair = line.split()
-                if pair:
-                    if pair[0][0] == "#":
-                        continue
-                    if pair[0] == "?":
-                        print("W: Line", i, "uncertainty")
-                        print(line.strip())
-                        pair.pop(0)
-                        warnings += 1
-                    if len(pair) != 2:
-                        print("W: Line", i, "Wrong number of words")
-                        print(line.strip())
-                        warnings += 1
-                        continue
-                    grascii = pair[0]
-                    word = pair[1]
-                    grascii = grascii.upper()
-                    word = word.capitalize()
-                    out = get_output_file(grascii)
-                    out.write(grascii + " ")
-                    out.write(word + "\n")
+        for file_name in args.infiles:
+            with file_name as src:
+            # with open(path, "r") as src:
+                for i, line in enumerate(src):
+                    pair = line.split()
+                    if pair:
+                        if pair[0][0] == "#":
+                            continue
+                        if pair[0] == "?":
+                            print("W: Line", i, "uncertainty")
+                            print(line.strip())
+                            pair.pop(0)
+                            warnings += 1
+                        if len(pair) != 2:
+                            print("W: Line", i, "Wrong number of words")
+                            print(line.strip())
+                            warnings += 1
+                            continue
+                        grascii = pair[0]
+                        word = pair[1]
+                        grascii = grascii.upper()
+                        word = word.capitalize()
+                        out = get_output_file(grascii)
+                        out.write(grascii + " ")
+                        out.write(word + "\n")
     finally:
         for f in out_files.values():
             f.close()
@@ -88,4 +96,4 @@ def main(arguments):
         print("Wrote", val, "entries to", dest + key)
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main(sys.argv[1:])

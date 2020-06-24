@@ -170,7 +170,7 @@ def main(arguments):
             help="run in interactive mode")
     aparse.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
-    args = aparse.parse_args()
+    args = aparse.parse_args(arguments)
 
     vprint = print if args.verbose else lambda *a, **k: None
 

@@ -26,9 +26,9 @@ entry_counts = {}
 # path = "./dict_test.txt"
 # path = "./dsrc/grascii_dict1916.txt"
 path = "./dsrc/z.txt"
-dest = "./dict/"
+# dest = "./dict/"
 
-def get_output_file(grascii):
+def get_output_file(dest, grascii):
     index = 0
     while index < len(grascii) and grascii[index] not in string.ascii_uppercase:
         index += 1
@@ -50,6 +50,12 @@ def main(arguments):
     aparse = argparse.ArgumentParser(description="Build the grascii dictionary")
     aparse.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
             help="the files to package")
+
+    aparse.add_argument("-o", "--output", help="path to a directory to output\
+            dictionary files", default="./dict")
+
+    aparse.add_argument("-c", "--clean", action="store_true",
+            help="clean the output directory before building")
 
     args = aparse.parse_args(arguments)
 
@@ -79,7 +85,7 @@ def main(arguments):
                         word = pair[1]
                         grascii = grascii.upper()
                         word = word.capitalize()
-                        out = get_output_file(grascii)
+                        out = get_output_file(args.output, grascii)
                         out.write(grascii + " ")
                         out.write(word + "\n")
     finally:
@@ -93,7 +99,7 @@ def main(arguments):
     print(errors, "errors")
     print()
     for key, val in entry_counts.items():
-        print("Wrote", val, "entries to", dest + key)
+        print("Wrote", val, "entries to", args.output + key)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

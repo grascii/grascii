@@ -63,7 +63,12 @@ def main(arguments):
     warnings = 0
     errors = 0
 
-    pathlib.Path(args.output).mkdir(parents=True, exist_ok=True)
+    out_dir = pathlib.Path(args.output)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    if args.clean:
+        for entry in out_dir.iterdir():
+            entry.unlink()
 
     try:
         for file_name in args.infiles:

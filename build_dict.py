@@ -68,6 +68,18 @@ def main(arguments):
     warnings = 0
     errors = 0
 
+    def log_warning(file_name, line, line_number, *message):
+        print("W:", file_name + ":" + str(line_number), *message)
+        print(line.strip())
+        nonlocal warnings
+        warnings += 1
+
+    def log_error(file_name, line, line_number, *message):
+        print("W:", file_name + ":" + str(line_number), *message)
+        print(line.strip())
+        nonlocal errors
+        errors += 1
+
     out_dir = pathlib.Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -78,36 +90,38 @@ def main(arguments):
             entry.unlink()
 
     try:
-        for file_name in args.infiles:
-            with file_name as src:
+        for src_file in args.infiles:
+            # with file_name as src:
             # with open(path, "r") as src:
-                for i, line in enumerate(src):
-                    pair = line.split()
-                    if pair:
-                        if pair[0][0] == "#":
-                            continue
-                        if pair[0] == "?":
-                            print("W: Line", i, "uncertainty")
-                            print(line.strip())
-                            pair.pop(0)
-                            warnings += 1
-                        if len(pair) != 2:
-                            print("W: Line", i, "Wrong number of words")
-                            print(line.strip())
-                            warnings += 1
-                            continue
-                        grascii = pair[0].upper()
-                        word = pair[1].capitalize()
-                        try:
-                            p.parse(grascii)
-                        except UnexpectedInput:
-                            print("E: Line", i, "failed to parse", grascii)
-                            print(line.strip())
-                            errors += 1
-                            continue
-                        out = get_output_file(args.output, grascii)
-                        out.write(grascii + " ")
-                        out.write(word + "\n")
+            for i, line in enumerate(src_file):
+                pair = line.split()
+                if pair:
+                    if pair[0][0] == "#":
+                        continue
+                    if pair[0] == "?":
+                        log_warning(src_file.name, line, i, "uncertainty")
+                        pair.pop(0)
+                    if len(pair) != 2:
+                        log_warning(src_file.name, line, i, 
+                                "Wrong number of words")
+                        # print("W: Line", i, "Wrong number of words")
+                        # print(line.strip())
+                        # warnings += 1
+                        continue
+                    grascii = pair[0].upper()
+                    word = pair[1].capitalize()
+                    try:
+                        p.parse(grascii)
+                    except UnexpectedInput:
+                        log_error(src_file.name, line, i, 
+                                "failed to parse", grascii)
+                        # print("E: Line", i, "failed to parse", grascii)
+                        # print(line.strip())
+                        # errors += 1
+                        continue
+                    out = get_output_file(args.output, grascii)
+                    out.write(grascii + " ")
+                    out.write(word + "\n")
     finally:
         for f in out_files.values():
             f.close()

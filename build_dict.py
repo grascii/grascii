@@ -61,6 +61,9 @@ def main(arguments):
     aparse.add_argument("-c", "--clean", action="store_true",
             help="clean the output directory before building")
 
+    aparse.add_argument("-p", "--parse", action="store_true",
+            help="enable syntax checking on grascii strings")
+
     args = aparse.parse_args(arguments)
 
     start_time = time.perf_counter()
@@ -75,7 +78,7 @@ def main(arguments):
         warnings += 1
 
     def log_error(file_name, line, line_number, *message):
-        print("W:", file_name + ":" + str(line_number), *message)
+        print("E:", file_name + ":" + str(line_number), *message)
         print(line.strip())
         nonlocal errors
         errors += 1
@@ -83,7 +86,8 @@ def main(arguments):
     out_dir = pathlib.Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    p = Lark.open("grascii.lark", parser="earley")
+    if args.parse:
+        p = Lark.open("grascii.lark", parser="earley")
 
     if args.clean:
         for entry in out_dir.iterdir():
@@ -91,8 +95,6 @@ def main(arguments):
 
     try:
         for src_file in args.infiles:
-            # with file_name as src:
-            # with open(path, "r") as src:
             for i, line in enumerate(src_file):
                 pair = line.split()
                 if pair:
@@ -104,21 +106,18 @@ def main(arguments):
                     if len(pair) != 2:
                         log_warning(src_file.name, line, i, 
                                 "Wrong number of words")
-                        # print("W: Line", i, "Wrong number of words")
-                        # print(line.strip())
-                        # warnings += 1
                         continue
                     grascii = pair[0].upper()
                     word = pair[1].capitalize()
-                    try:
-                        p.parse(grascii)
-                    except UnexpectedInput:
-                        log_error(src_file.name, line, i, 
-                                "failed to parse", grascii)
-                        # print("E: Line", i, "failed to parse", grascii)
-                        # print(line.strip())
-                        # errors += 1
-                        continue
+
+                    if args.parse:
+                        try:
+                            p.parse(grascii)
+                        except UnexpectedInput:
+                            log_error(src_file.name, line, i, 
+                                    "failed to parse", grascii)
+                            continue
+
                     out = get_output_file(args.output, grascii)
                     out.write(grascii + " ")
                     out.write(word + "\n")
@@ -139,3 +138,4 @@ def main(arguments):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+

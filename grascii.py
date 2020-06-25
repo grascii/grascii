@@ -160,13 +160,16 @@ def perform_search(patterns, starting_letters, dict_path="./dict/"):
 
 def main(arguments):
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
+
+    group = aparse.add_mutually_exclusive_group(required=False)
+
     
-    aparse.add_argument("-g", "--grascii", help="the grascii string to search for")
-    aparse.add_argument("-r", "--regex", help="a custom regular expression \
+    group.add_argument("-g", "--grascii", help="the grascii string to search for")
+    group.add_argument("-r", "--regex", help="a custom regular expression \
             to use in the search")
     aparse.add_argument("-u", "--uncertainty", type=int, choices=range(3),
             help="the uncertainty of the search term", default=0)
-    aparse.add_argument("-i", "--interactive", action="store_true",
+    group.add_argument("-i", "--interactive", action="store_true",
             help="run in interactive mode")
     aparse.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
@@ -211,5 +214,5 @@ def main(arguments):
         print("Results:", count)
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main(sys.argv[1:])
 

@@ -89,6 +89,8 @@ def main(arguments):
     if args.spell:
         with open("/usr/share/dict/words", "r") as words:
             en_dict = set(line.strip().capitalize() for line in words)
+        with open("./extra_words.txt", "r") as words:
+            en_dict |= set(line.strip().capitalize() for line in words)
 
     if args.parse:
         from lark import Lark, UnexpectedInput

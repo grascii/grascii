@@ -85,3 +85,90 @@ uoch watch
 uochdog watchdog
 uochmn watchman
 uochud watchword
+
+# Page 202 Column 1
+uate~ water
+uotemrk watermark
+uotemeln watermelon
+uote~e watery
+uot watt
+uotmete~ wattmeter
+uav wave
+uavr waver
+uax wax
+? uasberry waxberry
+? uasrk waxwork
+uabl waybill
+uafar wayfare
+uafarr wayfarer
+uala waylay
+ua^d wayward
+ek weak
+ekn weaken
+eke weakly
+eknes weakness
+lth wealth
+lthe wealthy
+uepn weapon
+uar wear
+uarr wearer
+ueren weariness
+uersm wearisome
+
+# Page 202 Column 2
+uere weary
+uesl weasel
+ueth weather
+uethkk weathercock
+uev weave
+uevr weaver
+ueb web
+ued wed
+uedd wedded
+uej wedge
+uedlok wedlock
+uens wednesday
+ued weed
+ek week
+uep weep
+uat weight
+? uerd weird
+lkm welcome
+lkmn welcomeness
+lkme~ welcomer
+ueld weld
+lfar welfare
+l well
+lbred well-bred
+lnon well-known
+uelsh welsh
+uelte~ welter
+
+# Page 202 Column 3
+uench wench
+uend wend
+er were
+ues west
+ues^re westerly
+uestn western
+uestnr westener
+ues^d westward
+uetn wetness
+'uak whack
+'ual whale
+'ualbon whalebone
+'uof wharf
+'uofj wharfage
+otev whatever
+otsov whatsoever
+'uet wheat
+'uetn wheaten
+'uedl wheedle
+'uel wheel
+'uelbaro wheelbarrow
+? 'uelus wheelhouse
+'ues wheeze
+en when
+'uens whence
+enev whenever
+ar where

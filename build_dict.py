@@ -5,9 +5,6 @@ import argparse
 import pathlib
 import time
 
-from lark import Lark, UnexpectedInput
-
-
 """
 add option to use parser for syntax check
 add werror: treat warnings as errors
@@ -64,6 +61,9 @@ def main(arguments):
     aparse.add_argument("-p", "--parse", action="store_true",
             help="enable syntax checking on grascii strings")
 
+    aparse.add_argument("-s", "--spell", action="store_true",
+            help="enable spell checking on english words")
+
     args = aparse.parse_args(arguments)
 
     start_time = time.perf_counter()
@@ -86,7 +86,12 @@ def main(arguments):
     out_dir = pathlib.Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.spell:
+        with open("/usr/share/dict/words", "r") as words:
+            en_dict = set(line.strip().capitalize() for line in words)
+
     if args.parse:
+        from lark import Lark, UnexpectedInput
         p = Lark.open("grascii.lark", parser="earley")
 
     if args.clean:
@@ -117,6 +122,11 @@ def main(arguments):
                             log_error(src_file.name, line, i, 
                                     "failed to parse", grascii)
                             continue
+
+                    if args.spell:
+                        if word not in en_dict:
+                            log_warning(src_file.name, line, i,
+                                    word, "not in dictionary")
 
                     out = get_output_file(args.output, grascii)
                     out.write(grascii + " ")

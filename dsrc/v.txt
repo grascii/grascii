@@ -257,3 +257,192 @@ venkulm vinculum
 vndek vidicate
 vdekatv vindicative
 vndekatr vindicator
+
+# Page 198 Column 1
+vndekv vindictive
+vin vine
+venegr vinegar
+venegre vinegary
+vena|~d vineyard
+vntj vintage
+vntne~ vintner
+vil viol
+vilb violable
+vila violate
+vilash violation
+vilens violence
+vilent violent
+vilesent violescent
+vilet violet
+vilen violin
+vilenes violinist
+vipr viper
+verago virago
+vejn virgin
+veredes viridescence
+veredte viridity
+verl virile
+ver^l virility
+ve~tl virtual
+ve~t^l virtuality
+ve~ta| virtually
+
+# Page 198 Column 2
+ve~tu virtue
+ve~tul virtueless
+ve~tus virtuous
+verlens virulence
+verlent virulent
+vesj visage
+vesve vis-a-vis
+? viknt viscount
+? vikntes viscountess
+veskus viscous
+vis vise
+ves^b visibility
+veb visible
+vesh vision
+veshre visionary
+vest visit
+vestsh visition
+vestr visitor
+vesr visor
+vesta vista
+vesul visual
+vesuliz visualize
+vitl vital
+vitlsm vitalism
+vet^l vitality
+vitlesh vitalization
+vitlis vitalize
+
+# Page 198 Column 3
+vita| vitally
+vitls vitals
+vesha&'t vitiate
+veteklchu^l viticultural
+veteklchu viticulture
+vetrus vitreous
+vetrusn vitreousness
+vetresns vitrescence
+vetrk vitric
+vetrfeksh vitrifaction
+vetrfaktr vitrifacture
+vetref^b vitrifiable
+vetref vitrify
+vetrl vitriol
+vetrlesh vitriolation
+vetrlek vitriolic
+vetri vitrite
+veta vitta
+vitupb vituperable
+vitp vituperate
+vitupsh vituperation
+vitup^v vituperative
+vivashus vivacious
+vivashusn vivaciousness
+viv^s) vivacity
+vevd vivid
+vev^f vivification
+
+# Page 199 Column 1
+vevf vivify
+vevseksh vivisection
+vevsekshl vivisectional
+vevsektr vivisector
+vexn vixen
+vexnsh vixenish
+veser vizier
+vesera vizierate
+vkab vocabulary
+vkabus vocabulist
+vkl vocal
+vklek vocalic
+vklsm vocalism
+vkles vocalist
+vklessh vocalization
+vklis vocalize
+vkash vocation
+vkatv vocative
+vosefrant vociferant
+vosefra vociferate
+vosefrash vociferation
+vosef vociferous
+vog vogue
+voes voice
+voesf voiceful
+voesl voiceless
+voed void
+
+# Page 199 Column 2
+voens voidance
+volant volant
+volatl volatile
+volatln volatileness
+volatliz volatlilize
+volknek volcanic
+volkn^s) volcanicity
+volknes volcanist
+volkno volcano
+volesh volition
+voleshl volitional
+voletv volitive
+vole volley
+volt volt
+voltj voltage
+voltak voltaic
+volamete~ voltameter
+volmete~ voltmeter
+vol^b volubility
+volb voluble
+volm volume
+volmskp volumescope
+volumete~ volumeter
+volmetrk volumetric
+volmnus voluminous
+volnte voluntary
+volnt volunteer
+
+# Page 199 Column 3
+volptre voluptuary
+volptus voluptuous
+volut volute
+volsh volution
+vorash voracious
+vor^s) voracity
+votex vortex
+vot^k vortical
+votekos vorticose
+votre votary
+vt vote
+vtv votive
+vauch vouch
+vauche vouchee
+vauche~ voucher
+vau vow
+vl vowel
+vlis vowelize
+voej voyage
+voeje~ voyager
+vulkn vulcan
+vulkna&'n vulcanian
+vulknek vulcanic
+vulknessh vulcanization
+vulknis vulcanize
+vul vulgar
+vulsm vulgarism
+
+# Page 200 Column 1
+vul^r vulgarity
+vulessh vulgarization
+vulis vulgarize
+
+# Page 200 Column 2
+vuln^b vulnerability
+vulnb vulnerable
+vulnbn vulnerableness
+
+# Page 200 Column 3
+vulner vulnerary
+vulchu vulture
+vulchus vulturous

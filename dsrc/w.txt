@@ -250,7 +250,7 @@ uedth width
 ueld wield
 ueldr wielder
 if wife
-fi^d wifehood
+if^d wifehood
 ueg wig
 uegl wiggle
 uego_m wigwam
@@ -400,7 +400,7 @@ rest wrest
 resl wrestle
 rech wretch
 rechdn wretchedness
-wregl wriggle
+regl wriggle
 reng wring
 reng~ wringer
 renkl wrinkle

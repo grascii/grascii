@@ -18,7 +18,7 @@ conditional : IF
 
 IF : "EF"
 
-pronoun : I | YOU | WE | THEY | IT | HE | WHICH 
+pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
 
 to_be : AM | ARE | IS | WAS //| WERE
 
@@ -33,7 +33,9 @@ WE : "UE"
 // fix this terminal conflict
 THEY : "THE" //| "TH"
 IT : "T"
-HE : "E"
+HE : "E"	
+
+THAT : "THA"
 
 AM : "M"
 ARE : "R"
@@ -69,7 +71,9 @@ noun.2 : described_noun | plain_noun
 plain_noun : pronoun | common_noun
 described_noun : adjective+ common_noun
 
-adjective : article	
+adjective : article | SUCH
+
+SUCH : "SCH"
 
 preposition : OF | to | IN | ON | WITH | WHICH
 	| THERE | BY | FOR | FROM | at
@@ -115,7 +119,7 @@ ABLE : "A" "BL"?
 
 adverb_phrase.2 : adverb ( to_be | auxillary )
 
-adverb : THERE
+adverb : THERE // | SUCH
 
 as_phrase : AS as_adj AS
 
@@ -259,7 +263,7 @@ interrogative_phrase : ( interrogative noun )
 
 interrogative : CAN | DO | COULD | WOULD 
 	| SHOULD | WHERE | WHY | WHO | HOW
-	| WHAT | WHEN
+	| WHAT | WHEN | IS
 
 WHERE : "AR"
 WHY : "I"

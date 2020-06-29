@@ -23,7 +23,7 @@ HE : "E"
 AM : "M"
 ARE : "R"
 IS : "S"
-WAS : "US"
+WAS : "OS"
 //WERE : "ER"
 
 NOT : "N"
@@ -98,7 +98,7 @@ as_phrase : AS as_adj AS
 AS : "S"
 
 as_adj : WELL | GOOD | GREAT | MUCH | MANY 
-	| LONG
+	| LONG | NEAR | LOW | SOON
 
 WELL : "L"
 GOOD : "G"
@@ -106,7 +106,9 @@ GREAT : "GR"
 MUCH : "MCH"
 MANY : "MNE"
 LONG : "LNG"
-
+NEAR : "NE"
+LOW : "LO"
+SOON : "N"
 
 
 

@@ -59,8 +59,9 @@ WILL : "L"
 SHALL : "SH"
 MAY : "MA"
 
-to_have : HAVE | HAS //| HAD
+to_have : HAVE | HAS | had
 
+had.-1 : HAD
 HAD : ASPIRATE? "A"? "D"
 
 HAVE : "V"
@@ -77,7 +78,7 @@ described_noun : adjective+ common_noun
 adjective : article | common_adjective | SUCH
 
 common_adjective : KIND | THAT | ALL | EVERY
-	| WHICH
+	| WHICH | ABLE
 
 KIND : "KI"
 EVERY : "EV"
@@ -120,7 +121,8 @@ aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE? )
 	| ( auxillary NOT? to_have BEEN? ABLE? )
 	| ( auxillary NOT? verb )
 
-have_phrase : to_have ( NOT BEEN? | NOT? BEEN ) ABLE?
+have_phrase : to_have have_phrase_ending
+have_phrase_ending : ( NOT BEEN? | NOT? BEEN ) ABLE?
 
 BE : "B"
 BEEN : "B"
@@ -172,14 +174,15 @@ YEARS : "E" "|"? "R" "S"?
 
 AGO : "G"
 
-infinitive.2 : to | short_to verb
+infinitive.2 : to | short_to ( verb | BE adjective? | HAVE have_phrase_ending )
 
 short_to : SHORT_TO
 SHORT_TO : "T"
 
 verb : common_verb
 
-common_verb : BE | HAVE | PAY | FAVOR 
+common_verb : BE | HAVE
+	| PAY | FAVOR 
 	| PLEASE | BELIEVE | HONOR 
 	| RECEIVE | LOOK | SEE 
 	| SHIP | REACH | LIKE 

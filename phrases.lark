@@ -190,10 +190,11 @@ REGARD : "RE"
 RELATIVE : "RELA"
 RESPECT : "RES"
 
-common_noun : MATTER | LETTER | FAVOR
+common_noun : MATTER | LETTER | FAVOR | REPLY
 
 MATTER : "MAT"
 LETTER : "LE"
+REPLY : "REP"
 
 business_phrase : greeting | salutation
 	| receipt_phrase

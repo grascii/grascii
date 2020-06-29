@@ -7,6 +7,7 @@ start : subject_phrase
 	| time_phrase
 	| infinitive
 	| omitted_to
+	| business_phrase
 
 subject_phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
@@ -193,11 +194,36 @@ common_noun : MATTER
 
 MATTER : "MAT"
 
+business_phrase : greeting | salutation
 
+greeting : MY? DEAR title
 
+MY : "MA"
+DEAR : "D"
 
+title : SIR | MADAM | MR | MRS | SIRS
 
+SIR : "S"
+MADAM : "M"
+MR : "MR"
+MRS : "MRS"
+SIRS : "SS"
 
+// UT VTU UVT UR
+salutation : ( YOURS VERY? sal_adverb )
+	| ( VERY sal_adverb YOURS? )
+	| ( VERY? sal_adverb YOURS )
+
+YOURS : "U"
+VERY: "V"
+
+sal_adverb : TRULY | RESPECTFULLY 
+	| SINCERELY | CORDIALLY
+
+TRULY : "T"
+RESPECTFULLY : "R"
+SINCERELY : "SEN"
+CORDIALLY : "K"
 
 
 

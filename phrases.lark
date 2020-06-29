@@ -71,7 +71,11 @@ noun.2 : described_noun | plain_noun
 plain_noun : pronoun | common_noun
 described_noun : adjective+ common_noun
 
-adjective : article | SUCH
+adjective : article | common_adjective | SUCH
+
+common_adjective : KIND
+
+KIND : "KI"
 
 SUCH : "SCH"
 
@@ -107,9 +111,9 @@ THESE : "THES"
 THOSE : "THS"
 
 aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE? )
-	| have_phrase
-	| ( auxillary have_phrase )
+	| auxillary? have_phrase
 	| ( auxillary NOT? to_have BEEN? ABLE? )
+	| ( auxillary NOT? verb )
 
 have_phrase : to_have ( NOT BEEN? | NOT? BEEN ) ABLE?
 
@@ -170,7 +174,7 @@ common_verb : BE | HAVE | PAY | FAVOR
 	| RECEIVE | LOOK | SEE 
 	| SHIP | REACH | LIKE 
 	| REPRESENT | SELL | FIND
-	| SAY | TOLD
+	| SAY | TOLD | WIRE | WRITE
 
 PAY : "PA"
 FAVOR : "FA"
@@ -187,6 +191,8 @@ REPRESENT : "RP"
 SELL : "SEL"
 FIND : "FI"
 SAY : "SA"
+WIRE : "IR"
+WRITE : "RI"
 
 TOLD : "TO"
 
@@ -213,13 +219,17 @@ RELATIVE : "RELA"
 RESPECT : "RES"
 
 common_noun.2 : MATTER | LETTER | FAVOR | REPLY
-	| ALL | BEHALF | REGARD
+	| ALL | BEHALF | REGARD | ME | SIDE
 
 MATTER : "MAT"
 LETTER : "LE"
 REPLY : "REP"
 ALL : "O"
 BEHALF : "BF"
+SIDE : "SI"
+
+// special rule
+ME : "ME"
 
 business_phrase : greeting | salutation
 	| receipt_phrase
@@ -274,7 +284,7 @@ WHEN : "EN"
 
 command_phrase : command ( DO? NOT? verb | noun )
 
-command : PLEASE | SHIP
+command : PLEASE | SHIP | WRITE
 
 
 

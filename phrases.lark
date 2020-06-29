@@ -1,9 +1,10 @@
 
-start : phrase | prep_phrase
+start : phrase | prep_phrase | aux_phrase
+	| adverb_phrase
 
 phrase : pronoun ( to_be | auxillary ) NOT?
 
-pronoun : I | YOU | WE | THEY | IT
+pronoun : I | YOU | WE | THEY | IT | WHICH
 
 to_be : AM | ARE | IS | WAS //| WERE
 
@@ -26,7 +27,7 @@ auxillary : to_have | SHOULD | COULD | WOULD
 	| CAN | WILL
 
 SHOULD : "SHD"
-COULD : "CD"
+COULD : "KD"
 WOULD : "D"
 CAN : "K"
 WILL : "L"
@@ -35,10 +36,15 @@ to_have : HAVE //| HAD
 
 HAVE : "V"
 
-prep_phrase : preposition article
+prep_phrase : preposition ( adjective | noun ) 
+
+noun.2 : adjective* pronoun
+
+adjective : article	
+
 
 preposition : OF | TO | IN | ON | WITH | WHICH
-	| THERE | BY | FOR
+	| THERE | BY | FOR | FROM
 
 OF : "O"
 TO : "TU" // | "T"
@@ -50,6 +56,7 @@ WHICH : "CH"
 THERE : "TH)"
 BY : "B"
 FOR : "F"
+FROM : "FM"
 
 
 article : THE | HIS | THEIR | YOUR | OUR 
@@ -64,9 +71,13 @@ THIS : "THS"
 THESE : "THES"
 THOSE : "THS"
 
+aux_phrase : auxillary ( NOT BE? | NOT? BE )
 
+BE : "B"
 
+adverb_phrase.2 : adverb ( to_be | auxillary )
 
+adverb : THERE
 
 
 

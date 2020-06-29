@@ -11,8 +11,12 @@ start : subject_phrase
 	| interrogative_phrase
 	| command_phrase
 
-subject_phrase : ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
+subject_phrase : conditional? ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
 	| pronoun verb
+
+conditional : IF
+
+IF : "EF"
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH 
 
@@ -63,7 +67,7 @@ prep_phrase : preposition+ ( adjective | noun )
 noun.2 : described_noun | plain_noun
 
 plain_noun : pronoun | common_noun
-described_noun : adjective+ plain_noun
+described_noun : adjective+ common_noun
 
 adjective : article	
 

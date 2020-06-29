@@ -188,7 +188,7 @@ common_verb : BE | HAVE
 	| SHIP | REACH | LIKE 
 	| REPRESENT | SELL | FIND
 	| SAY | TOLD | WIRE | WRITE
-	| INCLOSE
+	| INCLOSE | THINK
 
 PAY : "PA"
 FAVOR : "FA"
@@ -208,6 +208,7 @@ SAY : "SA"
 WIRE : "IR"
 WRITE : "RI"
 INCLOSE : "NK"
+THINK : "TH'"
 
 TOLD : "TO"
 

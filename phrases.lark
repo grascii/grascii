@@ -12,10 +12,10 @@ start : subject_phrase
 	| command_phrase
 	| conjunctive_phrase
 
-subject_phrase : conditional? ( pronoun ( aux_phrase 
+subject_phrase : conditional? ( ( pronoun ( aux_phrase 
 	| ( to_be NOT? adjective? )
-	| ( to_have | auxillary | to_do) NOT? ) )
-	| ( pronoun verb noun? )
+	| ( to_have | auxillary | to_do) NOT? ) ) 
+	| ( pronoun verb noun? ) )
 
 conditional : IF
 
@@ -194,7 +194,7 @@ common_verb : BE | HAVE
 	| SHIP | REACH | LIKE 
 	| REPRESENT | SELL | FIND
 	| SAY | TOLD | WIRE | WRITE
-	| INCLOSE | THINK
+	| INCLOSE | THINK | WANT
 
 PAY : "PA"
 FAVOR : "FA"
@@ -215,6 +215,7 @@ WIRE : "IR"
 WRITE : "RI"
 INCLOSE : "NK"
 THINK : "TH'"
+WANT : "NT"
 
 TOLD : "TO"
 
@@ -298,7 +299,7 @@ receipt_phrase : pronoun to_be IN? RECEIPT noun?
 
 RECEIPT : "R"
 
-interrogative_phrase : ( interrogative noun ) 
+interrogative_phrase : ( interrogative noun verb) 
 	| ( interrogative adjective+ )
 
 interrogative : CAN | DO | COULD | WOULD 

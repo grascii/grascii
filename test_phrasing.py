@@ -34,23 +34,23 @@ class TestLessonPhrases(unittest.TestCase):
 
     trans = PhraseFlattener()
 
-
-    def test_lesson1(self):
-        path = "./tests/phrasing/L1.txt"
+    def _test_lesson(self, number):
+        path = "./tests/phrasing/L" + str(number) + ".txt"
         with open(path, "r") as tests:
             for test in tests:
                 phrase, expected = test.strip().split(maxsplit=1)
-                with self.subTest(phrase=phrase):
+                with self.subTest(phrase=phrase, expected=expected):
                     tree = self.parser.parse(phrase)
                     tokens = self.trans.transform(tree)
                     tokens = (token.type for token in tokens)
                     parsed = " ".join(tokens)
                     self.assertEqual(parsed, expected)
 
+    def test_lesson1(self):
+        self._test_lesson(1)
 
-
-
-
+    def test_lesson2(self):
+        self._test_lesson(2)
 
 
 if __name__ == '__main__':

@@ -9,6 +9,7 @@ start : subject_phrase
 	| omitted_to
 	| business_phrase
 	| interrogative_phrase
+	| command_phrase
 
 subject_phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
@@ -94,8 +95,12 @@ THIS : "THS"
 THESE : "THES"
 THOSE : "THS"
 
-aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE?)
-	| ( to_have ( NOT BEEN? | NOT? BEEN ) ABLE? )
+aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE? )
+	| have_phrase
+	| ( auxillary have_phrase )
+	| ( auxillary NOT? to_have BEEN? ABLE? )
+
+have_phrase : to_have ( NOT BEEN? | NOT? BEEN ) ABLE?
 
 BE : "B"
 BEEN : "B"
@@ -251,8 +256,9 @@ HOW : ASPIRATE? "AU"
 WHAT : "OT"
 WHEN : "EN"
 
+command_phrase : command ( DO? NOT? verb | noun )
 
-
+command : PLEASE | SHIP
 
 
 

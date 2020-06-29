@@ -1,6 +1,6 @@
 
 start : phrase | prep_phrase | aux_phrase
-	| adverb_phrase
+	| adverb_phrase | as_phrase
 
 phrase : pronoun ( to_be | auxillary ) NOT?
 
@@ -79,8 +79,19 @@ adverb_phrase.2 : adverb ( to_be | auxillary )
 
 adverb : THERE
 
+as_phrase : AS as_adj AS
 
+AS : "S"
 
+as_adj : WELL | GOOD | GREAT | MUCH | MANY 
+	| LONG
+
+WELL : "L"
+GOOD : "G"
+GREAT : "GR"
+MUCH : "MCH"
+MANY : "MNE"
+LONG : "LNG"
 
 
 

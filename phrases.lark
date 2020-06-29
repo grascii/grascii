@@ -1,0 +1,89 @@
+
+start : phrase | prep_phrase
+
+phrase : pronoun ( to_be | auxillary ) NOT?
+
+pronoun : I | YOU | WE | THEY | IT
+
+to_be : AM | ARE | IS | WAS //| WERE
+
+I : "A"
+YOU : "U"
+WE : "UE"
+// fix this terminal conflict
+THEY : "THE" //| "TH"
+IT : "T"
+
+AM : "M"
+ARE : "R"
+IS : "S"
+WAS : "US"
+//WERE : "ER"
+
+NOT : "N"
+
+auxillary : to_have | SHOULD | COULD | WOULD
+	| CAN | WILL
+
+SHOULD : "SHD"
+COULD : "CD"
+WOULD : "D"
+CAN : "K"
+WILL : "L"
+
+to_have : HAVE //| HAD
+
+HAVE : "V"
+
+prep_phrase : preposition article
+
+preposition : OF | TO | IN | ON | WITH | WHICH
+	| THERE | BY | FOR
+
+OF : "O"
+TO : "TU" // | "T"
+IN : "N"
+ON : "ON"
+WITH : "ETH"
+WHICH : "CH"
+// directional?
+THERE : "TH)"
+BY : "B"
+FOR : "F"
+
+
+article : THE | HIS | THEIR | YOUR | OUR 
+	| THIS | THESE | THOSE 
+
+THE : "TH"
+HIS : "S"
+THEIR : "TH)"
+YOUR : "U"
+OUR : "R"
+THIS : "THS"
+THESE : "THES"
+THOSE : "THS"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

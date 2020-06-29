@@ -11,9 +11,10 @@ start : subject_phrase
 	| interrogative_phrase
 	| command_phrase
 
-subject_phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
+subject_phrase : ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
+	| pronoun verb
 
-pronoun : I | YOU | WE | THEY | IT | HE | WHICH
+pronoun : I | YOU | WE | THEY | IT | HE | WHICH 
 
 to_be : AM | ARE | IS | WAS //| WERE
 
@@ -57,12 +58,14 @@ HAVE : "V"
 HAS : ASPIRATE? "AS"
 ASPIRATE : "'"
 
-prep_phrase : preposition ( adjective | noun ) 
+prep_phrase : preposition+ ( adjective | noun ) 
 
-noun.2 : adjective* ( pronoun | common_noun )
+noun.2 : described_noun | plain_noun
+
+plain_noun : pronoun | common_noun
+described_noun : adjective+ plain_noun
 
 adjective : article	
-
 
 preposition : OF | to | IN | ON | WITH | WHICH
 	| THERE | BY | FOR | FROM | at
@@ -159,7 +162,7 @@ common_verb : BE | HAVE | PAY | FAVOR
 	| RECEIVE | LOOK | SEE 
 	| SHIP | REACH | LIKE 
 	| REPRESENT | SELL | FIND
-	| SAY
+	| SAY | TOLD
 
 PAY : "PA"
 FAVOR : "FA"
@@ -176,6 +179,8 @@ REPRESENT : "RP"
 SELL : "SEL"
 FIND : "FI"
 SAY : "SA"
+
+TOLD : "TO"
 
 omitted_to : ( omitted_to_verb verb )
 	| ( preposition? omitted_to_noun noun ) 
@@ -199,11 +204,14 @@ REGARD : "RE"
 RELATIVE : "RELA"
 RESPECT : "RES"
 
-common_noun : MATTER | LETTER | FAVOR | REPLY
+common_noun.2 : MATTER | LETTER | FAVOR | REPLY
+	| ALL | BEHALF | REGARD
 
 MATTER : "MAT"
 LETTER : "LE"
 REPLY : "REP"
+ALL : "O"
+BEHALF : "BF"
 
 business_phrase : greeting | salutation
 	| receipt_phrase

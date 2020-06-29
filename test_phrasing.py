@@ -12,6 +12,12 @@ class PhraseFlattener(Transformer):
                 result.append(token)
         return result
 
+    def short_to(self, children):
+        token = type('',(object,),{"type": "TO"})()
+        result = list()
+        result.append(token)
+        return result
+
     def __default__(self, data, children, meta):
         result = list()
         for child in children:
@@ -67,8 +73,11 @@ class TestLessonPhrases(unittest.TestCase):
     def test_lesson7(self):
         self._test_lesson(7)
 
-    def test_lesson11(self):
-        self._test_lesson(11)
+    def test_lesson11a(self):
+        self._test_lesson("11a")
+
+    def test_lesson11b(self):
+        self._test_lesson("11b")
 
 if __name__ == '__main__':
     unittest.main()

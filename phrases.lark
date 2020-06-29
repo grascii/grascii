@@ -12,7 +12,7 @@ start : subject_phrase
 	| command_phrase
 	| conjunctive_phrase
 
-subject_phrase.2 : conditional? ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
+subject_phrase : conditional? ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
 	| pronoun verb
 
 conditional : IF
@@ -21,7 +21,9 @@ IF : "EF"
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
 
-to_be : AM | ARE | IS | WAS | WERE
+to_be : AM | ARE | IS | WAS | were
+
+were.0 : WERE
 
 to_do : DO | DOES
 
@@ -65,7 +67,7 @@ HAVE : "V"
 HAS : ASPIRATE? "AS"
 ASPIRATE : "'"
 
-prep_phrase : preposition+ ( adjective | noun | adverb ) 
+prep_phrase : preposition ( adjective+ | noun | adverb ) 
 
 noun.2 : described_noun | plain_noun
 
@@ -75,6 +77,7 @@ described_noun : adjective+ common_noun
 adjective : article | common_adjective | SUCH
 
 common_adjective : KIND | THAT | ALL | EVERY
+	| WHICH
 
 KIND : "KI"
 EVERY : "EV"
@@ -85,7 +88,7 @@ preposition : OF | to | IN | ON | WITH | WHICH
 	| THERE | BY | FOR | FROM | at
 
 OF : "O"
-TO : "T" "U"? // | "T"
+TO : "TU" // | "T"
 to : TO
 IN : "N"
 ON : "ON"
@@ -96,7 +99,7 @@ THERE : "TH)"
 BY : "B"
 FOR : "F"
 FROM : "FM"
-at.2 : AT
+at : AT
 AT : "T"
 
 
@@ -125,7 +128,7 @@ ABLE : "A" "BL"?
 
 adverb_phrase.2 : adverb ( to_be | auxillary )
 
-adverb : THERE | THUS // | SUCH
+adverb.2 : THERE | THUS // | SUCH
 
 THUS : "THUS"
 
@@ -169,7 +172,10 @@ YEARS : "E" "|"? "R" "S"?
 
 AGO : "G"
 
-infinitive : TO verb
+infinitive.2 : to | short_to verb
+
+short_to : SHORT_TO
+SHORT_TO : "T"
 
 verb : common_verb
 

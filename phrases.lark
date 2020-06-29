@@ -1,6 +1,7 @@
 
 start : phrase | prep_phrase | aux_phrase
 	| adverb_phrase | as_phrase
+	| time_phrase
 
 phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
@@ -110,8 +111,28 @@ NEAR : "NE"
 LOW : "LO"
 SOON : "N"
 
+// fix to guarantee 2
+time_phrase : quantifier? unit AGO?
 
+quantifier : FEW | SEVERAL | TEN | ONE | TWO 
+	| THREE | MANY
 
+FEW : "F"
+SEVERAL : "SEV"
+TEN : "TN"
+ONE : "UN"
+TWO : "TU"
+THREE : "TH)E"
+
+unit : MINUTES | DAYS | WEEKS | MONTHS | YEARS
+
+MINUTES : "MNET" "S"?
+DAYS : "DA" "S"?
+WEEKS : "EK" "S"?
+MONTHS : "MNTH" "S"?
+YEARS : "E" "|"? "R" "S"?
+
+AGO : "G"
 
 
 

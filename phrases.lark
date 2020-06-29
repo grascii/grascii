@@ -12,7 +12,7 @@ start : subject_phrase
 	| command_phrase
 	| conjunctive_phrase
 
-subject_phrase : conditional? ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
+subject_phrase.2 : conditional? ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
 	| pronoun verb
 
 conditional : IF
@@ -21,7 +21,7 @@ IF : "EF"
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
 
-to_be : AM | ARE | IS | WAS //| WERE
+to_be : AM | ARE | IS | WAS | WERE
 
 to_do : DO | DOES
 
@@ -65,7 +65,7 @@ HAVE : "V"
 HAS : ASPIRATE? "AS"
 ASPIRATE : "'"
 
-prep_phrase : preposition+ ( adjective | noun ) 
+prep_phrase : preposition+ ( adjective | noun | adverb ) 
 
 noun.2 : described_noun | plain_noun
 
@@ -125,7 +125,9 @@ ABLE : "A" "BL"?
 
 adverb_phrase.2 : adverb ( to_be | auxillary )
 
-adverb : THERE // | SUCH
+adverb : THERE | THUS // | SUCH
+
+THUS : "THUS"
 
 as_phrase : AS as_adj AS
 
@@ -177,6 +179,7 @@ common_verb : BE | HAVE | PAY | FAVOR
 	| SHIP | REACH | LIKE 
 	| REPRESENT | SELL | FIND
 	| SAY | TOLD | WIRE | WRITE
+	| INCLOSE
 
 PAY : "PA"
 FAVOR : "FA"
@@ -195,6 +198,7 @@ FIND : "FI"
 SAY : "SA"
 WIRE : "IR"
 WRITE : "RI"
+INCLOSE : "NK"
 
 TOLD : "TO"
 
@@ -222,7 +226,7 @@ RESPECT : "RES"
 
 common_noun.2 : MATTER | LETTER | FAVOR | REPLY
 	| ALL | BEHALF | REGARD | ME | SIDE
-	| TIME | HAND | ATTENTION
+	| TIME | HAND | ATTENTION | RIGHT
 
 MATTER : "MAT"
 LETTER : "LE"
@@ -233,6 +237,8 @@ SIDE : "SI"
 TIME : "TM" // or "DM"
 HAND : ASPIRATE? "ND"
 ATTENTION : "TNSH"
+
+RIGHT : "RI"
 
 // special rule
 ME : "ME"
@@ -297,9 +303,9 @@ command : PLEASE | SHIP | WRITE
 
 
 conjunctive_phrase : conjunction ( subject_phrase 
-	| adverb_phrase | to_be | preposition )
+	| adverb_phrase | to_be | preposition | adjective)
 
-conjunction : AND
+conjunction : AND | THAT
 
 AND : "ND" // or "NT"
 

@@ -10,6 +10,7 @@ start : subject_phrase
 	| business_phrase
 	| interrogative_phrase
 	| command_phrase
+	| conjunctive_phrase
 
 subject_phrase : conditional? ( pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?) )
 	| pronoun verb
@@ -73,9 +74,10 @@ described_noun : adjective+ common_noun
 
 adjective : article | common_adjective | SUCH
 
-common_adjective : KIND
+common_adjective : KIND | THAT | ALL | EVERY
 
 KIND : "KI"
+EVERY : "EV"
 
 SUCH : "SCH"
 
@@ -99,7 +101,7 @@ AT : "T"
 
 
 article : THE | HIS | THEIR | YOUR | OUR 
-	| THIS | THESE | THOSE 
+	| THIS | THESE | THOSE | MY
 
 THE : "TH"
 HIS : "S"
@@ -220,6 +222,7 @@ RESPECT : "RES"
 
 common_noun.2 : MATTER | LETTER | FAVOR | REPLY
 	| ALL | BEHALF | REGARD | ME | SIDE
+	| TIME | HAND | ATTENTION
 
 MATTER : "MAT"
 LETTER : "LE"
@@ -227,6 +230,9 @@ REPLY : "REP"
 ALL : "O"
 BEHALF : "BF"
 SIDE : "SI"
+TIME : "TM" // or "DM"
+HAND : ASPIRATE? "ND"
+ATTENTION : "TNSH"
 
 // special rule
 ME : "ME"
@@ -290,7 +296,12 @@ command : PLEASE | SHIP | WRITE
 
 
 
+conjunctive_phrase : conjunction ( subject_phrase 
+	| adverb_phrase | to_be | preposition )
 
+conjunction : AND
+
+AND : "ND" // or "NT"
 
 
 

@@ -9,9 +9,10 @@ pronoun : I | YOU | WE | THEY | IT | HE | WHICH
 
 to_be : AM | ARE | IS | WAS //| WERE
 
-to_do : DO
+to_do : DO | DOES
 
 DO : "D" "U"?
+DOES : "DUS"
 
 I : "A"
 YOU : "U"

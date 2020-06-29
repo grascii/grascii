@@ -2,7 +2,7 @@
 start : phrase | prep_phrase | aux_phrase
 	| adverb_phrase | as_phrase
 
-phrase : pronoun ( to_be | auxillary | to_have ) NOT?
+phrase : pronoun ( aux_phrase | to_be NOT?)
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH
 
@@ -25,7 +25,7 @@ WAS : "US"
 NOT : "N"
 
 auxillary :  SHOULD | COULD | WOULD
-	| CAN | WILL | SHALL
+	| CAN | WILL | SHALL | MAY
 
 SHOULD : "SHD"
 COULD : "KD"
@@ -33,6 +33,7 @@ WOULD : "D"
 CAN : "K"
 WILL : "L"
 SHALL : "SH"
+MAY : "MA"
 
 to_have : HAVE | HAS //| HAD
 

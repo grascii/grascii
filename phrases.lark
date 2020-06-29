@@ -2,11 +2,15 @@
 start : phrase | prep_phrase | aux_phrase
 	| adverb_phrase | as_phrase
 
-phrase : pronoun ( aux_phrase | to_be NOT?)
+phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH
 
 to_be : AM | ARE | IS | WAS //| WERE
+
+to_do : DO
+
+DO : "D" "U"?
 
 I : "A"
 YOU : "U"
@@ -36,6 +40,8 @@ SHALL : "SH"
 MAY : "MA"
 
 to_have : HAVE | HAS //| HAD
+
+HAD : ASPIRATE? "A"? "D"
 
 HAVE : "V"
 HAS : ASPIRATE? "AS"

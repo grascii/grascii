@@ -2,9 +2,9 @@
 start : phrase | prep_phrase | aux_phrase
 	| adverb_phrase | as_phrase
 
-phrase : pronoun ( to_be | auxillary ) NOT?
+phrase : pronoun ( to_be | auxillary | to_have ) NOT?
 
-pronoun : I | YOU | WE | THEY | IT | WHICH
+pronoun : I | YOU | WE | THEY | IT | HE | WHICH
 
 to_be : AM | ARE | IS | WAS //| WERE
 
@@ -14,6 +14,7 @@ WE : "UE"
 // fix this terminal conflict
 THEY : "THE" //| "TH"
 IT : "T"
+HE : "E"
 
 AM : "M"
 ARE : "R"
@@ -23,18 +24,21 @@ WAS : "US"
 
 NOT : "N"
 
-auxillary : to_have | SHOULD | COULD | WOULD
-	| CAN | WILL
+auxillary :  SHOULD | COULD | WOULD
+	| CAN | WILL | SHALL
 
 SHOULD : "SHD"
 COULD : "KD"
 WOULD : "D"
 CAN : "K"
 WILL : "L"
+SHALL : "SH"
 
-to_have : HAVE //| HAD
+to_have : HAVE | HAS //| HAD
 
 HAVE : "V"
+HAS : ASPIRATE? "AS"
+ASPIRATE : "'"
 
 prep_phrase : preposition ( adjective | noun ) 
 
@@ -71,9 +75,12 @@ THIS : "THS"
 THESE : "THES"
 THOSE : "THS"
 
-aux_phrase : auxillary ( NOT BE? | NOT? BE )
+aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE?)
+	| ( to_have ( NOT BEEN? | NOT? BEEN ) ABLE? )
 
 BE : "B"
+BEEN : "B"
+ABLE : "A"
 
 adverb_phrase.2 : adverb ( to_be | auxillary )
 

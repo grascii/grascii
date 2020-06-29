@@ -23,7 +23,7 @@ pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
 
 to_be : AM | ARE | IS | WAS | were
 
-were.0 : WERE
+were.-1 : WERE
 
 to_do : DO | DOES
 
@@ -89,7 +89,7 @@ preposition : OF | to | IN | ON | WITH | WHICH
 
 OF : "O"
 TO : "TU" // | "T"
-to : TO
+to.2 : TO
 IN : "N"
 ON : "ON"
 WITH : "ETH"

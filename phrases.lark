@@ -1,9 +1,13 @@
 
-start : phrase | prep_phrase | aux_phrase
-	| adverb_phrase | as_phrase
+start : subject_phrase 
+	| prep_phrase 
+	| aux_phrase
+	| adverb_phrase 
+	| as_phrase
 	| time_phrase
+	| infinitive
 
-phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
+subject_phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH
 
@@ -26,7 +30,7 @@ AM : "M"
 ARE : "R"
 IS : "S"
 WAS : "OS"
-//WERE : "ER"
+WERE : "ER"
 
 NOT : "N"
 
@@ -60,7 +64,7 @@ preposition : OF | TO | IN | ON | WITH | WHICH
 	| THERE | BY | FOR | FROM
 
 OF : "O"
-TO : "TU" // | "T"
+TO : "T" "U"? // | "T"
 IN : "N"
 ON : "ON"
 WITH : "ETH"
@@ -134,6 +138,46 @@ MONTHS : "MNTH" "S"?
 YEARS : "E" "|"? "R" "S"?
 
 AGO : "G"
+
+infinitive : TO verb
+
+verb : common_verb
+
+common_verb : BE | HAVE | PAY | FAVOR 
+	| PLEASE | BELIEVE | HONOR 
+	| RECEIVE | LOOK | SEE 
+	| SHIP | REACH | LIKE 
+	| REPRESENT | SELL | FIND
+	| SAY
+
+PAY : "PA"
+FAVOR : "FAV"
+PLEASE : "PL"
+BELIEVE : "BE"
+HONOR : ASPIRATE? "ONOR"
+RECEIVE : "RSE"
+LOOK : "LU"
+SEE : "SE"
+SHIP : "SH"
+REACH : "RECH"
+LIKE : "LA"
+REPRESENT : "RP"
+SELL : "SEL"
+FIND : "FI"
+SAY : "SA"
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

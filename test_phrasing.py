@@ -79,5 +79,8 @@ class TestLessonPhrases(unittest.TestCase):
     def test_lesson11b(self):
         self._test_lesson("11b")
 
+    def test_lesson11c(self):
+        self._test_lesson("11c")
+
 if __name__ == '__main__':
     unittest.main()

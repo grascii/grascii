@@ -6,6 +6,7 @@ start : subject_phrase
 	| as_phrase
 	| time_phrase
 	| infinitive
+	| omitted_to
 
 subject_phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
@@ -55,7 +56,7 @@ ASPIRATE : "'"
 
 prep_phrase : preposition ( adjective | noun ) 
 
-noun.2 : adjective* pronoun
+noun.2 : adjective* ( pronoun | common_noun )
 
 adjective : article	
 
@@ -93,7 +94,7 @@ aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE?)
 
 BE : "B"
 BEEN : "B"
-ABLE : "A"
+ABLE : "A" "BL"?
 
 adverb_phrase.2 : adverb ( to_be | auxillary )
 
@@ -166,14 +167,31 @@ SELL : "SEL"
 FIND : "FI"
 SAY : "SA"
 
+omitted_to : ( omitted_to_verb verb )
+	| ( preposition? omitted_to_noun noun ) 
 
+omitted_to_verb : ABLE | GLAD | LIKE 
+	| REGRET | WISH
 
+LONG_ABLE : "ABL"
+GLAD : "GL"
+REGRET : "REG"
+WISH : "USH"
 
+omitted_to_noun : ACCORDING | ORDER | 
+	| REFERENCE | REGARD | RELATIVE
+	| RESPECT
 
+ACCORDING : "ACR" ASPIRATE?
+ORDER : "OD"
+REFERENCE : "RF"
+REGARD : "RE"
+RELATIVE : "RELA"
+RESPECT : "RES"
 
+common_noun : MATTER
 
-
-
+MATTER : "MAT"
 
 
 

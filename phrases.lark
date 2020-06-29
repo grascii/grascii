@@ -8,6 +8,7 @@ start : subject_phrase
 	| infinitive
 	| omitted_to
 	| business_phrase
+	| interrogative_phrase
 
 subject_phrase : pronoun ( aux_phrase | ( to_be | to_have | auxillary | to_do) NOT?)
 
@@ -62,11 +63,12 @@ noun.2 : adjective* ( pronoun | common_noun )
 adjective : article	
 
 
-preposition : OF | TO | IN | ON | WITH | WHICH
-	| THERE | BY | FOR | FROM
+preposition : OF | to | IN | ON | WITH | WHICH
+	| THERE | BY | FOR | FROM | at
 
 OF : "O"
 TO : "T" "U"? // | "T"
+to : TO
 IN : "N"
 ON : "ON"
 WITH : "ETH"
@@ -76,6 +78,8 @@ THERE : "TH)"
 BY : "B"
 FOR : "F"
 FROM : "FM"
+at.2 : AT
+AT : "T"
 
 
 article : THE | HIS | THEIR | YOUR | OUR 
@@ -232,6 +236,32 @@ CORDIALLY : "K"
 receipt_phrase : pronoun to_be IN? RECEIPT noun?
 
 RECEIPT : "R"
+
+interrogative_phrase : ( interrogative adjective* noun )
+	| ( interrogative adjective+ noun? )
+
+interrogative : CAN | DO | COULD | WOULD 
+	| SHOULD | WHERE | WHY | WHO | HOW
+	| WHAT | WHEN
+
+WHERE : "AR"
+WHY : "I"
+WHO : ASPIRATE "U"
+HOW : ASPIRATE? "AU"
+WHAT : "OT"
+WHEN : "EN"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

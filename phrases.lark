@@ -81,10 +81,12 @@ adjective : article | common_adjective | SUCH
 
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
+	| RECENT
 
 KIND : "KI"
 EVERY : "EV"
 SORRY : "SO"
+RECENT : "RS)"
 
 // ?
 EARLY : "E" "~"?
@@ -195,6 +197,7 @@ common_verb : BE | HAVE
 	| REPRESENT | SELL | FIND
 	| SAY | TOLD | WIRE | WRITE
 	| INCLOSE | THINK | WANT
+	| SEND | THANK | DRAW
 
 PAY : "PA"
 FAVOR : "FA"
@@ -216,6 +219,9 @@ WRITE : "RI"
 INCLOSE : "NK"
 THINK : "TH'"
 WANT : "NT"
+SEND : "SEN"
+THANK : "TH"
+DRAW : "DRO"
 
 TOLD : "TO"
 
@@ -244,7 +250,7 @@ RESPECT : "RES"
 common_noun.2 : MATTER | LETTER | FAVOR | REPLY
 	| ALL | BEHALF | REGARD | ME | SIDE
 	| TIME | HAND | ATTENTION | RIGHT
-	| HIM
+	| HIM | ORDER
 
 MATTER : "MAT"
 LETTER : "LE"

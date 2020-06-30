@@ -96,4 +96,31 @@ class TestLessonPhrases(unittest.TestCase):
         self._test_lesson("11i")
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    p = Lark.open("phrases.lark",
+            parser="earley",
+            ambiguity="explicit")
+
+    tree = p.parse("TBA")
+    trees = CollapseAmbiguities().transform(tree)
+    trans = PhraseFlattener()
+    for t in trees:
+        tokens = (token.type for token in trans.transform(t))
+        print(" ".join(tokens))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

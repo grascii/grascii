@@ -38,6 +38,10 @@ class TestLessonPhrases(unittest.TestCase):
     parser = Lark.open("phrases.lark",
             parser="earley")
 
+    aparser = Lark.open("phrases.lark",
+            parser="earley",
+            ambiguity="explicit")
+
     trans = PhraseFlattener()
 
     def _test_lesson(self, number):
@@ -50,7 +54,25 @@ class TestLessonPhrases(unittest.TestCase):
                     tokens = self.trans.transform(tree)
                     tokens = (token.type for token in tokens)
                     parsed = " ".join(tokens)
-                    self.assertEqual(parsed, expected)
+                    try:
+                        self.assertEqual(parsed, expected)
+                    except AssertionError as error:
+                        if not self.ambiguous_check(phrase, expected):
+                            self.fail(msg="failed ambiguity test")
+
+
+    def ambiguous_check(self, phrase, expected):
+        tree = self.aparser.parse(phrase)
+        trees = CollapseAmbiguities().transform(tree)
+        trans = PhraseFlattener()
+        parses = set()
+        for t in trees:
+            tokens = (token.type for token in trans.transform(t))
+            parses.add(" ".join(tokens))
+            # print(" ".join(tokens))
+
+        return expected in parses
+
 
     def test_lesson1(self):
         self._test_lesson(1)
@@ -96,18 +118,7 @@ class TestLessonPhrases(unittest.TestCase):
         self._test_lesson("11i")
 
 if __name__ == '__main__':
-    # unittest.main()
-    p = Lark.open("phrases.lark",
-            parser="earley",
-            ambiguity="explicit")
-
-    tree = p.parse("TBA")
-    trees = CollapseAmbiguities().transform(tree)
-    trans = PhraseFlattener()
-    for t in trees:
-        tokens = (token.type for token in trans.transform(t))
-        print(" ".join(tokens))
-
+    unittest.main()
 
 
 

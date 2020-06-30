@@ -305,12 +305,13 @@ receipt_phrase : pronoun to_be IN? RECEIPT noun?
 
 RECEIPT : "R"
 
-interrogative_phrase : ( interrogative noun verb) 
-	| ( interrogative adjective+ )
+interrogative_phrase : interrogative ( ( noun verb? ) 
+	| adjective+ 
+	| adverb )
 
 interrogative : CAN | DO | COULD | WOULD 
 	| SHOULD | WHERE | WHY | WHO | HOW
-	| WHAT | WHEN | IS
+	| WHAT | WHEN | IS 
 
 WHERE : "AR"
 WHY : "I"

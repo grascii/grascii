@@ -313,7 +313,7 @@ HOW : ASPIRATE? "AU"
 WHAT : "OT"
 WHEN : "EN"
 
-command_phrase : command ( DO? NOT? verb | noun )
+command_phrase : command ( DO? NOT? verb noun? | noun )
 
 command : PLEASE | SHIP | WRITE
 

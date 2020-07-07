@@ -94,3 +94,15 @@ Symbol | Description
 ## Examples
 Shorthand Form | English | Grascii
 ---------------|---------|--------
+
+## Unsupported Language Features
+
+- Grascii does provide a way of distinguishing between smooth and sharp 
+joinings. There is no plan to make it possible to make this distinction in 
+the future.
+- Intersection is currently not implemented. Proposed symbol to denote two
+intersected characters: \\.
+- RD is currently not implemented as it does not appear in Gregg 1916, 
+although, it is a form in subsequent versions.
+- There is no way of distinguishing the capitalization of a form.
+- The under joining/short vowel sound is not included.

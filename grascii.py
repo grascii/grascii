@@ -2,6 +2,7 @@ from functools import reduce
 import re
 import sys
 import argparse
+from configparser import ConfigParser
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
@@ -42,14 +43,14 @@ def create_parser():
               parser="earley",
               ambiguity="explicit")
 
-def run_interactive(parser, args):
+def run_interactive(parser, args, **kwargs):
     tree = get_grascii_search(parser)
     parses = flatten_tree(tree)
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
     patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
-    results = perform_search(patterns, starting_letters)
+    results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:
         input(result)
@@ -145,7 +146,7 @@ def generate_patterns(interpretations, index = 1, distance = 0):
             starting_letters.add(interpretationToString(interp[0]))
     return patterns, starting_letters
 
-def perform_search(patterns, starting_letters, dict_path="./dict/"):
+def perform_search(patterns, starting_letters, dict_path):
     for item in starting_letters:
         try:
             with open(dict_path + item, "r") as dictionary:
@@ -159,6 +160,10 @@ def perform_search(patterns, starting_letters, dict_path="./dict/"):
 
 
 def main(arguments):
+    conf = ConfigParser()
+    conf.read("config.conf")
+    uncertainty = conf.get('Search', 'Uncertainty', fallback=0)
+
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
 
     group = aparse.add_mutually_exclusive_group(required=False)
@@ -168,7 +173,7 @@ def main(arguments):
     group.add_argument("-r", "--regex", help="a custom regular expression \
             to use in the search")
     aparse.add_argument("-u", "--uncertainty", type=int, choices=range(3),
-            help="the uncertainty of the search term", default=0)
+            help="the uncertainty of the search term", default=uncertainty)
     group.add_argument("-i", "--interactive", action="store_true",
             help="run in interactive mode")
     aparse.add_argument("-v", "--verbose", action="store_true",
@@ -176,6 +181,8 @@ def main(arguments):
     args = aparse.parse_args(arguments)
 
     vprint = print if args.verbose else lambda *a, **k: None
+
+    args.dict_path = conf.get("Search", "DictionaryPath", fallback="./dict/")
 
     p = create_parser()
     if args.interactive:
@@ -206,7 +213,8 @@ def main(arguments):
             index = 1 #choose_interpretation(interpretations)
             patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
              
-        results = perform_search(patterns, starting_letters)
+
+        results = perform_search(patterns, starting_letters, args.dict_path)
         count = 0
         for result in results:
             print(result.strip())

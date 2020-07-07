@@ -75,3 +75,42 @@ There is no whitespace preceding `GRASCII STRING` or following `Translation`
 #### Blank Lines
 
 Output files contain no blank lines.
+
+## Build Options
+
+### Usage 
+
+`python grascii.py build [-h] [-o OUTPUT] [-c] [-p] [-s] infiles [infiles ...]`
+
+`infiles`
+
+The dictionary source files to compile.
+
+`-h`, `--help`
+
+Prints a help message and exits.
+
+`-o`, `--output`
+
+Sets the directory in which compiled files will be output.
+Default:
+
+`-c`, `--clean`
+
+Remove all files in the output directory before compiling.
+
+`-p`, `--parse`
+
+During the build, all Grascii Strings will be attempted to be parsed to
+verify that it is a valid Grascii string. If the parse fails, an error
+will be reported, and the corresponding entry will not be included in
+the output.
+
+`-s`, `--spell`
+
+During the build, all translations will be looked up in a dictionary to
+check the spelling/existence of the word. If the word is not found, a
+warning will be reported, but the corresponding entry will still be 
+included in the output.
+
+Talk about word list and dictionaries.

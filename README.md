@@ -1,11 +1,18 @@
 
 # Grascii 
 
+## About the Project
+
 Grascii is comprised of a language designed to represent Gregg Shorthand
 forms using the ASCII character set and of the tools revolving around
 the language to facillitate the study of Gregg Shorthand.
 
-## Requirements
+## Made With
+- Python 3
+
+## Getting Started
+
+### Prerequisites
 - Grascii runs on Python 3. It has not been tested on Python 3.5 and below.
 - Grascii depends on lark-parser
 
@@ -13,9 +20,11 @@ the language to facillitate the study of Gregg Shorthand.
 $ pip install lark-parser
 ```
 
-## Installation
+### Installation
 
-### Latest Release
+There are two ways to install Grascii.
+
+#### Latest Release
 
 Download the latest release from the releases page.
 Releases come bundled with a built version of the Grascii Dictionary.
@@ -25,7 +34,7 @@ Simply run from the repository root:
 $ unzip dict.zip
 ```
 
-### Clone the Repository
+#### Clone the Repository
 
 ```
 $ git clone ...
@@ -37,6 +46,9 @@ After cloning, the Grascii Dictionary must be built.
 $ python grascii.py build -o dict/ ../dsrc/*.txt
 ```
 
+## Grascii Language
+
+Explanation and example.
 
 ## Purpose
 When studying shorthand, a student may come across a form which is 
@@ -101,3 +113,36 @@ Results: 1
 
 For more details on Grascii Search, see search.md.
 
+## Grascii Dictionary
+
+Grascii comes with a dictionary for the 1916 version of the Gregg
+Shorthand Dictionary. 
+
+There is also the ability to package other words and derivatives into
+the dictionary used by Grascii Search.
+
+For more information, see dictionary.md.
+
+## Grascii Dephrase (Experimental)
+
+Grascii includes an experimental phrase parsing feature which is still under
+major development.
+
+It is designed to give the phrase for the most common phrase constructions
+in Gregg Shorthand as well as to provide suggestions for never before
+seen phrases.
+
+```
+$ python grascii.py dephrase AVNBA
+I HAVE NOT BEEN ABLE
+```
+
+For more information, see dephrase.md.
+
+## Contributing
+
+## License
+
+## Contact
+
+## Acknowledgements

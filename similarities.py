@@ -29,11 +29,11 @@ def get_node(stroke):
     try:
         return equiv_nodes[stroke]
     except KeyError:
-        return (stroke)
+        return (stroke,)
 
 disconnected_nodes = [
-        ("O"),
-        ("U"),
+        ("O",),
+        ("U",),
         get_node("PNT"),
         get_node("DF")
         ]

@@ -51,3 +51,25 @@ Shorthand Form | Grascii Representation(s) | Annotations
 |SS
 |XS
 |JNT, JND, PNT, PND
+
+## Annotations
+
+Annotation | Acceptable Tokens | Description
+-----------|-------------------|------------
+.|A, E, O, U | Denotes the medium sound of the four standard vowel groups.
+,|A, E, O, U | Denotes the long sound of the four standard vowel groups.
+,|S, TH, SH | Denotes the more obscure sound of the proceeding consonant. Ex. _gas_ vs. _gaze_, _breath_ vs. _breathe_, _assure_ vs. _azure_.
+\||A, E, I | Denotes that the preceeding circle vowel is looped.
+~|A, E, I | Denotes that the preceeding circle vowel is reversed according to the reversing principle.
+)|S, TH | When following an S, denotes a right S. When following an TH, denotes an under TH.
+(|S, TH | When following an S, denotes a left S. When following an TH, denotes an over TH. 
+\_|A, E, O, U, I, EU, AU, OE, A&E, A&' | Signifies a W sound to be applied before the preceeding vowel.
+
+## Other Symbols
+
+Symbol | Description
+-------|------------
+^|When placed between tokens, denotes that the two forms are disjoined. Whenplaced at the end of a from, denotes that the preceeding form lies above the line of writing.
+-|When placed between grascii forms, denotes that the two characters should not be interpreted as a blended form. Ex. N-T prevents interpretation of NT.
+
+

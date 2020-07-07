@@ -1,5 +1,4 @@
 
-import networkx as nx
 import re
 
 equiv_nodes = {
@@ -77,11 +76,6 @@ edges = [
 
 trans_edges = [(get_node(edge[0]), get_node(edge[1])) for edge in edges]
 
-g = nx.Graph()
-g.add_edges_from(trans_edges)
-g.add_nodes_from(disconnected_nodes)
-
-
 class SimilarityGraph():
 
     def __init__(self):
@@ -121,24 +115,12 @@ class SimilarityGraph():
 sg = SimilarityGraph()
 sg.add_edges(trans_edges)
 sg.add_nodes(disconnected_nodes)
-print(sg.nodes)
-print(sg.get_similar(get_node("S"), 2))
 
 def get_neighbors(stroke, distance):
-    neighbors = set()
-    start = get_node(stroke)
-    neighbors.add(start)
-    while distance > 0:
-        new = list()
-        for node in neighbors:
-            new += nx.neighbors(g, node)
-        neighbors |= set([item for item in new])
-        distance -= 1
-
-    return neighbors
+    return sg.get_similar(get_node(stroke), distance)
 
 def get_alt_regex(stroke, distance):
-    if get_node(stroke) not in g.nodes:
+    if get_node(stroke) not in sg.nodes:
         return re.escape(stroke)
     neighbors = get_neighbors(stroke, distance)
     flattened = []

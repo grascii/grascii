@@ -6,6 +6,24 @@
 Grascii is a language designed to represent Gregg Shorthand forms using the
 ASCII character set.
 
+It is designed to be intuitive to those already familiar with the system.
+
+Grascii is a context free grammar, and it's implementation can be viewed
+in grascii.lark.
+
+Grascii is moderately ambiguous. However, as the shorthand system is also
+ambiguous, it is reasonable that Grascii inherits this attribute.
+
+The current definition of Grascii is based on the Pre-anniversary (1916) 
+version of Gregg Shorthand.
+
+It aims to describe the shorthand forms accurately and succinctly. It also
+has many additional symbols enabling it to describe some of the lesser used
+features of the system.
+
+For a summary of what the language does not currently support, see the list
+below.
+
 ## Conversion Table
 
 Shorthand Form | Grascii Representation(s) | Annotations
@@ -31,6 +49,7 @@ Shorthand Form | Grascii Representation(s) | Annotations
 |'
 |NG
 |NK
+|LD
 |A | .,~\|
 |E | .,~\|
 |O | .,
@@ -72,4 +91,6 @@ Symbol | Description
 ^|When placed between tokens, denotes that the two forms are disjoined. Whenplaced at the end of a from, denotes that the preceeding form lies above the line of writing.
 -|When placed between grascii forms, denotes that the two characters should not be interpreted as a blended form. Ex. N-T prevents interpretation of NT.
 
-
+## Examples
+Shorthand Form | English | Grascii
+---------------|---------|--------

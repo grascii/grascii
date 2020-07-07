@@ -81,6 +81,49 @@ g = nx.Graph()
 g.add_edges_from(trans_edges)
 g.add_nodes_from(disconnected_nodes)
 
+
+class SimilarityGraph():
+
+    def __init__(self):
+        self.nodes = dict()
+
+    def add_node(self, node):
+        if node not in self.nodes:
+            self.nodes[node] = set()
+
+    def add_edge(self, edge):
+        assert len(edge) > 1
+        self.add_node(edge[0])
+        self.nodes[edge[0]].add(edge[1])
+        self.add_node(edge[1])
+        self.nodes[edge[1]].add(edge[0])
+
+    def add_nodes(self, nodes):
+        for node in nodes:
+            self.add_node(node)
+
+    def add_edges(self, edges):
+        for edge in edges:
+            self.add_edge(edge)
+
+    def get_similar(self, node, similarity): 
+        similars = set()
+        similars.add(node)
+        while similarity > 0:
+            new = list()
+            for node in similars:
+                new += self.nodes[node]
+            similars |= set(new)
+            similarity -= 1
+
+        return similars
+
+sg = SimilarityGraph()
+sg.add_edges(trans_edges)
+sg.add_nodes(disconnected_nodes)
+print(sg.nodes)
+print(sg.get_similar(get_node("S"), 2))
+
 def get_neighbors(stroke, distance):
     neighbors = set()
     start = get_node(stroke)

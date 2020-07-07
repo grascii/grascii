@@ -76,7 +76,7 @@ There is no whitespace preceding `GRASCII STRING` or following `Translation`
 
 Output files contain no blank lines.
 
-## Build Options
+## Building
 
 ### Usage 
 
@@ -114,3 +114,53 @@ warning will be reported, but the corresponding entry will still be
 included in the output.
 
 Talk about word list and dictionaries.
+
+### Warnings and Errors
+
+During a build, you may encounter warnings and errors.
+
+Warnings indicate that something unusual has been found with an entry. 
+Entries that receive a warning may warrant special attention/review.
+However, these entries will still be included in the final output.
+
+Errors indicate that there was a failure when processing an entry. Entries
+that receive an error will not be included in the final output.
+
+#### Possible Warnings
+
+##### Uncertainty
+
+Reports that an entry beginning with `?` has been found.
+
+##### Too many tokens
+
+Reports that too many tokens have been found in a source entry. If there are
+more than 2 words on a line, the first will be interpreted as a Grascii
+string, and the second as its translation. The following words will be
+discarded.
+
+##### Spelling
+
+When the `--spell` flag is set, denotes that an entry's translation
+has not been found in a dictionary.
+
+#### Possible Errors
+
+##### Too few tokens
+
+Reports that there is only one word on a line. A translation may be 
+missing.
+
+##### Invalid Grascii
+
+When the `--parse` flag is set, denotes that the first word is not a valid
+Grascii string.
+
+#### Suggestions
+
+Most of the time, it is acceptable to run the build without the `--parse`
+or `--spell` flags for a quick build.
+
+The overhead of `--spell` is reasonable, but enabling `--parse` will greatly
+increase build times. However, it is recommended to run a build with these
+options and resolving the issues before releasing the dictionary publicly.

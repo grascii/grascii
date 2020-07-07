@@ -4,6 +4,7 @@ import string
 import argparse
 import pathlib
 import time
+from configparser import ConfigParser
 
 """
 add option to use parser for syntax check
@@ -48,12 +49,16 @@ def get_output_file(dest, grascii):
 
 def main(arguments):
 
+    conf = ConfigParser()
+    conf.read("config.conf")
+    out_dir = conf.get('Build', 'BuildDirectory', fallback="./dict/")
+
     aparse = argparse.ArgumentParser(description="Build the grascii dictionary")
     aparse.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
             help="the files to package")
 
     aparse.add_argument("-o", "--output", help="path to a directory to output\
-            dictionary files", default="./dict")
+            dictionary files", default=out_dir)
 
     aparse.add_argument("-c", "--clean", action="store_true",
             help="clean the output directory before building")

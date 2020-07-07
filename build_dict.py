@@ -115,6 +115,8 @@ def main(arguments):
                                 "Wrong number of words")
                         continue
                     grascii = pair[0].upper()
+                    # strip '-'
+                    grascii = "".join(grascii.split("-"))
                     word = pair[1].capitalize()
 
                     if args.parse:

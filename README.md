@@ -139,7 +139,23 @@ I HAVE NOT BEEN ABLE
 
 For more information, see dephrase.md.
 
+## Issues
+
+The Grascii Dictionary has not been reviewed for accuracy. If you find any
+incorrect entries, please let me know. 
+
+If you discover any issues with the program or have any
+suggestions, file an issue.
+
 ## Contributing
+
+You are welcome to contribute and make pull requests.
+
+It would be great to have others to add more words to the dictionary
+as well as to make dictionaries for other versions of Gregg Shorthand.
+
+If you would like to help, please read the dictionary conventions in
+dictionary.md.
 
 ## License
 

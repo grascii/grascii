@@ -43,6 +43,40 @@ An entry preceded by a `?` will produce a warning during the build phase.
 ? ken keen
 ```
 
+## Source File Conventions
+
+While there is a reasonable amount of freedom in the dictionary source file
+format, a number of conventions were followed in writing the source files
+for the dictionary. It is recommended for new files to also follow these
+conventions.
+
+* Within source files, entries are placed alphabetically by translation.
+* When adding entries from a Gregg Shorthand dictionary, a comment denotes
+the corresponding page and column number in the dictionary. Entries in
+different pages/columns are separated by a blank line.
+* Comments should have `#` as the first character of the line, and there
+should be a single space following the `#` before the first word of the 
+comment.
+* If applicable, `?` should be the first character of the line, and there
+should be a single space following the `?` before the Grascii string.
+* There should be no excess whitespace before or after the Grascii string
+and its translation. There should be a single space between the Grascii
+string and its translation.
+* Grascii Strings and translations are written in lower case. The case will
+be adjusted during a build.
+* Entries taken from a dictionary are written in Grascii as presented. That
+is, annotations are not applied unless explicitly displayed. By extension,
+entries should be written in the simplest form possible, annotations only if
+necessary to distinguish the word from another. This helps generalize the
+dictionary for better search results. Ex.
+* For the direction annotations on S and TH are only included if the 
+character is in the direction contrary to its standard joining based on the
+characters around it. Ex.
+* For words which include two stokes next to each other that make up a blend
+, but are not blended, they are written with a barrier between them `-`. Ex.
+While these are stripped in the standard build mode, this information is
+useful for other build types that may be valuable in the future.
+
 ## The Build Process
 
 ### Input and Output

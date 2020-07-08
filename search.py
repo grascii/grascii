@@ -10,6 +10,8 @@ from lark.visitors import CollapseAmbiguities
 
 from similarities import get_alt_regex
 
+description = "Search a Grascii Dictionary"
+
 def build_argparser(argparser):
     group = argparser.add_mutually_exclusive_group(required=True)
     group.add_argument("-g", "--grascii", help="the grascii string to search for")
@@ -216,7 +218,7 @@ def main(args):
     print("Results:", count)
 
 if __name__ == "__main__":
-    argparser = argparse.ArgumentParser("Search a Grascii Dictionary")
+    argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     main(args)

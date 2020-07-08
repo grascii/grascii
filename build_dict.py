@@ -23,6 +23,8 @@ sort alphabetically?
 
 """
 
+description="Build a Grascii Dictionary"
+
 def build_argparser(argparser):
     # argparser = argparse.ArgumentParser(description="Build the grascii dictionary")
     argparser.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
@@ -172,7 +174,7 @@ def main(args):
         print("Wrote", val, "entries to", pathlib.PurePath(args.output, key))
 
 if __name__ == "__main__":
-    argparser = argparse.ArgumentParser(description="Build a Grascii Dictionary")
+    argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     main(args)

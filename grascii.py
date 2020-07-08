@@ -171,13 +171,13 @@ def main(arguments):
     group = aparse.add_mutually_exclusive_group(required=False)
 
     
-    group.add_argument("-g", "--grascii", help="the grascii string to search for")
-    group.add_argument("-r", "--regex", help="a custom regular expression \
-            to use in the search")
-    aparse.add_argument("-u", "--uncertainty", type=int, choices=range(3),
-            help="the uncertainty of the search term", default=uncertainty)
-    group.add_argument("-i", "--interactive", action="store_true",
-            help="run in interactive mode")
+    # group.add_argument("-g", "--grascii", help="the grascii string to search for")
+    # group.add_argument("-r", "--regex", help="a custom regular expression \
+            # to use in the search")
+    # aparse.add_argument("-u", "--uncertainty", type=int, choices=range(3),
+            # help="the uncertainty of the search term", default=uncertainty)
+    # group.add_argument("-i", "--interactive", action="store_true",
+            # help="run in interactive mode")
     aparse.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
 
@@ -188,7 +188,7 @@ def main(arguments):
 
     args = aparse.parse_args(arguments)
 
-    print(args)
+    args.func(args)
 
     vprint = print if args.verbose else lambda *a, **k: None
 

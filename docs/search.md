@@ -44,3 +44,32 @@ can be difficult to deal with manually, and most users should use
 `--grascii` instead as it handles many of these complications. Using
 `--regex` is effectively equivalent to
 `$ grep [regex] dict/*`
+
+## Implementation
+
+The search procedure when given a Grascii query is as follows:
+
+1. Convert the Grascii string to uppercase. Parse the Grascii string into
+   tokens and sets of annotations on those tokens.
+
+2. As the Grascii language is ambiguous, all possible parsings are
+generated.
+
+3. Choose an interpretation (parse).
+
+For each interpretation a regular expression is constructed.
+
+4. Each token is replaced with a string of regex alternatives among
+its equivalent forms and similar forms based on the uncertainty level. To
+learn how uncertainty is resolved, see similarity.md.
+
+5. In standard mode, modifiers are preserved. Or all possible modifiers
+for each token are built into the regex which may or may not occur.
+
+6. A set of starting letters is tracked which are the first alphabetic
+characters required to be accepted by any regex.
+
+7. The dictionary files corresponding to these letters are opened and 
+each line is searched with each regex.
+
+8. Any lines that have a matching regex are returned.

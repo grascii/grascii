@@ -23,22 +23,17 @@ sort alphabetically?
 
 """
 
-description="Build a Grascii Dictionary"
+description = "Build a Grascii Dictionary"
 
 def build_argparser(argparser):
-    # argparser = argparse.ArgumentParser(description="Build the grascii dictionary")
-    argparser.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
+    argparser.add_argument("infiles", nargs="+", type=argparse.FileType("r"), 
             help="the files to package")
-
-    argparser.add_argument("-o", "--output", help="path to a directory to output\
-            dictionary files")
-
+    argparser.add_argument("-o", "--output", 
+            help="path to a directory to output dictionary files")
     argparser.add_argument("-c", "--clean", action="store_true",
             help="clean the output directory before building")
-
     argparser.add_argument("-p", "--parse", action="store_true",
             help="enable syntax checking on grascii strings")
-
     argparser.add_argument("-s", "--spell", action="store_true",
             help="enable spell checking on english words")
 

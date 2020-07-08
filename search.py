@@ -14,9 +14,10 @@ description = "Search a Grascii Dictionary"
 
 def build_argparser(argparser):
     group = argparser.add_mutually_exclusive_group(required=True)
-    group.add_argument("-g", "--grascii", help="the grascii string to search for")
-    group.add_argument("-r", "--regex", help="a custom regular expression \
-            to use in the search")
+    group.add_argument("-g", "--grascii", 
+            help="the grascii string to search for")
+    group.add_argument("-r", "--regex", 
+            help="a custom regular expression to use in the search")
     group.add_argument("-i", "--interactive", action="store_true",
             help="run in interactive mode")
     argparser.add_argument("-u", "--uncertainty", type=int, choices=range(3),

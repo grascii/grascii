@@ -162,7 +162,8 @@ def perform_search(patterns, starting_letters, dict_path):
 def main(arguments):
     conf = ConfigParser()
     conf.read("config.conf")
-    uncertainty = conf.get('Search', 'Uncertainty', fallback=0)
+    uncertainty = conf.getint('Search', 'Uncertainty', fallback=0)
+    uncertainty = max(0, min(uncertainty, 2))
 
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
 

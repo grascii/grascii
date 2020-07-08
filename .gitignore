@@ -4,3 +4,5 @@
 *.pyc
 dict/
 myenv
+config.conf
+*.graphml

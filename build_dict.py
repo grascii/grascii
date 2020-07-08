@@ -91,11 +91,24 @@ def main(arguments):
     out_dir = pathlib.Path(args.output)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    main_words_path = conf.get("Build", "MainWordList",
+            fallback="/usr/share/dict/words")
+
+    supp_words_path = conf.get("Build", "SupplementaryWordList",
+            fallback="extra_words.txt")
+
+    en_dict = set()
     if args.spell:
-        with open("/usr/share/dict/words", "r") as words:
-            en_dict = set(line.strip().capitalize() for line in words)
-        with open("./extra_words.txt", "r") as words:
-            en_dict |= set(line.strip().capitalize() for line in words)
+        try:
+            with open(main_words_path, "r") as words:
+                en_dict |= set(line.strip().capitalize() for line in words)
+        except FileNotFoundError:
+            print("Could not find", main_words_path)
+        try:
+            with open(supp_words_path, "r") as words:
+                en_dict |= set(line.strip().capitalize() for line in words)
+        except FileNotFoundError:
+            print("Could not find", supp_words_path)
 
     if args.parse:
         from lark import Lark, UnexpectedInput

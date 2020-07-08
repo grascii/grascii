@@ -76,6 +76,7 @@ characters around it. Ex.
 , but are not blended, they are written with a barrier between them `-`. Ex.
 While these are stripped in the standard build mode, this information is
 useful for other build types that may be valuable in the future.
+* match sounds for equivs
 
 ## The Build Process
 

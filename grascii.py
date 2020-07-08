@@ -167,7 +167,7 @@ def main(arguments):
 
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
 
-    group = aparse.add_mutually_exclusive_group(required=False)
+    group = aparse.add_mutually_exclusive_group(required=True)
 
     
     group.add_argument("-g", "--grascii", help="the grascii string to search for")
@@ -189,38 +189,32 @@ def main(arguments):
     if args.interactive:
         vprint("Running in interactive mode")
         run_interactive(p, args)
+    elif args.grascii is None:
+        vprint("searching with custom regular expression:", args.regex.upper())
+        patterns = [re.compile(args.regex.upper())]
+        starting_letters = {"A"}
     else:
-        if args.grascii is None and args.regex is None:
-            print("expected value for -g, --grascii")
+        vprint("parsing grascii", args.grascii.upper())
+        tree = parse_grascii(p, args.grascii.upper())
+        if not tree:
+            vprint("parsing failed")
             vprint("exiting")
-            exit(2)
+            exit()
 
-        if args.grascii is None:
-            vprint("searching with custom regular expression:", args.regex.upper())
-            patterns = [re.compile(args.regex.upper())]
-            starting_letters = {"A"}
-        else:
-            vprint("parsing grascii", args.grascii.upper())
-            tree = parse_grascii(p, args.grascii.upper())
-            if not tree:
-                vprint("parsing failed")
-                vprint("exiting")
-                exit()
+        parses = flatten_tree(tree)
+        display_interpretations = get_unique_interpretations(parses)
+        interpretations = list(display_interpretations.values())
 
-            parses = flatten_tree(tree)
-            display_interpretations = get_unique_interpretations(parses)
-            interpretations = list(display_interpretations.values())
+        index = 1 #choose_interpretation(interpretations)
+        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+         
 
-            index = 1 #choose_interpretation(interpretations)
-            patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
-             
-
-        results = perform_search(patterns, starting_letters, args.dict_path)
-        count = 0
-        for result in results:
-            print(result.strip())
-            count += 1
-        print("Results:", count)
+    results = perform_search(patterns, starting_letters, args.dict_path)
+    count = 0
+    for result in results:
+        print(result.strip())
+        count += 1
+    print("Results:", count)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

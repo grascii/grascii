@@ -23,6 +23,24 @@ sort alphabetically?
 
 """
 
+def build_argparser(argparser):
+    # argparser = argparse.ArgumentParser(description="Build the grascii dictionary")
+    argparser.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
+            help="the files to package")
+
+    argparser.add_argument("-o", "--output", help="path to a directory to output\
+            dictionary files")
+
+    argparser.add_argument("-c", "--clean", action="store_true",
+            help="clean the output directory before building")
+
+    argparser.add_argument("-p", "--parse", action="store_true",
+            help="enable syntax checking on grascii strings")
+
+    argparser.add_argument("-s", "--spell", action="store_true",
+            help="enable spell checking on english words")
+
+
 out_files = {}
 entry_counts = {}
 # path = "./dict_test.txt"
@@ -47,29 +65,14 @@ def get_output_file(dest, grascii):
         entry_counts[char] = 1
         return out_files[char]
 
-def main(arguments):
+def main(args):
 
     conf = ConfigParser()
     conf.read("config.conf")
-    out_dir = conf.get('Build', 'BuildDirectory', fallback="./dict/")
 
-    aparse = argparse.ArgumentParser(description="Build the grascii dictionary")
-    aparse.add_argument("infiles", nargs="+", type=argparse.FileType("r"),
-            help="the files to package")
+    if args.output is None:
+        args.output = conf.get('Build', 'BuildDirectory', fallback="./dict/")
 
-    aparse.add_argument("-o", "--output", help="path to a directory to output\
-            dictionary files", default=out_dir)
-
-    aparse.add_argument("-c", "--clean", action="store_true",
-            help="clean the output directory before building")
-
-    aparse.add_argument("-p", "--parse", action="store_true",
-            help="enable syntax checking on grascii strings")
-
-    aparse.add_argument("-s", "--spell", action="store_true",
-            help="enable spell checking on english words")
-
-    args = aparse.parse_args(arguments)
 
     start_time = time.perf_counter()
 
@@ -169,5 +172,8 @@ def main(arguments):
         print("Wrote", val, "entries to", pathlib.PurePath(args.output, key))
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    argparser = argparse.ArgumentParser(description="Build a Grascii Dictionary")
+    build_argparser(argparser)
+    args = argparser.parse_args(sys.argv[1:])
+    main(args)
 

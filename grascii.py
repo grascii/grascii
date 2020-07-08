@@ -8,6 +8,7 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
 from similarities import get_alt_regex
+import build_dict as build
 
 class GrasciiFlattener(Transformer):
 
@@ -167,7 +168,7 @@ def main(arguments):
 
     aparse = argparse.ArgumentParser(description="Search the Grascii Dictionary.")
 
-    group = aparse.add_mutually_exclusive_group(required=True)
+    group = aparse.add_mutually_exclusive_group(required=False)
 
     
     group.add_argument("-g", "--grascii", help="the grascii string to search for")
@@ -179,10 +180,19 @@ def main(arguments):
             help="run in interactive mode")
     aparse.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
+
+    subparsers = aparse.add_subparsers()   
+    build_parser = subparsers.add_parser("build", help='build help')
+    build.build_argparser(build_parser)
+    build_parser.set_defaults(func=build.main)
+
     args = aparse.parse_args(arguments)
+
+    print(args)
 
     vprint = print if args.verbose else lambda *a, **k: None
 
+'''
     args.dict_path = conf.get("Search", "DictionaryPath", fallback="./dict/")
 
     p = create_parser()
@@ -215,6 +225,7 @@ def main(arguments):
         print(result.strip())
         count += 1
     print("Results:", count)
+    '''
 
 if __name__ == "__main__":
     main(sys.argv[1:])

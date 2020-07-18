@@ -116,13 +116,13 @@ sg = SimilarityGraph()
 sg.add_edges(trans_edges)
 sg.add_nodes(disconnected_nodes)
 
-def get_neighbors(stroke, distance):
+def get_similar(stroke, distance):
     return sg.get_similar(get_node(stroke), distance)
 
 def get_alt_regex(stroke, distance):
     if get_node(stroke) not in sg.nodes:
         return re.escape(stroke)
-    neighbors = get_neighbors(stroke, distance)
+    neighbors = get_similar(stroke, distance)
     flattened = []
     for neighbor in neighbors:
         if isinstance(neighbor, tuple):

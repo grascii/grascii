@@ -8,7 +8,7 @@ from configparser import ConfigParser
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from similarities import get_alt_regex
+from similarities import get_alt_regex, get_similar
 
 description = "Search a Grascii Dictionary"
 
@@ -151,15 +151,29 @@ def makeRegex(interp, distance):
     return "".join(regex)
 
 def generate_patterns(interpretations, index = 1, distance = 0):
+
+    def get_starting_letters(interp):
+        result = set()
+        for token in interp:
+            if not isinstance(token, set):
+                strokes = get_similar(token, distance)
+                flattened_strokes = list()
+                for tup in strokes:
+                    flattened_strokes += [s for s in tup]
+                result = set(string[0] for string in flattened_strokes)
+                break
+        return result
+
     patterns = list()
     starting_letters = set()
     if index > 0:
-        patterns.append(re.compile(makeRegex(interpretations[index - 1], distance)))
-        starting_letters.add(interpretationToString(interpretations[index - 1])[0])
+        interp = interpretations[index - 1]
+        patterns.append(re.compile(makeRegex(interp, distance)))
+        starting_letters |= get_starting_letters(interp)
     else:
         for interp in interpretations:
             patterns.append(re.compile(makeRegex(interp, distance)))
-            starting_letters.add(interpretationToString(interp[0]))
+            starting_letters |= get_starting_letters(interp)
     return patterns, starting_letters
 
 def perform_search(patterns, starting_letters, dict_path):
@@ -210,6 +224,7 @@ def main(args):
 
         index = 1 #choose_interpretation(interpretations)
         patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+
          
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0

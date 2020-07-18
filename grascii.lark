@@ -40,7 +40,7 @@ consonant : standard_consonant
 
 standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
-	| CH | J //| NG | NK
+	| CH | J | X //| NG | NK
 
 NGK : "NG" | "NK"
 
@@ -144,7 +144,7 @@ sh : SH OBLIQUE?
 
 //directed_consonant : DIRECTED_CONSONANT DIRECTION? OBLIQUE?
 
-DIRECTED_CONSONANT : "S" | "TH"
+DIRECTED_CONSONANT : "S" | "Z" | "TH"
 DIRECTION : ")" | "("
 
 vowel : circle_vowel | hook_vowel | diphthong 

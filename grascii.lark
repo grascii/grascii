@@ -16,9 +16,6 @@
 // expand terminals
 
 
-
-
-
 start : _preroot? _root _postroot?
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
@@ -66,6 +63,30 @@ blended_consonant.2 : TN | DN | TM | DM
 //	| "SS" | "XS"
 //	| "MN" | "MM"
 //	| "DT" | "TD" | "DD"
+
+annotatable_consonant : directed_consonant | oblique_consonant
+
+directed_consonant : ( S | Z | TH ) direction?
+
+direction : LEFT | RIGHT
+
+oblique_consonant : ( directed_consonant | SH ) OBLIQUE?
+
+vowel : ( circle_vowel | hook_vowel | diphthong ) WUNDERBAR?
+
+circle_vowel : ( A | E ) REVERSE? LOOP? sound?
+
+sound : MEDIUM_SOUND | LONG_SOUND
+
+hook_vowel : ( O LEFT? | U RIGHT? ) sound?
+
+diphthong.2 : circle_diphthong | hook_diphthong
+
+circle_diphthong : ( AE | EA ) REVERSE?
+	| I REVERSE? LOOP?
+ 
+hook_diphthong : EU | AU | OE
+
 
 K : "K"
 G : "G"
@@ -123,18 +144,7 @@ EU : "EU"
 AU : "AU"
 OE : "OE"
 
-
-
 //distinguishable_consonant : directed_consonant | sh
-
-annotatable_consonant : directed_consonant | oblique_consonant
-
-directed_consonant : ( S | Z | TH ) direction?
-
-direction : LEFT | RIGHT
-
-oblique_consonant : ( directed_consonant | SH ) OBLIQUE?
-
 LEFT : "("
 RIGHT : ")"
 
@@ -148,16 +158,10 @@ OBLIQUE : ","
 //DIRECTED_CONSONANT : "S" | "Z" | "TH"
 //DIRECTION : ")" | "("
 
-vowel : ( circle_vowel | hook_vowel | diphthong ) WUNDERBAR?
-
 ASPIRATE : "'"
 WUNDERBAR : "_"
 
 //circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
-
-circle_vowel : ( A | E ) REVERSE? LOOP? sound? //WUNDERBAR?
-
-sound : MEDIUM_SOUND | LONG_SOUND
 
 MEDIUM_SOUND : "."
 LONG_SOUND : ","
@@ -169,19 +173,11 @@ LOOP : "|"
 
 //hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
 
-hook_vowel : ( O LEFT? | U RIGHT? ) sound? //WUNDERBAR?
-
 //HOOK_VOWEL : "O" | "U"
 //HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
 
 //diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
 //I : "I"
-diphthong.2 : circle_diphthong | hook_diphthong
-
-circle_diphthong : ( AE | EA ) REVERSE?
-	| I REVERSE? LOOP?
- 
-hook_diphthong : EU | AU | OE
 
 //I_MODIFIERS : "~" | "|" | WUNDERBAR
 //DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"

@@ -6,3 +6,5 @@ dict/
 myenv
 config.conf
 *.graphml
+words.txt
+extra_words.txt

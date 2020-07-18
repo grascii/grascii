@@ -48,15 +48,23 @@ standard_consonant : K | G | R | L | N | M
 
 //blended_consonant : BLENDED_CONSONANT
 
-blended_consonant.2 : TN | DN | TM | DM
+blended_consonant.2 : _over_blend //TN | DN | TM | DM
+	| _men //| MN | MM
+	| _gent //| JNT | JND | PND | PNT
 	| NT | MT | ND | MD
-	| DF | DV | TV
-	| JNT | JND | PND | PNT
+	| _def //| DF | DV | TV
 	| SS | XS 
-	| MN | MM
 	| DT | TD | DD
 	| NG | NK
 	| LD
+
+_over_blend.2 : TN | DN | TM | DM
+_men.3 : MN | MM
+_gent.3 : JNT | JND | PND | PNT
+
+// this priority? ex. individual NDV
+// what about -ntive? NTV
+_def.-1 : DF | DV | TV
 
 //BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 //	| "NT" | "MT" | "ND" | "MD"

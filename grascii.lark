@@ -19,9 +19,11 @@
 start : _preroot? _root _postroot?
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
-DISJOINER : "^"
 
-_root : (_letter | ASPIRATE | _root "-"? _letter) ASPIRATE?
+
+_root : (_letter | ASPIRATE | _root _BOUNDARY? _letter) ING?
+
+
 
 prefix : _root 
 suffix : _root
@@ -87,6 +89,9 @@ circle_diphthong : ( AE | EA ) REVERSE?
  
 hook_diphthong : EU | AU | OE
 
+DISJOINER : "^"
+_BOUNDARY : "-"
+ING : "'"
 
 K : "K"
 G : "G"
@@ -167,6 +172,7 @@ MEDIUM_SOUND : "."
 LONG_SOUND : ","
 REVERSE : "~"
 LOOP : "|"
+
 
 //CIRCLE_VOWEL : "A" | "E"
 //CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | WUNDERBAR

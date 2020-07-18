@@ -16,7 +16,7 @@
 // expand terminals
 
 
-start : _preroot? _root _postroot?
+start : _preroot? _root _postroot? | _preroot
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 

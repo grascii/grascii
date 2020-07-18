@@ -20,8 +20,9 @@ start : _preroot? _root _postroot? | _preroot
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 
-
-_root : (_letter | ASPIRATE | _root _BOUNDARY? _letter) ING?
+// thinking TH''
+_root : (_letter | ASPIRATE | _root _BOUNDARY? _letter) ING~0..2
+_base : 
 
 
 

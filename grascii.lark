@@ -22,14 +22,12 @@ _postroot : DISJOINER suffix
 
 // thinking TH''
 _root : (_letter | ASPIRATE | _root _BOUNDARY? _letter) ING~0..2
-_base : 
-
-
 
 prefix : _root 
 suffix : _root
 
-_letter : consonant | ( ASPIRATE? vowel )
+//_letter : consonant | ( ASPIRATE? vowel )
+_letter : ASPIRATE? ( consonant | vowel )
 
 consonant : standard_consonant
 	| blended_consonant

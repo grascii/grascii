@@ -147,14 +147,14 @@ sh : SH OBLIQUE?
 DIRECTED_CONSONANT : "S" | "Z" | "TH"
 DIRECTION : ")" | "("
 
-vowel : circle_vowel | hook_vowel | diphthong 
+vowel : ( circle_vowel | hook_vowel | diphthong ) WUNDERBAR?
 
 ASPIRATE : "'"
 WUNDERBAR : "_"
 
 //circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
 
-circle_vowel : ( A | E ) REVERSE? LOOP? sound? WUNDERBAR?
+circle_vowel : ( A | E ) REVERSE? LOOP? sound? //WUNDERBAR?
 
 sound : MEDIUM_SOUND | LONG_SOUND
 
@@ -168,7 +168,7 @@ CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | WUNDERBAR
 
 //hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
 
-hook_vowel : ( O LEFT? | U RIGHT? ) sound? WUNDERBAR?
+hook_vowel : ( O LEFT? | U RIGHT? ) sound? //WUNDERBAR?
 
 HOOK_VOWEL : "O" | "U"
 HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR

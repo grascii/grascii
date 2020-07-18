@@ -117,7 +117,7 @@ O : "O"
 U : "U"
 I : "I"
 EA : "A&'"
-AE : "AE"
+AE : "A&E"
 EU : "EU"
 AU : "AU"
 OE : "OE"
@@ -128,7 +128,7 @@ distinguishable_consonant : directed_consonant | sh
 
 annotatable_consonant : directed_consonant | oblique_consonant
 
-directed_consonant : ( S | TH ) direction?
+directed_consonant : ( S | Z | TH ) direction?
 
 direction : LEFT | RIGHT
 
@@ -173,8 +173,15 @@ hook_vowel : ( O LEFT? | U RIGHT? ) sound? //WUNDERBAR?
 HOOK_VOWEL : "O" | "U"
 HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
 
-diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
+//diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
 //I : "I"
+diphthong : circle_diphthong | hook_diphthong
+
+circle_diphthong : ( AE | EA ) REVERSE?
+	| I REVERSE? LOOP?
+ 
+hook_diphthong : EU | AU
+
 I_MODIFIERS : "~" | "|" | WUNDERBAR
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 

@@ -42,10 +42,10 @@ standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
 	| CH | J | X //| NG | NK
 
-NGK : "NG" | "NK"
+//NGK : "NG" | "NK"
 
-STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
-	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" | "J"
+//STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
+//	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" | "J"
 
 //blended_consonant : BLENDED_CONSONANT
 
@@ -59,13 +59,13 @@ blended_consonant.2 : TN | DN | TM | DM
 	| NG | NK
 	| LD
 
-BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
-	| "NT" | "MT" | "ND" | "MD"
-	| "DF" | "DV" | "TV" 
-	| "JNT" | "JND" | "PND" | "PNT"
-	| "SS" | "XS"
-	| "MN" | "MM"
-	| "DT" | "TD" | "DD"
+//BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
+//	| "NT" | "MT" | "ND" | "MD"
+//	| "DF" | "DV" | "TV" 
+//	| "JNT" | "JND" | "PND" | "PNT"
+//	| "SS" | "XS"
+//	| "MN" | "MM"
+//	| "DT" | "TD" | "DD"
 
 K : "K"
 G : "G"
@@ -117,6 +117,7 @@ O : "O"
 U : "U"
 I : "I"
 EA : "A&'"
+// change to AE?
 AE : "A&E"
 EU : "EU"
 AU : "AU"
@@ -124,7 +125,7 @@ OE : "OE"
 
 
 
-distinguishable_consonant : directed_consonant | sh
+//distinguishable_consonant : directed_consonant | sh
 
 annotatable_consonant : directed_consonant | oblique_consonant
 
@@ -140,12 +141,12 @@ RIGHT : ")"
 //SH : "SH"
 OBLIQUE : ","
 
-sh : SH OBLIQUE?
+//sh : SH OBLIQUE?
 
 //directed_consonant : DIRECTED_CONSONANT DIRECTION? OBLIQUE?
 
-DIRECTED_CONSONANT : "S" | "Z" | "TH"
-DIRECTION : ")" | "("
+//DIRECTED_CONSONANT : "S" | "Z" | "TH"
+//DIRECTION : ")" | "("
 
 vowel : ( circle_vowel | hook_vowel | diphthong ) WUNDERBAR?
 
@@ -163,15 +164,15 @@ LONG_SOUND : ","
 REVERSE : "~"
 LOOP : "|"
 
-CIRCLE_VOWEL : "A" | "E"
-CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | WUNDERBAR
+//CIRCLE_VOWEL : "A" | "E"
+//CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | WUNDERBAR
 
 //hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
 
 hook_vowel : ( O LEFT? | U RIGHT? ) sound? //WUNDERBAR?
 
-HOOK_VOWEL : "O" | "U"
-HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
+//HOOK_VOWEL : "O" | "U"
+//HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
 
 //diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
 //I : "I"
@@ -182,8 +183,8 @@ circle_diphthong : ( AE | EA ) REVERSE?
  
 hook_diphthong : EU | AU | OE
 
-I_MODIFIERS : "~" | "|" | WUNDERBAR
-DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
+//I_MODIFIERS : "~" | "|" | WUNDERBAR
+//DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 
 %ignore " "
 

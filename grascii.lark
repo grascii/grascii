@@ -56,6 +56,7 @@ blended_consonant.2 : TN | DN | TM | DM
 	| MN | MM
 	| DT | TD | DD
 	| NG | NK
+	| LD
 
 BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "NT" | "MT" | "ND" | "MD"
@@ -79,6 +80,10 @@ F : "F"
 V : "V"
 CH : "CH"
 J : "J"
+S : "S"
+Z : "Z"
+X : "X"
+LD : "LD"
 NG : "NG"
 NK : "NK"
 TN : "TN"

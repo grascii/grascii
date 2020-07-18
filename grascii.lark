@@ -52,11 +52,64 @@ BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "MN" | "MM"
 	| "DT" | "TD" | "DD"
 
+K : "K"
+G : "G"
+R : "R"
+L : "L"
+N : "N"
+M : "M"
+T : "T"
+D : "D"
+P : "P"
+B : "B"
+F : "F"
+V : "V"
+CH : "CH"
+J : "J"
+NG : "NG"
+NK : "NK"
+TN : "TN"
+DN : "DN"
+TM : "TM"
+DM : "DM"
+NT : "NT"
+MT : "MT"
+ND : "ND"
+MD : "MD"
+DF : "DF"
+DV : "DV"
+TV : "TV"
+JNT : "JNT"
+JND : "JND"
+PND : "PND"
+PNT : "PNT"
+SS : "SS"
+XS : "XS"
+MN : "MN"
+MM : "MM"
+DT : "DT"
+TD : "TD"
+DD : "DD"
+SH : "SH"
+TH : "TH"
+A : "A"
+E : "E"
+O : "O"
+U : "U"
+I : "I"
+A_DOT : "A&'"
+AE : "AE"
+EU : "EU"
+AU : "AU"
+OE : "OE"
+
+
+
 distinguishable_consonant : directed_consonant | sh
 
 
 
-SH : "SH"
+//SH : "SH"
 OBLIQUE : ","
 
 sh : SH OBLIQUE?
@@ -81,7 +134,7 @@ HOOK_VOWEL : "O" | "U"
 HOOK_VOWEL_MODIFIER : "." | "," | UNDERBAR
 
 diphthong : ( DIPHTHONG UNDERBAR? ) | ( I I_MODIFIERS* )
-I : "I"
+//I : "I"
 I_MODIFIERS : "~" | "|" | UNDERBAR
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 

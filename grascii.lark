@@ -21,7 +21,10 @@ _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 
 // thinking TH''
-_root : ( _letter | ASPIRATE | _root ( _BOUNDARY | INTERSECTION )? _letter ) ING~0..2
+//_root : ( _letter | ASPIRATE | _root ( _BOUNDARY | INTERSECTION )? _letter ) ING~0..2
+
+_root : ASPIRATE? _string ING~0..2
+_string : _letter | _string ( _BOUNDARY | INTERSECTION )? _letter
 
 prefix : _root 
 suffix : _root

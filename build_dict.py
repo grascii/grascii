@@ -161,12 +161,18 @@ def main(args):
 
     if warnings or errors:
         print()
-    print("Finished Build in", end_time - start_time, "seconds")
+
+    total = 0
+    for key, val in entry_counts.items():
+        total += val
+        print("Wrote", val, "entries to", pathlib.PurePath(args.output, key))
+
+    print()
+    total_time = "{:.5f}".format(end_time - start_time)
+    print("Finished Build in", total_time, "seconds")
+    print(total, "entries")
     print(warnings, "warnings")
     print(errors, "errors")
-    print()
-    for key, val in entry_counts.items():
-        print("Wrote", val, "entries to", pathlib.PurePath(args.output, key))
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(description)

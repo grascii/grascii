@@ -152,7 +152,16 @@ vowel : circle_vowel | hook_vowel | diphthong
 ASPIRATE : "'"
 UNDERBAR : "_"
 
-circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
+//circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
+
+circle_vowel : ( A | E ) REVERSE? LOOP? sound? UNDERBAR?
+
+sound : MEDIUM_SOUND | LONG_SOUND
+
+MEDIUM_SOUND : "."
+LONG_SOUND : ","
+REVERSE : "~"
+LOOP : "|"
 
 CIRCLE_VOWEL : "A" | "E"
 CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | UNDERBAR

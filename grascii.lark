@@ -53,7 +53,7 @@ blended_consonant.2 : _over_blend //TN | DN | TM | DM
 	| _gent //| JNT | JND | PND | PNT
 	| NT | MT | ND | MD
 	| _def //| DF | DV | TV
-	| SS | XS 
+	| _ses //| SS | XS 
 	| DT | TD | DD
 	| NG | NK
 	| LD
@@ -61,6 +61,8 @@ blended_consonant.2 : _over_blend //TN | DN | TM | DM
 _over_blend.2 : TN | DN | TM | DM
 _men.3 : MN | MM
 _gent.3 : JNT | JND | PND | PNT
+
+_ses : ( SS | XS ) direction?
 
 // this priority? ex. individual NDV
 // what about -ntive? NTV

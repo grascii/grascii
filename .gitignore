@@ -4,7 +4,7 @@
 *.pyc
 dict/
 myenv
-config.conf
+grascii.conf
 *.graphml
 words.txt
 extra_words.txt

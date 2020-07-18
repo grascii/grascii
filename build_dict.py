@@ -128,7 +128,11 @@ def main(args):
                     if pair[0] == "?":
                         log_warning(src_file.name, line, i, "uncertainty")
                         pair.pop(0)
-                    if len(pair) != 2:
+                    if len(pair) < 2:
+                        log_error(src_file.name, line, i, 
+                                "Too few words")
+                        continue
+                    if len(pair) > 2:
                         log_warning(src_file.name, line, i, 
                                 "Wrong number of words")
                         continue

@@ -175,12 +175,12 @@ HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
 
 //diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
 //I : "I"
-diphthong : circle_diphthong | hook_diphthong
+diphthong.2 : circle_diphthong | hook_diphthong
 
 circle_diphthong : ( AE | EA ) REVERSE?
 	| I REVERSE? LOOP?
  
-hook_diphthong : EU | AU
+hook_diphthong : EU | AU | OE
 
 I_MODIFIERS : "~" | "|" | WUNDERBAR
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"

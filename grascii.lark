@@ -150,11 +150,11 @@ DIRECTION : ")" | "("
 vowel : circle_vowel | hook_vowel | diphthong 
 
 ASPIRATE : "'"
-UNDERBAR : "_"
+WUNDERBAR : "_"
 
 //circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
 
-circle_vowel : ( A | E ) REVERSE? LOOP? sound? UNDERBAR?
+circle_vowel : ( A | E ) REVERSE? LOOP? sound? WUNDERBAR?
 
 sound : MEDIUM_SOUND | LONG_SOUND
 
@@ -164,15 +164,18 @@ REVERSE : "~"
 LOOP : "|"
 
 CIRCLE_VOWEL : "A" | "E"
-CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | UNDERBAR
+CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | WUNDERBAR
 
-hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
+//hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
+
+hook_vowel : ( O LEFT? | U RIGHT? ) sound? WUNDERBAR?
+
 HOOK_VOWEL : "O" | "U"
-HOOK_VOWEL_MODIFIER : "." | "," | UNDERBAR
+HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
 
-diphthong : ( DIPHTHONG UNDERBAR? ) | ( I I_MODIFIERS* )
+diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
 //I : "I"
-I_MODIFIERS : "~" | "|" | UNDERBAR
+I_MODIFIERS : "~" | "|" | WUNDERBAR
 DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 
 %ignore " "

@@ -22,6 +22,9 @@ def build_argparser(argparser):
             help="run in interactive mode")
     argparser.add_argument("-u", "--uncertainty", type=int, choices=range(3),
             help="the uncertainty of the search term")
+    argparser.add_argument("-s", "--search-mode",
+            choices=["word", "start", "contains"], default="word",
+            help="the kind of search to perform")
     argparser.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
 
@@ -65,7 +68,7 @@ def run_interactive(parser, args, **kwargs):
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
-    patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+    patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode)
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:
@@ -133,7 +136,7 @@ def choose_interpretation(interpretations):
 def get_unique_interpretations(flattened_parses):
     return {interpretationToString(interp): interp for interp in flattened_parses}
 
-def makeRegex(interp, distance):
+def makeRegex(interp, distance, search_mode):
     def reducer(builder, token):
         if isinstance(token, set):
             if token and distance == 0:
@@ -145,14 +148,30 @@ def makeRegex(interp, distance):
             builder.append(get_alt_regex(token, distance))
         return builder
 
-    regex = reduce(reducer, interp, ["^"])
-    regex.append("\\s")
+    base = list()
+    if search_mode == "word" or search_mode == "start":
+        base.append("^")
+
+    if search_mode == "contains":
+        base.append(".*")
+    
+    regex = reduce(reducer, interp, base)
+
+    if search_mode == "contains":
+        regex.append(".*")
+
+    if search_mode == "word" or search_mode == "contains":
+        regex.append("\\s")
 
     return "".join(regex)
 
-def generate_patterns(interpretations, index = 1, distance = 0):
+def generate_patterns(interpretations, index = 1, distance = 0, search_mode="word"):
 
     def get_starting_letters(interp):
+        if search_mode == "contains":
+            # include X?
+            return set([char for char in "ABCDEFGIJKLMNOPRSTUVZ"])
+
         result = set()
         for token in interp:
             if not isinstance(token, set):
@@ -168,11 +187,11 @@ def generate_patterns(interpretations, index = 1, distance = 0):
     starting_letters = set()
     if index > 0:
         interp = interpretations[index - 1]
-        patterns.append(re.compile(makeRegex(interp, distance)))
+        patterns.append(re.compile(makeRegex(interp, distance, search_mode)))
         starting_letters |= get_starting_letters(interp)
     else:
         for interp in interpretations:
-            patterns.append(re.compile(makeRegex(interp, distance)))
+            patterns.append(re.compile(makeRegex(interp, distance, search_mode)))
             starting_letters |= get_starting_letters(interp)
     return patterns, starting_letters
 
@@ -223,7 +242,7 @@ def main(args):
         interpretations = list(display_interpretations.values())
 
         index = 1 #choose_interpretation(interpretations)
-        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty)
+        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode)
 
          
     results = perform_search(patterns, starting_letters, args.dict_path)

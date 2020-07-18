@@ -36,6 +36,8 @@ def build_argparser(argparser):
             help="enable syntax checking on grascii strings")
     argparser.add_argument("-s", "--spell", action="store_true",
             help="enable spell checking on english words")
+    argparser.add_argument("-k", "--check-only", action="store_true",
+            help="only check input; no output is generated")
 
 
 out_files = {}
@@ -154,9 +156,10 @@ def main(args):
                             log_warning(src_file.name, line, i,
                                     word, "not in dictionary")
 
-                    out = get_output_file(args.output, grascii)
-                    out.write(grascii + " ")
-                    out.write(word + "\n")
+                    if not args.check_only:
+                        out = get_output_file(args.output, grascii)
+                        out.write(grascii + " ")
+                        out.write(word + "\n")
     finally:
         for f in out_files.values():
             f.close()
@@ -174,7 +177,8 @@ def main(args):
     print()
     total_time = "{:.5f}".format(end_time - start_time)
     print("Finished Build in", total_time, "seconds")
-    print(total, "entries")
+    if total > 0:
+        print(total, "entries")
     print(warnings, "warnings")
     print(errors, "errors")
 

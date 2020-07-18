@@ -34,6 +34,5 @@
 -g --generic
   generic search
 
-
-
-
+-f --freeze
+  no uncertainty on first character

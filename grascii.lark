@@ -39,7 +39,7 @@ consonant : standard_consonant
 
 standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
-	| CH | J | NG | NK
+	| CH | J //| NG | NK
 
 NGK : "NG" | "NK"
 
@@ -48,13 +48,14 @@ STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
 
 //blended_consonant : BLENDED_CONSONANT
 
-blended_consonant : TN | DN | TM | DM
+blended_consonant.2 : TN | DN | TM | DM
 	| NT | MT | ND | MD
 	| DF | DV | TV
 	| JNT | JND | PND | PNT
 	| SS | XS 
 	| MN | MM
-	| DT | DD | DD
+	| DT | TD | DD
+	| NG | NK
 
 BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
 	| "NT" | "MT" | "ND" | "MD"

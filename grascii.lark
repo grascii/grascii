@@ -21,7 +21,7 @@ _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 
 // thinking TH''
-_root : (_letter | ASPIRATE | _root _BOUNDARY? _letter) ING~0..2
+_root : ( _letter | ASPIRATE | _root ( _BOUNDARY | INTERSECTION )? _letter ) ING~0..2
 
 prefix : _root 
 suffix : _root
@@ -100,6 +100,7 @@ hook_diphthong : EU | AU | OE
 
 DISJOINER : "^"
 _BOUNDARY : "-"
+INTERSECTION : "\\"
 ING : "'"
 
 K : "K"

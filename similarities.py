@@ -2,6 +2,8 @@
 import re
 
 equiv_nodes = {
+        "S" : ("S", "Z"),
+        "Z" : ("S", "Z"),
         "TD" : ("TD", "DT", "DD"),
         "DT" : ("TD", "DT", "DD"),
         "DD" : ("TD", "DT", "DD"),
@@ -52,12 +54,14 @@ edges = [
         ("N", "NG"),
         ("M", "NK"),
         ("NG", "NK"),
-        ("M", "NG"),
+        ("M", "NG"), # add to graph
         ("NK", "MN"),
         ("SH", "S"),
         ("S", "SS"),
         ("S", "XS"),
         ("SS", "XS"),
+        ("XS", "X"),
+        ("X", "S"),
         ("S", "F"),
         ("F", "V"),
         ("SH", "CH"),

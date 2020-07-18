@@ -33,7 +33,8 @@ _letter : consonant | ( ASPIRATE? vowel )
 
 consonant : standard_consonant
 	| blended_consonant
-	| distinguishable_consonant
+	| annotatable_consonant	
+	//| distinguishable_consonant
 
 //standard_consonant : STANDARD_CONSONANT | NGK
 
@@ -125,14 +126,23 @@ OE : "OE"
 
 distinguishable_consonant : directed_consonant | sh
 
+annotatable_consonant : directed_consonant | oblique_consonant
 
+directed_consonant : ( S | TH ) direction?
+
+direction : LEFT | RIGHT
+
+oblique_consonant : ( directed_consonant | SH ) OBLIQUE?
+
+LEFT : "("
+RIGHT : ")"
 
 //SH : "SH"
 OBLIQUE : ","
 
 sh : SH OBLIQUE?
 
-directed_consonant : DIRECTED_CONSONANT DIRECTION? OBLIQUE?
+//directed_consonant : DIRECTED_CONSONANT DIRECTION? OBLIQUE?
 
 DIRECTED_CONSONANT : "S" | "TH"
 DIRECTION : ")" | "("

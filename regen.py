@@ -1,7 +1,7 @@
 import re
 from enum import Enum
 
-from similarities import get_alt_regex, get_similar
+from similarities import get_similar
 
 class SearchMode(Enum):
     MATCH = "match"
@@ -12,11 +12,43 @@ class RegexBuilder():
 
     hard_characters = {char for char in "ABCDEFGIJKLMNOPRSTUVZ"}
     annotations = {char for char in "'_,.()~|"}
+    modifiers = {
+            "A" : "[.,~|_]*",
+            "E" : "[.,~|_]*",
+            "I" : "[~|_]*",
+            "O" : "[.,_]*",
+            "U" : "[.,_]*",
+            "EU" : "_?",
+            "AU" : "_?",
+            "OE" : "_?",
+            "A&'" : "_?",
+            "A&E" : "_?",
+            "S" : "[)(]?,?",
+            "TH" : "[)(]?,?",
+            "SH" : ",?"
+            }
 
     def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False):
         self.uncertainty = uncertainty
         self.search_mode = search_mode
         self.fix_first = fix_first
+
+    def make_uncertainty_regex(self, stroke, uncertainty):
+        # if get_node(stroke) not in sg.nodes:
+            # return re.escape(stroke)
+        similars = get_similar(stroke, uncertainty)
+        flattened = []
+        for group in similars:
+            for token in group:
+                flattened.append(token)
+
+        if uncertainty > 0:
+            for i, symbol in enumerate(flattened):
+                flattened[i] += self.modifiers.get(symbol, "")
+
+        if len(flattened) > 1:
+            return "(" + "|".join(flattened) + ")"
+        return flattened[0]
 
     def build_regex(self, interpretation):
 
@@ -39,9 +71,9 @@ class RegexBuilder():
             else:
                 if self.fix_first and not found_first:
                     found_first = True
-                    builder.append(get_alt_regex(token, 0))
+                    builder.append(self.make_uncertainty_regex(token, 0))
                 else:
-                    builder.append(get_alt_regex(token, self.uncertainty))
+                    builder.append(self.make_uncertainty_regex(token, self.uncertainty))
 
         if self.search_mode is SearchMode.CONTAIN:
             builder.append(".*")
@@ -80,4 +112,5 @@ class RegexBuilder():
             print(regex)
             patterns.append(re.compile(regex))
         return patterns
+
 

@@ -16,11 +16,12 @@ class Strictness(Enum):
 
 class RegexBuilder():
 
-    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, annotation_mode=Strictness.LOW):
+    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, annotation_mode=Strictness.LOW, aspirate_mode=Strictness.MEDIUM):
         self.uncertainty = uncertainty
         self.search_mode = search_mode
         self.fix_first = fix_first
         self.annotation_mode = annotation_mode
+        self.aspirate_mode = aspirate_mode
 
     def make_annotation_regex(self, stroke, annotations):
 
@@ -67,20 +68,44 @@ class RegexBuilder():
     def build_regex(self, interpretation):
 
         builder = list()
+        i = 0
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.START:
             builder.append("^")
+            if self.aspirate_mode is Strictness.LOW:
+                builder.append(re.escape(grammar.ASPIRATE))
+                builder.append("?")
+            if self.aspirate_mode is Strictness.MEDIUM:
+                while i < len(interpretation) and interpretation[i] == grammar.ASPIRATE:
+                    builder.append(re.escape(grammar.ASPIRATE))
+                    i += 1
+                if i < 2:
+                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append("?")
+        print(i)
+        print(builder)
 
         if self.search_mode is SearchMode.CONTAIN:
             builder.append(".*")
 
         found_first = False
 
-        i = 0
         while i < len(interpretation):
             token = interpretation[i]
+
+            if self.aspirate_mode is Strictness.LOW:
+                if token == grammar.ASPIRATE:
+                    i += 1
+                    continue
+
             uncertainty = self.uncertainty if found_first or not self.fix_first else 0
             if token in grammar.STROKES:
+                if self.aspirate_mode is Strictness.LOW:
+                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append("?")
+                if builder[-1] != re.escape(grammar.ASPIRATE) and self.aspirate_mode is Strictness.MEDIUM and found_first:
+                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append("?")
                 found_first = True
 
             if token in grammar.ANNOTATIONS:

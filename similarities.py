@@ -104,7 +104,7 @@ class SimilarityGraph():
         while similarity > 0:
             new = list()
             for node in similars:
-                new += self.nodes[node]
+                new += self.nodes.get(node, list())
             similars |= set(new)
             similarity -= 1
 

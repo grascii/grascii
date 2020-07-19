@@ -8,7 +8,6 @@ from configparser import ConfigParser
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from similarities import get_alt_regex, get_similar
 import regen
 
 vprint = lambda *a, **k: None

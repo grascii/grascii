@@ -12,20 +12,20 @@ class SearchMode(Enum):
 class RegexBuilder():
 
     modifiers = {
-            "A" : "[.,~|_]*",
-            "E" : "[.,~|_]*",
-            "I" : "[~|_]*",
-            "O" : "[.,_]*",
-            "U" : "[.,_]*",
-            "EU" : "_?",
-            "AU" : "_?",
-            "OE" : "_?",
-            "A&'" : "_?",
-            "A&E" : "_?",
-            "S" : "[)(]?,?",
-            "TH" : "[)(]?,?",
-            "SH" : ",?"
-            }
+        "A" : "[.,~|_]*",
+        "E" : "[.,~|_]*",
+        "I" : "[~|_]*",
+        "O" : "[.,_]*",
+        "U" : "[.,_]*",
+        "EU" : "_?",
+        "AU" : "_?",
+        "OE" : "_?",
+        "A&'" : "_?",
+        "A&E" : "_?",
+        "S" : "[)(]?,?",
+        "TH" : "[)(]?,?",
+        "SH" : ",?"
+        }
 
     def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False):
         self.uncertainty = uncertainty

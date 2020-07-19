@@ -27,10 +27,7 @@ equiv_nodes = {
         }
 
 def get_node(stroke):
-    try:
-        return equiv_nodes[stroke]
-    except KeyError:
-        return (stroke,)
+    return equiv_nodes.get(stroke, (stroke,))
 
 disconnected_nodes = [
         ("O",),
@@ -122,48 +119,4 @@ sg.add_nodes(disconnected_nodes)
 
 def get_similar(stroke, distance):
     return sg.get_similar(get_node(stroke), distance)
-
-def get_alt_regex(stroke, distance):
-    if get_node(stroke) not in sg.nodes:
-        return re.escape(stroke)
-    neighbors = get_similar(stroke, distance)
-    flattened = []
-    for neighbor in neighbors:
-        if isinstance(neighbor, tuple):
-            for symbol in neighbor:
-                flattened.append(symbol)
-        else:
-            flattened.append(neighbor)
-
-    if distance > 0:
-        for i, symbol in enumerate(flattened):
-            flattened[i] += get_modifiers(symbol)
-
-    if len(flattened) > 1:
-        return "(" + "|".join(flattened) + ")"
-    return flattened[0]
-
-
-modifiers = {
-        "A" : "[.,~|_]*",
-        "E" : "[.,~|_]*",
-        "I" : "[~|_]*",
-        "O" : "[.,_]*",
-        "U" : "[.,_]*",
-        "EU" : "_?",
-        "AU" : "_?",
-        "OE" : "_?",
-        "A&'" : "_?",
-        "A&E" : "_?",
-        "S" : "[)(]?,?",
-        "TH" : "[)(]?,?",
-        "SH" : ",?"
-        }
-
-def get_modifiers(stroke):
-    try:
-        return modifiers[stroke]
-    except KeyError:
-        return ""
-
 

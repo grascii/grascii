@@ -10,6 +10,8 @@ from lark.visitors import CollapseAmbiguities
 
 from similarities import get_alt_regex, get_similar
 
+vprint = lambda *a, **k: None
+
 description = "Search a Grascii Dictionary"
 
 def build_argparser(argparser):
@@ -200,7 +202,9 @@ def generate_patterns(interpretations, index = 1, distance = 0, search_mode="wor
     starting_letters = set()
     if index > 0:
         interp = interpretations[index - 1]
-        patterns.append(re.compile(makeRegex(interp, distance, search_mode, fix_first)))
+        regex = makeRegex(interp, distance, search_mode, fix_first)
+        vprint(regex)
+        patterns.append(re.compile(regex))
         starting_letters |= get_starting_letters(interp)
     else:
         for interp in interpretations:
@@ -231,6 +235,7 @@ def main(args):
 
     args.dict_path = conf.get("Search", "DictionaryPath", fallback="./dict/")
 
+    global vprint
     vprint = print if args.verbose else lambda *a, **k: None
 
     p = create_parser()
@@ -257,8 +262,6 @@ def main(args):
         index = 1 #choose_interpretation(interpretations)
         patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
 
-    vprint(patterns)
-         
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:

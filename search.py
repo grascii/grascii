@@ -119,9 +119,8 @@ def flatten_tree(parse_tree):
 
 def interpretationToString(interp):
     def reducer(builder, token):
-        if isinstance(token, set):
-            for char in token:
-                builder.append(char)
+        if isinstance(token, list):
+            builder += token
         else:
             if builder and builder[-1] != "^" and token != "^":
                 builder.append("-")

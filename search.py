@@ -9,6 +9,7 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
 from similarities import get_alt_regex, get_similar
+import regen
 
 vprint = lambda *a, **k: None
 
@@ -25,7 +26,8 @@ def build_argparser(argparser):
     argparser.add_argument("-u", "--uncertainty", type=int, choices=range(3),
             help="the uncertainty of the search term")
     argparser.add_argument("-s", "--search-mode",
-            choices=["word", "start", "contains"], default="word",
+            choices=[mode.value for mode in regen.SearchMode],
+            default=regen.SearchMode.MATCH.value,
             help="the kind of search to perform")
     argparser.add_argument("-f", "--fix-first", action="store_true",
             help="apply an uncertainty of 0 to the first token")
@@ -230,6 +232,8 @@ def main(args):
     uncertainty = conf.getint('Search', 'Uncertainty', fallback=0)
     uncertainty = max(0, min(uncertainty, 2))
 
+    args.search_mode = regen.SearchMode(args.search_mode)
+
     if args.uncertainty is None:
         args.uncertainty = uncertainty
 
@@ -260,7 +264,11 @@ def main(args):
         interpretations = list(display_interpretations.values())
 
         index = 1 #choose_interpretation(interpretations)
-        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
+        builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first)
+        interps = interpretations[index - 1: index]
+        patterns = builder.generate_patterns(interpretations)
+        starting_letters = builder.get_starting_letters(interpretations)
+        # patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
 
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0

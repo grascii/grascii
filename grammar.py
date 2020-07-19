@@ -1,5 +1,6 @@
 
 HARD_CHARACTERS = {c for c in "ABCDEFGIJKLMNOPRSTUVYZ"}
+ANNOTATION_CHARACTERS = {c for c in ",.|~_()"}
 ASPIRATE = "'"
 MEDIUM_SOUND = "."
 LONG_SOUND = ","

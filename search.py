@@ -9,6 +9,7 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
 import regen
+import grammar
 
 vprint = lambda *a, **k: None
 
@@ -35,18 +36,24 @@ def build_argparser(argparser):
 
 class GrasciiFlattener(Transformer):
 
-    def __init__(self):
-        self.circle_vowel = self.group_modifiers
-        self.hook_vowel = self.group_modifiers
-        self.diphthong = self.group_modifiers
-        self.directed_consonant = self.group_modifiers
-        self.sh = self.group_modifiers
+    # def __init__(self):
+        # self.circle_vowel = self.group_modifiers
+        # self.hook_vowel = self.group_modifiers
+        # self.diphthong = self.group_modifiers
+        # self.directed_consonant = self.group_modifiers
+        # self.sh = self.group_modifiers
 
     def start(self, children):
         result = list()
         for child in children:
             for token in child:
-                result.append(token)
+                if token in grammar.ANNOTATION_CHARACTERS:
+                    if isinstance(result[-1], list):
+                        result[-1].append(token)
+                    else:
+                        result.append([token])
+                else:
+                    result.append(token)
         return result
 
     def group_modifiers(self, children):
@@ -193,8 +200,10 @@ def main(args):
             exit()
 
         parses = flatten_tree(tree)
+        vprint(parses)
         display_interpretations = get_unique_interpretations(parses)
         interpretations = list(display_interpretations.values())
+        vprint(interpretations)
 
         index = 1 #choose_interpretation(interpretations)
         builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first)

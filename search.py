@@ -33,6 +33,10 @@ def build_argparser(argparser):
             choices=[mode.value for mode in regen.Strictness],
             default=regen.Strictness.LOW.value,
             help="how to handle annotations in grascii")
+    argparser.add_argument("-p", "--aspirate-mode",
+            choices=[mode.value for mode in regen.Strictness],
+            default=regen.Strictness.LOW.value,
+            help="how to handle aspirates in grascii")
     argparser.add_argument("-f", "--fix-first", action="store_true",
             help="apply an uncertainty of 0 to the first token")
     argparser.add_argument("-v", "--verbose", action="store_true",
@@ -81,10 +85,11 @@ def create_parser():
 def run_interactive(parser, args, **kwargs):
     tree = get_grascii_search(parser)
     parses = flatten_tree(tree)
+    vprint(parses)
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
-    builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first)
+    builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode)
     if index == 0:
         interps = interpretations
     else:
@@ -177,6 +182,9 @@ def main(args):
 
     args.search_mode = regen.SearchMode(args.search_mode)
     args.annotation_mode = regen.Strictness(args.annotation_mode)
+    args.aspirate_mode = regen.Strictness(args.aspirate_mode)
+
+    print(args.aspirate_mode)
 
     if args.uncertainty is None:
         args.uncertainty = uncertainty
@@ -210,7 +218,7 @@ def main(args):
         vprint(interpretations)
 
         index = 1 #choose_interpretation(interpretations)
-        builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode)
+        builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode)
         interps = interpretations[index - 1: index]
         patterns = builder.generate_patterns(interps)
         starting_letters = builder.get_starting_letters(interps)

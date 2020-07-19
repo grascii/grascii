@@ -16,7 +16,7 @@ class Strictness(Enum):
 
 class RegexBuilder():
 
-    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, annotation_mode=Strictness.LOW, aspirate_mode=Strictness.MEDIUM):
+    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, annotation_mode=Strictness.LOW, aspirate_mode=Strictness.LOW):
         self.uncertainty = uncertainty
         self.search_mode = search_mode
         self.fix_first = fix_first
@@ -82,8 +82,6 @@ class RegexBuilder():
                 if i < 2:
                     builder.append(re.escape(grammar.ASPIRATE))
                     builder.append("?")
-        print(i)
-        print(builder)
 
         if self.search_mode is SearchMode.CONTAIN:
             builder.append(".*")
@@ -93,10 +91,13 @@ class RegexBuilder():
         while i < len(interpretation):
             token = interpretation[i]
 
-            if self.aspirate_mode is Strictness.LOW:
-                if token == grammar.ASPIRATE:
+            if token == grammar.ASPIRATE:
+                if self.aspirate_mode is Strictness.LOW:
                     i += 1
                     continue
+                builder.append(re.escape(grammar.ASPIRATE))
+                i += 1
+                continue
 
             uncertainty = self.uncertainty if found_first or not self.fix_first else 0
             if token in grammar.STROKES:
@@ -117,21 +118,6 @@ class RegexBuilder():
 
             builder.append(self.make_uncertainty_regex(token, uncertainty))
             i += 1
-
-
-        # for token in interpretation:
-            # if isinstance(token, list):
-                # if token and self.uncertainty == 0:
-                    # builder.append("[")
-                    # for char in token:
-                        # builder.append(char)
-                    # builder.append("]*")
-            # else:
-                # if self.fix_first and not found_first:
-                    # found_first = True
-                    # builder.append(self.make_uncertainty_regex(token, 0))
-                # else:
-                    # builder.append(self.make_uncertainty_regex(token, self.uncertainty))
 
         if self.search_mode is SearchMode.CONTAIN:
             builder.append(".*")

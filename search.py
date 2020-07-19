@@ -80,7 +80,6 @@ def run_interactive(parser, args, **kwargs):
         interps = interpretations[index - 1: index]
     patterns = builder.generate_patterns(interps)
     starting_letters = builder.get_starting_letters(interps)
-    # patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:
@@ -216,4 +215,3 @@ if __name__ == "__main__":
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     main(args)
-

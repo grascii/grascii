@@ -73,7 +73,14 @@ def run_interactive(parser, args, **kwargs):
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
-    patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
+    builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first)
+    if index == 0:
+        interps = interpretations
+    else:
+        interps = interpretations[index - 1: index]
+    patterns = builder.generate_patterns(interps)
+    starting_letters = builder.get_starting_letters(interps)
+    # patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:
@@ -193,8 +200,8 @@ def main(args):
         index = 1 #choose_interpretation(interpretations)
         builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first)
         interps = interpretations[index - 1: index]
-        patterns = builder.generate_patterns(interpretations)
-        starting_letters = builder.get_starting_letters(interpretations)
+        patterns = builder.generate_patterns(interps)
+        starting_letters = builder.get_starting_letters(interps)
         # patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
 
     results = perform_search(patterns, starting_letters, args.dict_path)

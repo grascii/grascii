@@ -9,41 +9,30 @@ class SearchMode(Enum):
     START = "start"
     CONTAIN = "contain"
 
+class Strictness(Enum):
+    LOW = "discard"
+    MEDIUM = "retain"
+    HIGH = "strict"
+
 class RegexBuilder():
 
-    modifiers = {
-        "A" : "[.,~|_]*",
-        "E" : "[.,~|_]*",
-        "I" : "[~|_]*",
-        "O" : "[.,_]*",
-        "U" : "[.,_]*",
-        "EU" : "_?",
-        "AU" : "_?",
-        "OE" : "_?",
-        "A&'" : "_?",
-        "A&E" : "_?",
-        "S" : "[)(]?,?",
-        "TH" : "[)(]?,?",
-        "SH" : ",?"
-        }
-
-    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, preserve_annotations=True):
+    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, annotation_mode=Strictness.LOW):
         self.uncertainty = uncertainty
         self.search_mode = search_mode
         self.fix_first = fix_first
-        self.preserve_annotations = preserve_annotations
+        self.annotation_mode = annotation_mode
 
     def make_annotation_regex(self, stroke, annotations):
 
         def pack(tup):
             if len(tup) == 1:
-                # return tup[0] + "?"
                 return re.escape(tup[0]) + "?"
             return "[" + "".join(tup) + "]?"
 
         possible = grammar.ANNOTATIONS.get(stroke, list())
 
-        if self.preserve_annotations:
+        if self.annotation_mode is Strictness.MEDIUM or \
+                self.annotation_mode is Strictness.HIGH:
             builder = list()
             i = 0
             while i < len(possible):
@@ -53,7 +42,7 @@ class RegexBuilder():
                         builder.append(re.escape(an))
                         match = True
                         break
-                if not match:
+                if not match and self.annotation_mode is not Strictness.HIGH:
                     builder.append(pack(possible[i]))
                 i += 1
 
@@ -70,10 +59,6 @@ class RegexBuilder():
         for group in similars:
             for token in group:
                 flattened.append(self.make_annotation_regex(token, annotations))
-
-        # if uncertainty > 0:
-            # for i, symbol in enumerate(flattened):
-                # flattened[i] += self.modifiers.get(symbol, "")
 
         if len(flattened) > 1:
             return "(" + "|".join(flattened) + ")"
@@ -94,10 +79,9 @@ class RegexBuilder():
         i = 0
         while i < len(interpretation):
             token = interpretation[i]
+            uncertainty = self.uncertainty if found_first or not self.fix_first else 0
             if token in grammar.STROKES:
                 found_first = True
-
-            uncertainty = self.uncertainty if found_first else 0
 
             if token in grammar.ANNOTATIONS:
                 if i + 1 < len(interpretation):

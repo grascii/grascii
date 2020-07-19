@@ -25,6 +25,8 @@ def build_argparser(argparser):
     argparser.add_argument("-s", "--search-mode",
             choices=["word", "start", "contains"], default="word",
             help="the kind of search to perform")
+    argparser.add_argument("-f", "--fix-first", action="store_true",
+            help="apply an uncertainty of 0 to the first token")
     argparser.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
 
@@ -68,7 +70,7 @@ def run_interactive(parser, args, **kwargs):
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
     index = choose_interpretation(interpretations)
-    patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode)
+    patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:
@@ -136,8 +138,12 @@ def choose_interpretation(interpretations):
 def get_unique_interpretations(flattened_parses):
     return {interpretationToString(interp): interp for interp in flattened_parses}
 
-def makeRegex(interp, distance, search_mode):
+def makeRegex(interp, distance, search_mode, fix_first):
+
+    found_first = False
+
     def reducer(builder, token):
+        nonlocal found_first
         if isinstance(token, set):
             if token and distance == 0:
                 builder.append("[")
@@ -145,7 +151,11 @@ def makeRegex(interp, distance, search_mode):
                     builder.append(char)
                 builder.append("]*")
         else:
-            builder.append(get_alt_regex(token, distance))
+            if fix_first and not found_first:
+                found_first = True
+                builder.append(get_alt_regex(token, 0))
+            else:
+                builder.append(get_alt_regex(token, distance))
         return builder
 
     base = list()
@@ -165,7 +175,7 @@ def makeRegex(interp, distance, search_mode):
 
     return "".join(regex)
 
-def generate_patterns(interpretations, index = 1, distance = 0, search_mode="word"):
+def generate_patterns(interpretations, index = 1, distance = 0, search_mode="word", fix_first=False):
 
     def get_starting_letters(interp):
         if search_mode == "contains":
@@ -175,7 +185,10 @@ def generate_patterns(interpretations, index = 1, distance = 0, search_mode="wor
         result = set()
         for token in interp:
             if not isinstance(token, set):
-                strokes = get_similar(token, distance)
+                if fix_first:
+                    strokes = get_similar(token, 0)
+                else:
+                    strokes = get_similar(token, distance)
                 flattened_strokes = list()
                 for tup in strokes:
                     flattened_strokes += [s for s in tup]
@@ -187,11 +200,11 @@ def generate_patterns(interpretations, index = 1, distance = 0, search_mode="wor
     starting_letters = set()
     if index > 0:
         interp = interpretations[index - 1]
-        patterns.append(re.compile(makeRegex(interp, distance, search_mode)))
+        patterns.append(re.compile(makeRegex(interp, distance, search_mode, fix_first)))
         starting_letters |= get_starting_letters(interp)
     else:
         for interp in interpretations:
-            patterns.append(re.compile(makeRegex(interp, distance, search_mode)))
+            patterns.append(re.compile(makeRegex(interp, distance, search_mode, fix_first)))
             starting_letters |= get_starting_letters(interp)
     return patterns, starting_letters
 
@@ -242,8 +255,9 @@ def main(args):
         interpretations = list(display_interpretations.values())
 
         index = 1 #choose_interpretation(interpretations)
-        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode)
+        patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
 
+    vprint(patterns)
          
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0

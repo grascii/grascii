@@ -1,6 +1,7 @@
 import re
 from enum import Enum
 
+import grammar
 from similarities import get_similar
 
 class SearchMode(Enum):
@@ -10,8 +11,6 @@ class SearchMode(Enum):
 
 class RegexBuilder():
 
-    hard_characters = {char for char in "ABCDEFGIJKLMNOPRSTUVZ"}
-    annotations = {char for char in "'_,.()~|"}
     modifiers = {
             "A" : "[.,~|_]*",
             "E" : "[.,~|_]*",
@@ -87,12 +86,12 @@ class RegexBuilder():
     def get_starting_letters(self, interpretations):
 
         if self.search_mode is SearchMode.CONTAIN:
-            return self.hard_characters
+            return grammar.HARD_CHARACTERS
 
         letters = set()
         for interp in interpretations:
             for token in interp:
-                if token[0] in self.hard_characters:
+                if token[0] in grammar.HARD_CHARACTERS:
                     if self.fix_first:
                         strokes = get_similar(token, 0)
                     else:

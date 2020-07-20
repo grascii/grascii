@@ -1,6 +1,6 @@
 
 SEARCH = {
-    "DictionaryPath" : "../dict",
+    "DictionaryPath" : "../dict/",
     "Uncertainty" : 0,
     "SearchMode" : "match",
     "AnnotationMode" : "discard",

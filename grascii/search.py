@@ -217,7 +217,8 @@ def process_args(args):
     args.aspirate_mode = regen.Strictness(args.aspirate_mode)
     args.disjoiner_mode = regen.Strictness(args.disjoiner_mode)
 
-    args.dict_path = conf.get("Search", "DictionaryPath", fallback="./dict/")
+    args.dict_path = conf.get("Search", "DictionaryPath", 
+            fallback=defaults.SEARCH["DictionaryPath"])
 
 def main(args):
 

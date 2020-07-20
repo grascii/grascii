@@ -78,7 +78,7 @@ class GrasciiFlattener(Transformer):
         return result
 
 def create_parser():
-    return Lark.open("grascii.lark",
+    return Lark.open("../grammars/grascii.lark",
               parser="earley",
               ambiguity="explicit")
 
@@ -176,7 +176,7 @@ def perform_search(patterns, starting_letters, dict_path):
 
 def process_args(args):
     conf = ConfigParser()
-    conf.read("grascii.conf")
+    conf.read("../grascii.conf")
     uncertainty = conf.getint('Search', 'Uncertainty', fallback=0)
     uncertainty = max(0, min(uncertainty, 2))
     search_mode = conf.get('Search', "SearchMode", fallback="match")

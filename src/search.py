@@ -178,7 +178,7 @@ def perform_search(patterns, starting_letters, dict_path):
 
 def process_args(args):
     conf = ConfigParser()
-    conf.read("../grascii.conf")
+    conf.read("grascii.conf")
     uncertainty = conf.getint('Search', 'Uncertainty', 
             fallback=defaults.SEARCH["Uncertainty"])
     uncertainty = max(0, min(uncertainty, 2))

@@ -70,7 +70,7 @@ def get_output_file(dest, grascii):
 def main(args):
 
     conf = ConfigParser()
-    conf.read("../grascii.conf")
+    conf.read("grascii.conf")
 
     if args.output is None:
         args.output = conf.get('Build', 'BuildDirectory', 

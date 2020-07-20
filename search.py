@@ -205,7 +205,7 @@ def main(args):
     elif args.grascii is None:
         vprint("searching with custom regular expression:", args.regex.upper())
         patterns = [re.compile(args.regex.upper())]
-        starting_letters = {"A"}
+        starting_letters = grammar.HARD_CHARACTERS
     else:
         vprint("parsing grascii", args.grascii.upper())
         tree = parse_grascii(p, args.grascii.upper())
@@ -215,6 +215,7 @@ def main(args):
             exit()
 
         parses = flatten_tree(tree)
+        vprint(tree.pretty())
         vprint(parses)
         display_interpretations = get_unique_interpretations(parses)
         interpretations = list(display_interpretations.values())

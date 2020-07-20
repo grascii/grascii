@@ -35,17 +35,17 @@ class TestLessonPhrases(unittest.TestCase):
         # self.parser = Lark.open("phrases.lark",
                 # parser="earley")
 
-    parser = Lark.open("phrases.lark",
+    parser = Lark.open("../grammars/phrases.lark",
             parser="earley")
 
-    aparser = Lark.open("phrases.lark",
+    aparser = Lark.open("../grammars/phrases.lark",
             parser="earley",
             ambiguity="explicit")
 
     trans = PhraseFlattener()
 
     def _test_lesson(self, number):
-        path = "./tests/phrasing/L" + str(number) + ".txt"
+        path = "./phrasing/L" + str(number) + ".txt"
         with open(path, "r") as tests:
             for test in tests:
                 phrase, expected = test.strip().split(maxsplit=1)

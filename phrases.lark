@@ -1,0 +1,351 @@
+
+start : subject_phrase 
+	| prep_phrase 
+	| aux_phrase
+	| adverb_phrase 
+	| as_phrase
+	| time_phrase
+	| infinitive
+	| omitted_to
+	| business_phrase
+	| interrogative_phrase
+	| command_phrase
+	| conjunctive_phrase
+
+subject_phrase : conditional? ( ( pronoun ( aux_phrase 
+	| ( to_be NOT? adjective? )
+	| ( to_have | auxillary | to_do) NOT? ) ) 
+	| ( pronoun verb noun? ) )
+
+conditional : IF
+
+IF : "EF"
+
+pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
+
+to_be : AM | ARE | IS | WAS | were
+
+were.-1 : WERE
+
+to_do : DO | DOES
+
+DO : "D" "U"?
+DOES : "DUS"
+
+I : "A"
+YOU : "U"
+WE : "UE"
+// fix this terminal conflict
+THEY : "THE" //| "TH"
+IT : "T"
+HE : "E"	
+
+THAT : "THA"
+
+AM : "M"
+ARE : "R"
+IS : "S"
+WAS : "OS"
+WERE : "ER"
+
+NOT : "N"
+
+auxillary :  SHOULD | COULD | WOULD
+	| CAN | WILL | SHALL | MAY
+
+SHOULD : "SHD"
+COULD : "KD"
+WOULD : "D"
+CAN : "K"
+WILL : "L"
+SHALL : "SH"
+MAY : "MA"
+
+to_have : HAVE | HAS | had
+
+had.-1 : HAD
+HAD : ASPIRATE? "A"? "D"
+
+HAVE : "V"
+HAS : ASPIRATE? "AS"
+ASPIRATE : "'"
+
+prep_phrase : preposition ( adjective+ | noun | adverb ) 
+
+noun.2 : described_noun | plain_noun
+
+plain_noun : pronoun | common_noun
+described_noun : adjective~1..2 common_noun
+
+adjective : article | common_adjective | SUCH
+
+common_adjective : KIND | THAT | ALL | EVERY
+	| WHICH | ABLE | EARLY | SORRY
+	| RECENT
+
+KIND : "KI"
+EVERY : "EV"
+SORRY : "SO"
+RECENT : "RS)"
+
+// ?
+EARLY : "E" "~"?
+
+SUCH : "SCH"
+
+preposition : OF | to | IN | ON | WITH | WHICH
+	| THERE | BY | FOR | FROM | at
+
+OF : "O"
+TO : "TU" // | "T"
+to.2 : TO
+IN : "N"
+ON : "ON"
+WITH : "ETH"
+WHICH : "CH"
+// directional?
+THERE : "TH)"
+BY : "B"
+FOR : "F"
+FROM : "FM"
+at : AT
+AT : "T"
+
+
+article : THE | HIS | THEIR | YOUR | OUR 
+	| THIS | THESE | THOSE | MY
+
+THE : "TH"
+HIS : "S"
+THEIR : "TH)"
+YOUR : "U"
+OUR : "R"
+THIS : "THS"
+THESE : "THES"
+THOSE : "THS"
+
+aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE? )
+	| auxillary? have_phrase
+	| ( auxillary NOT? to_have BEEN? ABLE? )
+	| ( auxillary NOT? verb )
+
+have_phrase : to_have have_phrase_ending
+have_phrase_ending : ( NOT BEEN? | NOT? BEEN ) ABLE?
+
+BE : "B"
+BEEN : "B"
+ABLE : "A" "BL"?
+
+adverb_phrase.2 : adverb ( to_be | auxillary )
+
+adverb.2 : THERE | THUS // | SUCH
+
+THUS : "THUS"
+
+as_phrase : AS as_adj AS
+
+AS : "S"
+
+as_adj : WELL | GOOD | GREAT | MUCH | MANY 
+	| LONG | NEAR | LOW | SOON
+
+WELL : "L"
+GOOD : "G"
+GREAT : "GR"
+MUCH : "MCH"
+MANY : "MNE"
+LONG : "LNG"
+NEAR : "NE"
+LOW : "LO"
+SOON : "N"
+
+// fix to guarantee 2
+time_phrase : quantifier? unit AGO?
+
+quantifier : FEW | SEVERAL | TEN | ONE | TWO 
+	| THREE | MANY
+
+FEW : "F"
+SEVERAL : "SEV"
+TEN : "TN"
+ONE : "UN"
+TWO : "TU"
+THREE : "TH)E"
+
+unit : MINUTES | DAYS | WEEKS | MONTHS | YEARS
+
+MINUTES : "MNET" "S"?
+DAYS : "DA" "S"?
+WEEKS : "EK" "S"?
+MONTHS : "MNTH" "S"?
+YEARS : "E" "|"? "R" "S"?
+
+AGO : "G"
+
+infinitive.2 : to | short_to ( verb | BE adjective? | HAVE have_phrase_ending )
+
+short_to : SHORT_TO
+SHORT_TO : "T"
+
+verb : common_verb
+
+common_verb : BE | HAVE
+	| PAY | FAVOR 
+	| PLEASE | BELIEVE | HONOR 
+	| RECEIVE | LOOK | SEE 
+	| SHIP | REACH | LIKE 
+	| REPRESENT | SELL | FIND
+	| SAY | TOLD | WIRE | WRITE
+	| INCLOSE | THINK | WANT
+	| SEND | THANK | DRAW
+
+PAY : "PA"
+FAVOR : "FA"
+PLEASE : "PL"
+BELIEVE : "BE"
+HONOR : ASPIRATE? "ONOR"
+RECEIVE : "RSE"
+LOOK : "LU"
+SEE : "SE"
+SHIP : "SH"
+REACH : "RECH"
+LIKE : "LA"
+REPRESENT : "RP"
+SELL : "SEL"
+FIND : "FI"
+SAY : "SA"
+WIRE : "IR"
+WRITE : "RI"
+INCLOSE : "NK"
+THINK : "TH'"
+WANT : "NT"
+SEND : "SEN"
+THANK : "TH"
+DRAW : "DRO"
+
+TOLD : "TO"
+
+omitted_to : ( omitted_to_verb verb )
+	| ( preposition? omitted_to_noun noun ) 
+
+omitted_to_verb : ABLE | GLAD | LIKE 
+	| REGRET | WISH
+
+LONG_ABLE : "ABL"
+GLAD : "GL"
+REGRET : "REG"
+WISH : "USH"
+
+omitted_to_noun : ACCORDING | ORDER | 
+	| REFERENCE | REGARD | RELATIVE
+	| RESPECT
+
+ACCORDING : "ACR" ASPIRATE?
+ORDER : "OD"
+REFERENCE : "RF"
+REGARD : "RE"
+RELATIVE : "RELA"
+RESPECT : "RES"
+
+common_noun.2 : MATTER | LETTER | FAVOR | REPLY
+	| ALL | BEHALF | REGARD | ME | SIDE
+	| TIME | HAND | ATTENTION | RIGHT
+	| HIM | ORDER | DATE | DAY
+
+MATTER : "MAT"
+LETTER : "LE"
+REPLY : "REP"
+ALL : "O"
+BEHALF : "BF"
+SIDE : "SI"
+TIME : "TM" // or "DM"
+HAND : ASPIRATE? "ND"
+ATTENTION : "TNSH"
+DAY : "DA"
+DATE : "DT"
+
+RIGHT : "RI"
+
+// special rule
+ME : "ME"
+HIM : ASPIRATE? "E"? "M"
+
+business_phrase : greeting | salutation
+	| receipt_phrase
+
+greeting : MY? DEAR title
+
+MY : "MA"
+DEAR : "D"
+
+title : SIR | MADAM | MR | MRS | SIRS
+
+SIR : "S"
+MADAM : "M"
+MR : "MR"
+MRS : "MRS"
+SIRS : "SS"
+
+// UT VTU UVT UR
+salutation : ( YOURS VERY? sal_adverb )
+	| ( VERY sal_adverb YOURS? )
+	| ( VERY? sal_adverb YOURS )
+
+YOURS : "U"
+VERY: "V"
+
+sal_adverb : TRULY | RESPECTFULLY 
+	| SINCERELY | CORDIALLY
+
+TRULY : "T"
+RESPECTFULLY : "R"
+SINCERELY : "SEN"
+CORDIALLY : "K"
+
+// add NOT?
+receipt_phrase : pronoun to_be IN? RECEIPT noun?
+
+RECEIPT : "R"
+
+interrogative_phrase : interrogative ( ( noun verb? ) 
+	| adjective+ 
+	| adverb )
+
+interrogative : CAN | DO | COULD | WOULD 
+	| SHOULD | WHERE | WHY | WHO | HOW
+	| WHAT | WHEN | IS 
+
+WHERE : "AR"
+WHY : "I"
+WHO : ASPIRATE "U"
+HOW : ASPIRATE? "AU"
+WHAT : "OT"
+WHEN : "EN"
+
+command_phrase : command ( DO? NOT? verb noun? | noun )
+
+command : PLEASE | SHIP | WRITE
+
+
+
+
+
+conjunctive_phrase : conjunction ( subject_phrase 
+	| adverb_phrase | to_be | preposition | adjective)
+
+conjunction : AND | THAT
+
+AND : "ND" // or "NT"
+
+
+
+
+
+
+
+
+
+
+
+
+

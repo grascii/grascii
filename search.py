@@ -27,19 +27,15 @@ def build_argparser(argparser):
             help="the uncertainty of the search term")
     argparser.add_argument("-s", "--search-mode",
             choices=[mode.value for mode in regen.SearchMode],
-            default=regen.SearchMode.MATCH.value,
             help="the kind of search to perform")
     argparser.add_argument("-a", "--annotation-mode",
             choices=[mode.value for mode in regen.Strictness],
-            default=regen.Strictness.LOW.value,
             help="how to handle annotations in grascii")
     argparser.add_argument("-p", "--aspirate-mode",
             choices=[mode.value for mode in regen.Strictness],
-            default=regen.Strictness.LOW.value,
             help="how to handle aspirates in grascii")
     argparser.add_argument("-j", "--disjoiner-mode",
             choices=[mode.value for mode in regen.Strictness],
-            default=regen.Strictness.HIGH.value,
             help="how to handle disjoiners in grascii")
     argparser.add_argument("-f", "--fix-first", action="store_true",
             help="apply an uncertainty of 0 to the first token")
@@ -178,21 +174,37 @@ def perform_search(patterns, starting_letters, dict_path):
         except FileNotFoundError:
             print("Error: Could not find", dict_path + item)
 
-def main(args):
+def process_args(args):
     conf = ConfigParser()
     conf.read("grascii.conf")
     uncertainty = conf.getint('Search', 'Uncertainty', fallback=0)
     uncertainty = max(0, min(uncertainty, 2))
+    search_mode = conf.get('Search', "SearchMode", fallback="match")
+    annotation_mode = conf.get('Search', "AnnotationMode", fallback="discard")
+    aspirate_mode = conf.get('Search', "AspirateMode", fallback="discard")
+    disjoiner_mode = conf.get('Search', "DisjoinerMode", fallback="strict")
+
+    if args.uncertainty is None:
+        args.uncertainty = uncertainty
+    if args.search_mode is None:
+        args.search_mode = search_mode
+    if args.annotation_mode is None:
+        args.annotation_mode = annotation_mode
+    if args.aspirate_mode is None:
+        args.aspirate_mode = aspirate_mode
+    if args.disjoiner_mode is None:
+        args.disjoiner_mode = disjoiner_mode
 
     args.search_mode = regen.SearchMode(args.search_mode)
     args.annotation_mode = regen.Strictness(args.annotation_mode)
     args.aspirate_mode = regen.Strictness(args.aspirate_mode)
     args.disjoiner_mode = regen.Strictness(args.disjoiner_mode)
 
-    if args.uncertainty is None:
-        args.uncertainty = uncertainty
-
     args.dict_path = conf.get("Search", "DictionaryPath", fallback="./dict/")
+
+def main(args):
+
+    process_args(args)
 
     global vprint
     vprint = print if args.verbose else lambda *a, **k: None

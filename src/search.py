@@ -11,6 +11,7 @@ from lark.visitors import CollapseAmbiguities
 
 import regen
 import grammar
+import defaults
 
 vprint = lambda *a, **k: None
 
@@ -178,12 +179,17 @@ def perform_search(patterns, starting_letters, dict_path):
 def process_args(args):
     conf = ConfigParser()
     conf.read("../grascii.conf")
-    uncertainty = conf.getint('Search', 'Uncertainty', fallback=0)
+    uncertainty = conf.getint('Search', 'Uncertainty', 
+            fallback=defaults.SEARCH["Uncertainty"])
     uncertainty = max(0, min(uncertainty, 2))
-    search_mode = conf.get('Search', "SearchMode", fallback="match")
-    annotation_mode = conf.get('Search', "AnnotationMode", fallback="discard")
-    aspirate_mode = conf.get('Search', "AspirateMode", fallback="discard")
-    disjoiner_mode = conf.get('Search', "DisjoinerMode", fallback="strict")
+    search_mode = conf.get('Search', "SearchMode", 
+            fallback=defaults.SEARCH["SearchMode"])
+    annotation_mode = conf.get('Search', "AnnotationMode", 
+            fallback=defaults.SEARCH["AnnotationMode"])
+    aspirate_mode = conf.get('Search', "AspirateMode", 
+            fallback=defaults.SEARCH["AspirateMode"])
+    disjoiner_mode = conf.get('Search', "DisjoinerMode", 
+            fallback=defaults.SEARCH["DisjoinerMode"])
 
     if args.uncertainty is None:
         args.uncertainty = uncertainty

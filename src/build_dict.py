@@ -7,6 +7,8 @@ import os
 import time
 from configparser import ConfigParser
 
+import defaults
+
 """
 add option to use parser for syntax check
 add werror: treat warnings as errors
@@ -71,7 +73,8 @@ def main(args):
     conf.read("../grascii.conf")
 
     if args.output is None:
-        args.output = conf.get('Build', 'BuildDirectory', fallback="./dict/")
+        args.output = conf.get('Build', 'BuildDirectory', 
+                fallback=defaults.BUILD["BuildDirectory"])
 
 
     start_time = time.perf_counter()
@@ -95,10 +98,10 @@ def main(args):
     out_dir.mkdir(parents=True, exist_ok=True)
 
     main_words_path = conf.get("Build", "MainWordList",
-            fallback="/usr/share/dict/words")
+            fallback=defaults.BUILD["MainWordList"])
 
     supp_words_path = conf.get("Build", "SupplementaryWordList",
-            fallback="extra_words.txt")
+            fallback=defaults.BUILD["SupplementaryWordList"])
 
     en_dict = set()
     if args.spell:

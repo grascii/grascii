@@ -17,7 +17,7 @@ consonant : standard_consonant
 
 standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
-	| CH | J | X //| NG | NK
+	| CH | J | X
 
 blended_consonant.2 : _over_blend
 	| _men

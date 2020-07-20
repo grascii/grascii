@@ -109,9 +109,20 @@ def run_interactive(parser, args, **kwargs):
     starting_letters = builder.get_starting_letters(interps)
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0
+    display_all = False
     for result in results:
-        input(result)
         count += 1
+        if not display_all:
+            action = input(result + "e(x)it, (d)isplay all, (e)nd search: ")
+        else:
+            print(result.strip())
+        if action == "e":
+            break
+        elif action == "x":
+            exit()
+        elif action == "d":
+            display_all = True
+        
     print("Results:", count)
 
 def get_grascii_search(parser):

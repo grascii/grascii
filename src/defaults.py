@@ -1,6 +1,6 @@
 
 SEARCH = {
-    "DictionaryPath" : "./dict",
+    "DictionaryPath" : "../dict",
     "Uncertainty" : 0,
     "SearchMode" : "match",
     "AnnotationMode" : "discard",
@@ -9,7 +9,7 @@ SEARCH = {
 }
 
 BUILD = {
-    "BuildDirectory" : "./dict/",
-    "MainWordList" : "./words.txt",
-    "SupplementaryWordList" : "./extra_words.txt"
+    "BuildDirectory" : "../dict/",
+    "MainWordList" : "../words.txt",
+    "SupplementaryWordList" : "../extra_words.txt"
 }

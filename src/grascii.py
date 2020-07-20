@@ -2,6 +2,7 @@
 
 import sys
 import argparse
+import os
 
 import build_dict as build
 import search
@@ -32,6 +33,9 @@ def main(arguments):
     build_parser.set_defaults(func=build.main)
 
     args = argparser.parse_args(arguments)
+
+    print(sys.argv[0])
+    os.chdir(os.path.dirname(sys.argv[0]))
 
     args.func(args)
 

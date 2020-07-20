@@ -3,6 +3,7 @@ from functools import reduce
 import re
 import sys
 import argparse
+import os
 from configparser import ConfigParser
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput

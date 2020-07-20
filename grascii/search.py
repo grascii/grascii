@@ -41,6 +41,10 @@ def build_argparser(argparser):
     argparser.add_argument("-j", "--disjoiner-mode",
             choices=[mode.value for mode in regen.Strictness],
             help="how to handle disjoiners in grascii")
+    argparser.add_argument("-n", "--interpretation", 
+            choices=["best", "all"],
+            default="best",
+            help="how to handle ambiguous grascii strings")
     argparser.add_argument("-f", "--fix-first", action="store_true",
             help="apply an uncertainty of 0 to the first token")
     argparser.add_argument("-v", "--verbose", action="store_true",
@@ -81,10 +85,14 @@ class GrasciiFlattener(Transformer):
                     result.append(token)
         return result
 
-def create_parser():
+def create_parser(ambiguity=True):
+    if ambiguity:
+        return Lark.open("../grammars/grascii.lark",
+                  parser="earley",
+                  ambiguity="explicit")
     return Lark.open("../grammars/grascii.lark",
               parser="earley",
-              ambiguity="explicit")
+              ambiguity="resolve")
 
 def run_interactive(parser, args, **kwargs):
     tree = get_grascii_search(parser)
@@ -218,9 +226,11 @@ def main(args):
     global vprint
     vprint = print if args.verbose else lambda *a, **k: None
 
-    p = create_parser()
+
+
     if args.interactive:
         vprint("Running in interactive mode")
+        p = create_parser(ambiguity=True)
         run_interactive(p, args)
         exit(0)
     elif args.grascii is None:
@@ -228,6 +238,7 @@ def main(args):
         patterns = [re.compile(args.regex.upper())]
         starting_letters = grammar.HARD_CHARACTERS
     else:
+        p = create_parser(ambiguity=args.interpretation == "all")
         vprint("parsing grascii", args.grascii.upper())
         tree = parse_grascii(p, args.grascii.upper())
         if not tree:
@@ -242,12 +253,13 @@ def main(args):
         interpretations = list(display_interpretations.values())
         vprint(interpretations)
 
-        index = 1 #choose_interpretation(interpretations)
+        if args.interpretation == "best":
+            assert len(interpretations) == 1
+
         builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode, args.disjoiner_mode)
-        interps = interpretations[index - 1: index]
+        interps = interpretations[0:1] if args.interpretation == "best" else interpretations
         patterns = builder.generate_patterns(interps)
         starting_letters = builder.get_starting_letters(interps)
-        # patterns, starting_letters = generate_patterns(interpretations, index, args.uncertainty, args.search_mode, args.fix_first)
 
     results = perform_search(patterns, starting_letters, args.dict_path)
     count = 0

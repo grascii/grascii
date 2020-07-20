@@ -43,7 +43,6 @@ def build_argparser(argparser):
             help="how to handle disjoiners in grascii")
     argparser.add_argument("-n", "--interpretation", 
             choices=["best", "all"],
-            default="best",
             help="how to handle ambiguous grascii strings")
     argparser.add_argument("-f", "--fix-first", action="store_true",
             help="apply an uncertainty of 0 to the first token")
@@ -200,6 +199,8 @@ def process_args(args):
             fallback=defaults.SEARCH["AspirateMode"])
     disjoiner_mode = conf.get('Search', "DisjoinerMode", 
             fallback=defaults.SEARCH["DisjoinerMode"])
+    interpretation = conf.get('Search', "Interpretation",
+            fallback=defaults.SEARCH["Interpretation"])
 
     if args.uncertainty is None:
         args.uncertainty = uncertainty
@@ -211,6 +212,8 @@ def process_args(args):
         args.aspirate_mode = aspirate_mode
     if args.disjoiner_mode is None:
         args.disjoiner_mode = disjoiner_mode
+    if args.interpretation is None:
+        args.interpretation = interpretation
 
     args.search_mode = regen.SearchMode(args.search_mode)
     args.annotation_mode = regen.Strictness(args.annotation_mode)

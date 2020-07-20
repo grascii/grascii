@@ -5,7 +5,8 @@ SEARCH = {
     "SearchMode" : "match",
     "AnnotationMode" : "discard",
     "AspirateMode" : "discard",
-    "DisjoinerMode" : "strict"
+    "DisjoinerMode" : "strict",
+    "Interpretation" : "best"
 }
 
 BUILD = {

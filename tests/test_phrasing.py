@@ -5,9 +5,6 @@ import unittest
 from lark import Lark, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
-# from grascii import search
-import src.grammar
-
 class PhraseFlattener(Transformer):
     def start(self, children):
         result = list()

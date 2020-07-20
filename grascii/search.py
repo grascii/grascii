@@ -13,7 +13,7 @@ from lark.visitors import CollapseAmbiguities
 # import grammar
 # import defaults
 
-from grascii import regen, grammar, defaults
+from grascii import regen, grammar, defaults, interactive
 
 vprint = lambda *a, **k: None
 
@@ -158,17 +158,19 @@ def choose_interpretation(interpretations):
     else:
         print("Interpretations: ", len(interpretations))
         print()
-        print("0: all")
-        for i, interp in enumerate(interpretations):
-            print(str(i + 1) + ":", interpretationToString(interp))
+        # print("0: all")
+        return interactive.get_choice("Choose an interpretation to use in the search:", 
+                ["all"] + [interpretationToString(interp) for interp in interpretations])
+        # for i, interp in enumerate(interpretations):
+            # print(str(i + 1) + ":", interpretationToString(interp))
 
-        while True:
-            try:
-              index = int(input("Choose an interpretation to use in the search:"))
-              if index >= 0 and index <= len(interpretations):
-                  return index
-            except ValueError:
-                continue
+        # while True:
+            # try:
+              # index = int(input("Choose an interpretation to use in the search:"))
+              # if index >= 0 and index <= len(interpretations):
+                  # return index
+            # except ValueError:
+                # continue
 
 def get_unique_interpretations(flattened_parses):
     return {interpretationToString(interp): interp for interp in flattened_parses}

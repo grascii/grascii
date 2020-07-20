@@ -4,8 +4,10 @@ import sys
 import argparse
 import os
 
-import build_dict as build
-import search
+# import build_dict as build
+# import search
+import grascii.build_dict as build
+from grascii import search
 
 def no_command(args):
     print("Expecting subcommand")
@@ -34,8 +36,7 @@ def main(arguments):
 
     args = argparser.parse_args(arguments)
 
-    print(sys.argv[0])
-    os.chdir(os.path.dirname(sys.argv[0]))
+    os.chdir(os.path.dirname(__file__))
 
     args.func(args)
 

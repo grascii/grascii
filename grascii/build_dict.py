@@ -7,7 +7,8 @@ import os
 import time
 from configparser import ConfigParser
 
-import defaults
+# import defaults
+from grascii import defaults
 
 """
 add option to use parser for syntax check

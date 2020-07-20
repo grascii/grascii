@@ -182,7 +182,7 @@ YEARS : "E" "|"? "R" "S"?
 
 AGO : "G"
 
-infinitive.2 : to | short_to ( verb | BE adjective? | HAVE have_phrase_ending )
+infinitive.2 : ( to | short_to ) ( verb | BE adjective? | HAVE have_phrase_ending )
 
 short_to : SHORT_TO
 SHORT_TO : "T"

@@ -1,8 +1,11 @@
 import re
 from enum import Enum
 
-import grammar
-from similarities import get_similar
+# import grammar
+# from similarities import get_similar
+
+from grascii import grammar
+from grascii.similarities import get_similar
 
 class SearchMode(Enum):
     MATCH = "match"

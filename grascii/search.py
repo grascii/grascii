@@ -9,9 +9,11 @@ from configparser import ConfigParser
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-import regen
-import grammar
-import defaults
+# import regen
+# import grammar
+# import defaults
+
+from grascii import regen, grammar, defaults
 
 vprint = lambda *a, **k: None
 

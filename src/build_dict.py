@@ -76,6 +76,7 @@ def main(args):
         args.output = conf.get('Build', 'BuildDirectory', 
                 fallback=defaults.BUILD["BuildDirectory"])
 
+    args.output = os.path.abspath(args.output)
 
     start_time = time.perf_counter()
 

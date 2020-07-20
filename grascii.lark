@@ -1,27 +1,7 @@
 
-// todo
-// move terms to rules to allow for ambigation resolution
-// with overlapping terminals
-//
-// refine aspirates: before after root, before consonants
-//
-// add NG NK, X, Z ?
-// Hook vowel orientation
-// W placement
-// intersection?
-// priorities?
-// S, TH, SH alt. pronunciations
-// add LD
-// reduce priority of NG, NK
-// expand terminals
-
-
 start : _preroot? _root _postroot? | _preroot
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
-
-// thinking TH''
-//_root : ( _letter | ASPIRATE | _root ( _BOUNDARY | INTERSECTION )? _letter ) ING~0..2
 
 _root : ASPIRATE? _string "^"? ING~0..2
 _string : _letter | _string ( _BOUNDARY | INTERSECTION )? _letter
@@ -29,33 +9,22 @@ _string : _letter | _string ( _BOUNDARY | INTERSECTION )? _letter
 prefix : _root 
 suffix : _root
 
-//_letter : consonant | ( ASPIRATE? vowel )
 _letter : ASPIRATE? ( consonant | vowel )
 
 consonant : standard_consonant
 	| blended_consonant
 	| annotatable_consonant	
-	//| distinguishable_consonant
-
-//standard_consonant : STANDARD_CONSONANT | NGK
 
 standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
 	| CH | J | X //| NG | NK
 
-//NGK : "NG" | "NK"
-
-//STANDARD_CONSONANT : "K" | "G" | "R" | "L" | "N" | "M"
-//	| "T" | "D" | "P" | "B" | "F" | "V" | "CH" | "J"
-
-//blended_consonant : BLENDED_CONSONANT
-
-blended_consonant.2 : _over_blend //TN | DN | TM | DM
-	| _men //| MN | MM
-	| _gent //| JNT | JND | PND | PNT
+blended_consonant.2 : _over_blend
+	| _men
+	| _gent
+	| _def
+	| _ses
 	| NT | MT | ND | MD
-	| _def //| DF | DV | TV
-	| _ses //| SS | XS 
 	| DT | TD | DD
 	| NG | NK
 	| LD
@@ -69,14 +38,6 @@ _ses : ( SS | XS ) direction?
 // this priority? ex. individual NDV
 // what about -ntive? NTV
 _def.-1 : DF | DV | TV
-
-//BLENDED_CONSONANT : "TN" | "DN" | "TM" | "DM"
-//	| "NT" | "MT" | "ND" | "MD"
-//	| "DF" | "DV" | "TV" 
-//	| "JNT" | "JND" | "PND" | "PNT"
-//	| "SS" | "XS"
-//	| "MN" | "MM"
-//	| "DT" | "TD" | "DD"
 
 annotatable_consonant : directed_consonant | oblique_consonant
 
@@ -162,44 +123,15 @@ EU : "EU"
 AU : "AU"
 OE : "OE"
 
-//distinguishable_consonant : directed_consonant | sh
+ASPIRATE : "'"
 LEFT : "("
 RIGHT : ")"
-
-//SH : "SH"
 OBLIQUE : ","
-
-//sh : SH OBLIQUE?
-
-//directed_consonant : DIRECTED_CONSONANT DIRECTION? OBLIQUE?
-
-//DIRECTED_CONSONANT : "S" | "Z" | "TH"
-//DIRECTION : ")" | "("
-
-ASPIRATE : "'"
 WUNDERBAR : "_"
-
-//circle_vowel : CIRCLE_VOWEL CIRCLE_VOWEL_MODIFIER*
-
 MEDIUM_SOUND : "."
 LONG_SOUND : ","
 REVERSE : "~"
 LOOP : "|"
-
-
-//CIRCLE_VOWEL : "A" | "E"
-//CIRCLE_VOWEL_MODIFIER : "." | "," | "~" | "|" | WUNDERBAR
-
-//hook_vowel : HOOK_VOWEL HOOK_VOWEL_MODIFIER*
-
-//HOOK_VOWEL : "O" | "U"
-//HOOK_VOWEL_MODIFIER : "." | "," | WUNDERBAR
-
-//diphthong : ( DIPHTHONG WUNDERBAR? ) | ( I I_MODIFIERS* )
-//I : "I"
-
-//I_MODIFIERS : "~" | "|" | WUNDERBAR
-//DIPHTHONG : "EU" | "AU" | "OE" | "A&'" | "A&E"
 
 %ignore " "
 

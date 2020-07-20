@@ -163,7 +163,7 @@ def get_unique_interpretations(flattened_parses):
     return {interpretationToString(interp): interp for interp in flattened_parses}
 
 def perform_search(patterns, starting_letters, dict_path):
-    for item in starting_letters:
+    for item in sorted(starting_letters):
         try:
             with open(dict_path + item, "r") as dictionary:
                 for line in dictionary:

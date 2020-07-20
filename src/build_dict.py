@@ -3,6 +3,7 @@ import sys
 import string
 import argparse
 import pathlib
+import os
 import time
 from configparser import ConfigParser
 
@@ -28,7 +29,7 @@ description = "Build a Grascii Dictionary"
 def build_argparser(argparser):
     argparser.add_argument("infiles", nargs="+", type=argparse.FileType("r"), 
             help="the files to package")
-    argparser.add_argument("-o", "--output", 
+    argparser.add_argument("-o", "--output", type=os.path.abspath,
             help="path to a directory to output dictionary files")
     argparser.add_argument("-c", "--clean", action="store_true",
             help="clean the output directory before building")

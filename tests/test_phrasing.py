@@ -1,8 +1,12 @@
 
+import os
 import unittest
 
 from lark import Lark, Transformer, Token
 from lark.visitors import CollapseAmbiguities
+
+# from grascii import search
+import src.grammar
 
 class PhraseFlattener(Transformer):
     def start(self, children):
@@ -36,16 +40,19 @@ class TestLessonPhrases(unittest.TestCase):
                 # parser="earley")
 
     parser = Lark.open("../grammars/phrases.lark",
+            rel_to=__file__,
             parser="earley")
 
     aparser = Lark.open("../grammars/phrases.lark",
+            rel_to=__file__,
             parser="earley",
             ambiguity="explicit")
 
     trans = PhraseFlattener()
 
     def _test_lesson(self, number):
-        path = "./phrasing/L" + str(number) + ".txt"
+        dirname = os.path.dirname(__file__)
+        path = os.path.join(dirname, "./phrasing/L" + str(number) + ".txt")
         with open(path, "r") as tests:
             for test in tests:
                 phrase, expected = test.strip().split(maxsplit=1)

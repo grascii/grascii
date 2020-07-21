@@ -19,10 +19,9 @@ class CustomBuild(build_py):
 setup(
     name="grascii",
     version="0.1",
-    packages=find_packages(exclude=["tests"]),
+    packages=find_packages(exclude=["tests", "grascii.dict"]),
     package_data={
-        "grascii" : ["dict/*"],
-        "grascii": ["grammars/*.lark"]
+        "grascii": ["dict/*", "grammars/*.lark"]
     },
     install_requires=[
         "lark-parser",

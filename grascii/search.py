@@ -100,6 +100,55 @@ def create_parser(ambiguity=True):
 def run_interactive(parser, args):
     previous_search = interactive_search(parser, args)
 
+    while True:
+        action = questionary.select("What next?",
+                ["New Search",
+                 "Modify Search",
+                 "Edit Settings",
+                 "Exit"]).ask()
+
+        if action == "Exit":
+            exit()
+        elif action == "New Search":
+            previous_search = interactive_search(parser, args)
+        elif action == "Modify Search":
+            previous_search = interactive_search(parser, args, previous_search)
+        elif action == "Edit Settings":
+            # print("previous search:", previous_search)
+            while True:
+                action = questionary.select("Search Settings",
+                        [Choice(title="Uncertainty [{}]".format(args.uncertainty), value=1),
+                         Choice(title="Search Mode [{}]".format(args.search_mode.value), value=2),
+                         Choice(title="Annotation Mode [{}]".format(args.annotation_mode.value), value=3),
+                         Choice(title="Aspirate Mode [{}]".format(args.aspirate_mode.value), value=4),
+                         Choice(title="Disjoiner Mode [{}]".format(args.disjoiner_mode.value), value=5),
+                         Choice(title="Fix First [{}]".format(args.fix_first), value=6),
+                         "Back"]
+                        # ["Uncertainty",
+                         # "Search Mode",
+                         # "Annotation Mode",
+                         # "Aspirate Mode",
+                         # "Disjoiner Mode",
+                         # "Fix First",
+                         # "Back"]
+                        ).ask()
+
+                if action == "Back":
+                    break
+                elif action == 1:
+                    change_arg(args, "uncertainty", range(3), display_name="Uncertainty")
+                elif action == 2:
+                    change_arg(args, "annotation_mode", list(regen.Strictness), convert=get_enum_value, display_name="Annotation mode")
+                elif action == 3:
+                    change_arg(args, "aspirate_mode", list(regen.Strictness), convert=get_enum_value, display_name="Aspirate mode")
+                elif action == 4:
+                    change_arg(args, "disjoiner_mode", list(regen.Strictness), convert=get_enum_value, display_name="Disjoiner mode")
+                elif action == 5:
+                    change_arg(args, "search_mode", list(regen.SearchMode), convert=get_enum_value, display_name="Search mode")
+                elif action == 6:
+                    change_arg(args, "fix_first", [True, False], display_name="Fix First")
+                                       
+
     # action = interactive.get_choice("", ["exit", 
         # "edit search",
         # "perform another search"])
@@ -109,12 +158,25 @@ def run_interactive(parser, args):
     # elif action == 2:
         # interactive_search(parser, args)
 
-def interactive_search(parser, args):
-    search, tree = get_grascii_search(parser)
+def get_enum_value(enum):
+    return enum.value
+
+def change_arg(args, arg_name, options, display_name=None, convert=str):
+    choices = list()
+    for option in options:
+        selected = getattr(args, arg_name) == option
+        choices.append(Choice(title=convert(option), value=option, checked=selected))
+    title = display_name if display_name else "Set " + arg_name
+    setting = questionary.select(title, choices).ask()
+    setattr(args, arg_name, setting)
+
+def interactive_search(parser, args, previous=None):
+    search, tree = get_grascii_search(parser, previous)
     parses = flatten_tree(tree)
     vprint(parses)
     display_interpretations = get_unique_interpretations(parses)
     interpretations = list(display_interpretations.values())
+    assert len(interpretations)
     index = choose_interpretation(interpretations)
     builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode, args.disjoiner_mode)
     if index == 0:
@@ -128,29 +190,33 @@ def interactive_search(parser, args):
     display_all = False
     for result in results:
         count += 1
-        print(result.strip())
         if not display_all:
             # action = input(result + "e(x)it, (d)isplay all, (e)nd search: ")
-            action = questionary.select(" ",
-                    ["next",
-                     "display all",
-                     "end search",
-                     "exit"]
+            action = questionary.select("Search Results",
+                    ["Next",
+                     "Display All",
+                     "End Search",
+                     "Exit"]
                     ).ask()
-        if action == "end search":
+        print(result.strip())
+        if action == "End search":
             break
-        elif action == "exit":
+        elif action == "Exit":
             exit()
-        elif action == "display all":
+        elif action == "Display All":
             display_all = True
         
     print("Results:", count)
     return search
         
-def get_grascii_search(parser):
+def get_grascii_search(parser, previous):
     while True:
         # search = input("Enter search: ").upper()
-        search = questionary.text("Enter Search:").ask().upper()
+        if previous:
+            search = questionary.text("Enter Search:",
+                    default=previous).ask().upper()
+        else:
+            search = questionary.text("Enter Search:").ask().upper()
         if search == "":
             continue
         result = parse_grascii(parser, search)

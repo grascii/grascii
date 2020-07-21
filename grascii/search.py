@@ -133,13 +133,13 @@ def run_interactive(parser, args):
                 elif action == 1:
                     change_arg(args, "uncertainty", range(3), display_name="Uncertainty")
                 elif action == 2:
-                    change_arg(args, "annotation_mode", list(regen.Strictness), convert=get_enum_value, display_name="Annotation mode")
-                elif action == 3:
-                    change_arg(args, "aspirate_mode", list(regen.Strictness), convert=get_enum_value, display_name="Aspirate mode")
-                elif action == 4:
-                    change_arg(args, "disjoiner_mode", list(regen.Strictness), convert=get_enum_value, display_name="Disjoiner mode")
-                elif action == 5:
                     change_arg(args, "search_mode", list(regen.SearchMode), convert=get_enum_value, display_name="Search mode")
+                elif action == 3:
+                    change_arg(args, "annotation_mode", list(regen.Strictness), convert=get_enum_value, display_name="Annotation mode")
+                elif action == 4:
+                    change_arg(args, "aspirate_mode", list(regen.Strictness), convert=get_enum_value, display_name="Aspirate mode")
+                elif action == 5:
+                    change_arg(args, "disjoiner_mode", list(regen.Strictness), convert=get_enum_value, display_name="Disjoiner mode")
                 elif action == 6:
                     change_arg(args, "fix_first", [True, False], display_name="Fix First")
                                        
@@ -203,6 +203,7 @@ def interactive_search(parser, args, previous=None):
             display_all = True
         
     print("Results:", count)
+    print()
     return search
         
 def get_grascii_search(parser, previous):
@@ -247,13 +248,13 @@ def interpretationToString(interp):
 
 def choose_interpretation(interpretations):
     if len(interpretations) == 1:
-        print()
-        print("Found 1 possible interpretation")
-        print("Beginning search")
+        # print()
+        # print("Found 1 possible interpretation")
+        # print("Beginning search")
         return 0
     else:
-        print("Interpretations: ", len(interpretations))
-        print()
+        # print("Interpretations: ", len(interpretations))
+        # print()
         # print("0: all")
         choices = [Choice(title="all", value=0)]
         i = 1

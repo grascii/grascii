@@ -5,6 +5,7 @@ import sys
 import argparse
 import os
 from configparser import ConfigParser
+import readline
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
@@ -93,8 +94,20 @@ def create_parser(ambiguity=True):
               parser="earley",
               ambiguity="resolve")
 
-def run_interactive(parser, args, **kwargs):
-    tree = get_grascii_search(parser)
+def run_interactive(parser, args):
+    previous_search = interactive_search(parser, args)
+
+    action = interactive.get_choice("", ["exit", 
+        "edit search",
+        "perform another search"])
+
+    if action == 1:
+        pass
+    elif action == 2:
+        interactive_search(parser, args)
+
+def interactive_search(parser, args):
+    search, tree = get_grascii_search(parser)
     parses = flatten_tree(tree)
     vprint(parses)
     display_interpretations = get_unique_interpretations(parses)
@@ -124,7 +137,8 @@ def run_interactive(parser, args, **kwargs):
             display_all = True
         
     print("Results:", count)
-
+    return search
+        
 def get_grascii_search(parser):
     while True:
         search = input("Enter search: ").upper()
@@ -133,7 +147,7 @@ def get_grascii_search(parser):
         result = parse_grascii(parser, search)
         if not result:
             continue
-        return result
+        return search, result
 
 def parse_grascii(parser, grascii):
     try:

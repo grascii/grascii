@@ -10,6 +10,9 @@ import readline
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
+import questionary
+from questionary.prompts.common import Choice
+
 # import regen
 # import grammar
 # import defaults
@@ -97,14 +100,14 @@ def create_parser(ambiguity=True):
 def run_interactive(parser, args):
     previous_search = interactive_search(parser, args)
 
-    action = interactive.get_choice("", ["exit", 
-        "edit search",
-        "perform another search"])
+    # action = interactive.get_choice("", ["exit", 
+        # "edit search",
+        # "perform another search"])
 
-    if action == 1:
-        pass
-    elif action == 2:
-        interactive_search(parser, args)
+    # if action == 1:
+        # pass
+    # elif action == 2:
+        # interactive_search(parser, args)
 
 def interactive_search(parser, args):
     search, tree = get_grascii_search(parser)
@@ -141,7 +144,8 @@ def interactive_search(parser, args):
         
 def get_grascii_search(parser):
     while True:
-        search = input("Enter search: ").upper()
+        # search = input("Enter search: ").upper()
+        search = questionary.text("Enter Search:").ask().upper()
         if search == "":
             continue
         result = parse_grascii(parser, search)
@@ -184,8 +188,14 @@ def choose_interpretation(interpretations):
         print("Interpretations: ", len(interpretations))
         print()
         # print("0: all")
-        return interactive.get_choice("Choose an interpretation to use in the search:", 
-                ["all"] + [interpretationToString(interp) for interp in interpretations])
+        choices = [Choice(title="all", value=0)]
+        i = 1
+        for interp in interpretations:
+            choices.append(Choice(title=interpretationToString(interp), value=i))
+            i += 1
+        return questionary.rawselect("Choose an interpretation to use in the search:", choices).ask()
+        # return interactive.get_choice("Choose an interpretation to use in the search:", 
+                # ["all"] + [interpretationToString(interp) for interp in interpretations])
         # for i, interp in enumerate(interpretations):
             # print(str(i + 1) + ":", interpretationToString(interp))
 

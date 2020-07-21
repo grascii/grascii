@@ -11,7 +11,7 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
 import questionary
-from questionary.prompts.common import Choice
+from questionary.prompts.common import Choice, Separator
 
 # import regen
 # import grammar
@@ -98,16 +98,18 @@ def create_parser(ambiguity=True):
               ambiguity="resolve")
 
 def run_interactive(parser, args):
-    previous_search = interactive_search(parser, args)
+    # previous_search = interactive_search(parser, args)
+    previous_search = None
 
     while True:
-        action = questionary.select("What next?",
+        action = questionary.select("What would you like to do?",
                 ["New Search",
-                 "Modify Search",
+                 Choice("Modify Search", disabled=not previous_search),
+                 # "Modify Search",
                  "Edit Settings",
                  "Exit"]).ask()
 
-        if action == "Exit":
+        if action is None or action == "Exit":
             exit()
         elif action == "New Search":
             previous_search = interactive_search(parser, args)
@@ -124,16 +126,9 @@ def run_interactive(parser, args):
                          Choice(title="Disjoiner Mode [{}]".format(args.disjoiner_mode.value), value=5),
                          Choice(title="Fix First [{}]".format(args.fix_first), value=6),
                          "Back"]
-                        # ["Uncertainty",
-                         # "Search Mode",
-                         # "Annotation Mode",
-                         # "Aspirate Mode",
-                         # "Disjoiner Mode",
-                         # "Fix First",
-                         # "Back"]
                         ).ask()
 
-                if action == "Back":
+                if action is None or action == "Back":
                     break
                 elif action == 1:
                     change_arg(args, "uncertainty", range(3), display_name="Uncertainty")
@@ -168,7 +163,8 @@ def change_arg(args, arg_name, options, display_name=None, convert=str):
         choices.append(Choice(title=convert(option), value=option, checked=selected))
     title = display_name if display_name else "Set " + arg_name
     setting = questionary.select(title, choices).ask()
-    setattr(args, arg_name, setting)
+    if setting:
+        setattr(args, arg_name, setting)
 
 def interactive_search(parser, args, previous=None):
     search, tree = get_grascii_search(parser, previous)

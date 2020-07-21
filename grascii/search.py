@@ -193,14 +193,11 @@ def interactive_search(parser, args, previous=None):
             action = questionary.select("Search Results",
                     ["Next",
                      "Display All",
-                     "End Search",
-                     "Exit"]
-                    ).ask()
+                     "End Search" 
+                    ]).ask()
         print(result.strip())
-        if action == "End search":
+        if action is None or action == "End Search":
             break
-        elif action == "Exit":
-            exit()
         elif action == "Display All":
             display_all = True
         

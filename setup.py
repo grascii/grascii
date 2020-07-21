@@ -1,6 +1,20 @@
 #!/usr/bin/python
 
+import argparse
+from glob import glob
 from setuptools import setup, find_packages
+from setuptools.command.build_py import build_py
+
+import grascii.build_dict
+
+class CustomBuild(build_py):
+    def run(self):
+        argparser = argparse.ArgumentParser()
+        grascii.build_dict.build_argparser(argparser)
+        args = argparser.parse_args(glob("./dsrc/*.txt") + ["--output=./grascii/dict"])
+        grascii.build_dict.main(args)
+        build_py.run(self)
+
 
 setup(
     name="grascii",
@@ -18,5 +32,8 @@ setup(
         "console_scripts" : [
             "grascii = grascii.__main__:main"
         ]
+    },
+    cmdclass={
+        "build_py": CustomBuild
     }
 )

@@ -102,7 +102,7 @@ def create_parser(ambiguity=True):
                   # ambiguity="explicit")
     return Lark(grammar_stream,
             parser="earley",
-            ambiguity="explicit")
+            ambiguity="resolve")
     # return Lark.open("../grammars/grascii.lark",
               # parser="earley",
               # ambiguity="resolve")

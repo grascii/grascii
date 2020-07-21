@@ -37,7 +37,7 @@ def main():
     # args = argparser.parse_args(arguments)
     args = argparser.parse_args(sys.argv[1:])
 
-    os.chdir(os.path.dirname(__file__))
+    # os.chdir(os.path.dirname(__file__))
 
     args.func(args)
 

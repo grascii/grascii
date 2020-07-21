@@ -3,9 +3,11 @@ from functools import reduce
 import re
 import sys
 import argparse
+import io
 import os
 from configparser import ConfigParser
 import readline
+from pkg_resources import resource_stream, resource_string
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
@@ -89,13 +91,21 @@ class GrasciiFlattener(Transformer):
         return result
 
 def create_parser(ambiguity=True):
+    grammar_stream = io.TextIOWrapper(resource_stream("grascii.grammars", "grascii.lark"), 
+            encoding="utf-8")
     if ambiguity:
-        return Lark.open("../grammars/grascii.lark",
-                  parser="earley",
-                  ambiguity="explicit")
-    return Lark.open("../grammars/grascii.lark",
-              parser="earley",
-              ambiguity="resolve")
+        return Lark(grammar_stream,
+                parser="earley",
+                ambiguity="explicit")
+        # return Lark.open("../grammars/grascii.lark",
+                  # parser="earley",
+                  # ambiguity="explicit")
+    return Lark(grammar_stream,
+            parser="earley",
+            ambiguity="explicit")
+    # return Lark.open("../grammars/grascii.lark",
+              # parser="earley",
+              # ambiguity="resolve")
 
 def run_interactive(parser, args):
     # previous_search = interactive_search(parser, args)

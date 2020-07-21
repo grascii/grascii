@@ -163,11 +163,13 @@ def change_arg(args, arg_name, options, display_name=None, convert=str):
         choices.append(Choice(title=convert(option), value=option, checked=selected))
     title = display_name if display_name else "Set " + arg_name
     setting = questionary.select(title, choices).ask()
-    if setting:
+    if setting is not None:
         setattr(args, arg_name, setting)
 
 def interactive_search(parser, args, previous=None):
     search, tree = get_grascii_search(parser, previous)
+    if search is None:
+        return previous
     parses = flatten_tree(tree)
     vprint(parses)
     display_interpretations = get_unique_interpretations(parses)
@@ -211,11 +213,14 @@ def get_grascii_search(parser, previous):
         # search = input("Enter search: ").upper()
         if previous:
             search = questionary.text("Enter Search:",
-                    default=previous).ask().upper()
+                    default=previous).ask()
         else:
-            search = questionary.text("Enter Search:").ask().upper()
+            search = questionary.text("Enter Search:").ask()
+        if search is None:
+            return search, None
         if search == "":
             continue
+        search = search.upper()
         result = parse_grascii(parser, search)
         if not result:
             continue

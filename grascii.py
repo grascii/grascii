@@ -2,7 +2,7 @@
 
 import sys
 
-import grascii.main
+import grascii.__main__
 
 if __name__ == "__main__":
-    grascii.main.main(sys.argv[1:])
+    grascii.__main__.main(sys.argv[1:])

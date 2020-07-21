@@ -14,7 +14,7 @@ def no_command(args):
     print("For help run:")
     print("grascii.py --help")
 
-def main(arguments):
+def main():
 
     argparser = argparse.ArgumentParser()
     argparser.set_defaults(func=no_command)
@@ -34,12 +34,13 @@ def main(arguments):
     build.build_argparser(build_parser)
     build_parser.set_defaults(func=build.main)
 
-    args = argparser.parse_args(arguments)
+    # args = argparser.parse_args(arguments)
+    args = argparser.parse_args(sys.argv[1:])
 
     os.chdir(os.path.dirname(__file__))
 
     args.func(args)
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
 

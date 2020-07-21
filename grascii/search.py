@@ -293,7 +293,8 @@ def get_unique_interpretations(flattened_parses):
 def perform_search(patterns, starting_letters, dict_path):
     for item in sorted(starting_letters):
         try:
-            with open(dict_path + item, "r") as dictionary:
+            with io.TextIOWrapper(resource_stream("grascii.dict", item), encoding="utf-8") as dictionary:
+            # with open(dict_path + item, "r") as dictionary:
                 for line in dictionary:
                     for pattern in patterns:
                         if pattern.search(line):

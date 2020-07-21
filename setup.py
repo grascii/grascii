@@ -21,8 +21,8 @@ setup(
     version="0.1",
     packages=find_packages(exclude=["tests"]),
     package_data={
-        "" : ["dict/*"],
-        "grascii.grammars": ["*.lark"]
+        "grascii" : ["dict/*"],
+        "grascii": ["grammars/*.lark"]
     },
     install_requires=[
         "lark-parser",

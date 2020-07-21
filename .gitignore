@@ -9,4 +9,5 @@ grascii.conf
 words.txt
 extra_words.txt
 build/
+dist/
 grascii.egg-info/

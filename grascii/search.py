@@ -128,15 +128,20 @@ def interactive_search(parser, args):
     display_all = False
     for result in results:
         count += 1
+        print(result.strip())
         if not display_all:
-            action = input(result + "e(x)it, (d)isplay all, (e)nd search: ")
-        else:
-            print(result.strip())
-        if action == "e":
+            # action = input(result + "e(x)it, (d)isplay all, (e)nd search: ")
+            action = questionary.select(" ",
+                    ["next",
+                     "display all",
+                     "end search",
+                     "exit"]
+                    ).ask()
+        if action == "end search":
             break
-        elif action == "x":
+        elif action == "exit":
             exit()
-        elif action == "d":
+        elif action == "display all":
             display_all = True
         
     print("Results:", count)
@@ -193,7 +198,7 @@ def choose_interpretation(interpretations):
         for interp in interpretations:
             choices.append(Choice(title=interpretationToString(interp), value=i))
             i += 1
-        return questionary.rawselect("Choose an interpretation to use in the search:", choices).ask()
+        return questionary.select("Choose an interpretation to use in the search:", choices).ask()
         # return interactive.get_choice("Choose an interpretation to use in the search:", 
                 # ["all"] + [interpretationToString(interp) for interp in interpretations])
         # for i, interp in enumerate(interpretations):

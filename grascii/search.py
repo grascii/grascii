@@ -19,7 +19,7 @@ from questionary.prompts.common import Choice, Separator
 # import grammar
 # import defaults
 
-from grascii import regen, grammar, defaults, interactive
+from grascii import regen, grammar, defaults, interactive, utils
 
 vprint = lambda *a, **k: None
 
@@ -91,8 +91,9 @@ class GrasciiFlattener(Transformer):
         return result
 
 def create_parser(ambiguity=True):
-    grammar_stream = io.TextIOWrapper(resource_stream("grascii.grammars", "grascii.lark"), 
-            encoding="utf-8")
+    grammar_stream = utils.get_grammar("grascii")
+    #io.TextIOWrapper(resource_stream("grascii.grammars", "grascii.lark"), 
+            # encoding="utf-8")
     if ambiguity:
         return Lark(grammar_stream,
                 parser="earley",
@@ -294,8 +295,9 @@ def get_unique_interpretations(flattened_parses):
 def perform_search(patterns, starting_letters, dict_path):
     for item in sorted(starting_letters):
         try:
-            with io.TextIOWrapper(resource_stream("grascii.dict", item), encoding="utf-8") as dictionary:
+            # with io.TextIOWrapper(resource_stream("grascii.dict", item), encoding="utf-8") as dictionary:
             # with open(dict_path + item, "r") as dictionary:
+            with utils.get_dict_file(":preanniversary", item) as dictionary:
                 for line in dictionary:
                     for pattern in patterns:
                         if pattern.search(line):

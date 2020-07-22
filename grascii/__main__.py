@@ -16,7 +16,7 @@ def no_command(args):
 
 def main():
 
-    argparser = argparse.ArgumentParser()
+    argparser = argparse.ArgumentParser(prog="grascii")
     argparser.set_defaults(func=no_command)
     subparsers = argparser.add_subparsers(title="subcommands")   
 

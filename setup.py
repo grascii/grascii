@@ -2,6 +2,7 @@
 
 import argparse
 from glob import glob
+import os
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 
@@ -9,10 +10,8 @@ import grascii.build_dict
 
 class CustomBuild(build_py):
     def run(self):
-        argparser = argparse.ArgumentParser()
-        grascii.build_dict.build_argparser(argparser)
-        args = argparser.parse_args(glob("./dsrc/*.txt") + ["--output=./grascii/dict"])
-        grascii.build_dict.main(args)
+        grascii.build_dict.main(glob(os.path.join("dsrc", "*.txt")) + 
+            ["--output", os.path.join("grascii", "dict")])
         build_py.run(self)
 
 

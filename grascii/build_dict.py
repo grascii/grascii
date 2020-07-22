@@ -68,7 +68,7 @@ def get_output_file(dest, grascii):
         entry_counts[char] = 1
         return out_files[char]
 
-def main(args):
+def build(args):
 
     conf = ConfigParser()
     conf.read("grascii.conf")
@@ -188,9 +188,12 @@ def main(args):
     print(warnings, "warnings")
     print(errors, "errors")
 
-if __name__ == "__main__":
+def main(sys_args):
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
-    args = argparser.parse_args(sys.argv[1:])
-    main(args)
+    args = argparser.parse_args(sys_args)
+    build(args)
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
 

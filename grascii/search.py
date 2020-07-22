@@ -342,7 +342,7 @@ def process_args(args):
     args.dict_path = conf.get("Search", "DictionaryPath", 
             fallback=defaults.SEARCH["DictionaryPath"])
 
-def main(args):
+def search(args):
 
     process_args(args)
 
@@ -391,8 +391,11 @@ def main(args):
         count += 1
     print("Results:", count)
 
-if __name__ == "__main__":
+def main(sys_args):
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
-    args = argparser.parse_args(sys.argv[1:])
-    main(args)
+    args = argparser.parse_args(sys_args)
+    search(args)
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

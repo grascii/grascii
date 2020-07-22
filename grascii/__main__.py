@@ -25,14 +25,14 @@ def main():
             help=search.description,
             aliases=["s"])
     search.build_argparser(search_parser)
-    search_parser.set_defaults(func=search.main)
+    search_parser.set_defaults(func=search.search)
 
     build_parser = subparsers.add_parser("build", 
             description=build.description, 
             help=build.description,
             aliases=["b"])
     build.build_argparser(build_parser)
-    build_parser.set_defaults(func=build.main)
+    build_parser.set_defaults(func=build.build)
 
     # args = argparser.parse_args(arguments)
     args = argparser.parse_args(sys.argv[1:])

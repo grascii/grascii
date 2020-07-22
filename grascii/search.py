@@ -230,6 +230,7 @@ def get_grascii_search(parser, previous):
         search = search.upper()
         result = parse_grascii(parser, search)
         if not result:
+            previous = search
             continue
         return search, result
 

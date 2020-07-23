@@ -120,7 +120,8 @@ def build(args):
 
     if args.parse:
         from lark import Lark, UnexpectedInput
-        p = Lark.open("grascii.lark", parser="earley")
+        from grascii.utils import get_grammar
+        p = Lark(get_grammar("grascii"), parser="earley")
 
     if args.clean:
         for entry in out_dir.iterdir():
@@ -134,14 +135,14 @@ def build(args):
                     if pair[0][0] == "#":
                         continue
                     if pair[0] == "?":
-                        log_warning(src_file.name, line, i, "uncertainty")
+                        log_warning(src_file.name, line, i + 1, "uncertainty")
                         pair.pop(0)
                     if len(pair) < 2:
-                        log_error(src_file.name, line, i, 
+                        log_error(src_file.name, line, i + 1, 
                                 "Too few words")
                         continue
                     if len(pair) > 2:
-                        log_warning(src_file.name, line, i, 
+                        log_warning(src_file.name, line, i + 1, 
                                 "Wrong number of words")
                         continue
                     grascii = pair[0].upper()
@@ -153,13 +154,13 @@ def build(args):
                         try:
                             p.parse(grascii)
                         except UnexpectedInput:
-                            log_error(src_file.name, line, i, 
+                            log_error(src_file.name, line, i + 1,
                                     "failed to parse", grascii)
                             continue
 
                     if args.spell:
                         if word not in en_dict:
-                            log_warning(src_file.name, line, i,
+                            log_warning(src_file.name, line, i + 1,
                                     word, "not in dictionary")
 
                     if not args.check_only:

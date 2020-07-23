@@ -81,13 +81,13 @@ kat quite
 ke_vr quiver
 ke_vr^e quiveringly
 ? ke_x^a quixotic
-qe_z quiz
-qe_z^k quizzical
+ke_z quiz
+ke_z^k quizzical
 
 # Page 148 Column 1
 ? koe_t quoit
 ko_n-dm quondam
-k_orm quorum
+ko_rm quorum
 
 # Page 148 Column 2
 ko_ta quota
@@ -95,6 +95,6 @@ ko_tb quotable
 ko_tsh quotation
 
 # Page 148 Column 3
-k_ot quote
+ko_t quote
 ko_th quoth
 ko_sht quotient

@@ -6,6 +6,7 @@ import argparse
 import io
 import os
 from configparser import ConfigParser
+import readline
 from pkg_resources import resource_stream, resource_string
 
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput

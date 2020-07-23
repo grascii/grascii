@@ -19,7 +19,7 @@ from questionary.prompts.common import Choice, Separator
 # import grammar
 # import defaults
 
-from grascii import regen, grammar, defaults, interactive, utils
+from grascii import regen, grammar, defaults, utils
 
 vprint = lambda *a, **k: None
 
@@ -91,22 +91,9 @@ class GrasciiFlattener(Transformer):
         return result
 
 def create_parser(ambiguity=True):
-    grammar_stream = utils.get_grammar("grascii")
-    #io.TextIOWrapper(resource_stream("grascii.grammars", "grascii.lark"), 
-            # encoding="utf-8")
-    if ambiguity:
-        return Lark(grammar_stream,
-                parser="earley",
-                ambiguity="explicit")
-        # return Lark.open("../grammars/grascii.lark",
-                  # parser="earley",
-                  # ambiguity="explicit")
-    return Lark(grammar_stream,
-            parser="earley",
-            ambiguity="resolve")
-    # return Lark.open("../grammars/grascii.lark",
-              # parser="earley",
-              # ambiguity="resolve")
+    grammar = utils.get_grammar("grascii")
+    am = "explicit" if ambiguity else "resolve"
+    return Lark(grammar, parser="earley", ambiguity=am)
 
 def run_interactive(parser, args):
     # previous_search = interactive_search(parser, args)
@@ -351,12 +338,12 @@ def search(args):
     global vprint
     vprint = print if args.verbose else lambda *a, **k: None
 
-
-
     if args.interactive:
+        from grascii import interactive
         vprint("Running in interactive mode")
         p = create_parser(ambiguity=True)
-        run_interactive(p, args)
+        # run_interactive(p, args)
+        interactive.run_interactive(p, args)
         exit(0)
     elif args.grascii is None:
         vprint("searching with custom regular expression:", args.regex.upper())

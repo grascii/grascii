@@ -8,10 +8,9 @@ pas^f pacification
 fasf^r pacifier
 pasf pacify
 pak pack
-pacj package
+pakj package
 pakr packer
-paket
-packet
+paket packet
 pakt pact
 pad pad
 padl paddle
@@ -276,7 +275,7 @@ pdagoj^k pedagogical
 pdagoje pedagogy
 pdl pedal
 pdn-t pedant
-pd_n pedantic
+pd^n pedantic
 pdn-tre pedantry
 pdlr peddler
 pdestl pedestal
@@ -388,7 +387,7 @@ persh perish
 persh^b perishability
 pershb perishable
 pershbn perishableness
-perstehi~ peristyle
+persti~ peristyle
 pe~tn^ts peritonitis
 prju perjure
 prju^r perjure
@@ -430,7 +429,7 @@ prssns persistence
 prssnt presistent
 prs) person
 prs) personal
-prs)?b personable
+prs)^b personable
 
 # Page 135 Column 1
 prs)j personage
@@ -586,7 +585,7 @@ pen pin
 penche~| pinchers
 pench pinch
 pin pine
-? pne-un
+? pne-un pinion
 penk pink
 pn^k pinnacle
 pint pint
@@ -1235,7 +1234,7 @@ prsak prosaic
 prsenem proscenium
 prskr proscribe
 prskr proscript
-prscrsh proscription
+prskrsh proscription
 pros prose
 prsk prosecute
 prsksh prosecution

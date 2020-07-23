@@ -5,4 +5,4 @@ import sys
 import grascii.__main__
 
 if __name__ == "__main__":
-    grascii.__main__.main(sys.argv[1:])
+    grascii.__main__.main()

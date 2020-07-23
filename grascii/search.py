@@ -12,13 +12,6 @@ from pkg_resources import resource_stream, resource_string
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-import questionary
-from questionary.prompts.common import Choice, Separator
-
-# import regen
-# import grammar
-# import defaults
-
 from grascii import regen, grammar, defaults, utils
 
 vprint = lambda *a, **k: None

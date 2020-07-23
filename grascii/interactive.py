@@ -1,9 +1,14 @@
 
-import questionary
-from questionary.prompts.common import Choice, Separator
+try:
+    import questionary
+    from questionary.prompts.common import Choice, Separator
+    BASIC = False
+except ImportError:
+    BASIC = True
+
 
 from grascii import regen
-from grascii.search import flatten_tree, interpretationToString, get_unique_interpretations, perform_search, parse_grascii
+from grascii.search import flatten_tree, interpretation_to_string, get_unique_interpretations, perform_search, parse_grascii
 
 def get_choice(prompt, choices):
     for i, choice in enumerate(choices):
@@ -19,24 +24,24 @@ def get_choice(prompt, choices):
 
 def choose_interpretation(interpretations):
     if len(interpretations) == 1:
-        # print()
-        # print("Found 1 possible interpretation")
-        # print("Beginning search")
         return 0
-    else:
-        # print("Interpretations: ", len(interpretations))
-        # print()
-        # print("0: all")
-        choices = [Choice(title="all", value=0)]
-        i = 1
-        for interp in interpretations:
-            choices.append(Choice(title=interpretationToString(interp), value=i))
-            i += 1
-        return questionary.select("Choose an interpretation to use in the search:", choices).ask()
+    prompt = "Choose an interpretation to use in the search:"
+    if BASIC:
+        return get_choice(prompt, ["all"] + [interpretation_to_string(interp) for interp in interpretations])
+    choices = [Choice(title="all", value=0)]
+    i = 1
+    for interp in interpretations:
+        choices.append(Choice(title=interpretation_to_string(interp), value=i))
+        i += 1
+    return questionary.select(prompt, choices).ask()
 
 def run_interactive(parser, args):
-    previous_search = None
 
+    if BASIC:
+        interactive_search(parser, args)       
+        return
+
+    previous_search = None
     while True:
         action = questionary.select("What would you like to do?",
                 ["New Search",
@@ -123,8 +128,8 @@ def interactive_search(parser, args, previous=None):
     display_all = False
     for result in results:
         count += 1
-        if not display_all:
-            # action = input(result + "e(x)it, (d)isplay all, (e)nd search: ")
+        action = "Next"
+        if not display_all and not BASIC:
             action = questionary.select("Search Results",
                     ["Next",
                      "Display All",
@@ -142,12 +147,13 @@ def interactive_search(parser, args, previous=None):
         
 def get_grascii_search(parser, previous):
     while True:
-        # search = input("Enter search: ").upper()
-        if previous:
-            search = questionary.text("Enter Search:",
-                    default=previous).ask()
+        if BASIC:
+            search = input("Enter search: ").upper()
+        elif previous:
+            search = questionary.text("Enter Search:", default=previous).ask()
         else:
             search = questionary.text("Enter Search:").ask()
+
         if search is None:
             return search, None
         if search == "":

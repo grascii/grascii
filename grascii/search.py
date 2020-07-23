@@ -235,7 +235,7 @@ def flatten_tree(parse_tree):
     trans = GrasciiFlattener()
     return [trans.transform(tree) for tree in trees]
 
-def interpretationToString(interp):
+def interpretation_to_string(interp):
     def reducer(builder, token):
         if isinstance(token, list):
             builder += token
@@ -260,13 +260,13 @@ def choose_interpretation(interpretations):
         choices = [Choice(title="all", value=0)]
         i = 1
         for interp in interpretations:
-            choices.append(Choice(title=interpretationToString(interp), value=i))
+            choices.append(Choice(title=interpretation_to_string(interp), value=i))
             i += 1
         return questionary.select("Choose an interpretation to use in the search:", choices).ask()
         # return interactive.get_choice("Choose an interpretation to use in the search:", 
-                # ["all"] + [interpretationToString(interp) for interp in interpretations])
+                # ["all"] + [interpretation_to_string(interp) for interp in interpretations])
         # for i, interp in enumerate(interpretations):
-            # print(str(i + 1) + ":", interpretationToString(interp))
+            # print(str(i + 1) + ":", interpretation_to_string(interp))
 
         # while True:
             # try:
@@ -277,7 +277,7 @@ def choose_interpretation(interpretations):
                 # continue
 
 def get_unique_interpretations(flattened_parses):
-    return {interpretationToString(interp): interp for interp in flattened_parses}
+    return {interpretation_to_string(interp): interp for interp in flattened_parses}
 
 def perform_search(patterns, starting_letters, dict_path):
     for item in sorted(starting_letters):

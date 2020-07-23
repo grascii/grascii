@@ -23,9 +23,11 @@ setup(
         "grascii": ["dict/*", "grammars/*.lark"]
     },
     install_requires=[
-        "lark-parser",
-        "questionary"
+        "lark-parser>=0.8.6,!=0.8.7,!=0.8.8",
     ],
+    extras_require={
+        "interactive": ["questionary>=1.5.1"]
+    },
     entry_points={
         "console_scripts" : [
             "grascii = grascii.__main__:main"

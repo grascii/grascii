@@ -6,10 +6,9 @@ import argparse
 import io
 import os
 from configparser import ConfigParser
-import readline
-from pkg_resources import resource_stream, resource_string
+from typing import Union, List, Dict, Set, Iterable, Match, Pattern, cast
 
-from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput
+from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput, Tree
 from lark.visitors import CollapseAmbiguities
 
 from grascii import regen, grammar, defaults, utils
@@ -18,7 +17,7 @@ vprint = lambda *a, **k: None
 
 description = "Search a Grascii Dictionary"
 
-def build_argparser(argparser):
+def build_argparser(argparser: argparse.ArgumentParser) -> None:
     group = argparser.add_mutually_exclusive_group(required=True)
     group.add_argument("-g", "--grascii", 
             help="the grascii string to search for")
@@ -83,12 +82,12 @@ class GrasciiFlattener(Transformer):
                     result.append(token)
         return result
 
-def create_parser(ambiguity=True):
+def create_parser(ambiguity: bool=True) -> Lark:
     grammar = utils.get_grammar("grascii")
     am = "explicit" if ambiguity else "resolve"
     return Lark(grammar, parser="earley", ambiguity=am)
 
-def parse_grascii(parser, grascii):
+def parse_grascii(parser: Lark, grascii: str) -> Union[Tree, bool]:
     try:
         return parser.parse(grascii)
     except UnexpectedInput as e:
@@ -96,12 +95,12 @@ def parse_grascii(parser, grascii):
         print(e.get_context(grascii))
         return False
 
-def flatten_tree(parse_tree):
+def flatten_tree(parse_tree: Tree) -> list:
     trees = CollapseAmbiguities().transform(parse_tree)
     trans = GrasciiFlattener()
     return [trans.transform(tree) for tree in trees]
 
-def interpretation_to_string(interp):
+def interpretation_to_string(interp: list) -> str:
     def reducer(builder, token):
         if isinstance(token, list):
             builder += token
@@ -113,10 +112,11 @@ def interpretation_to_string(interp):
 
     return "".join(reduce(reducer, interp, []))
 
-def get_unique_interpretations(flattened_parses):
+def get_unique_interpretations(flattened_parses: Iterable[list]) -> Dict[str, List[list]]:
+
     return {interpretation_to_string(interp): interp for interp in flattened_parses}
 
-def perform_search(patterns, starting_letters, dict_path):
+def perform_search(patterns: Iterable[Pattern], starting_letters: Set[str], dict_path) -> Iterable[str]:
     for item in sorted(starting_letters):
         try:
             with utils.get_dict_file(":preanniversary", item) as dictionary:
@@ -128,7 +128,7 @@ def perform_search(patterns, starting_letters, dict_path):
         except FileNotFoundError:
             print("Error: Could not find", dict_path + item)
 
-def process_args(args):
+def process_args(args: argparse.Namespace) -> None:
     conf = ConfigParser()
     conf.read("grascii.conf")
     uncertainty = conf.getint('Search', 'Uncertainty', 
@@ -166,7 +166,7 @@ def process_args(args):
     args.dict_path = conf.get("Search", "DictionaryPath", 
             fallback=defaults.SEARCH["DictionaryPath"])
 
-def search(args):
+def search(args: argparse.Namespace) -> None:
 
     process_args(args)
 
@@ -191,6 +191,7 @@ def search(args):
             vprint("parsing failed")
             vprint("exiting")
             exit()
+        tree = cast(Tree, tree)
 
         parses = flatten_tree(tree)
         vprint(tree.pretty())
@@ -214,7 +215,7 @@ def search(args):
         count += 1
     print("Results:", count)
 
-def main(sys_args):
+def main(sys_args: List[str]) -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys_args)

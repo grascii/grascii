@@ -1,5 +1,6 @@
+from typing import Tuple, Hashable, List, Set, cast, Dict
 
-equiv_nodes = {
+equiv_nodes: Dict[str, Tuple[str, ...]] = {
     "S" : ("S", "Z"),
     "Z" : ("S", "Z"),
     "TD" : ("TD", "DT", "DD"),
@@ -24,17 +25,17 @@ equiv_nodes = {
     "JND" : ("PNT", "PND", "JNT", "JND"),
     }
 
-def get_node(stroke):
+def get_node(stroke: str) -> Tuple[str, ...]:
     return equiv_nodes.get(stroke, (stroke,))
 
-disconnected_nodes = [
+disconnected_nodes: List[Hashable] = [
     ("O",),
     ("U",),
     get_node("PNT"),
     get_node("DF")
     ]
 
-edges = [
+edges: List[Tuple[str, str]] = [
     ("K", "G"),
     ("R", "L"),
     ("L", "LD"),
@@ -72,33 +73,33 @@ edges = [
     ("TH", "NT"),
     ]
 
-trans_edges = [(get_node(edge[0]), get_node(edge[1])) for edge in edges]
+trans_edges: List[Tuple[Hashable, Hashable]] = [(get_node(edge[0]), get_node(edge[1])) for edge in edges]
 
 class SimilarityGraph():
 
     def __init__(self):
         self.nodes = dict()
 
-    def add_node(self, node):
+    def add_node(self, node: Hashable) -> None:
         if node not in self.nodes:
             self.nodes[node] = set()
 
-    def add_edge(self, edge):
+    def add_edge(self, edge: Tuple[Hashable, Hashable]) -> None:
         assert len(edge) > 1
         self.add_node(edge[0])
         self.nodes[edge[0]].add(edge[1])
         self.add_node(edge[1])
         self.nodes[edge[1]].add(edge[0])
 
-    def add_nodes(self, nodes):
+    def add_nodes(self, nodes: List[Hashable]) -> None:
         for node in nodes:
             self.add_node(node)
 
-    def add_edges(self, edges):
+    def add_edges(self, edges: List[Tuple[Hashable, Hashable]]) -> None:
         for edge in edges:
             self.add_edge(edge)
 
-    def get_similar(self, node, similarity):
+    def get_similar(self, node: Hashable, similarity: int) -> Set[Hashable]:
         similars = set()
         similars.add(node)
         while similarity > 0:
@@ -114,6 +115,6 @@ sg = SimilarityGraph()
 sg.add_edges(trans_edges)
 sg.add_nodes(disconnected_nodes)
 
-def get_similar(stroke, distance):
-    return sg.get_similar(get_node(stroke), distance)
+def get_similar(stroke: str, distance: int) -> Set[Tuple]:
+    return cast(Set[Tuple], sg.get_similar(get_node(stroke), distance))
 

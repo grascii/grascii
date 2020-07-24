@@ -190,13 +190,11 @@ class DictionaryBuilder():
         end_time = time.perf_counter()
         self.print_build_summary(end_time - start_time)
 
-def build(args):
-
+def build(args: argparse.Namespace) -> None:
     builder = DictionaryBuilder(**{k: v for k, v in vars(args).items() if v is not None})
     builder.build()
-    return
 
-def main(sys_args):
+def main(sys_args: List[str]) -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys_args)

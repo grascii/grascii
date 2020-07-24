@@ -77,11 +77,12 @@ class DictionaryBuilder():
         self.errors += 1
 
     def prepare_output_dir(self) -> None:
-        self.out_dir = pathlib.Path(self.output)
-        self.out_dir.mkdir(parents=True, exist_ok=True)
-        if self.clean:
-            for entry in self.out_dir.iterdir():
-                entry.unlink
+        if not self.check_only:
+            self.out_dir = pathlib.Path(self.output)
+            self.out_dir.mkdir(parents=True, exist_ok=True)
+            if self.clean:
+                for entry in self.out_dir.iterdir():
+                    entry.unlink
 
         # premake out files?
 
@@ -158,6 +159,7 @@ class DictionaryBuilder():
 
         self.load_word_set()
         self.load_parser()
+        self.prepare_output_dir()
 
         try:
             for src_file in self.src_files:
@@ -186,7 +188,7 @@ class DictionaryBuilder():
 
 def build(args):
 
-    builder = DictionaryBuilder(**args.__dict__)
+    builder = DictionaryBuilder(**{k: v for k, v in vars(args).items() if v is not None})
     builder.build()
     return
 

@@ -6,8 +6,7 @@ import os
 
 # import build_dict as build
 # import search
-import grascii.build_dict as build
-from grascii import search
+from grascii import search, build
 
 def no_command(args):
     print("Expecting subcommand")

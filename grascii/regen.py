@@ -1,8 +1,7 @@
-import re
 from enum import Enum
+import re
+from typing import List, Union, Iterable, Set, Pattern
 
-# import grammar
-# from similarities import get_similar
 
 from grascii import grammar
 from grascii.similarities import get_similar
@@ -27,7 +26,7 @@ class RegexBuilder():
         self.aspirate_mode = aspirate_mode
         self.disjoiner_mode = disjoiner_mode
 
-    def make_annotation_regex(self, stroke, annotations):
+    def make_annotation_regex(self, stroke: str, annotations: Iterable[str]) -> str:
 
         def pack(tup):
             if len(tup) == 1:
@@ -56,7 +55,7 @@ class RegexBuilder():
         return stroke + "".join([pack(tup) for tup in possible])
 
 
-    def make_uncertainty_regex(self, stroke, uncertainty, annotations=list()):
+    def make_uncertainty_regex(self, stroke: str, uncertainty: int, annotations: list=list()) -> str:
         # if get_node(stroke) not in sg.nodes:
             # return re.escape(stroke)
         similars = get_similar(stroke, uncertainty)
@@ -69,7 +68,7 @@ class RegexBuilder():
             return "(" + "|".join(flattened) + ")"
         return flattened[0]
 
-    def build_regex(self, interpretation):
+    def build_regex(self, interpretation: list) -> str:
 
         builder = list()
         i = 0
@@ -147,7 +146,7 @@ class RegexBuilder():
 
         return "".join(builder)
 
-    def get_starting_letters(self, interpretations):
+    def get_starting_letters(self, interpretations: List[list]) -> Set[str]:
 
         if self.search_mode is SearchMode.CONTAIN:
             return grammar.HARD_CHARACTERS
@@ -168,7 +167,7 @@ class RegexBuilder():
 
         return letters
 
-    def generate_patterns(self, interpretations):
+    def generate_patterns(self, interpretations: List[list]) -> List[Pattern]:
         patterns = list()
         for interp in interpretations:
             regex = self.build_regex(interp)

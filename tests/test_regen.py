@@ -1,77 +1,70 @@
 
 import unittest
 
+from typing import List, Tuple
+
 from grascii import regen, grammar
 
 class TestAnnotationRegex(unittest.TestCase):
 
-    def test_strictness_low_circle_vowel(self):
+    def check_strictness_low(self, annotations: List[str], texts: List[Tuple[str, str]]):
         builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
+        for a in annotations:
+            for t in texts:
+                regex = builder.make_annotation_regex(t[0], a)
+                self.assertRegex(t[0] + t[1], regex)
 
+    def test_strictness_low_circle_vowel(self):
         annotations = [
             [],
             [","],
             ["~", ","]
         ]
-
-        text = ["A", "A~", "A~|", "A,", "A~|._"]
-
-        for an in annotations:
-            regex = builder.make_annotation_regex("A", an)
-            for t in text:
-                self.assertRegex(t, regex)
+        texts = [("A", ""), ("A", "~"), ("A", "|."), ("A", "~|,_"),
+                 ("E", ""), ("E", "~"), ("E", "|."), ("E", "~|,_"),]
+        self.check_strictness_low(annotations, texts)
 
     def test_strictness_low_hook_vowel(self):
-        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
-
-        annotations = [
+        annotations_o = [
             [],
             [","],
-            ["(", ","]
+            ["(", ","],
+            ["(", "_"]
         ]
-
-        text = ["O", "O(", "O,", "O(._"]
-
-        for an in annotations:
-            regex = builder.make_annotation_regex("O", an)
-            for t in text:
-                self.assertRegex(t, regex)
+        texts_o = [("O", ""), ("O", "("), ("O", "(,"), ("O", "(._")]
+        annotations_u = [
+            [],
+            [","],
+            [")", ","],
+            [")", "_"]
+        ]
+        texts_u = [("U", ""), ("U", ")"), ("U", "),"), ("U", ")._")]
+        self.check_strictness_low(annotations_o, texts_o)
+        self.check_strictness_low(annotations_u, texts_u)
 
     def test_strictness_low_circle_diphthong(self):
-        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
-
         annotations = [
             [],
             ["~"],
             ["~|"],
             ["_"],
         ]
-
-        text = ["A&E", "A&E~", "A&E~|_"]
-
-        for an in annotations:
-            regex = builder.make_annotation_regex("A&E", an)
-            for t in text:
-                self.assertRegex(t, regex)
+        texts = [("I", ""), ("I", "~"), ("I", "_"), ("I~|_"),
+                ("A&E", ""), ("A&E", "~"), ("A&E", "_"), ("A&E~|_"),    
+                ("A'E", ""), ("A'E", "~"), ("A'E", "_"), ("A'E~|_")]
+        self.check_strictness_low(annotations, texts)
                 
     def test_strictness_low_hook_diphthong(self):
-        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
-
         annotations = [
             [],
             ["_"],
         ]
-
-        text = ["AU", "AU_"]
-
-        for an in annotations:
-            regex = builder.make_annotation_regex("AU", an)
-            for t in text:
-                self.assertRegex(t, regex)
+        texts = [("AU", ""), ("AU", "_"),
+                 ("OE", ""), ("OE", "_"),
+                 ("EU", ""), ("EU", "_")]
+        self.check_strictness_low(annotations, texts)
 
     def test_strictness_low_directed_consonant(self):
-        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
-
         annotations = [
             [],
             ["("],
@@ -79,28 +72,18 @@ class TestAnnotationRegex(unittest.TestCase):
             [","],
             ["(,"]
         ]
-
-        text = ["S", "S)", "S(,"]
-
-        for an in annotations:
-            regex = builder.make_annotation_regex("S", an)
-            for t in text:
-                self.assertRegex(t, regex)
+        texts = [("S", ""), ("S", "("), ("S", "),"),
+                ("Z", ""), ("Z", "("), ("Z", "),"),
+                ("TH", ""), ("TH", "("), ("TH", "),")]
+        self.check_strictness_low(annotations, texts)
 
     def test_strictness_low_oblique_consonant(self):
-        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
-
         annotations = [
             [],
             [","]
         ]
-
-        text = ["SH", "SH,"]
-
-        for an in annotations:
-            regex = builder.make_annotation_regex("SH", an)
-            for t in text:
-                self.assertRegex(t, regex)
+        texts = [("SH", ""), ("SH", ",")]
+        self.check_strictness_low(annotations, texts)
 
 
          

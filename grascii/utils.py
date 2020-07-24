@@ -14,6 +14,8 @@ def get_dict_file(dictionary: str, name: str) -> TextIO:
                     encoding="utf-8")
     return open(os.path.join(dictionary, name))
 
-
+def get_words_file(name: str) -> TextIO:
+    return io.TextIOWrapper(resource_stream("grascii.words", name),
+            encoding="utf-8")
 
 

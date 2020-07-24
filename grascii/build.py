@@ -9,7 +9,7 @@ from typing import TextIO, List, Optional, Union
 from configparser import ConfigParser
 from lark import Lark, UnexpectedInput
 
-from grascii.utils import get_grammar
+from grascii.utils import get_grammar, get_words_file
 
 from grascii import defaults, grammar
 
@@ -91,8 +91,12 @@ class DictionaryBuilder():
             self.parser = Lark(get_grammar("grascii"), parser="earley", ambiguity="resolve")
 
     def load_word_set(self) -> None:
+        self.words = set()
         if self.spell:
-            self.words = set()
+            with get_words_file("words.txt") as words:
+                    self.words |= set(line.strip().capitalize() for line in words)
+            with get_words_file("extra_words.txt") as words:
+                    self.words |= set(line.strip().capitalize() for line in words)
 
     def check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
         tokens = line.split()
@@ -191,36 +195,6 @@ def build(args):
     builder = DictionaryBuilder(**{k: v for k, v in vars(args).items() if v is not None})
     builder.build()
     return
-
-    conf = ConfigParser()
-    conf.read("grascii.conf")
-
-    if args.output is None:
-        args.output = conf.get('Build', 'BuildDirectory', 
-                fallback=defaults.BUILD["BuildDirectory"])
-
-    args.output = os.path.abspath(args.output)
-
-
-    main_words_path = conf.get("Build", "MainWordList",
-            fallback=defaults.BUILD["MainWordList"])
-
-    supp_words_path = conf.get("Build", "SupplementaryWordList",
-            fallback=defaults.BUILD["SupplementaryWordList"])
-
-    en_dict = set()
-    if args.spell:
-        try:
-            with open(main_words_path, "r") as words:
-                en_dict |= set(line.strip().capitalize() for line in words)
-        except FileNotFoundError:
-            print("Could not find", main_words_path)
-        try:
-            with open(supp_words_path, "r") as words:
-                en_dict |= set(line.strip().capitalize() for line in words)
-        except FileNotFoundError:
-            print("Could not find", supp_words_path)
-
 
 def main(sys_args):
     argparser = argparse.ArgumentParser(description)

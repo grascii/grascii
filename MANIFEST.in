@@ -2,6 +2,7 @@
 include dsrc/*.txt
 include grascii/*.py
 include grascii/grammars/*.lark
+include grascii/words
 include docs/*.md
 include README.md starter.conf setup.py
 recursive-include tests *.py *.txt

@@ -6,11 +6,11 @@ import os
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 
-import grascii.build_dict
+import grascii.build
 
 class CustomBuild(build_py):
     def run(self):
-        grascii.build_dict.main(glob(os.path.join("dsrc", "*.txt")) + 
+        grascii.build.main(glob(os.path.join("dsrc", "*.txt")) + 
             ["--output", os.path.join("grascii", "dict")])
         build_py.run(self)
 
@@ -20,7 +20,7 @@ setup(
     version="0.1",
     packages=find_packages(exclude=["tests", "grascii.dict"]),
     package_data={
-        "grascii": ["dict/*", "grammars/*.lark"]
+        "grascii": ["dict/*", "grammars/*.lark", "words/*.txt"]
     },
     install_requires=[
         "lark-parser>=0.8.6,!=0.8.7,!=0.8.8",

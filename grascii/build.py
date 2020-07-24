@@ -42,7 +42,7 @@ class DictionaryBuilder():
         self.spell = kwargs.get("spell", False)
         self.check_only = kwargs.get("check_only", False)
         self.package = kwargs.get("package", False)
-        self.output = kwargs.get("output", os.path.join(".", "gdict"))
+        self.output = kwargs.get("output", "gdict")
         self.src_files = kwargs["infiles"]
         if kwargs.get("verbose", False):
             self.vprint = lambda *a, **k: None
@@ -64,7 +64,7 @@ class DictionaryBuilder():
         except KeyError:
             self.out_files[char] = pathlib.Path(self.output, char).open("w")
             self.entry_counts[char] = 1
-            return out_files[char]
+            return self.out_files[char]
 
     def log_warning(self, file_name: str, line: str, line_number: int, *message: Union[str, List[str]]) -> None:
         print("W:", file_name + ":" + str(line_number), *message)
@@ -126,8 +126,8 @@ class DictionaryBuilder():
         return True
 
     def write_entry(self, grascii: str, word: str) -> None:
-        if not self.check_word:
-            out = get_output_file(grascii)
+        if not self.check_only:
+            out = self.get_output_file(grascii)
             out.write(grascii + " ")
             out.write(word + "\n")
 
@@ -139,14 +139,14 @@ class DictionaryBuilder():
         if self.warnings or self.errors:
             print()
         total = 0
-        for key, val in entry_counts.items():
+        for key, val in self.entry_counts.items():
             total += val
             print("Wrote", val, "entries to", os.path.join(self.output, key))
         if total > 0:
             print()
         formatted_time = "{:.5f}".format(time)
         print("Finished Build in", formatted_time, "seconds")
-        if total > 0:
+        if not self.check_only:
             print("Entries:", total)
         print("Warnings:", self.warnings)
         print("Errors:", self.errors)
@@ -184,31 +184,6 @@ class DictionaryBuilder():
         end_time = time.perf_counter()
         self.print_build_summary(end_time - start_time)
 
-
-
-
-
-
-out_files = {}
-entry_counts = {}
-
-def get_output_file(dest, grascii):
-    index = 0
-    while index < len(grascii) and grascii[index] not in string.ascii_uppercase:
-        index += 1
-    if index == len(grascii):
-        raise Exception()
-
-    char = grascii[index]
-    try:
-        result = out_files[char]
-        entry_counts[char] += 1
-        return result
-    except KeyError:
-        out_files[char] = pathlib.Path(dest, char).open("w")
-        entry_counts[char] = 1
-        return out_files[char]
-
 def build(args):
 
     builder = DictionaryBuilder(**args.__dict__)
@@ -224,25 +199,6 @@ def build(args):
 
     args.output = os.path.abspath(args.output)
 
-    start_time = time.perf_counter()
-
-    warnings = 0
-    errors = 0
-
-    def log_warning(file_name, line, line_number, *message):
-        print("W:", file_name + ":" + str(line_number), *message)
-        print(line.strip())
-        nonlocal warnings
-        warnings += 1
-
-    def log_error(file_name, line, line_number, *message):
-        print("E:", file_name + ":" + str(line_number), *message)
-        print(line.strip())
-        nonlocal errors
-        errors += 1
-
-    out_dir = pathlib.Path(args.output)
-    out_dir.mkdir(parents=True, exist_ok=True)
 
     main_words_path = conf.get("Build", "MainWordList",
             fallback=defaults.BUILD["MainWordList"])
@@ -263,76 +219,6 @@ def build(args):
         except FileNotFoundError:
             print("Could not find", supp_words_path)
 
-    if args.parse:
-        from lark import Lark, UnexpectedInput
-        from grascii.utils import get_grammar
-        p = Lark(get_grammar("grascii"), parser="earley")
-
-    if args.clean:
-        for entry in out_dir.iterdir():
-            entry.unlink()
-
-    try:
-        for src_file in args.infiles:
-            for i, line in enumerate(src_file):
-                pair = line.split()
-                if pair:
-                    if pair[0][0] == "#":
-                        continue
-                    if pair[0] == "?":
-                        log_warning(src_file.name, line, i + 1, "uncertainty")
-                        pair.pop(0)
-                    if len(pair) < 2:
-                        log_error(src_file.name, line, i + 1, 
-                                "Too few words")
-                        continue
-                    if len(pair) > 2:
-                        log_warning(src_file.name, line, i + 1, 
-                                "Wrong number of words")
-                        continue
-                    grascii = pair[0].upper()
-                    # strip '-'
-                    grascii = "".join(grascii.split("-"))
-                    word = pair[1].capitalize()
-
-                    if args.parse:
-                        try:
-                            p.parse(grascii)
-                        except UnexpectedInput:
-                            log_error(src_file.name, line, i + 1,
-                                    "failed to parse", grascii)
-                            continue
-
-                    if args.spell:
-                        if word not in en_dict:
-                            log_warning(src_file.name, line, i + 1,
-                                    word, "not in dictionary")
-
-                    if not args.check_only:
-                        out = get_output_file(args.output, grascii)
-                        out.write(grascii + " ")
-                        out.write(word + "\n")
-    finally:
-        for f in out_files.values():
-            f.close()
-
-    end_time = time.perf_counter();
-
-    if warnings or errors:
-        print()
-
-    total = 0
-    for key, val in entry_counts.items():
-        total += val
-        print("Wrote", val, "entries to", pathlib.PurePath(args.output, key))
-
-    print()
-    total_time = "{:.5f}".format(end_time - start_time)
-    print("Finished Build in", total_time, "seconds")
-    if total > 0:
-        print(total, "entries")
-    print(warnings, "warnings")
-    print(errors, "errors")
 
 def main(sys_args):
     argparser = argparse.ArgumentParser(description)

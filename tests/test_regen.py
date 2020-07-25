@@ -160,7 +160,89 @@ class TestDisjoiners(unittest.TestCase):
         self.run_tests(builder, tests)
 
 class TestAspirates(unittest.TestCase):
-    pass
+
+    def run_tests(self, builder, tests):
+        for test in tests:
+            interp = test[0]
+            for text, expected in test[1]:
+                regex = builder.build_regex(interp)
+                with self.subTest(interpretation=interp, text=text):
+                    if expected:
+                        self.assertRegex(text, regex)
+                    else:
+                        self.assertNotRegex(text, regex)
+
+    def test_strictness_low(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
+        tests = [
+            (["A"], [("A", True), ("'A", True)]),
+            (["'", "A"], [("A", True), ("'A", True)]),
+            (["A", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["'", "A", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["'", "A", "'", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["'", "A", "'", "D", "'", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["A", "'", "D", "'", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["'", "A", "D", "'", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["A", "'", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["A", "D", "'", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+        ]
+        self.run_tests(builder, tests)
+
+    def test_strictness_medium(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["A"], [("A", True), ("'A", True)]),
+            (["'", "A"], [("A", False), ("'A", True)]),
+            (["A", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+            (["'", "A", "D", "E"], [("ADE", False), ("'ADE", True), ("A'DE", False), ("AD'E", False), ("'A'DE", True),
+                ("'AD'E", True), ("A'D'E", False), ("'A'D'E", True)]),
+            (["'", "A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", True),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", True)]),
+            (["'", "A", "'", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", True)]),
+            (["A", "'", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", True), ("'A'D'E", True)]),
+            (["'", "A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", True), ("A'D'E", False), ("'A'D'E", True)]),
+            (["A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", True), ("AD'E", False), ("'A'DE", True),
+                ("'AD'E", False), ("A'D'E", True), ("'A'D'E", True)]),
+            (["A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", True), ("'A'DE", False),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+        ]
+        self.run_tests(builder, tests)
+
+    def test_strictness_high(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.HIGH)
+        tests = [
+            (["A"], [("A", True), ("'A", False)]),
+            (["'", "A"], [("A", False), ("'A", True)]),
+            (["A", "D", "E"], [("ADE", True), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+            (["'", "A", "D", "E"], [("ADE", False), ("'ADE", True), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+            (["'", "A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", True),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+            (["'", "A", "'", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", True)]),
+            (["A", "'", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", True), ("'A'D'E", False)]),
+            (["'", "A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", True), ("A'D'E", False), ("'A'D'E", False)]),
+            (["A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", True), ("AD'E", False), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+            (["A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", True), ("'A'DE", False),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+        ]
+        self.run_tests(builder, tests)
         
 class TestUncertaintyRegex(unittest.TestCase):
     

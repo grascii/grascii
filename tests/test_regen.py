@@ -92,22 +92,77 @@ class TestAnnotationRegex(unittest.TestCase):
                 annotations = test[0]
                 for text, expected in test[1]:
                     regex = builder.make_annotation_regex(stroke, annotations)
-                    if expected:
-                        self.assertRegex(stroke + text, regex)
-                    else:
-                        self.assertNotRegex(stroke + text, regex)
+                    with self.subTest(annotations=annotations, text=stroke+text):
+                        if expected:
+                            self.assertRegex(stroke + text, regex)
+                        else:
+                            self.assertNotRegex(stroke + text, regex)
 
 
     def test_strictness_medium_circle_vowel(self):
         circle_vowels = ["A", "E"]
-        a = [
+        tests = [
             ([], [("", True), (",", True), ("~|._", True)]),
             ([","], [("", False), (".", False), (",", True), ("~|,_", True)]),
             (["~"], [("", False), ("~", True), (".", False), ("~|._", True)]),
             (["~", "|", ".", "_"], [("~", False), ("|", False), (".", False),
                 ("_", False), ("~|._", True)]),
         ]
-        self.check_strictness_medium(circle_vowels, a)
+        self.check_strictness_medium(circle_vowels, tests)
+
+    def test_strictness_medium_hook_vowel(self):
+        tests1 = [
+            ([], [("", True), (",", True), ("(,_", True)]),
+            ([","], [("", False), (".", False), (",", True), ("(,_", True)]),
+            (["("], [("", False), (".", False), ("(,_", True)]),
+            (["(", ".", "_"], [(".", False), ("_", False), ("(._", True)]),
+        ]
+        tests2 = [
+            ([], [("", True), (",", True), ("),_", True)]),
+            ([","], [("", False), (".", False), (",", True), ("),_", True)]),
+            ([")"], [("", False), (".", False), ("),_", True)]),
+            ([")", ".", "_"], [(".", False), ("_", False), (")._", True)]),
+        ]
+        self.check_strictness_medium(["O"], tests1)
+        self.check_strictness_medium(["U"], tests2)
+
+    def test_strictness_medium_circle_diphthong(self):
+        strokes = ["I", "A&E", "A&'"]
+        tests = [
+            ([], [("", True), ("~", True), ("|", True), ("_", True), ("~|_", True)]),
+            (["~"], [("", False), ("~", True), ("|", False), ("_", False), ("~|_", True)]),
+            (["|"], [("", False), ("~", False), ("|", True), ("_", False), ("~|_", True)]),
+            (["_"], [("", False), ("~", False), ("|", False), ("_", True), ("~|_", True)]),
+            (["~", "|", "_"], [("", False), ("~", False), ("|", False), ("_", False), ("~|_", True)]),
+        ]
+        self.check_strictness_medium(strokes, tests)
+
+    def test_strictness_medium_hook_diphthong(self):
+        strokes = ["AU", "OE", "EU"]
+        tests = [
+            ([], [("", True), ("_", True)]),
+            (["_"], [("", False), ("_", True)]),
+        ]
+        self.check_strictness_medium(strokes, tests)
+
+    def test_strictness_medium_directed_consonant(self):
+        strokes = ["S", "Z", "TH"]
+        tests = [
+            ([], [("", True), ("(", True), (")", True), (",", True), ("(,", True), ("),", True)]),
+            (["("], [("", False), ("(", True), (")", False), (",", False), ("(,", True), ("),", False)]),
+            ([")"], [("", False), ("(", False), (")", True), (",", False), ("(,", False), ("),", True)]),
+            (["(", ","], [("", False), ("(", False), (")", False), (",", False), ("(,", True), ("),", False)]),
+            ([")", ","], [("", False), ("(", False), (")", False), (",", False), ("(,", False), ("),", True)])
+        ]
+        self.check_strictness_medium(strokes, tests)
+
+    def test_strictness_medium_oblique_consonant(self):
+        tests = [
+            ([], [("", True), (",", True)]),
+            ([","], [("", False), (",", True)]),
+        ]
+        self.check_strictness_medium(["SH"], tests)
+
 
 
 class TestDisjoiners(unittest.TestCase):
@@ -303,6 +358,8 @@ class TestStartingLetters(unittest.TestCase):
     pass
 
 
+class TestRegexBuilder(unittest.TestCase):
+    pass
 
 
          

@@ -142,7 +142,7 @@ class RegexBuilder():
 
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.CONTAIN:
-            builder.append("\\s")
+            builder.append("\\b")
 
         return "".join(builder)
 

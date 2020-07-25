@@ -3,7 +3,7 @@ import unittest
 
 from typing import List, Tuple
 
-from grascii import regen, grammar
+from grascii import regen, grammar, similarities
 
 class TestAnnotationRegex(unittest.TestCase):
 
@@ -46,7 +46,7 @@ class TestAnnotationRegex(unittest.TestCase):
         annotations = [
             [],
             ["~"],
-            ["~|"],
+            ["~", "|"],
             ["_"],
         ]
         texts = [("I", ""), ("I", "~"), ("I", "_"), ("I~|_"),
@@ -84,6 +84,82 @@ class TestAnnotationRegex(unittest.TestCase):
         ]
         texts = [("SH", ""), ("SH", ",")]
         self.check_strictness_low(annotations, texts)
+
+    def check_strictness_medium(self, strokes, tests):
+        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.MEDIUM)
+        for stroke in strokes:
+            for test in tests:
+                annotations = test[0]
+                for text, expected in test[1]:
+                    regex = builder.make_annotation_regex(stroke, annotations)
+                    if expected:
+                        self.assertRegex(stroke + text, regex)
+                    else:
+                        self.assertNotRegex(stroke + text, regex)
+
+
+    def test_strictness_medium_circle_vowel(self):
+        circle_vowels = ["A", "E"]
+        a = [
+            ([], [("", True), (",", True), ("~|._", True)]),
+            ([","], [("", False), (".", False), (",", True), ("~|,_", True)]),
+            (["~"], [("", False), ("~", True), (".", False), ("~|._", True)]),
+            (["~", "|", ".", "_"], [("~", False), ("|", False), (".", False),
+                ("_", False), ("~|._", True)]),
+        ]
+        self.check_strictness_medium(circle_vowels, a)
+
+
+class TestDisjoiners(unittest.TestCase):
+
+    def run_tests(self, builder, tests):
+        for test in tests:
+            interp = test[0]
+            for text, expected in test[1]:
+                regex = builder.build_regex(interp)
+                with self.subTest(interpretation=interp, text=text):
+                    if expected:
+                        self.assertRegex(text, regex)
+                    else:
+                        self.assertNotRegex(text, regex)
+
+    def test_strictness_low(self):
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.LOW)
+        tests = [
+            (["A", "B"], [("AB", True), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", True), ("A^B", True)]),
+            (["A", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
+            (["A", "^", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
+            (["A", "B", "^", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
+            (["A", "^", "B", "^", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)])
+        ]
+        self.run_tests(builder, tests)
+
+class TestAspirates(unittest.TestCase):
+    pass
+        
+class TestUncertaintyRegex(unittest.TestCase):
+    
+    def test_uncertainty_zero(self):
+        # this should go under sim tests
+        for stroke in grammar.STROKES:
+            similars = similarities.get_similar(stroke, 0)
+            self.assertEqual(len(similars), 1)
+            self.assertIn(stroke, list(similars)[0])
+
+
+
+
+class TestSearchMode(unittest.TestCase):
+    pass
+
+class TestFixFirst(unittest.TestCase):
+    pass
+
+class TestStartingLetters(unittest.TestCase):
+    pass
+
+
 
 
          

@@ -122,7 +122,9 @@ def perform_search(patterns: Iterable[Pattern], starting_letters: Set[str], dict
             with utils.get_dict_file(":preanniversary", item) as dictionary:
                 for line in dictionary:
                     for pattern in patterns:
-                        if pattern.search(line):
+                        match = pattern.search(line)
+                        if match:
+                            print(match.groups())
                             yield line
                             break
         except FileNotFoundError:

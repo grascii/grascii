@@ -159,6 +159,9 @@ class TestDisjoiners(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
+    def test_prefixes(self):
+        pass
+
 class TestAspirates(unittest.TestCase):
 
     def run_tests(self, builder, tests):
@@ -243,6 +246,9 @@ class TestAspirates(unittest.TestCase):
                 ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
         ]
         self.run_tests(builder, tests)
+
+    def test_double_aspirate(self):
+        pass
         
 class TestUncertaintyRegex(unittest.TestCase):
     
@@ -257,7 +263,38 @@ class TestUncertaintyRegex(unittest.TestCase):
 
 
 class TestSearchMode(unittest.TestCase):
-    pass
+
+    def run_tests(self, builder, tests):
+        for test in tests:
+            interp = test[0]
+            for text, expected in test[1]:
+                regex = builder.build_regex(interp)
+                with self.subTest(interpretation=interp, text=text):
+                    if expected:
+                        self.assertRegex(text, regex)
+                    else:
+                        self.assertNotRegex(text, regex)
+    
+    def test_match(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.MATCH)
+        tests = [
+            (["A", "B"], [("AB", True), ("ABU", False), ("DAB", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_start(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.START)
+        tests = [
+            (["A", "B"], [("AB", True), ("ABU", True), ("DAB", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_contains(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.CONTAIN)
+        tests = [
+            (["A", "B"], [("AB", True), ("ABU", True), ("DAB", True)])
+        ]
+        self.run_tests(builder, tests)
 
 class TestFixFirst(unittest.TestCase):
     pass

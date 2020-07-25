@@ -1,34 +1,34 @@
-# begin Z's
+# begin Z'z
 # Page 208 Column 1
-safr zaffer
-sel zeal
-selut zealot
-selutre zealotry
-selus zealous
-selusn zealousness
-sebra zebra
-senith zenith
-sefr zephyr
+zafr zaffer
+zel zeal
+zelut zealot
+zelutre zealotry
+zelus zealous
+zelusn zealousness
+zebra zebra
+zenith zenith
+zefr zephyr
 
 # Page 208 Column 2
-sefrus zephyrus
-sero zero
-sest zest
-sigsag zigzag
-sink zink
-sink^f zincification
-sinkus zincous
-? sith zither
-soda&'k zodiac
-sod^k zodiacal
+zefrus zephyrus
+zero zero
+zest zest
+zigzag zigzag
+zink zinc
+zink^f zincification
+zinkus zincous
+? zith zither
+zoda&'k zodiac
+zod^k zodiacal
 
 # Page 208 Column 3
-sonal zonal
-son zone
-sonl zoneless
-so^us zoologist
-? so^o zoology
-sootme zootomy
-sa_v zouave
-sebak zwieback
-sim^a zymotic
+zonal zonal
+zon zone
+zonl zoneless
+zo^os zoologist
+zo^o( zoology
+zootme zootomy
+za_v zouave
+zebak zwieback
+zim^a zymotic

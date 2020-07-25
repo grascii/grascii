@@ -1,4 +1,5 @@
 
+import re
 import unittest
 
 from typing import List, Tuple
@@ -162,6 +163,93 @@ class TestAnnotationRegex(unittest.TestCase):
             ([","], [("", False), (",", True)]),
         ]
         self.check_strictness_medium(["SH"], tests)
+
+    def check_strictness_high(self, strokes, tests):
+        builder = regen.RegexBuilder(annotation_mode=regen.Strictness.HIGH)
+        for stroke in strokes:
+            for test in tests:
+                annotations = test[0]
+                for text, expected in test[1]:
+                    regex = builder.make_annotation_regex(stroke, annotations)
+                    with self.subTest(annotations=annotations, text=stroke+text):
+                        if expected:
+                            self.assertTrue(re.fullmatch(regex, stroke + text))
+                        else:
+                            self.assertFalse(re.fullmatch(regex, stroke + text))
+
+
+    def test_strictness_high_circle_vowel(self):
+        circle_vowels = ["A", "E"]
+        tests = [
+            ([], [("", True), (",", False), ("~|._", False)]),
+            ([","], [("", False), (".", False), (",", True), ("~|,_", False)]),
+            (["~"], [("", False), ("~", True), (".", False), ("~|._", False)]),
+            (["~", "|", ".", "_"], [("~", False), ("|", False), (".", False),
+                ("_", False), ("~|._", True)]),
+        ]
+        self.check_strictness_high(circle_vowels, tests)
+
+    def test_strictness_high_hook_vowel(self):
+        tests1 = [
+            ([], [("", True), (",", False), ("(,_", False)]),
+            ([","], [("", False), (".", False), (",", True), ("(,_", False)]),
+            (["("], [("", False), (".", False), ("(,_", False)]),
+            (["(", ".", "_"], [(".", False), ("_", False), ("(._", True)]),
+        ]
+        tests2 = [
+            ([], [("", True), (",", False), ("),_", False)]),
+            ([","], [("", False), (".", False), (",", True), ("),_", False)]),
+            ([")"], [("", False), (".", False), ("),_", False)]),
+            ([")", ".", "_"], [(".", False), ("_", False), (")._", True)]),
+        ]
+        self.check_strictness_high(["O"], tests1)
+        self.check_strictness_high(["U"], tests2)
+
+    def test_strictness_high_circle_diphthong(self):
+        strokes = ["I", "A&E", "A&'"]
+        tests = [
+            ([], [("", True), ("~", False), ("|", False), ("_", False), ("~|_", False)]),
+            (["~"], [("", False), ("~", True), ("|", False), ("_", False), ("~|_", False)]),
+            (["|"], [("", False), ("~", False), ("|", True), ("_", False), ("~|_", False)]),
+            (["_"], [("", False), ("~", False), ("|", False), ("_", True), ("~|_", False)]),
+            (["~", "|", "_"], [("", False), ("~", False), ("|", False), ("_", False), ("~|_", True)]),
+        ]
+        self.check_strictness_high(strokes, tests)
+
+    def test_strictness_high_hook_diphthong(self):
+        strokes = ["AU", "OE", "EU"]
+        tests = [
+            ([], [("", True), ("_", False)]),
+            (["_"], [("", False), ("_", True)]),
+        ]
+        self.check_strictness_high(strokes, tests)
+
+    def test_strictness_high_directed_consonant(self):
+        strokes = ["S", "Z", "TH"]
+        tests = [
+            ([], [("", True), ("(", False), (")", False), (",", False), ("(,", False), ("),", False)]),
+            (["("], [("", False), ("(", True), (")", False), (",", False), ("(,", False), ("),", False)]),
+            ([")"], [("", False), ("(", False), (")", True), (",", False), ("(,", False), ("),", False)]),
+            (["(", ","], [("", False), ("(", False), (")", False), (",", False), ("(,", True), ("),", False)]),
+            ([")", ","], [("", False), ("(", False), (")", False), (",", False), ("(,", False), ("),", True)])
+        ]
+        self.check_strictness_high(strokes, tests)
+
+    def test_strictness_high_oblique_consonant(self):
+        tests = [
+            ([], [("", True), (",", False)]),
+            ([","], [("", False), (",", True)]),
+        ]
+        self.check_strictness_high(["SH"], tests)
+
+    def test_out_of_order_annotations(self):
+        pass
+
+    def test_invalid_annotations(self):
+        pass
+
+    def test_mutually_exclusive_annotations(self):
+        pass
 
 
 

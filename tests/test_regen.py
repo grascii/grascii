@@ -135,6 +135,30 @@ class TestDisjoiners(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
+    def test_strictness_medium(self):
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["A", "B"], [("AB", True), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", False), ("A^B", True)]),
+            (["A", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
+            (["A", "^", "B", "D"], [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", True)]),
+            (["A", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", True)]),
+            (["A", "^", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", False), ("A^B^D", True)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_strictness_high(self):
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.HIGH)
+        tests = [
+            (["A", "B"], [("AB", True), ("A^B", False)]),
+            (["A", "^", "B"], [("AB", False), ("A^B", True)]),
+            (["A", "B", "D"], [("ABD", True), ("A^BD", False), ("AB^D", False), ("A^B^D", False)]),
+            (["A", "^", "B", "D"], [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", False)]),
+            (["A", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", False)]),
+            (["A", "^", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", False), ("A^B^D", True)])
+        ]
+        self.run_tests(builder, tests)
+
 class TestAspirates(unittest.TestCase):
     pass
         

@@ -395,14 +395,54 @@ class TestAspirates(unittest.TestCase):
         
 class TestUncertaintyRegex(unittest.TestCase):
     
+    def run_tests(self, uncertainty, tests):
+        builder = regen.RegexBuilder()
+        for test in tests:
+            stroke = test[0]
+            for text, expected in test[1]:
+                regex = builder.make_uncertainty_regex(stroke, uncertainty)
+                with self.subTest():
+                    if expected:
+                        self.assertTrue(re.fullmatch(regex, text))
+                    else:
+                        self.assertFalse(re.fullmatch(regex, text))
+
+    # def test_uncertainty_zero(self):
+        # # this should go under sim tests
+        # for stroke in grammar.STROKES:
+            # similars = similarities.get_similar(stroke, 0)
+            # self.assertEqual(len(similars), 1)
+            # self.assertIn(stroke, list(similars)[0])
+
     def test_uncertainty_zero(self):
-        # this should go under sim tests
-        for stroke in grammar.STROKES:
-            similars = similarities.get_similar(stroke, 0)
-            self.assertEqual(len(similars), 1)
-            self.assertIn(stroke, list(similars)[0])
+        tests = [
+            ("A", [("A", True), ("E", False), ("I", False)]),
+            ("NT", [("NT", True), ("ND", True), ("TH", False), ("MT", False), ("MD", False)]),
+            ("F", [("F", True), ("V", False), ("CH", False), ("S", False),
+                   ("Z", False), ("SH", False), ("P", False), ("J", False),
+                   ("X", False), ("XS", False), ("SS", False), ("B", False)])
+        ]
+        self.run_tests(0, tests)
 
+    def test_uncertainty_one(self):
+        tests = [
+            ("A", [("A", True), ("E", True), ("I", True)]),
+            ("NT", [("NT", True), ("ND", True), ("TH", True), ("MT", True), ("MD", True)]),
+            ("F", [("F", True), ("V", True), ("CH", True), ("S", True),
+                   ("Z", True), ("SH", False), ("P", False), ("J", False),
+                   ("X", False), ("XS", False), ("SS", False), ("B", False)])
+        ]
+        self.run_tests(1, tests)
 
+    def test_uncertainty_two(self):
+        tests = [
+            ("A", [("A", True), ("E", True), ("I", True)]),
+            ("NT", [("NT", True), ("ND", True), ("TH", True), ("MT", True), ("MD", True)]),
+            ("F", [("F", True), ("V", True), ("CH", True), ("S", True),
+                   ("Z", True), ("SH", True), ("P", True), ("J", True),
+                   ("X", True), ("XS", True), ("SS", True), ("B", False)])
+        ]
+        self.run_tests(2, tests)
 
 
 class TestSearchMode(unittest.TestCase):

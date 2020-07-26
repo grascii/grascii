@@ -5,7 +5,7 @@ import unittest
 from lark import Lark, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
-import grascii.search
+from grascii.utils import get_grammar
 
 class PhraseFlattener(Transformer):
     def start(self, children):
@@ -38,14 +38,18 @@ class TestLessonPhrases(unittest.TestCase):
         # self.parser = Lark.open("phrases.lark",
                 # parser="earley")
 
-    parser = Lark.open("../grammars/phrases.lark",
-            rel_to=__file__,
-            parser="earley")
+    # parser = Lark.open("../grammars/phrases.lark",
+            # rel_to=__file__,
+            # parser="earley")
 
-    aparser = Lark.open("../grammars/phrases.lark",
-            rel_to=__file__,
-            parser="earley",
-            ambiguity="explicit")
+    # aparser = Lark.open("../grammars/phrases.lark",
+            # rel_to=__file__,
+            # parser="earley",
+            # ambiguity="explicit")
+
+    g = get_grammar("phrases")
+    parser = Lark(g, parser="earley", ambiguity="resolve")
+    aparser = Lark(g, parser="earley", ambiguity="explicit")
 
     trans = PhraseFlattener()
 

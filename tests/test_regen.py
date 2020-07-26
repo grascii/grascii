@@ -440,7 +440,33 @@ class TestSearchMode(unittest.TestCase):
         self.run_tests(builder, tests)
 
 class TestFixFirst(unittest.TestCase):
-    pass
+
+    def run_tests(self, builder, tests):
+        for test in tests:
+            interp = test[0]
+            for text, expected in test[1]:
+                regex = builder.build_regex(interp)
+                with self.subTest(interpretation=interp, text=text):
+                    if expected:
+                        self.assertRegex(text, regex)
+                    else:
+                        self.assertNotRegex(text, regex)
+
+    def test_fix_first_off(self):
+        builder = regen.RegexBuilder(fix_first=False, uncertainty=1)
+        tests = [
+            (["A", "B", "D"], [("ABD", True), ("EBD", True), ("IBD", True),
+                               ("APT", True), ("EPDD", True), ("IBDT", True)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_fix_first_on(self):
+        builder = regen.RegexBuilder(fix_first=True, uncertainty=1)
+        tests = [
+            (["A", "B", "D"], [("ABD", True), ("EBD", False), ("IBD", False),
+                               ("APT", True), ("EPDD", False), ("IBDT", False)])
+        ]
+        self.run_tests(builder, tests)
 
 class TestStartingLetters(unittest.TestCase):
     pass

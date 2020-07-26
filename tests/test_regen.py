@@ -509,7 +509,48 @@ class TestFixFirst(unittest.TestCase):
         self.run_tests(builder, tests)
 
 class TestStartingLetters(unittest.TestCase):
-    pass
+    
+    def run_tests(self, builder, tests):
+        for test in tests:
+            interps = test[0]
+            for stroke, expected in test[1]:
+                letters = builder.get_starting_letters(interps)
+                with self.subTest(interpretations=interps, stroke=stroke):
+                    if expected:
+                        self.assertIn(stroke, letters)
+                    else:
+                        self.assertNotIn(stroke, letters)
+
+    def test_starting_letters_search_mode_contains(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.CONTAIN)
+        tests = [[["A"]], [["B"]], [["K", "P"]], [["'", "I"]]]
+        for test in tests:
+            letters = builder.get_starting_letters(test)
+            self.assertSetEqual(letters, grammar.HARD_CHARACTERS)
+
+    def test_starting_letters_fix_first_uncertainty_one(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.MATCH,
+                                     uncertainty=1,
+                                     fix_first=True)
+        tests = [
+            ([["A"]], [("A", True), ("E", False), ("I", False)]),
+            ([["'", "I"], [("I", True), ("E", False), ("A", False)]]),
+            ([["NT"], ["DN"]], [("N", True), ("T", True), ("D", True),
+                ("M", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_starting_letters_no_fix_first_uncertainty_one(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.MATCH,
+                                     uncertainty=1,
+                                     fix_first=False)
+        tests = [
+            ([["A"]], [("A", True), ("E", True), ("I", True)]),
+            ([["'", "I"], [("I", True), ("E", False), ("A", True)]]),
+            ([["NT"], ["DN"]], [("N", True), ("T", True), ("D", True),
+                ("M", True)])
+        ]
+        self.run_tests(builder, tests)
 
 
 class TestRegexBuilder(unittest.TestCase):

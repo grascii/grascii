@@ -70,20 +70,23 @@ class RegexBuilder():
 
     def build_regex(self, interpretation: list) -> str:
 
+        aspirate = "(" + re.escape(grammar.ASPIRATE) + ")"
+        disjoiner = "(" + re.escape(grammar.DISJOINER) + ")"
+
         builder = list()
         i = 0
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.START:
             builder.append("^")
             if self.aspirate_mode is Strictness.LOW:
-                builder.append(re.escape(grammar.ASPIRATE))
+                builder.append(aspirate)
                 builder.append("?")
             if self.aspirate_mode is Strictness.MEDIUM:
                 while i < len(interpretation) and interpretation[i] == grammar.ASPIRATE:
-                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append(aspirate)
                     i += 1
                 if i < 2:
-                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append(aspirate)
                     builder.append("?")
 
         if self.search_mode is SearchMode.CONTAIN:
@@ -97,14 +100,14 @@ class RegexBuilder():
             if token == grammar.ASPIRATE:
                 if self.aspirate_mode is Strictness.MEDIUM or \
                         self.aspirate_mode is Strictness.HIGH:
-                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append(aspirate)
                 i += 1
                 continue
 
             if token == grammar.DISJOINER:
                 if self.disjoiner_mode is Strictness.MEDIUM or \
                         self.disjoiner_mode is Strictness.HIGH:
-                    builder.append(re.escape(grammar.DISJOINER))
+                    builder.append(disjoiner)
                 i += 1
                 continue
 
@@ -114,16 +117,16 @@ class RegexBuilder():
                 if builder[-1] != re.escape(grammar.ASPIRATE) and self.aspirate_mode is Strictness.MEDIUM and found_first:
                     insert_aspirate = True
                 if self.disjoiner_mode is Strictness.LOW and found_first:
-                    builder.append(re.escape(grammar.DISJOINER))
+                    builder.append(disjoiner)
                     builder.append("?")
                 if builder[-1] != re.escape(grammar.DISJOINER) and self.disjoiner_mode is Strictness.MEDIUM and found_first:
-                    builder.append(re.escape(grammar.DISJOINER))
+                    builder.append(disjoiner)
                     builder.append("?")
                 if self.aspirate_mode is Strictness.LOW:
-                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append(aspirate)
                     builder.append("?")
                 if insert_aspirate:
-                    builder.append(re.escape(grammar.ASPIRATE))
+                    builder.append(aspirate)
                     builder.append("?")
                 found_first = True
 

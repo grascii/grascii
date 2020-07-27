@@ -222,7 +222,7 @@ Other Symbols
 |             |the preceeding form lies above the line of writing.           |
 |             |                                                              |
 +-------------+--------------------------------------------------------------+
-|-            |When placed between grascii forms, denotes that the two       |
+|\-           |When placed between grascii forms, denotes that the two       |
 |             |characters should not be interpreted as a blended form.       |
 |             |Ex. N-T prevents interpretation on NT.                        |
 |             |                                                              |

@@ -31,7 +31,7 @@ def main():
             help=build.description,
             aliases=["b"])
     build.build_argparser(build_parser)
-    build_parser.set_defaults(func=build.build)
+    build_parser.set_defaults(func=build.cli_build)
 
     # args = argparser.parse_args(arguments)
     args = argparser.parse_args(sys.argv[1:])

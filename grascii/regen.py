@@ -64,9 +64,9 @@ class RegexBuilder():
             for token in group:
                 flattened.append(self.make_annotation_regex(token, annotations))
 
-        if len(flattened) > 1:
-            return "(" + "|".join(flattened) + ")"
-        return flattened[0]
+        # if len(flattened) > 1:
+        return "(" + "|".join(flattened) + ")"
+        # return flattened[0]
 
     def build_regex(self, interpretation: list) -> str:
 
@@ -142,7 +142,6 @@ class RegexBuilder():
 
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.CONTAIN:
-            # builder.append("\\b")
             builder.append(r"(?:\Z|\s)")
 
         return "".join(builder)

@@ -3,8 +3,10 @@ import io
 import os
 from pkg_resources import resource_stream, resource_string
 from typing import Union, IO, TextIO
+from warnings import warn
 
 def get_grammar(name: str) -> str:
+    warn("This function is deprecated. Use grascii.grammars.get_grammar instead", DeprecationWarning)
     return resource_string("grascii.grammars", name + ".lark").decode("utf-8")
 
 def get_dict_file(dictionary: str, name: str) -> TextIO:
@@ -15,6 +17,7 @@ def get_dict_file(dictionary: str, name: str) -> TextIO:
     return open(os.path.join(dictionary, name))
 
 def get_words_file(name: str) -> TextIO:
+    warn("This function is deprecated. Use grascii.words.get_words_file instead", DeprecationWarning)
     return io.TextIOWrapper(resource_stream("grascii.words", name),
             encoding="utf-8")
 

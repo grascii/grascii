@@ -11,7 +11,7 @@ from typing import Union, List, Dict, Set, Iterable, Match, Pattern, cast
 from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput, Tree
 from lark.visitors import CollapseAmbiguities
 
-from grascii import regen, grammar, defaults, utils
+from grascii import regen, grammar, defaults, utils, metrics
 
 vprint = lambda *a, **k: None
 
@@ -125,6 +125,7 @@ def perform_search(patterns: Iterable[Pattern], starting_letters: Set[str], dict
                         match = pattern.search(line)
                         if match:
                             print(match.groups())
+                            metrics.check(match)
                             yield line
                             break
         except FileNotFoundError:

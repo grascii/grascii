@@ -24,7 +24,7 @@ def main():
             help=search.description,
             aliases=["s"])
     search.build_argparser(search_parser)
-    search_parser.set_defaults(func=search.search)
+    search_parser.set_defaults(func=search.cli_search)
 
     build_parser = subparsers.add_parser("build", 
             description=build.description, 

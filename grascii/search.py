@@ -217,11 +217,15 @@ def search(args: argparse.Namespace) -> None:
         count += 1
     print("Results:", count)
 
-def main(sys_args: List[str]) -> None:
+def cli_search(args: argparse.Namespace) -> None:
+    search(args)
+    # search(**{k: v for k, v in vars(args).items() if v is not None})
+
+def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
-    args = argparser.parse_args(sys_args)
-    search(args)
+    args = argparser.parse_args(sys.argv[1:])
+    search(**{k: v for k, v in vars(args).items() if v is not None})
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()

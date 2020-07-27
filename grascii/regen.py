@@ -142,7 +142,8 @@ class RegexBuilder():
 
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.CONTAIN:
-            builder.append("\\b")
+            # builder.append("\\b")
+            builder.append(r"(?:\Z|\s)")
 
         return "".join(builder)
 

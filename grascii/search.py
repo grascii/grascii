@@ -200,27 +200,32 @@ def process_args(args: argparse.Namespace) -> None:
     args.dict_path = conf.get("Search", "DictionaryPath", 
             fallback=defaults.SEARCH["DictionaryPath"])
 
-def search(args: argparse.Namespace) -> Iterable[str]:
+def search(**kwargs) -> Iterable[str]:
 
-    process_args(args)
+    verbose = kwargs.get("verbose", False)
+    is_interactive = kwargs.get("interactive", False)
+    interpretation_mode = kwargs.get("interpretation", "best")
+
+
 
     global vprint
-    vprint = print if args.verbose else lambda *a, **k: None
+    vprint = print if kwargs.get('verbose', False) else lambda *a, **k: None
 
-    if args.interactive:
+
+    if is_interactive:
         from grascii import interactive
         vprint("Running in interactive mode")
         p = create_parser(ambiguity=True)
-        interactive.run_interactive(p, args)
+        # interactive.run_interactive(p, args)
         exit(0)
-    elif args.grascii is None:
-        vprint("searching with custom regular expression:", args.regex.upper())
-        patterns = [re.compile(args.regex.upper())]
+    elif kwargs['grascii'] is None:
+        vprint("searching with custom regular expression:", kwargs['regex'].upper())
+        patterns = [re.compile(kwargs['regex'].upper())]
         starting_letters = grammar.HARD_CHARACTERS
     else:
-        p = create_parser(ambiguity=args.interpretation == "all")
-        vprint("parsing grascii", args.grascii.upper())
-        tree = parse_grascii(p, args.grascii.upper())
+        p = create_parser(ambiguity=interpretation_mode == "all")
+        vprint("parsing grascii", kwargs['grascii'].upper())
+        tree = parse_grascii(p, kwargs['grascii'].upper())
         if not tree:
             vprint("parsing failed")
             vprint("exiting")
@@ -234,32 +239,35 @@ def search(args: argparse.Namespace) -> Iterable[str]:
         interpretations = list(display_interpretations.values())
         vprint(interpretations)
 
-        if args.interpretation == "best":
+        if interpretation_mode == "best":
             assert len(interpretations) == 1
 
-        builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode, args.disjoiner_mode)
-        interps = interpretations[0:1] if args.interpretation == "best" else interpretations
+        # builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode, args.disjoiner_mode)
+        builder = regen.RegexBuilder(**kwargs)
+        interps = interpretations[0:1] if interpretation_mode == "best" else interpretations
         # patterns = builder.generate_patterns(interps)
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
 
     # results = perform_search(patterns, starting_letters, args.dict_path)
-    results = perform_search_sorted(patterns, starting_letters, args.dict_path)
-    return results
+    results = perform_search_sorted(patterns, starting_letters, None)
+    return list(results)
 
 def cli_search(args: argparse.Namespace) -> None:
-    results = search(args)
+    process_args(args)
+    results = search(**{k: v for k, v in vars(args).items() if v is not None})
     count = 0
     for result in results:
         print(result.strip())
         count += 1
     print("Results:", count)
-    # search(**{k: v for k, v in vars(args).items() if v is not None})
+    # search()
 
 def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
+    cli_search(args)
     search(**{k: v for k, v in vars(args).items() if v is not None})
 
 if __name__ == "__main__":

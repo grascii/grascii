@@ -18,13 +18,13 @@ class Strictness(Enum):
 
 class RegexBuilder():
 
-    def __init__(self, uncertainty=0, search_mode=SearchMode.MATCH, fix_first=False, annotation_mode=Strictness.LOW, aspirate_mode=Strictness.LOW, disjoiner_mode=Strictness.HIGH):
-        self.uncertainty = uncertainty
-        self.search_mode = search_mode
-        self.fix_first = fix_first
-        self.annotation_mode = annotation_mode
-        self.aspirate_mode = aspirate_mode
-        self.disjoiner_mode = disjoiner_mode
+    def __init__(self, **kwargs):
+        self.uncertainty = kwargs.get('uncertainty', 0)
+        self.search_mode = kwargs.get('search_mode', SearchMode.MATCH)
+        self.fix_first = kwargs.get('fix_first', False)
+        self.annotation_mode = kwargs.get('annotation_mode', Strictness.LOW)
+        self.aspirate_mode = kwargs.get('aspirate_mode', Strictness.LOW)
+        self.disjoiner_mode = kwargs.get('disjoiner_mode', Strictness.HIGH)
 
     def make_annotation_regex(self, stroke: str, annotations: Iterable[str]) -> str:
 

@@ -200,7 +200,7 @@ def process_args(args: argparse.Namespace) -> None:
     args.dict_path = conf.get("Search", "DictionaryPath", 
             fallback=defaults.SEARCH["DictionaryPath"])
 
-def search(args: argparse.Namespace) -> None:
+def search(args: argparse.Namespace) -> Iterable[str]:
 
     process_args(args)
 
@@ -245,14 +245,15 @@ def search(args: argparse.Namespace) -> None:
 
     # results = perform_search(patterns, starting_letters, args.dict_path)
     results = perform_search_sorted(patterns, starting_letters, args.dict_path)
+    return results
+
+def cli_search(args: argparse.Namespace) -> None:
+    results = search(args)
     count = 0
     for result in results:
         print(result.strip())
         count += 1
     print("Results:", count)
-
-def cli_search(args: argparse.Namespace) -> None:
-    search(args)
     # search(**{k: v for k, v in vars(args).items() if v is not None})
 
 def main() -> None:

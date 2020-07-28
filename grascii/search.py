@@ -131,6 +131,23 @@ def perform_search(patterns: Iterable[Pattern], starting_letters: Set[str], dict
         except FileNotFoundError:
             print("Error: Could not find", dict_path + item)
 
+def perform_search_sorted(patterns, starting_letters: Set[str], dict_path) -> Iterable[str]:
+    for item in sorted(starting_letters):
+        try:
+            with utils.get_dict_file(":preanniversary", item) as dictionary:
+                for line in dictionary:
+                    m = False
+                    for interp, pattern in patterns:
+                        match = pattern.search(line)
+                        if match:
+                            m = True
+                            print(metrics.standard(interp, match))
+                    if m:
+                        print(match.groups())
+                        yield line
+        except FileNotFoundError:
+            print("Error: Could not find", dict_path + item)
+
 def process_args(args: argparse.Namespace) -> None:
     conf = ConfigParser()
     conf.read("grascii.conf")
@@ -208,10 +225,12 @@ def search(args: argparse.Namespace) -> None:
 
         builder = regen.RegexBuilder(args.uncertainty, args.search_mode, args.fix_first, args.annotation_mode, args.aspirate_mode, args.disjoiner_mode)
         interps = interpretations[0:1] if args.interpretation == "best" else interpretations
-        patterns = builder.generate_patterns(interps)
+        # patterns = builder.generate_patterns(interps)
+        patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
 
-    results = perform_search(patterns, starting_letters, args.dict_path)
+    # results = perform_search(patterns, starting_letters, args.dict_path)
+    results = perform_search_sorted(patterns, starting_letters, args.dict_path)
     count = 0
     for result in results:
         print(result.strip())

@@ -1,5 +1,6 @@
 from typing import List, Union, Set, Match, Tuple
 import re
+import string
 
 from grascii import grammar
 from grascii.similarities import get_similar
@@ -14,7 +15,7 @@ def convert_interpretation(interp: List[Union[list, str]]) -> List[Tuple[str, Se
                 new_interp.append((item, set(interp[i + 1])))
                 i += 2
                 continue
-        new_interp.append((item, set))
+        new_interp.append((item, set()))
         i += 1
     return new_interp
 
@@ -25,10 +26,15 @@ def convert_match(match: Match):
     for group in match.groups():
         if group is None:
             continue
-        m = regex.match(group)
-        assert m
-        if m.group(1) in grammar.STROKES:
-            new_seq.append((m.group(1), {c for c in m.group(2)}))
+        i = 0
+        while i < len(group) and group[i] in string.ascii_uppercase:
+            i += 1
+        # m = regex.match(group)
+        # assert m
+        # if m.group(1) in grammar.STROKES:
+        if i > 0:
+            # new_seq.append((m.group(1), {c for c in m.group(2)}))
+            new_seq.append((group[:i], {c for c in group[i:]}))
         else:
             new_seq.append((group, set()))
     return new_seq
@@ -88,6 +94,8 @@ def compute_ins_del_cost(tup):
     elif tup[0] == grammar.DISJOINER:
         cost += BASE_COST
 
+    # print(tup[1])
+    assert isinstance(tup[1], set)
     cost += sum(COSTS.get(a, 0) for a in tup[1])
     return cost
 
@@ -112,6 +120,8 @@ def compute_sub_cost(t1, t2):
         cost += sum(COSTS.get(a, 0) for a in diff)
         return cost
     else:
+        if t1[0] == t2[0]:
+            return 0
         return max(compute_ins_del_cost(t1), compute_ins_del_cost(t2))
 
 # print(compute_ins_del_cost(("A", {"~", ","})))
@@ -122,22 +132,22 @@ def match_distance(g1, g2):
 
     v0 = [0]
     for i in range(n):
-        v0.append(v0[-1] + compute_ins_del_cost(g1[i]))
+        v0.append(v0[-1] + compute_ins_del_cost(g2[i]))
     # v0 = [i for i in range(n + 1)]
     v1 = [0 for i in range(n + 1)]
 
     for i in range(m):
         print(v0)
         # v1[0] = i + 1
-        v1[0] = v0[0] + compute_ins_del_cost(g2[i])
+        v1[0] = v0[0] + compute_ins_del_cost(g1[i])
         
         for j in range(n):
             del_cost = v0[j + 1] + compute_ins_del_cost(g2[j])
-            print(del_cost)
+            # print(del_cost)
             ins_cost = v1[j] + compute_ins_del_cost(g1[i])
-            print(ins_cost)
-            sub_cost = compute_sub_cost(g1[i], g2[j])
-            print(sub_cost)
+            # print(ins_cost)
+            sub_cost = v0[j] + compute_sub_cost(g1[i], g2[j])
+            # print(sub_cost)
             # if s1[i] == s2[j]:
                 # sub_cost = v0[j]
             # else:
@@ -153,4 +163,11 @@ def match_distance(g1, g2):
 
     return v0[n]
 
-match_distance([("A", set())], [("A", {","})])
+# match_distance([("A", set())], [("A", {","})])
+
+def standard(interp, match):
+    g1 = convert_interpretation(interp)
+    g2 = convert_match(match)
+    print(g1)
+    print(g2)
+    return match_distance(g1, g2)

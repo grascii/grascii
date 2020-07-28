@@ -179,3 +179,11 @@ class RegexBuilder():
         return patterns
 
 
+    def generate_patterns_map(self, interpretations: List[list]):
+        patterns = list()
+        for interp in interpretations:
+            regex = self.build_regex(interp)
+            print(regex)
+            # patterns.append(re.compile(regex))
+            patterns.append((interp, re.compile(regex)))
+        return patterns

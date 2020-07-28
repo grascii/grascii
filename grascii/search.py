@@ -132,21 +132,35 @@ def perform_search(patterns: Iterable[Pattern], starting_letters: Set[str], dict
             print("Error: Could not find", dict_path + item)
 
 def perform_search_sorted(patterns, starting_letters: Set[str], dict_path) -> Iterable[str]:
+    sorted_results = list()
     for item in sorted(starting_letters):
         try:
             with utils.get_dict_file(":preanniversary", item) as dictionary:
                 for line in dictionary:
                     m = False
+                    metric = 2^32 - 1
                     for interp, pattern in patterns:
                         match = pattern.search(line)
                         if match:
                             m = True
-                            print(metrics.standard(interp, match))
+                            metric = min(metric, metrics.standard(interp, match))
+                            # print(metrics.standard(interp, match))
                     if m:
-                        print(match.groups())
-                        yield line
+                        i = len(sorted_results)
+                        sorted_results.append((line, metric))
+                        while i > 0:
+                            if sorted_results[i][1] < sorted_results[i - 1][1]:
+                                tmp = sorted_results[i - 1]
+                                sorted_results[i - 1] = sorted_results[i]
+                                sorted_results[i] = tmp
+                            i -= 1
+                        # print(match.groups())
+                        # yield line
         except FileNotFoundError:
             print("Error: Could not find", dict_path + item)
+    for tup in sorted_results:
+        print(tup[1])
+        yield tup[0]
 
 def process_args(args: argparse.Namespace) -> None:
     conf = ConfigParser()

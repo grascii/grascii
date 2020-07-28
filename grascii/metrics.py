@@ -142,9 +142,9 @@ def match_distance(g1, g2):
         v1[0] = v0[0] + compute_ins_del_cost(g1[i])
         
         for j in range(n):
-            del_cost = v0[j + 1] + compute_ins_del_cost(g2[j])
+            del_cost = v0[j + 1] + compute_ins_del_cost(g1[i])
             # print(del_cost)
-            ins_cost = v1[j] + compute_ins_del_cost(g1[i])
+            ins_cost = v1[j] + compute_ins_del_cost(g2[j])
             # print(ins_cost)
             sub_cost = v0[j] + compute_sub_cost(g1[i], g2[j])
             # print(sub_cost)
@@ -168,6 +168,6 @@ def match_distance(g1, g2):
 def standard(interp, match):
     g1 = convert_interpretation(interp)
     g2 = convert_match(match)
-    print(g1)
+    # print(g1)
     print(g2)
     return match_distance(g1, g2)

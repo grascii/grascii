@@ -94,8 +94,7 @@ def compute_ins_del_cost(tup):
     elif tup[0] == grammar.DISJOINER:
         cost += BASE_COST
 
-    # print(tup[1])
-    assert isinstance(tup[1], set)
+    assert cost > 0
     cost += sum(COSTS.get(a, 0) for a in tup[1])
     return cost
 
@@ -137,7 +136,7 @@ def match_distance(g1, g2):
     v1 = [0 for i in range(n + 1)]
 
     for i in range(m):
-        print(v0)
+        # print(v0)
         # v1[0] = i + 1
         v1[0] = v0[0] + compute_ins_del_cost(g1[i])
         
@@ -159,7 +158,7 @@ def match_distance(g1, g2):
         v0 = v1
         v1 = tmp
         
-    print(v0)
+    # print(v0)
 
     return v0[n]
 
@@ -169,5 +168,5 @@ def standard(interp, match):
     g1 = convert_interpretation(interp)
     g2 = convert_match(match)
     # print(g1)
-    print(g2)
+    # print(g2)
     return match_distance(g1, g2)

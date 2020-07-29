@@ -182,10 +182,20 @@ class RegexSearcher(Searcher):
 
     def search(self, **kwargs):
         regex = kwargs["regex"]
-        pattern = re.compile(regex.upper())
+        print(regex)
+        pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
         metric = lambda str, Match: 0
         starting_letters = grammar.HARD_CHARACTERS
         results = self.perform_search(patterns, starting_letters, metric)
         return list(results)
 
+class ReverseSearcher(RegexSearcher):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def search(self, **kwargs):
+        word = kwargs["regex"]
+        kwargs["regex"] = r".*\s" + word.capitalize()
+        return super().search(**kwargs)

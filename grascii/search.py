@@ -12,7 +12,7 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput, Tr
 from lark.visitors import CollapseAmbiguities
 
 from grascii import regen, grammar, defaults, utils, metrics
-from grascii.new_search import GrasciiSearcher, RegexSearcher
+from grascii.new_search import GrasciiSearcher, RegexSearcher, ReverseSearcher
 
 vprint = lambda *a, **k: None
 
@@ -205,7 +205,7 @@ def search(**kwargs) -> Iterable[str]:
 
     if kwargs.get("grascii"):
         return GrasciiSearcher().search(**kwargs)
-    return RegexSearcher().search(**kwargs)
+    return ReverseSearcher().search(**kwargs)
 
 
     verbose = kwargs.get("verbose", False)

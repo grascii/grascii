@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from functools import reduce
+import re
 from typing import Union, List, Set, Iterable, Dict, TypeVar, Callable, Pattern, Tuple, Match
 
 from lark import Lark, Tree, UnexpectedInput, Transformer, Token
@@ -172,5 +173,19 @@ class GrasciiSearcher(Searcher):
         starting_letters = builder.get_starting_letters(interps)
 
         results = self.perform_search(patterns, starting_letters, metrics.standard)
+        return list(results)
+
+class RegexSearcher(Searcher):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def search(self, **kwargs):
+        regex = kwargs["regex"]
+        pattern = re.compile(regex.upper())
+        patterns = [(pattern.pattern, pattern)]
+        metric = lambda str, Match: 0
+        starting_letters = grammar.HARD_CHARACTERS
+        results = self.perform_search(patterns, starting_letters, metric)
         return list(results)
 

@@ -155,7 +155,7 @@ class RegexSearcher(Searcher):
         super().__init__(**kwargs)
 
     def search(self, **kwargs):
-        regex = kwargs["regex"]
+        regex = kwargs["regexp"]
         print(regex)
         pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
@@ -170,6 +170,6 @@ class ReverseSearcher(RegexSearcher):
         super().__init__(**kwargs)
 
     def search(self, **kwargs):
-        word = kwargs["regex"]
-        kwargs["regex"] = r".*\s" + word.capitalize()
+        word = kwargs["reverse"]
+        kwargs["regexp"] = r".*\s" + word.capitalize()
         return super().search(**kwargs)

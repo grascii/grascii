@@ -12,7 +12,7 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput, Tr
 from lark.visitors import CollapseAmbiguities
 
 from grascii import regen, grammar, defaults, utils, metrics
-from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher
+from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
 from grascii.interactive import InteractiveSearcher
 
 description = "Search a Grascii Dictionary"
@@ -21,8 +21,10 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     group = argparser.add_mutually_exclusive_group(required=True)
     group.add_argument("-g", "--grascii", 
             help="the grascii string to search for")
-    group.add_argument("-r", "--regex", 
+    group.add_argument("-e", "--regexp", 
             help="a custom regular expression to use in the search")
+    group.add_argument("-r", "--reverse", 
+            help="search by word instead")
     group.add_argument("-i", "--interactive", action="store_true",
             help="run in interactive mode")
     argparser.add_argument("-u", "--uncertainty", type=int, choices=range(3),
@@ -87,11 +89,16 @@ def process_args(args: argparse.Namespace) -> None:
 
 def search(**kwargs) -> Iterable[str]:
 
+    searcher: Searcher
     if kwargs.get("grascii"):
-        return GrasciiSearcher().search(**kwargs)
+        searcher = GrasciiSearcher()
     elif kwargs.get("interactive"):
-        return InteractiveSearcher().search(**kwargs)
-    return ReverseSearcher().search(**kwargs)
+        searcher = InteractiveSearcher()
+    elif kwargs.get("reverse"):
+        searcher = ReverseSearcher()
+    else:
+        searcher = RegexSearcher()
+    return searcher.search(**kwargs)
 
 def cli_search(args: argparse.Namespace) -> None:
     process_args(args)

@@ -12,11 +12,8 @@ from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput, Tr
 from lark.visitors import CollapseAmbiguities
 
 from grascii import regen, grammar, defaults, utils, metrics
-from grascii.new_search import GrasciiSearcher, RegexSearcher, ReverseSearcher
+from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher
 from grascii.interactive import InteractiveSearcher
-
-
-vprint = lambda *a, **k: None
 
 description = "Search a Grascii Dictionary"
 

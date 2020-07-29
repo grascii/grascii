@@ -3,7 +3,7 @@ import questionary
 from questionary.prompts.common import Choice, Separator
 
 from grascii import regen, metrics
-from grascii.new_search import GrasciiSearcher
+from grascii.searchers import GrasciiSearcher
 
 class InteractiveSearcher(GrasciiSearcher):
 

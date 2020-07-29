@@ -9,32 +9,47 @@ from lark.visitors import CollapseAmbiguities
 from grascii import regen, utils, metrics, grammar
 from grascii.grammars import get_grammar
 
-Interpretation = Union[str, List[str]]
+Interpretation = List[Union[str, List[str]]]
 
 class GrasciiFlattener(Transformer):
 
-    def start(self, children):
-        result = list()
+    """This is a Lark Transformer that converts a parsed Grascii string
+    into an Interpretation. An Interpretation is a list of terminals and
+    annotation lists. Each terminal is its own element in the interpretation,
+    but sequences of annotation terminals are grouped into their own sublist.
+    """
+
+    def start(self, children) -> Interpretation:
+        """Returns the final result of the transformation.
+        
+        :meta private:
+        """
+
+        result: Interpretation = list()
         for child in children:
             for token in child:
                 if token in grammar.ANNOTATION_CHARACTERS:
+                    # pack annotation terminals into sublist
                     if isinstance(result[-1], list):
+                        # add to previous annotation list
                         result[-1].append(token)
                     else:
+                        # start new annotation list
                         result.append([token])
                 else:
                     result.append(token)
         return result
 
-    def group_modifiers(self, children):
-        return children[0], set(children[1:])
+    def __default__(self, data, children, meta) -> List[str]:
+        """The default visitor function for nodes in the parse tree.
+        Returns a flat list of strings."""
 
-    def __default__(self, data, children, meta):
-        result = list()
+        result: List[str] = list()
         for child in children:
             if isinstance(child, Token):
                 result.append(child)
             else:
+                # flatten iterable
                 for token in child:
                     result.append(token)
         return result
@@ -43,10 +58,26 @@ T = TypeVar("T")
 
 class Searcher(ABC):
 
+    """An abstract base class for objects that search as Grascii dictionary."""
+
     def __init__(self, **kwargs):
         self.dictionary = ":preanniversary"
 
     def perform_search(self, patterns: Iterable[Tuple[T, Pattern]], starting_letters: Set[str], metric: Callable[[T, Match], int]) -> Iterable[str]:
+        """Performs a search of a Grascii Dictionary.
+        
+        :param patterns: A collection of compiled regular expression patterns
+            with a corresponding interpretation.
+        :param starting_letters: A set of letters used to index the search in
+            a Grascii Dictionary.
+        :param metric: A function taking an interpretation and a regular 
+            expression match that returns a positive integer signifying the
+            differnce between the interpretation and the match. 0 means the
+            two are equivalent. The greater the value, the more different
+            they are.
+        :returns: A collection strings of the form "[grascii] [translation]"
+            sorted by the results of metric.
+        """
         sorted_results: List[Tuple[str, int]] = list()
         for item in sorted(starting_letters):
             try:
@@ -76,9 +107,18 @@ class Searcher(ABC):
 
     @abstractmethod
     def search(self, **kwargs):
+        """An abstract method that runs a search with the given search
+        options and returns the results."""
         ...
 
 class GrasciiSearcher(Searcher):
+
+    """A subclass of Searcher that performs a search given a Grascii
+       string
+
+
+       
+       """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -86,6 +126,13 @@ class GrasciiSearcher(Searcher):
         self.parser = Lark(grammar, parser="earley", ambiguity="explicit") 
 
     def parse_grascii(self, grascii: str) -> Union[Tree, bool]:
+        """Attempt to parse a grascii string.
+        
+        :param grascii: The grascii string to parse.
+        :returns: A Lark parse tree on a successful parse, or False if the
+            parse fails.
+        """
+
         try:
             return self.parser.parse(grascii)
         except UnexpectedInput as e:
@@ -94,11 +141,24 @@ class GrasciiSearcher(Searcher):
             return False
 
     def flatten_tree(self, parse_tree: Tree) -> List[Interpretation]:
+        """Extract a list of all possible Interpretations from a grascii
+            parse tree.
+
+        :param parse_tree: A Lark parse tree from a parsed grascii string.
+        :returns: A list of all possible Interpretations.
+        """
+
         trees = CollapseAmbiguities().transform(parse_tree)
         trans = GrasciiFlattener()
         return [trans.transform(tree) for tree in trees]
 
-    def interpretation_to_string(self, interp: Interpretation) -> str:
+    def interpretation_to_string(self, interpretation: Interpretation) -> str:
+        """Generate a string representation of an Interpretation.
+        
+        :param interpretation: An Interpretation to generate a string for.
+        :returns: A string representation of an Interpretation
+        """
+
         def reducer(builder, token):
             if isinstance(token, list):
                 builder += token
@@ -108,12 +168,22 @@ class GrasciiSearcher(Searcher):
                 builder.append(token)
             return builder
 
-        return "".join(reduce(reducer, interp, []))
+        return "".join(reduce(reducer, interpretation, []))
 
     def get_unique_interpretations(self, interpretations: List[Interpretation]) -> Dict[str, Interpretation]:
+        """Generate a collection of all unique Interpretations in another
+        collection by comparing string representations.
+        
+        :param interpretations: A collection of Interpretations to process
+        :returns: A dictionary mapping interpretation string representations
+            to Interpretations.
+        """
+
         return {self.interpretation_to_string(interp): interp for interp in interpretations}
 
     def extract_search_args(self, **kwargs):
+        """Get the relevant arguments for search."""
+
         self.uncertainty = kwargs.get("uncertainty", 0)
         # handle enum conversion error?
         self.search_mode = regen.SearchMode(kwargs.get("search_mode", "match"))
@@ -124,6 +194,28 @@ class GrasciiSearcher(Searcher):
         self.interpretation_mode = kwargs.get("interpretation", "best")
 
     def search(self, **kwargs):
+        """
+
+        :param grascii: [Required] The grascii string to use in the search.
+        :param uncertainty: The uncertainty of the grascii string.
+        :param search_mode: The search mode to use.
+        :param annotation_mode: How to handle annotations in the search.
+        :param aspirate_mode: How to handle annotations in the search.
+        :param disjoiner_mode: How to handle annotations in the search.
+        :param fix_first: Apply an uncertainty of 0 to the first token.
+        :param interpretation: How to handle ambiguous grascii strings.
+        :type grascii: str
+        :type uncertainty: int: 0, 1, or 2
+        :type search_mode: str: one of regen.SearchMode values
+        :type annotation_mode: one of regen.Strictness values
+        :type aspirate_mode: one of regen.Strictness values
+        :type disjoiner_mode: one of regen.Strictness values
+        :type fix_first: bool
+        :type interpretation: "best" or "all"
+        :returns: A list of search results.
+        :rtype: List[str]
+        """
+
         grascii = kwargs["grascii"].upper()
         self.extract_search_args(**kwargs)
         tree = self.parse_grascii(grascii)
@@ -151,10 +243,19 @@ class GrasciiSearcher(Searcher):
 
 class RegexSearcher(Searcher):
 
+    """A subclass of Searcher that searches a grascii dictionary given
+    a raw regular expression."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def search(self, **kwargs):
+        """
+        :param regexp: [Required] A regular expression to use in a search.
+        :returns: A list of search results.
+        :rtype: List[str]
+        """
+
         regex = kwargs["regexp"]
         print(regex)
         pattern = re.compile(regex)
@@ -166,10 +267,19 @@ class RegexSearcher(Searcher):
 
 class ReverseSearcher(RegexSearcher):
 
+    """A subclass of RegexSearcher that searches a grascii dictionary
+    given a word."""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def search(self, **kwargs):
+        """
+        :param reverse: [Required] A word to search for.
+        :returns: A list of search results.
+        :rtype: List[str]
+        """
+
         word = kwargs["reverse"]
         kwargs["regexp"] = r".*\s" + word.capitalize()
         return super().search(**kwargs)

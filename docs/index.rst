@@ -15,6 +15,8 @@ Welcome to Grascii's documentation!
    search
    dictionary
    similarity
+   reference
+
 
 
 

@@ -94,6 +94,8 @@ def compute_ins_del_cost(tup):
     elif tup[0] == grammar.DISJOINER:
         cost += BASE_COST
 
+    if cost == 0:
+         print(tup)
     assert cost > 0
     cost += sum(COSTS.get(a, 0) for a in tup[1])
     return cost

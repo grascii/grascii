@@ -74,9 +74,9 @@ class Searcher(ABC):
         for tup in sorted_results:
             yield tup[0]
 
-    # @abstractmethod
-    # def search(self, ...):
-        # ...
+    @abstractmethod
+    def search(self, **kwargs):
+        ...
 
 class GrasciiSearcher(Searcher):
 
@@ -113,36 +113,7 @@ class GrasciiSearcher(Searcher):
     def get_unique_interpretations(self, interpretations: List[Interpretation]) -> Dict[str, Interpretation]:
         return {self.interpretation_to_string(interp): interp for interp in interpretations}
 
-    # def perform_search(self, patterns, starting_letters: Set[str]) -> Iterable[str]:
-        # sorted_results = list()
-        # for item in sorted(starting_letters):
-            # try:
-                # with utils.get_dict_file(self.dictionary, item) as dictionary:
-                    # for line in dictionary:
-                        # m = False
-                        # metric = 2^32 - 1
-                        # for interp, pattern in patterns:
-                            # match = pattern.search(line)
-                            # if match:
-                                # m = True
-                                # metric = min(metric, metrics.standard(interp, match))
-                        # if m:
-                            # i = len(sorted_results)
-                            # sorted_results.append((line, metric))
-                            # while i > 0:
-                                # if sorted_results[i][1] < sorted_results[i - 1][1]:
-                                    # tmp = sorted_results[i - 1]
-                                    # sorted_results[i - 1] = sorted_results[i]
-                                    # sorted_results[i] = tmp
-                                # i -= 1
-            # except FileNotFoundError:
-                # pass
-                # # print("Error: Could not find", dict_path + item)
-        # for tup in sorted_results:
-            # yield tup[0]
-
-    def search(self, **kwargs):
-        grascii = kwargs["grascii"].upper()
+    def extract_search_args(self, **kwargs):
         self.uncertainty = kwargs.get("uncertainty", 0)
         # handle enum conversion error?
         self.search_mode = regen.SearchMode(kwargs.get("search_mode", "match"))
@@ -152,6 +123,9 @@ class GrasciiSearcher(Searcher):
         self.fix_first = kwargs.get("fix_first", False)
         self.interpretation_mode = kwargs.get("interpretation", "best")
 
+    def search(self, **kwargs):
+        grascii = kwargs["grascii"].upper()
+        self.extract_search_args(**kwargs)
         tree = self.parse_grascii(grascii)
         if not tree:
             raise Exception

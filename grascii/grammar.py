@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple
 
 _STROKES = "A AU A&' A&E B CH D DD DF DM DN DT E EU F G I J JND JNT K L LD \
-    M MD MM MN MT N ND NG NT O OE P PND PNT R S SH SS T TD TH TM TN U V X XS Z"
+    M MD MM MN MT N ND NG NK NT O OE P PND PNT R S SH SS T TD TH TM TN U V X XS Z"
 
 STROKES = set(_STROKES.split())
 

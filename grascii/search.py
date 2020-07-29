@@ -14,6 +14,7 @@ from lark.visitors import CollapseAmbiguities
 from grascii import regen, grammar, defaults, utils, metrics
 from grascii.new_search import GrasciiSearcher, RegexSearcher, ReverseSearcher
 
+
 vprint = lambda *a, **k: None
 
 description = "Search a Grascii Dictionary"
@@ -205,6 +206,9 @@ def search(**kwargs) -> Iterable[str]:
 
     if kwargs.get("grascii"):
         return GrasciiSearcher().search(**kwargs)
+    elif kwargs.get("interactive"):
+        from grascii.interactive import InteractiveSearcher
+        return InteractiveSearcher().search(**kwargs)
     return ReverseSearcher().search(**kwargs)
 
 

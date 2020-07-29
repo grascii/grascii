@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from functools import reduce
+from typing import Union, List, Set, Iterable, Dict, TypeVar, Callable, Pattern, Tuple, Match
 
 from lark import Lark, Tree, UnexpectedInput, Transformer, Token
 from lark.visitors import CollapseAmbiguities
-from typing import Union, List, Set, Iterable, Dict
 
 from grascii import regen, utils, metrics, grammar
 from grascii.grammars import get_grammar
@@ -38,10 +38,40 @@ class GrasciiFlattener(Transformer):
                     result.append(token)
         return result
 
+T = TypeVar("T")
+
 class Searcher(ABC):
 
     def __init__(self, **kwargs):
         self.dictionary = ":preanniversary"
+
+    def perform_search(self, patterns: Iterable[Tuple[T, Pattern]], starting_letters: Set[str], metric: Callable[[T, Match], int]) -> Iterable[str]:
+        sorted_results: List[Tuple[str, int]] = list()
+        for item in sorted(starting_letters):
+            try:
+                with utils.get_dict_file(self.dictionary, item) as dictionary:
+                    for line in dictionary:
+                        found_match = False
+                        diff = 2^32 - 1
+                        for interp, pattern in patterns:
+                            match = pattern.search(line)
+                            if match:
+                                found_match = True
+                                diff = min(diff, metric(interp, match))
+                        if found_match:
+                            i = len(sorted_results)
+                            sorted_results.append((line, diff))
+                            while i > 0:
+                                if sorted_results[i][1] < sorted_results[i - 1][1]:
+                                    tmp = sorted_results[i - 1]
+                                    sorted_results[i - 1] = sorted_results[i]
+                                    sorted_results[i] = tmp
+                                i -= 1
+            except FileNotFoundError:
+                pass
+                # print("Error: Could not find", dict_path + item)
+        for tup in sorted_results:
+            yield tup[0]
 
     # @abstractmethod
     # def search(self, ...):
@@ -50,7 +80,6 @@ class Searcher(ABC):
 class GrasciiSearcher(Searcher):
 
     def __init__(self, **kwargs):
-        # super(**kwargs)
         super().__init__(**kwargs)
         grammar = get_grammar("grascii")
         self.parser = Lark(grammar, parser="earley", ambiguity="explicit") 
@@ -62,9 +91,6 @@ class GrasciiSearcher(Searcher):
             # print("Syntax Error")
             # print(e.get_context(grascii))
             return False
-
-    def perform_search(self, grascii: str):
-        pass
 
     def flatten_tree(self, parse_tree: Tree) -> List[Interpretation]:
         trees = CollapseAmbiguities().transform(parse_tree)
@@ -83,36 +109,36 @@ class GrasciiSearcher(Searcher):
 
         return "".join(reduce(reducer, interp, []))
 
-    def get_unique_interpretations(self, interpretations: List[Interpretation]) -> Dict[str, List[Interpretation]]:
+    def get_unique_interpretations(self, interpretations: List[Interpretation]) -> Dict[str, Interpretation]:
         return {self.interpretation_to_string(interp): interp for interp in interpretations}
 
-    def perform_search(self, patterns, starting_letters: Set[str]) -> Iterable[str]:
-        sorted_results = list()
-        for item in sorted(starting_letters):
-            try:
-                with utils.get_dict_file(self.dictionary, item) as dictionary:
-                    for line in dictionary:
-                        m = False
-                        metric = 2^32 - 1
-                        for interp, pattern in patterns:
-                            match = pattern.search(line)
-                            if match:
-                                m = True
-                                metric = min(metric, metrics.standard(interp, match))
-                        if m:
-                            i = len(sorted_results)
-                            sorted_results.append((line, metric))
-                            while i > 0:
-                                if sorted_results[i][1] < sorted_results[i - 1][1]:
-                                    tmp = sorted_results[i - 1]
-                                    sorted_results[i - 1] = sorted_results[i]
-                                    sorted_results[i] = tmp
-                                i -= 1
-            except FileNotFoundError:
-                pass
-                # print("Error: Could not find", dict_path + item)
-        for tup in sorted_results:
-            yield tup[0]
+    # def perform_search(self, patterns, starting_letters: Set[str]) -> Iterable[str]:
+        # sorted_results = list()
+        # for item in sorted(starting_letters):
+            # try:
+                # with utils.get_dict_file(self.dictionary, item) as dictionary:
+                    # for line in dictionary:
+                        # m = False
+                        # metric = 2^32 - 1
+                        # for interp, pattern in patterns:
+                            # match = pattern.search(line)
+                            # if match:
+                                # m = True
+                                # metric = min(metric, metrics.standard(interp, match))
+                        # if m:
+                            # i = len(sorted_results)
+                            # sorted_results.append((line, metric))
+                            # while i > 0:
+                                # if sorted_results[i][1] < sorted_results[i - 1][1]:
+                                    # tmp = sorted_results[i - 1]
+                                    # sorted_results[i - 1] = sorted_results[i]
+                                    # sorted_results[i] = tmp
+                                # i -= 1
+            # except FileNotFoundError:
+                # pass
+                # # print("Error: Could not find", dict_path + item)
+        # for tup in sorted_results:
+            # yield tup[0]
 
     def search(self, **kwargs):
         grascii = kwargs["grascii"].upper()
@@ -145,6 +171,6 @@ class GrasciiSearcher(Searcher):
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
 
-        results = self.perform_search(patterns, starting_letters)
+        results = self.perform_search(patterns, starting_letters, metrics.standard)
         return list(results)
 

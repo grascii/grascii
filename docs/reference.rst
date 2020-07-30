@@ -13,3 +13,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.build
    :members:
+
+.. automodule:: grascii.search
+   :members:

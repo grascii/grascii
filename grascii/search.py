@@ -1,23 +1,31 @@
+"""
+Acts as the main entry point for the grascii search command.
 
-from functools import reduce
-import re
-import sys
+This can be invoked as a standalone program:
+$ python -m grascii.search --help
+"""
+
 import argparse
+from configparser import ConfigParser
 import io
 import os
-from configparser import ConfigParser
-from typing import Union, List, Dict, Set, Iterable, Match, Pattern, cast
+import re
+import sys
+from typing import Union, List, Dict, Set, Iterable, Match, Pattern, cast, Optional
 
-from lark import Lark, Visitor, Transformer, Discard, Token, UnexpectedInput, Tree
-from lark.visitors import CollapseAmbiguities
-
-from grascii import regen, grammar, defaults, utils, metrics
+from grascii import regen, defaults
 from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
 from grascii.interactive import InteractiveSearcher
 
 description = "Search a Grascii Dictionary"
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
+    """Configure an ArgumentParser parser to parse the search command-line
+    options.
+    
+    :param argparser: A fresh ArgumentParser to configure.
+    """
+
     group = argparser.add_mutually_exclusive_group(required=True)
     group.add_argument("-g", "--grascii", 
             help="the grascii string to search for")
@@ -50,6 +58,11 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
             help="turn on verbose output")
 
 def process_args(args: argparse.Namespace) -> None:
+    """Set defaults for arguments that were unprovided.
+
+    :param args: The set of arguments to process.
+    """
+
     conf = ConfigParser()
     conf.read("grascii.conf")
     uncertainty = conf.getint('Search', 'Uncertainty', 
@@ -87,7 +100,23 @@ def process_args(args: argparse.Namespace) -> None:
     args.dict_path = conf.get("Search", "DictionaryPath", 
             fallback=defaults.SEARCH["DictionaryPath"])
 
-def search(**kwargs) -> Iterable[str]:
+def search(**kwargs) -> Optional[Iterable[str]]:
+    """Run a grascii dictionary search. Parameters can consist of
+    any parameters used by the search method of any subclass of
+    Searcher. One, and only one, of the parameters list below
+    is required.
+
+    :param grascii: A grascii string to use in a search.
+    :param interactive: A flag enabling an interactive search.
+    :param reverse: A word to search for in the dictionary.
+    :param regexp: A regular expression to use in a search.
+    :type grascii: str
+    :type interactive: bool
+    :type reverse: str
+    :type regexp: str
+
+    :returns: A list of search results, or None if run in interactive mode
+    """
 
     searcher: Searcher
     if kwargs.get("grascii"):
@@ -101,6 +130,11 @@ def search(**kwargs) -> Iterable[str]:
     return searcher.search(**kwargs)
 
 def cli_search(args: argparse.Namespace) -> None:
+    """Run a search using arguments parsed from the command line.
+    
+    :param args: A namespace of parsed arguments.
+    """
+
     process_args(args)
     results = search(**{k: v for k, v in vars(args).items() if v is not None})
     count = 0
@@ -110,6 +144,8 @@ def cli_search(args: argparse.Namespace) -> None:
     print("Results:", count)
 
 def main() -> None:
+    """Run a search using arguments retrieved from sys.argv."""
+
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])

@@ -28,3 +28,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.words
    :members:
+
+.. automodule:: grascii.grammars
+   :members:

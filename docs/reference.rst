@@ -22,3 +22,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.metrics
    :members:
+
+.. automodule:: grascii.similarities
+   :members:

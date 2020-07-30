@@ -1,4 +1,6 @@
-from typing import Tuple, Hashable, List, Set, cast, Dict
+"""Contains methods for detemining the similarity of grascii strokes."""
+
+from typing import Tuple, Hashable, List, Set, cast, Dict, Iterable
 
 equiv_nodes: Dict[str, Tuple[str, ...]] = {
     "S" : ("S", "Z"),
@@ -76,30 +78,61 @@ edges: List[Tuple[str, str]] = [
 trans_edges: List[Tuple[Hashable, Hashable]] = [(get_node(edge[0]), get_node(edge[1])) for edge in edges]
 
 class SimilarityGraph():
+    """Implements a basic graph with the capability of doing an n-layered
+    breadth-first search."""
 
     def __init__(self):
         self.nodes = dict()
 
     def add_node(self, node: Hashable) -> None:
+        """Add a node to the graph.
+        
+        :param node: An object that can be used as a dict key.
+        """
+        
         if node not in self.nodes:
             self.nodes[node] = set()
 
     def add_edge(self, edge: Tuple[Hashable, Hashable]) -> None:
+        """Add an edge to the graph. If either node does not exist
+        in the graph, it is added.
+        
+        :param edge: Two objects that can be used as a dict key.
+        """
+
         assert len(edge) > 1
         self.add_node(edge[0])
         self.nodes[edge[0]].add(edge[1])
         self.add_node(edge[1])
         self.nodes[edge[1]].add(edge[0])
 
-    def add_nodes(self, nodes: List[Hashable]) -> None:
+    def add_nodes(self, nodes: Iterable[Hashable]) -> None:
+        """Add a collection of nodes to the graph.
+        
+        :param nodes: A collection of objects that can be used as a dict key.
+        """
+
         for node in nodes:
             self.add_node(node)
 
-    def add_edges(self, edges: List[Tuple[Hashable, Hashable]]) -> None:
+    def add_edges(self, edges: Iterable[Tuple[Hashable, Hashable]]) -> None:
+        """Add a collection of edges to the graph.
+        
+        :param nodes: A collection of edges.
+        """
+
         for edge in edges:
             self.add_edge(edge)
 
     def get_similar(self, node: Hashable, similarity: int) -> Set[Hashable]:
+        """Get a set of all nodes within a distance of similarity to the
+        given node.
+
+        :param node: The node to get similars for.
+        :param similarity: How different... uncertainty.
+        :returns: A set of nodes
+        """
+
         similars = set()
         similars.add(node)
         while similarity > 0:
@@ -116,5 +149,13 @@ sg.add_edges(trans_edges)
 sg.add_nodes(disconnected_nodes)
 
 def get_similar(stroke: str, distance: int) -> Set[Tuple]:
+    """Get a set of all strokes within a distance to the
+    given node.
+
+    :param stroke: The stroke to get similars for.
+    :param distance: How different... uncertainty.
+    :returns: A set of strokes.
+    """
+
     return cast(Set[Tuple], sg.get_similar(get_node(stroke), distance))
 

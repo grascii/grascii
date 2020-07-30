@@ -10,3 +10,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.grammar
    :members:
+
+.. automodule:: grascii.build
+   :members:

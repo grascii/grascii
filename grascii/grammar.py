@@ -24,7 +24,6 @@
     tuples of annotations. The tuples are ordered in the same order they
     must appear in a strict grascii string. The tuples contain mutually
     exclusive annotations. Ex: MEDIUM_SOUND and LONG_SOUND
-
 """ 
 
 from typing import Dict, List, Tuple

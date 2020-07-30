@@ -1,22 +1,48 @@
+"""
+Contains RegexBuilder for generating regular expression to use in grascii
+searches.
+"""
+
 from enum import Enum
 import re
-from typing import List, Union, Iterable, Set, Pattern
-
+from typing import List, Union, Iterable, Set, Pattern, Tuple
 
 from grascii import grammar
 from grascii.similarities import get_similar
+from grascii.searchers import Interpretation
 
 class SearchMode(Enum):
+    """An enum representing different searh modes."""
+
     MATCH = "match"
     START = "start"
     CONTAIN = "contain"
 
 class Strictness(Enum):
+    """An enum representing different levels of strictness for handling
+    annotations, aspirates, and disjoiners in grascii strings."""
+
     LOW = "discard"
     MEDIUM = "retain"
     HIGH = "strict"
 
 class RegexBuilder():
+    """A class used for generating regular expressions used to search from
+    a grascii string based on grascii search options.
+    
+    :param uncertainty: The uncertainty of the grascii string.
+    :param search_mode: The search mode to use.
+    :param annotation_mode: How to handle annotations in the search.
+    :param aspirate_mode: How to handle annotations in the search.
+    :param disjoiner_mode: How to handle annotations in the search.
+    :param fix_first: Apply an uncertainty of 0 to the first token.
+    :type uncertainty: int: 0, 1, or 2
+    :type search_mode: str: one of regen.SearchMode values
+    :type annotation_mode: one of regen.Strictness values
+    :type aspirate_mode: one of regen.Strictness values
+    :type disjoiner_mode: one of regen.Strictness values
+    :type fix_first: bool
+    """
 
     def __init__(self, **kwargs):
         self.uncertainty = kwargs.get('uncertainty', 0)
@@ -27,6 +53,16 @@ class RegexBuilder():
         self.disjoiner_mode = kwargs.get('disjoiner_mode', Strictness.HIGH)
 
     def make_annotation_regex(self, stroke: str, annotations: Iterable[str]) -> str:
+        """Create a regular expression that matches the stroke with
+        the acceptable annotations and given annotations according to
+        the search options.
+        
+        :param stroke: The stroke for which to generate annotations.
+        :param annotations: A collection of annotations used in generating
+            the regular expression.
+
+        :returns: A regular expression.
+        """
 
         def pack(tup):
             if len(tup) == 1:
@@ -56,19 +92,31 @@ class RegexBuilder():
 
 
     def make_uncertainty_regex(self, stroke: str, uncertainty: int, annotations: list=list()) -> str:
-        # if get_node(stroke) not in sg.nodes:
-            # return re.escape(stroke)
+        """Create a regular expression that matches a stroke within a given
+        uncertainty while applying provided annotations.
+        
+        :param stroke: The stroke for which to generate alternatives.
+        :param uncertainty: The uncertainty to apply to the stroke.
+        :param annotations: A list of annotations to use in the generation.
+        :returns: A regular expression.
+        """
+
         similars = get_similar(stroke, uncertainty)
         flattened = []
         for group in similars:
             for token in group:
                 flattened.append(self.make_annotation_regex(token, annotations))
 
-        # if len(flattened) > 1:
         return "(" + "|".join(flattened) + ")"
-        # return flattened[0]
 
-    def build_regex(self, interpretation: list) -> str:
+    def build_regex(self, interpretation: Interpretation) -> str:
+        """Create a regular expression from a grascii interpretation based
+        on the constructor search parameters.
+        
+        :param interpretation: The interpretation for which to generate a 
+            regular expression.
+        :returns: A regular expression.
+        """
 
         aspirate = "(" + re.escape(grammar.ASPIRATE) + ")"
         disjoiner = "(" + re.escape(grammar.DISJOINER) + ")"
@@ -149,7 +197,14 @@ class RegexBuilder():
 
         return "".join(builder)
 
-    def get_starting_letters(self, interpretations: List[list]) -> Set[str]:
+    def get_starting_letters(self, interpretations: List[Interpretation]) -> Set[str]:
+        """Get a set of starting letters based on the given interpretations
+        factoring in uncertainty.
+        
+        :param interpretations: A list of interpretations to generate 
+            starting letters for.
+        :returns: A set of characters.
+        """
 
         if self.search_mode is SearchMode.CONTAIN:
             return grammar.HARD_CHARACTERS
@@ -170,7 +225,15 @@ class RegexBuilder():
 
         return letters
 
-    def generate_patterns(self, interpretations: List[list]) -> List[Pattern]:
+    def generate_patterns(self, interpretations: List[Interpretation]) -> List[Pattern]:
+        """Generates a set of compiled regular expressions from a list
+        of interpretations.
+        
+        :param interpretations: A list of interpretations to generate 
+            patterns for.
+        :returns: A list of Patterns.
+        """
+
         patterns = list()
         for interp in interpretations:
             regex = self.build_regex(interp)
@@ -179,7 +242,16 @@ class RegexBuilder():
         return patterns
 
 
-    def generate_patterns_map(self, interpretations: List[list]):
+    def generate_patterns_map(self, interpretations: List[Interpretation]) -> List[Tuple[Interpretation, Pattern]]:
+        """Generates a set of compiled regular expressions from a list
+        of interpretations.
+        
+        :param interpretations: A list of interpretations to generate 
+            patterns for.
+        :returns: A list of Interpretations with their corresponding 
+            Patterns.
+        """
+
         patterns = list()
         for interp in interpretations:
             regex = self.build_regex(interp)

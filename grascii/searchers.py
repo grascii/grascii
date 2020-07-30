@@ -200,7 +200,6 @@ class GrasciiSearcher(Searcher):
 
     def search(self, **kwargs):
         """
-
         :param grascii: [Required] The grascii string to use in the search.
         :param uncertainty: The uncertainty of the grascii string.
         :param search_mode: The search mode to use.

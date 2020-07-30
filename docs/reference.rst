@@ -16,3 +16,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.search
    :members:
+
+.. automodule:: grascii.regen
+   :members:

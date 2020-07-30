@@ -19,3 +19,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.regen
    :members:
+
+.. automodule:: grascii.metrics
+   :members:

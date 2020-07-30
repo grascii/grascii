@@ -9,7 +9,7 @@ from typing import List, Union, Iterable, Set, Pattern, Tuple
 
 from grascii import grammar
 from grascii.similarities import get_similar
-from grascii.searchers import Interpretation
+from grascii.types import Interpretation
 
 class SearchMode(Enum):
     """An enum representing different searh modes."""

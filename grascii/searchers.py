@@ -13,8 +13,8 @@ from lark.visitors import CollapseAmbiguities
 
 from grascii import regen, utils, metrics, grammar
 from grascii.grammars import get_grammar
+from grascii.types import Interpretation
 
-Interpretation = List[Union[str, List[str]]]
 
 class GrasciiFlattener(Transformer):
 

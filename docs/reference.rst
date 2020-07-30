@@ -7,3 +7,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.interactive
    :members:
+
+.. automodule:: grascii.grammar
+   :members:

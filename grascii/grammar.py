@@ -1,3 +1,32 @@
+"""A collection of useful information about the grascii grammar.
+
+:var STROKES: A set of all valid strokes.
+:var HARD_CHARACTERS: A set of all alphabetic characters that can appear as
+    the first character in a stroke.
+:var ANNOTATION_CHARACTERS: The set of all characters that are annotations.
+:var ASPIRATE: The character corresponding to the aspirate.
+:var MEDIUM_SOUND: The character corresponding to the medium sound of a standard
+    vowel.
+:var LONG_SOUND: The character corresponding to the long sound of a standard
+    vowel.
+:var LOOP: The character corresponding to the loop annotation.
+:var REVERSE: The character corresponding to the reversing annotation.
+:var WUNDERBAR: The character corresponding to the underbar (W) annotation.
+:var ING: The character corresponding to the -ing ending.
+:var LEFT: A character corresponding to a direction annotation.
+:var RIGHT: A character corresponding to a direction annotation.
+:var OBLIQUE: The character corresponding to the oblique annotation.
+:var DISJOINER: The character corresponding to a disjoiner.
+:var BOUNDARY: The character corresponding to a boundary.
+:var INTERSECTION: The character corresponding to an intersection.
+:var ANNOTATIONS: A dictionary of annotatable strokes to a sequence of 
+    acceptable annotations on the corresponding stroke. The sequece contains
+    tuples of annotations. The tuples are ordered in the same order they
+    must appear in a strict grascii string. The tuples contain mutually
+    exclusive annotations. Ex: MEDIUM_SOUND and LONG_SOUND
+
+""" 
+
 from typing import Dict, List, Tuple
 
 _STROKES = "A AU A&' A&E B CH D DD DF DM DN DT E EU F G I J JND JNT K L LD \

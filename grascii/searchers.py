@@ -1,3 +1,8 @@
+"""
+Contains the base class for Searchers as well as multiple concrete 
+implementations of it. 
+"""
+
 from abc import ABC, abstractmethod
 from functools import reduce
 import re

@@ -1,20 +1,58 @@
+"""
+Contains an implementation of an Interactive Searcher for an 
+interactive cli experience.
+"""
 
 import questionary
 from questionary.prompts.common import Choice, Separator
+from lark import Tree
+from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple
 
 from grascii import regen, metrics
-from grascii.searchers import GrasciiSearcher
+from grascii.searchers import GrasciiSearcher, Interpretation
+
+T = TypeVar("T")
 
 class InteractiveSearcher(GrasciiSearcher):
+    """This subclass of GrasciiSearcher runs an interactive search
+    experience for performing grascii searches with support for changing
+    search parameters.
+    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def search(self, **kwargs):
+        """
+        :param grascii: [Required] The grascii string to use in the search.
+        :param uncertainty: The uncertainty of the grascii string.
+        :param search_mode: The search mode to use.
+        :param annotation_mode: How to handle annotations in the search.
+        :param aspirate_mode: How to handle annotations in the search.
+        :param disjoiner_mode: How to handle annotations in the search.
+        :param fix_first: Apply an uncertainty of 0 to the first token.
+        :type grascii: str
+        :type uncertainty: int: 0, 1, or 2
+        :type search_mode: str: one of regen.SearchMode values
+        :type annotation_mode: one of regen.Strictness values
+        :type aspirate_mode: one of regen.Strictness values
+        :type disjoiner_mode: one of regen.Strictness values
+        :type fix_first: bool
+        :returns: None
+        :rtype: None
+        """
+
         self.extract_search_args(**kwargs)
         self.run_interactive()
 
-    def choose_interpretation(self, interpretations):
+    def choose_interpretation(self, interpretations: Sequence[Interpretation]) -> int:
+        """Prompt the user to choose an interpretation(s).
+        
+        :param interpretations: A collection of Interpretations to present
+            to the user
+        :returns: The index of the selected item in interpretations.
+        """
+
         if len(interpretations) == 1:
             return 0
         prompt = "Choose an interpretation to use in the search:"
@@ -25,7 +63,9 @@ class InteractiveSearcher(GrasciiSearcher):
             i += 1
         return questionary.select(prompt, choices).ask()
 
-    def run_interactive(self):
+    def run_interactive(self) -> None:
+        """Run an interactive search loop."""
+
         previous_search = None
         while True:
             action = questionary.select("What would you like to do?",
@@ -70,7 +110,17 @@ class InteractiveSearcher(GrasciiSearcher):
     def get_enum_value(self, enum):
         return enum.value
 
-    def change_arg(self, arg_name, options, display_name=None, convert=str):
+    def change_arg(self, arg_name, options: Iterable[T], display_name: str=None, convert: Callable[[T], str]=str) -> None:
+        """Prompt the user to select the value of a search parameter and set
+            the new value.
+        
+        :param arg_name: The name of the argument to change.
+        :param options: A collection of choices to present to the user.
+        :param display_name: The title of the prompt.
+        :param convert: A function that returns a string given an object of
+            type T.
+        """
+
         choices = list()
         for option in options:
             selected = getattr(self, arg_name) == option
@@ -80,7 +130,14 @@ class InteractiveSearcher(GrasciiSearcher):
         if setting is not None:
             setattr(self, arg_name, setting)
 
-    def interactive_search(self, previous=None):
+    def interactive_search(self, previous: str=None) -> Optional[str]:
+        """Run an interactive search.
+
+        :param previous: The previous search performed in this interactive
+            session.
+        :returns: The search string used.
+        """
+
         search, tree = self.get_grascii_search(previous)
         if search is None:
             return previous
@@ -124,7 +181,13 @@ class InteractiveSearcher(GrasciiSearcher):
         print()
         return search
             
-    def get_grascii_search(self, previous):
+    def get_grascii_search(self, previous: Optional[str]=None) -> Tuple[Optional[str], Optional[Tree]]:
+        """Prompt the user for a grascii string.
+        
+        :param previous: The previous grascii string used in a search.
+        :returns: A grascii string and a grascii parse tree.
+        """
+
         while True:
             if previous:
                 search = questionary.text("Enter Search:", default=previous).ask()

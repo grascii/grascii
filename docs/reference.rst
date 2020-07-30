@@ -25,3 +25,6 @@ Grascii Class Reference
 
 .. automodule:: grascii.similarities
    :members:
+
+.. automodule:: grascii.words
+   :members:

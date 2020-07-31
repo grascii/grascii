@@ -652,7 +652,7 @@ anexsh annexation
 anila annihilate
 anilash annihilation
 anev anniversary
-a\d Anno Domini
+*2 a\d Anno Domini
 anota annotate
 anotsh annotation
 anns announce

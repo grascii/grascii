@@ -10,6 +10,7 @@ import argparse
 from configparser import ConfigParser
 import os
 import pathlib
+import re
 import string
 import sys
 import time
@@ -172,12 +173,23 @@ class DictionaryBuilder():
                 return None
             if tokens[0] == "?":
                 self.log_warning(file_name, line, line_number, "Uncertainty")
-                tokens.pop(0)
+                # tokens.pop(0)
+                tokens = tokens[1:]
             if len(tokens) < 2:
                 self.log_error(file_name, line, line_number, "Too few words")
                 return None
-            if len(tokens) > 2:
-                self.log_warning(file_name, line, line_number, "Too many words")
+            match = re.match(r"\*(\d*)", tokens[0])           
+            count: Optional[int] = 1
+            if match:
+                tokens = tokens[1:]
+                if match[1]:
+                    count = int(match[1])
+                else:
+                    count = None
+            if count and len(tokens) != count + 1:
+                self.log_warning(file_name, line, line_number, 
+                        "Incorrect number of words:",
+                        "Expected:", str(count), "Got:", str(len(tokens) - 1))
                 return None
         return tokens
 
@@ -269,7 +281,8 @@ class DictionaryBuilder():
                     grascii = tokens[0].upper()
                     # remove '-' characters
                     grascii = "".join(grascii.split("-"))
-                    word = tokens[1].capitalize()
+                    # word = tokens[1].capitalize()
+                    word = " ".join(t.capitalize() for t in tokens[1:])
 
                     if not self.check_grascii(grascii, src_file.name, line, i + 1):
                         continue

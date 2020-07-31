@@ -105,7 +105,7 @@ class DictionaryBuilder():
             return self.out_files[char]
 
     def log_warning(self, file_name: str, line: str, line_number: int, *message: Union[str, List[str]]) -> None:
-        """Print a build warning to stdout.
+        """Print a build warning to stderr.
         
         :param file_name: The name of the dictionary source file that caused a 
             warning.
@@ -114,12 +114,12 @@ class DictionaryBuilder():
         :param message: A collection of strings to print as a message.
         """
 
-        print("W:", file_name + ":" + str(line_number), *message)
-        print(line.strip())
+        print("W:", file_name + ":" + str(line_number), *message, file=sys.stderr)
+        print(line.strip(), file=sys.stderr)
         self.warnings += 1
 
     def log_error(self, file_name: str, line: str, line_number: int, *message: Union[str, List[str]]):
-        """Print a build error to stdout.
+        """Print a build error to stderr.
         
         :param file_name: The name of the dictionary source file that caused a 
             error.
@@ -128,8 +128,8 @@ class DictionaryBuilder():
         :param message: A collection of strings to print as a message.
         """
         
-        print("E:", file_name + ":" + str(line_number), *message)
-        print(line.strip())
+        print("E:", file_name + ":" + str(line_number), *message, file=sys.stderr)
+        print(line.strip(), file=sys.stderr)
         self.errors += 1
 
     def prepare_output_dir(self) -> None:

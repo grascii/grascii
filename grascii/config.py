@@ -13,11 +13,12 @@ CONF_FILE_NAME = APP_NAME + ".conf"
 description = "Manage Grascii configuration"
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None: 
-    argparser.add_argument("--init", action="store_true",
+    group = argparser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--init", action="store_true",
             help="Create a configuration file.")
-    argparser.add_argument("-D", "--delete", action="store_true",
+    group.add_argument("-D", "--delete", action="store_true",
             help="Delete an existing configuration file.")
-    argparser.add_argument("-w", "--where", action="store_true",
+    group.add_argument("-w", "--where", action="store_true",
             help="Print the path to the configuration file and exit.")
     argparser.add_argument("-f", "--force", action="store_true",
             help="Allow overwriting of an existing configuration file.")

@@ -72,7 +72,7 @@ class DictionaryBuilder():
         self.spell = kwargs.get("spell", False)
         self.check_only = kwargs.get("check_only", False)
         self.package = kwargs.get("package", False)
-        self.output = kwargs.get("output", "gdict")
+        self.output = kwargs.get("output", defaults.BUILD["BuildDirectory"])
         self.src_files = kwargs["infiles"]
         if kwargs.get("verbose", False):
             self.vprint = lambda *a, **k: None

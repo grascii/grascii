@@ -11,7 +11,7 @@ from typing import Union, List, Set, Iterable, Dict, TypeVar, Callable, Pattern,
 from lark import Lark, Tree, UnexpectedInput, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
-from grascii import regen, utils, metrics, grammar
+from grascii import regen, utils, metrics, grammar, defaults
 from grascii.grammars import get_grammar
 from grascii.types import Interpretation
 
@@ -66,7 +66,7 @@ class Searcher(ABC):
     """An abstract base class for objects that search as Grascii dictionary."""
 
     def __init__(self, **kwargs):
-        self.dictionary = ":preanniversary"
+        self.dictionary = kwargs.get("dictionary", defaults.SEARCH["Dictionary"])
 
     def perform_search(self, patterns: Iterable[Tuple[T, Pattern]], starting_letters: Set[str], metric: Callable[[T, Match], int]) -> Iterable[str]:
         """Performs a search of a Grascii Dictionary.
@@ -189,14 +189,14 @@ class GrasciiSearcher(Searcher):
     def extract_search_args(self, **kwargs):
         """Get the relevant arguments for search."""
 
-        self.uncertainty = kwargs.get("uncertainty", 0)
+        self.uncertainty = kwargs.get("uncertainty", defaults.SEARCH.getint("Uncertainty"))
         # handle enum conversion error?
-        self.search_mode = regen.SearchMode(kwargs.get("search_mode", "match"))
-        self.annotation_mode = regen.Strictness(kwargs.get("annotation_mode", "discard"))
-        self.aspirate_mode = regen.Strictness(kwargs.get("aspirate_mode", "discard"))
-        self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", "strict"))
+        self.search_mode = regen.SearchMode(kwargs.get("search_mode", defaults.SEARCH["SearchMode"]))
+        self.annotation_mode = regen.Strictness(kwargs.get("annotation_mode", defaults.SEARCH["AnnotationMode"]))
+        self.aspirate_mode = regen.Strictness(kwargs.get("aspirate_mode", defaults.SEARCH["AspirateMode"]))
+        self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"]))
         self.fix_first = kwargs.get("fix_first", False)
-        self.interpretation_mode = kwargs.get("interpretation", "best")
+        self.interpretation_mode = kwargs.get("interpretation", defaults.SEARCH["Interpretation"])
 
     def search(self, **kwargs):
         """

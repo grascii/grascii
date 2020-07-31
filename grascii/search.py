@@ -63,36 +63,36 @@ def process_args(args: argparse.Namespace) -> None:
     :param args: The set of arguments to process.
     """
 
-    conf = ConfigParser()
-    conf.read("grascii.conf")
-    uncertainty = defaults.SEARCH.getint("Uncertainty")
-    uncertainty = max(0, min(uncertainty, 2))
-    search_mode = defaults.SEARCH["SearchMode"]
-    annotation_mode = defaults.SEARCH["AnnotationMode"]
-    aspirate_mode = defaults.SEARCH["AspirateMode"]
-    disjoiner_mode = defaults.SEARCH["DisjoinerMode"]
-    interpretation = defaults.SEARCH["Interpretation"]
+    # conf = ConfigParser()
+    # conf.read("grascii.conf")
+    # uncertainty = defaults.SEARCH.getint("Uncertainty")
+    # uncertainty = max(0, min(uncertainty, 2))
+    # search_mode = defaults.SEARCH["SearchMode"]
+    # annotation_mode = defaults.SEARCH["AnnotationMode"]
+    # aspirate_mode = defaults.SEARCH["AspirateMode"]
+    # disjoiner_mode = defaults.SEARCH["DisjoinerMode"]
+    # interpretation = defaults.SEARCH["Interpretation"]
 
-    if args.uncertainty is None:
-        args.uncertainty = uncertainty
-    if args.search_mode is None:
-        args.search_mode = search_mode
-    if args.annotation_mode is None:
-        args.annotation_mode = annotation_mode
-    if args.aspirate_mode is None:
-        args.aspirate_mode = aspirate_mode
-    if args.disjoiner_mode is None:
-        args.disjoiner_mode = disjoiner_mode
-    if args.interpretation is None:
-        args.interpretation = interpretation
+    # if args.uncertainty is None:
+        # args.uncertainty = uncertainty
+    # if args.search_mode is None:
+        # args.search_mode = search_mode
+    # if args.annotation_mode is None:
+        # args.annotation_mode = annotation_mode
+    # if args.aspirate_mode is None:
+        # args.aspirate_mode = aspirate_mode
+    # if args.disjoiner_mode is None:
+        # args.disjoiner_mode = disjoiner_mode
+    # if args.interpretation is None:
+        # args.interpretation = interpretation
 
-    args.search_mode = regen.SearchMode(args.search_mode)
-    args.annotation_mode = regen.Strictness(args.annotation_mode)
-    args.aspirate_mode = regen.Strictness(args.aspirate_mode)
-    args.disjoiner_mode = regen.Strictness(args.disjoiner_mode)
+    # args.search_mode = regen.SearchMode(args.search_mode)
+    # args.annotation_mode = regen.Strictness(args.annotation_mode)
+    # args.aspirate_mode = regen.Strictness(args.aspirate_mode)
+    # args.disjoiner_mode = regen.Strictness(args.disjoiner_mode)
 
-    args.dict_path = conf.get("Search", "DictionaryPath", 
-            fallback=defaults.SEARCH["DictionaryPath"])
+    # args.dict_path = conf.get("Search", "DictionaryPath", 
+            # fallback=defaults.SEARCH["DictionaryPath"])
 
 def search(**kwargs) -> Optional[Iterable[str]]:
     """Run a grascii dictionary search. Parameters can consist of

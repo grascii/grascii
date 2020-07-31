@@ -4,17 +4,14 @@ import sys
 import argparse
 import os
 
-# import build_dict as build
-# import search
-from grascii import search, build
+from grascii import search, build, config
 
-def no_command(args):
+def no_command(args: argparse.ArgumentParser) -> None:
     print("Expecting subcommand")
     print("For help run:")
     print("grascii.py --help")
 
-def main():
-
+def main() -> None:
     argparser = argparse.ArgumentParser(prog="grascii")
     argparser.set_defaults(func=no_command)
     subparsers = argparser.add_subparsers(title="subcommands")   
@@ -33,10 +30,14 @@ def main():
     build.build_argparser(build_parser)
     build_parser.set_defaults(func=build.cli_build)
 
-    # args = argparser.parse_args(arguments)
-    args = argparser.parse_args(sys.argv[1:])
+    config_parser = subparsers.add_parser("config", 
+            description=config.description, 
+            help=config.description,
+            aliases=["cf"])
+    config.build_argparser(config_parser)
+    config_parser.set_defaults(func=config.cli_config)
 
-    # os.chdir(os.path.dirname(__file__))
+    args = argparser.parse_args(sys.argv[1:])
 
     args.func(args)
 

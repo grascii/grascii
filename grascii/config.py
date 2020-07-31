@@ -26,10 +26,7 @@ def config_exists() -> bool:
     path = Path(CONF_DIRECTORY, CONF_FILE_NAME)
     return path.exists()
 
-def main() -> None:
-    argparser = argparse.ArgumentParser(description)
-    build_argparser(argparser)
-    args = argparser.parse_args(sys.argv[1:])
+def cli_config(args: argparse.Namespace) -> None:
     if args.where:
         if config_exists():
             print(PurePath(CONF_DIRECTORY, CONF_FILE_NAME))
@@ -52,12 +49,18 @@ def main() -> None:
             print("Configuration file does not exist.")
             return
         if not args.force:
-            print("Are you sure you want to delete the configuration file.",
+            print("Are you sure you want to delete the configuration file?",
                   "If so, run with --force.")
             return
         dest = Path(CONF_DIRECTORY, CONF_FILE_NAME)
         dest.unlink()
         print("Removed", dest)
+
+def main() -> None:
+    argparser = argparse.ArgumentParser(description)
+    build_argparser(argparser)
+    args = argparser.parse_args(sys.argv[1:])
+    cli_config(args)
 
 if __name__ == "__main__":
     main()

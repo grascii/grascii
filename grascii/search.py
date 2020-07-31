@@ -65,19 +65,13 @@ def process_args(args: argparse.Namespace) -> None:
 
     conf = ConfigParser()
     conf.read("grascii.conf")
-    uncertainty = conf.getint('Search', 'Uncertainty', 
-            fallback=defaults.SEARCH["Uncertainty"])
+    uncertainty = defaults.SEARCH.getint("Uncertainty")
     uncertainty = max(0, min(uncertainty, 2))
-    search_mode = conf.get('Search', "SearchMode", 
-            fallback=defaults.SEARCH["SearchMode"])
-    annotation_mode = conf.get('Search', "AnnotationMode", 
-            fallback=defaults.SEARCH["AnnotationMode"])
-    aspirate_mode = conf.get('Search', "AspirateMode", 
-            fallback=defaults.SEARCH["AspirateMode"])
-    disjoiner_mode = conf.get('Search', "DisjoinerMode", 
-            fallback=defaults.SEARCH["DisjoinerMode"])
-    interpretation = conf.get('Search', "Interpretation",
-            fallback=defaults.SEARCH["Interpretation"])
+    search_mode = defaults.SEARCH["SearchMode"]
+    annotation_mode = defaults.SEARCH["AnnotationMode"]
+    aspirate_mode = defaults.SEARCH["AspirateMode"]
+    disjoiner_mode = defaults.SEARCH["DisjoinerMode"]
+    interpretation = defaults.SEARCH["Interpretation"]
 
     if args.uncertainty is None:
         args.uncertainty = uncertainty

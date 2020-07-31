@@ -7,7 +7,6 @@ $ python -m grascii.build --help
 """
 
 import argparse
-from configparser import ConfigParser
 import os
 import pathlib
 import re

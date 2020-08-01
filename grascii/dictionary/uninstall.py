@@ -6,7 +6,7 @@ import sys
 
 from grascii.appdirs import user_data_dir
 from grascii.config import APP_NAME
-from grascii.install import DICTIONARY_PATH
+from grascii.dictionary.install import DICTIONARY_PATH
 
 description = "Uninstall a Grascii Dictionary"
 

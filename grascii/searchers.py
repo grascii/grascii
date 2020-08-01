@@ -12,7 +12,7 @@ from lark import Lark, Tree, UnexpectedInput, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
 from grascii import regen, metrics, grammar, defaults
-from grascii.dict import get_dict_file
+from grascii.dictionary import get_dict_file
 from grascii.grammars import get_grammar
 from grascii.types import Interpretation
 

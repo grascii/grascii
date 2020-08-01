@@ -4,7 +4,7 @@ import sys
 import argparse
 import os
 
-from grascii import search, build, config
+from grascii import search, config, dictionary
 
 def no_command(args: argparse.ArgumentParser) -> None:
     print("Expecting subcommand")
@@ -23,12 +23,19 @@ def main() -> None:
     search.build_argparser(search_parser)
     search_parser.set_defaults(func=search.cli_search)
 
-    build_parser = subparsers.add_parser("build", 
-            description=build.description, 
-            help=build.description,
-            aliases=["b"])
-    build.build_argparser(build_parser)
-    build_parser.set_defaults(func=build.cli_build)
+    dictionary_parser = subparsers.add_parser("dictionary", 
+            description=dictionary.description, 
+            help=dictionary.description,
+            aliases=["d"])
+    dictionary.build_argparser(dictionary_parser)
+    # dictionary_parser.set_defaults(func=dictionary.cli_config)
+
+    # build_parser = subparsers.add_parser("build", 
+            # description=build.description, 
+            # help=build.description,
+            # aliases=["b"])
+    # build.build_argparser(build_parser)
+    # build_parser.set_defaults(func=build.cli_build)
 
     config_parser = subparsers.add_parser("config", 
             description=config.description, 

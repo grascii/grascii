@@ -6,7 +6,7 @@ import sys
 
 from pkg_resources import resource_listdir, resource_isdir
 
-from grascii.install import DICTIONARY_PATH
+from grascii.dictionary.install import DICTIONARY_PATH
 
 description = "List built-in and installed dictionaries."
 
@@ -15,9 +15,9 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
 
 def cli_list(args: argparse.Namespace) -> None:
     print("Built-in Dictionaries:")
-    files = resource_listdir("grascii", "dict")
+    files = resource_listdir("grascii", "dictionary")
     for f in files:
-        if resource_isdir("grascii.dict", f) and f[0] != "_":
+        if resource_isdir("grascii.dictionary", f) and f[0] != "_":
             print(f)
     print()
 

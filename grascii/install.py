@@ -9,7 +9,7 @@ from grascii.config import APP_NAME
 
 description = "Install a Grascii Dictionary"
 
-DICTIONARY_PATH = Path(user_data_dir(APP_NAME), "dictionarys")
+DICTIONARY_PATH = Path(user_data_dir(APP_NAME), "dictionaries")
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
     argparser.add_argument("-n", "--name", action="store",

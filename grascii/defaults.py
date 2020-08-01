@@ -2,11 +2,11 @@
 from configparser import ConfigParser
 from pathlib import Path
 
-from grascii.config import CONF_DIRECTORY, CONF_FILE_NAME
+from grascii.config import get_config_file_path
 
 _CONFIG = ConfigParser()
 _CONFIG.read_file(Path(__file__).with_name("defaults.conf").open())
-_CONFIG.read(Path(CONF_DIRECTORY, CONF_FILE_NAME))
+_CONFIG.read(get_config_file_path())
 
 DEFAULTS = ConfigParser()
 DEFAULTS.read_file(Path(__file__).with_name("defaults.conf").open())

@@ -1,0 +1,56 @@
+
+# Page 207 Column 1
+eot yacht
+eotmn yachtsman
+? a|'u yahoo
+a|k yak
+a|m yam
+a|nke yankee
+a~|d yard
+a~|dam yardarm
+a~|d-f yardful
+a~|dstek yardstick
+a~|n yarn
+a|ro yarrow
+e-o yaw
+e-ol yawl
+e-on yawn
+e|, ye
+a|, yea
+
+# Page 207 Column 2
+e|r year
+e|rbk yearbook
+e|rl' yearling
+e~|n yearn
+e~|n^e yearningly
+e|st yeast
+e|lo yellow
+e|lon yellowness
+e|lp yelp
+e-omn yeoman
+e-omnre yeomanry
+a| yes
+e|st yesterday
+e|t yet
+e|ld yield
+e|ldr yielder
+
+# Page 207 Column 3
+e-odl yodel
+e-oga yoga
+e-ok yoke
+e-ok yolk
+e-on yon
+u you
+u your
+ung young
+unge~ younger
+ungste~ youngster
+euth youth
+euth)f youthful
+? e|uka yucca
+? e|uga yuga
+eul yule
+eulti yuletide
+eumas yumas

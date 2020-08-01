@@ -54,45 +54,10 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
             help="how to handle ambiguous grascii strings")
     argparser.add_argument("-f", "--fix-first", action="store_true",
             help="apply an uncertainty of 0 to the first token")
+    argparser.add_argument("-d", "--dictionary", 
+            help="set the dictionary to be searched")
     argparser.add_argument("-v", "--verbose", action="store_true",
             help="turn on verbose output")
-
-def process_args(args: argparse.Namespace) -> None:
-    """Set defaults for arguments that were unprovided.
-
-    :param args: The set of arguments to process.
-    """
-
-    # conf = ConfigParser()
-    # conf.read("grascii.conf")
-    # uncertainty = defaults.SEARCH.getint("Uncertainty")
-    # uncertainty = max(0, min(uncertainty, 2))
-    # search_mode = defaults.SEARCH["SearchMode"]
-    # annotation_mode = defaults.SEARCH["AnnotationMode"]
-    # aspirate_mode = defaults.SEARCH["AspirateMode"]
-    # disjoiner_mode = defaults.SEARCH["DisjoinerMode"]
-    # interpretation = defaults.SEARCH["Interpretation"]
-
-    # if args.uncertainty is None:
-        # args.uncertainty = uncertainty
-    # if args.search_mode is None:
-        # args.search_mode = search_mode
-    # if args.annotation_mode is None:
-        # args.annotation_mode = annotation_mode
-    # if args.aspirate_mode is None:
-        # args.aspirate_mode = aspirate_mode
-    # if args.disjoiner_mode is None:
-        # args.disjoiner_mode = disjoiner_mode
-    # if args.interpretation is None:
-        # args.interpretation = interpretation
-
-    # args.search_mode = regen.SearchMode(args.search_mode)
-    # args.annotation_mode = regen.Strictness(args.annotation_mode)
-    # args.aspirate_mode = regen.Strictness(args.aspirate_mode)
-    # args.disjoiner_mode = regen.Strictness(args.disjoiner_mode)
-
-    # args.dict_path = conf.get("Search", "DictionaryPath", 
-            # fallback=defaults.SEARCH["DictionaryPath"])
 
 def search(**kwargs) -> Optional[Iterable[str]]:
     """Run a grascii dictionary search. Parameters can consist of
@@ -114,13 +79,13 @@ def search(**kwargs) -> Optional[Iterable[str]]:
 
     searcher: Searcher
     if kwargs.get("grascii"):
-        searcher = GrasciiSearcher()
+        searcher = GrasciiSearcher(**kwargs)
     elif kwargs.get("interactive"):
-        searcher = InteractiveSearcher()
+        searcher = InteractiveSearcher(**kwargs)
     elif kwargs.get("reverse"):
-        searcher = ReverseSearcher()
+        searcher = ReverseSearcher(**kwargs)
     else:
-        searcher = RegexSearcher()
+        searcher = RegexSearcher(**kwargs)
     return searcher.search(**kwargs)
 
 def cli_search(args: argparse.Namespace) -> None:
@@ -129,7 +94,6 @@ def cli_search(args: argparse.Namespace) -> None:
     :param args: A namespace of parsed arguments.
     """
 
-    process_args(args)
     results = search(**{k: v for k, v in vars(args).items() if v is not None})
     count = 0
     for result in results:

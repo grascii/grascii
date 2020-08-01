@@ -50,7 +50,10 @@ def get_dict_file(dictionary: str, name: str) -> TextIO:
             module = "grascii.dictionary." + dictionary[1:]
             return io.TextIOWrapper(resource_stream(module, name),
                     encoding="utf-8")
-        return DICTIONARY_PATH.joinpath(dictionary[1:], name).open()
+        directory = DICTIONARY_PATH.joinpath(dictionary[1:])
+        if not directory.exists():
+            print(dictionary, "does not exist.", file=sys.stderr)
+        return directory.joinpath(name).open()
     return Path(dictionary, name).open()
 
 

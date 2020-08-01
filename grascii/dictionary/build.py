@@ -7,6 +7,7 @@ $ python -m grascii.build --help
 """
 
 import argparse
+from fileinput import FileInput
 import os
 import pathlib
 import re
@@ -103,7 +104,7 @@ class DictionaryBuilder():
             self.entry_counts[char] = 1
             return self.out_files[char]
 
-    def log_warning(self, file_name: str, line: str, line_number: int, *message: Union[str, List[str]]) -> None:
+    def log_warning(self, file_name: os.PathLike, line: str, line_number: int, *message: Union[str, List[str]]) -> None:
         """Print a build warning to stderr.
         
         :param file_name: The name of the dictionary source file that caused a 
@@ -113,11 +114,11 @@ class DictionaryBuilder():
         :param message: A collection of strings to print as a message.
         """
 
-        print("W:", file_name + ":" + str(line_number), *message, file=sys.stderr)
+        print("W:", str(file_name) + ":" + str(line_number), *message, file=sys.stderr)
         print(line.strip(), file=sys.stderr)
         self.warnings += 1
 
-    def log_error(self, file_name: str, line: str, line_number: int, *message: Union[str, List[str]]):
+    def log_error(self, file_name: os.PathLike, line: str, line_number: int, *message: Union[str, List[str]]):
         """Print a build error to stderr.
         
         :param file_name: The name of the dictionary source file that caused a 
@@ -127,7 +128,7 @@ class DictionaryBuilder():
         :param message: A collection of strings to print as a message.
         """
         
-        print("E:", file_name + ":" + str(line_number), *message, file=sys.stderr)
+        print("E:", str(file_name) + ":" + str(line_number), *message, file=sys.stderr)
         print(line.strip(), file=sys.stderr)
         self.errors += 1
 
@@ -161,7 +162,7 @@ class DictionaryBuilder():
             with get_words_file("extra_words.txt") as words:
                     self.words |= set(line.strip().capitalize() for line in words)
 
-    def check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
+    def check_line(self, file_name: os.PathLike, line: str, line_number: int) -> Optional[List[str]]:
         """Check a dictionary source file line for comments, uncertainty,
         and incorrect token counts.
         
@@ -194,7 +195,7 @@ class DictionaryBuilder():
                 return None
         return tokens
 
-    def check_grascii(self, grascii: str, file_name: str, line: str, line_number: int) -> bool:
+    def check_grascii(self, grascii: str, file_name: os.PathLike, line: str, line_number: int) -> bool:
         """Check the parsabliity of a grascii string.
         
         :returns: False if parse checking is enabled and a parse fails.
@@ -208,7 +209,7 @@ class DictionaryBuilder():
                 return False
         return True
 
-    def check_word(self, word: str, file_name: str, line: str, line_number: int) -> bool:
+    def check_word(self, word: str, file_name: os.PathLike, line: str, line_number: int) -> bool:
         """Check the existence of a word in the word set.
         
         :returns: False if spell checking is enabled and the word does not
@@ -273,26 +274,28 @@ class DictionaryBuilder():
         self.prepare_output_dir()
 
         try:
-            for src_file in self.src_files:
-                with open(src_file) as src_file:
-                    for i, line in enumerate(src_file):
-                        tokens = self.check_line(src_file.name, line, i + 1)
-                        if not tokens:
-                            continue
+            # for src_file in self.src_files:
+                # with open(src_file) as src_file:
+                    # for i, line in enumerate(src_file):
 
-                        grascii = tokens[0].upper()
-                        # remove '-' characters
-                        grascii = "".join(grascii.split("-"))
-                        # word = tokens[1].capitalize()
-                        word = " ".join(t.capitalize() for t in tokens[1:])
+            with FileInput(self.src_files) as f:
+                for line in f:
+                    tokens = self.check_line(f.filename(), line, f.filelineno())
+                    if not tokens:
+                        continue
 
-                        if not self.check_grascii(grascii, src_file.name, line, i + 1):
-                            continue
+                    grascii = tokens[0].upper()
+                    # remove '-' characters
+                    grascii = "".join(grascii.split("-"))
+                    word = " ".join(t.capitalize() for t in tokens[1:])
 
-                        if not self.check_word(word, src_file.name, line, i + 1):
-                            continue
-                       
-                        self.write_entry(grascii, word)
+                    if not self.check_grascii(grascii, f.filename(), line, f.filelineno()):
+                        continue
+
+                    if not self.check_word(word, f.filename(), line, f.filelineno()):
+                        continue
+                   
+                    self.write_entry(grascii, word)
         finally:
             self.close_output_files()
 

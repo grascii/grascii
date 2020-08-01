@@ -191,10 +191,22 @@ class GrasciiSearcher(Searcher):
 
         self.uncertainty = kwargs.get("uncertainty", defaults.SEARCH.getint("Uncertainty"))
         # handle enum conversion error?
-        self.search_mode = regen.SearchMode(kwargs.get("search_mode", defaults.SEARCH["SearchMode"]))
-        self.annotation_mode = regen.Strictness(kwargs.get("annotation_mode", defaults.SEARCH["AnnotationMode"]))
-        self.aspirate_mode = regen.Strictness(kwargs.get("aspirate_mode", defaults.SEARCH["AspirateMode"]))
-        self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"]))
+        try:
+            self.search_mode = regen.SearchMode(kwargs.get("search_mode", defaults.SEARCH["SearchMode"]))
+        except ValueError:
+            self.search_mode = regen.SearchMode(defaults.DEFAULTS["Search"]["SearchMode"])
+        try:
+            self.annotation_mode = regen.Strictness(kwargs.get("annotation_mode", defaults.SEARCH["AnnotationMode"]))
+        except ValueError:
+            self.annotation_mode = regen.Strictness(defaults.DEFAULTS["Search"]["AnnotationMode"])
+        try:
+            self.aspirate_mode = regen.Strictness(kwargs.get("aspirate_mode", defaults.SEARCH["AspirateMode"]))
+        except ValueError:
+            self.aspirate_mode = regen.Strictness(defaults.DEFAULTS["Search"]["AspirateMode"])
+        try:
+            self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"]))
+        except:
+            self.disjoiner_mode = regen.Strictness(defaults.DEFAULTS["Search"]["DisjoinerMode"])
         self.fix_first = kwargs.get("fix_first", False)
         self.interpretation_mode = kwargs.get("interpretation", defaults.SEARCH["Interpretation"])
 

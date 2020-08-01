@@ -11,7 +11,8 @@ from typing import Union, List, Set, Iterable, Dict, TypeVar, Callable, Pattern,
 from lark import Lark, Tree, UnexpectedInput, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
-from grascii import regen, utils, metrics, grammar, defaults
+from grascii import regen, metrics, grammar, defaults
+from grascii.dict import get_dict_file
 from grascii.grammars import get_grammar
 from grascii.types import Interpretation
 
@@ -86,7 +87,7 @@ class Searcher(ABC):
         sorted_results: List[Tuple[str, int]] = list()
         for item in sorted(starting_letters):
             try:
-                with utils.get_dict_file(self.dictionary, item) as dictionary:
+                with get_dict_file(self.dictionary, item) as dictionary:
                     for line in dictionary:
                         found_match = False
                         diff = 2^32 - 1

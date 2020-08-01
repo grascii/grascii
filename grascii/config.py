@@ -75,22 +75,22 @@ def cli_config(args: argparse.Namespace) -> None:
         if config_exists():
             print(get_config_file_path())
         else:
-            print("Configuration file does not exist. Use --init to create one.")
+            print("Configuration file does not exist. Use --init to create one.", file=sys.stderr)
     elif args.init:
         if config_exists() and not args.force:
-            print("Configuration file already exists.")
+            print("Configuration file already exists.", file=sys.stderr)
             print("If you would like to overwrite it with the default", 
-                  "configuration, run again with --force.")
+                  "configuration, run again with --force.", file=sys.stderr)
             return
         create_config()
         print("Configuration file created at", get_config_file_path())
     elif args.delete:
         if not config_exists():
-            print("Configuration file does not exist.")
+            print("Configuration file does not exist.", file=sys.stderr)
             return
         if not args.force:
             print("Are you sure you want to delete the configuration file?",
-                  "If so, run with --force.")
+                  "If so, run with --force.", file=sys.stderr)
             return
         delete_config()
         print("Removed", get_config_file_path())

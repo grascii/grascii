@@ -35,9 +35,9 @@ def cli_install(args: argparse.Namespace) -> None:
         if not dest.is_dir():
             print()
             return
-        print("A dictionary named", name, "already exists.")
-        print("Provide a different name with --name.")
-        print("If you would like to overwrite it, run with --force.")
+        print("A dictionary named", name, "already exists.", file=sys.stderr)
+        print("Provide a different name with --name.", file=sys.stderr)
+        print("If you would like to overwrite it, run with --force.", file=sys.stderr)
         return
 
     dest.mkdir(parents=True, exist_ok=True)

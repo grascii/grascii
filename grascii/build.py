@@ -29,7 +29,7 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     :param argparser: A fresh ArgumentParser to configure.
     """
 
-    argparser.add_argument("infiles", nargs="+", type=argparse.FileType("r"), 
+    argparser.add_argument("infiles", nargs="+", type=pathlib.Path,
             help="the files to package")
     argparser.add_argument("-o", "--output", type=os.path.abspath,
             help="path to a directory to output dictionary files")
@@ -272,24 +272,25 @@ class DictionaryBuilder():
 
         try:
             for src_file in self.src_files:
-                for i, line in enumerate(src_file):
-                    tokens = self.check_line(src_file.name, line, i + 1)
-                    if not tokens:
-                        continue
+                with open(src_file) as src_file:
+                    for i, line in enumerate(src_file):
+                        tokens = self.check_line(src_file.name, line, i + 1)
+                        if not tokens:
+                            continue
 
-                    grascii = tokens[0].upper()
-                    # remove '-' characters
-                    grascii = "".join(grascii.split("-"))
-                    # word = tokens[1].capitalize()
-                    word = " ".join(t.capitalize() for t in tokens[1:])
+                        grascii = tokens[0].upper()
+                        # remove '-' characters
+                        grascii = "".join(grascii.split("-"))
+                        # word = tokens[1].capitalize()
+                        word = " ".join(t.capitalize() for t in tokens[1:])
 
-                    if not self.check_grascii(grascii, src_file.name, line, i + 1):
-                        continue
+                        if not self.check_grascii(grascii, src_file.name, line, i + 1):
+                            continue
 
-                    if not self.check_word(word, src_file.name, line, i + 1):
-                        continue
-                   
-                    self.write_entry(grascii, word)
+                        if not self.check_word(word, src_file.name, line, i + 1):
+                            continue
+                       
+                        self.write_entry(grascii, word)
         finally:
             self.close_output_files()
 

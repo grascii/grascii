@@ -2,7 +2,7 @@
 
 import argparse
 from glob import glob
-import os
+from pathlib import Path
 from setuptools import setup, find_packages
 from setuptools.command.build_py import build_py
 
@@ -10,8 +10,11 @@ import grascii.build
 
 class CustomBuild(build_py):
     def run(self):
-        grascii.build.main(glob(os.path.join("dsrc", "*.txt")) + 
-            ["--output", os.path.join("grascii", "dict")])
+        print(Path("dsrc").glob("*.txt"))
+        grascii.build.build(infiles=Path("dsrc").glob("*.txt"),
+                            output=Path("grascii/dict/preanniversary"))
+        # grascii.build.main(glob(os.path.join("dsrc", "*.txt")) + 
+            # ["--output", os.path.join("grascii", "dict", "preanniversary")])
         build_py.run(self)
 
 

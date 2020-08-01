@@ -1,9 +1,10 @@
 
 import io
 import os
-from pkg_resources import resource_stream, resource_string
 from typing import Union, IO, TextIO
 from warnings import warn
+
+from pkg_resources import resource_stream, resource_string
 
 def get_grammar(name: str) -> str:
     warn("This function is deprecated. Use grascii.grammars.get_grammar instead", DeprecationWarning)

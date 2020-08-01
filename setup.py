@@ -12,9 +12,8 @@ class CustomBuild(build_py):
     def run(self):
         print(Path("dsrc").glob("*.txt"))
         grascii.build.build(infiles=Path("dsrc").glob("*.txt"),
-                            output=Path("grascii/dict/preanniversary"))
-        # grascii.build.main(glob(os.path.join("dsrc", "*.txt")) + 
-            # ["--output", os.path.join("grascii", "dict", "preanniversary")])
+                            output=Path("grascii/dict/preanniversary"),
+                            package=True)
         build_py.run(self)
 
 

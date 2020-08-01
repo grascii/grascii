@@ -140,6 +140,8 @@ class DictionaryBuilder():
             if self.clean:
                 for entry in self.out_dir.iterdir():
                     entry.unlink
+            if self.package:
+                self.out_dir.joinpath("__init__.py").touch()
 
         # premake out files?
 

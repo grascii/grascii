@@ -4,8 +4,6 @@ import sys
 
 from grascii.dictionary import build_argparser
 
-description = "Create and manage Grascii dictionaries"
-
 def main() -> None:
     argparser = argparse.ArgumentParser(prog="dictionary")
     build_argparser(argparser)

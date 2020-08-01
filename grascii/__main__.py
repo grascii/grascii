@@ -6,15 +6,10 @@ import os
 
 from grascii import search, config, dictionary
 
-def no_command(args: argparse.ArgumentParser) -> None:
-    print("Expecting subcommand")
-    print("For help run:")
-    print("grascii.py --help")
-
 def main() -> None:
     argparser = argparse.ArgumentParser(prog="grascii")
-    argparser.set_defaults(func=no_command)
     subparsers = argparser.add_subparsers(title="subcommands")   
+    argparser.set_defaults(func=None)
 
     search_parser = subparsers.add_parser("search", 
             description=search.description, 
@@ -28,14 +23,6 @@ def main() -> None:
             help=dictionary.description,
             aliases=["d"])
     dictionary.build_argparser(dictionary_parser)
-    # dictionary_parser.set_defaults(func=dictionary.cli_config)
-
-    # build_parser = subparsers.add_parser("build", 
-            # description=build.description, 
-            # help=build.description,
-            # aliases=["b"])
-    # build.build_argparser(build_parser)
-    # build_parser.set_defaults(func=build.cli_build)
 
     config_parser = subparsers.add_parser("config", 
             description=config.description, 
@@ -46,7 +33,11 @@ def main() -> None:
 
     args = argparser.parse_args(sys.argv[1:])
 
-    args.func(args)
+    if args.func:
+        args.func(args)
+    else:
+        argparser.print_help()
+
 
 if __name__ == "__main__":
     main()

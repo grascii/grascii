@@ -697,6 +697,93 @@ a^pask antepaschal
 a^penul antepenult
 a^prand anteprandial
 
+# Page 9 Column 1
+a^rr anterior
+a^rm anteroom
+anthem anthem
+anth^o-e anthography
+anthoe anthoid
+anth^o(s anthologist
+anth^o( anthology
+anthsi athracite
+anthp^o athropology
+a^k antic
+a^kris antichrist
+a^sepnt anticipant
+a^sep anticipate
+a^sepsh anticipation
+a^klimax anticlimax
+a^dot antidote
+a^loje antilogy
+a^mnl antimonial
+a^mne antimony
+a^pthe antipathy
+a^fn antiphon
+a^pdl antipodal
+a^pd antipode
+a^pdes antipodes
+a^ka_r antiquarian
+a^k antique
+a^kete antiquity
+
+# Page 9 Column 2
+a^sepk antiseptic
+a^thess antithesis
+a^tox antitoxin
+antlr antler
+anvel anvil
+angsa&e anxiety
+ank anxious
+nebo anybody
+n'au anyhow
+ne-un anyone
+ne' anything
+aota aorta
+apas apace
+apachas apaches
+apt apart
+apt-m apartment
+apth^a apathetic
+apthe apathy
+aperent aperient
+ape~tr aperture
+apex apex
+aforsm aphorism
+afrodi aphrodite
+apa&'re apiary
+apkref apocryphal
+apol^a apologetic
+apol apologize
+
+# Page 9 Column 3
+ap^o( apology
+apoplaxe apoplexy
+aposl apostle
+aposta apostate
+apostola apostolate
+apostol apostolic
+apostrfe apostrophe
+apthekre apothecary
+apthess apotheosis
+apalashn appalachian
+apol appall
+apol^e appallingly
+apratus apparatus
+aprl apparel
+aprnt apparent
+aparesh apparition
+apel appeal
+apr appear
+aprns appearance
+apes appease
+aplnt appellant
+aplash appellation
+apnd append
+apndj appendage
+apnd^ts appendicitis
+apndex appendix
+aprsepsh apperception
+
 # Page 10 Column 1
 ape~tn appertain
 apti appetite

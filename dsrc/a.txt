@@ -705,8 +705,8 @@ anth^o-e anthography
 anthoe anthoid
 anth^o(s anthologist
 anth^o( anthology
-anthsi athracite
-anthp^o athropology
+anthsi anthracite
+anthp^o anthropology
 a^k antic
 a^kris antichrist
 a^sepnt anticipant
@@ -787,24 +787,24 @@ aprsepsh apperception
 # Page 10 Column 1
 ape~tn appertain
 apti appetite
-aptis^e appetizingly
+aptiz^e appetizingly
 aplod applaud
-aplus applause
+aplos applause
 apl apple
 apla&ens appliance
 aplek^b applicability
 aplek applicant
 aplsh application
-aleka, applique
+apleka, applique
 apli apply
-oi appoint
-oi^b appointable
-? oie appointee
-oi^r appointer
-oimn appointment
+oe appoint
+oe^b appointable
+oee appointee
+oe^r appointer
+oem appointment
 aporsh apportion
-apurshmn apportionment
-apis apposite
+aporshm apportionment
+apos apposite
 aposh apposition
 apostv appositive
 apras appraise
@@ -816,22 +816,22 @@ aprend apprehend
 
 # Page 10 Column 2
 aprens^b apprehensibility
-aprensb appbrehensible
+aprensb apprehensible
 aprensh apprehension
 aprensv apprehensive
 aprentes apprentice
 apris apprise
 aprch approach
-aprshb approachable
+aprchb approachable
 aprbash approbation
-? aprprb appropriable
+aprpreb appropriable
 aprprat appropriate
 aprprash appropriation
 aprva approval
 aprv approve
 aprx approximate
 aprxsh approximation
-apetns appurtenance
+ape~tns appurtenance
 aprekt apricot
 apr April
 aprn apron
@@ -840,11 +840,11 @@ aptet aptitude
 apte aptly
 apt-n aptness
 ak^a aquatic
-ace_duc aqueduct
-? akeu_s aqueous
+ake_duk aqueduct
+ake_us aqueous
 
 # Page 10 Column 3
-ake_ren aquiline
+ake_len aquiline
 arabn Arabian
 arabk Arabic
 arbte~ arbiter
@@ -855,10 +855,10 @@ arborel arboreal
 arbtus arbutus
 ark arc
 arkada&' Arcadia
-arkanm arcanum
+arkanum arcanum
 a~ch arch
-? a~k^oe archaeography
-? ark^o archaeology
+ark^oe archaeography
+ark^o( archaeology
 arkak archaic
 arknj archangel
 a~chbesh archbishop
@@ -870,23 +870,23 @@ aktek architect
 aktek^l architectural
 aktekt architecture
 arkiv archive
-a`cha_ archway
+a~cha_ archway
 
 # Page 11 Column 1
 arktek arctic
-a~dnt ardent
+a~d-nt ardent
 a~dr ardor
 a~dus arduous
 ara&' area
-arfeksh arefaction
+arfaksh arefaction
 aromete~ areometer
-agnt argent
-agnten argentine
+ajnt argent
+ajnten argentine
 argnot Argonaut
-argose Argosey
+argose Argosy
 argo argot
 ageu argue
-agmn argument
+agm argument
 argus Argus
 aredte aridity
 aris arise
@@ -898,7 +898,7 @@ arethmetsh arithmetician
 ark ark
 a~m arm
 a~mada armada
-a~mamn armament
+a~mam armament
 a~matr armature
 
 # Page 11 Column 2
@@ -915,10 +915,10 @@ arom^a aromatic
 arnd around
 araus arouse
 aran arraign
-aramn arraignment
+aram arraignment
 ara arrange
 ara arrangement
-arant arant
+arant arrant
 ara array
 ares arrest
 ari arrive
@@ -936,13 +936,13 @@ a~t art
 a~tre artery
 a~tesh artesian
 a~tf artful
-a~rfn artfulness
+a~tfn artfulness
 a~tchk artichoke
 a~t^k article
 a~teklr articular
 a~teklre articulary
 a~tek^u articulate
-a~tek^ush ariculation
+a~tek^ush articulation
 a~tek^uv articulative
 a~tek^ur articulator
 a~tfes artifice
@@ -953,7 +953,7 @@ a~tes artist
 a~t^st artistic
 a~testre artistry
 a~tl artless
-a~tln artlesseness
+a~tln artlessness
 asbes asbestos
 asend ascend
 asen-dnse ascendancy
@@ -968,7 +968,7 @@ asetss asceticism
 askrb ascribable
 askr ascribe
 askrsh ascription
-aseptek aseptaic
+aseptek aseptic
 ash ash
 ashamd ashamed
 ashn ashen
@@ -976,7 +976,7 @@ ashor ashore
 as^a Asiatic
 asi aside
 aseni asinine
-sen^nt asininity
+asen^nt asininity
 sk ask
 aslep asleep
 asparg asparagus
@@ -984,14 +984,14 @@ aspk aspect
 aspn aspen
 asp^r asperity
 asprsh aspersion
-asfelt asphalt
-? asjesa&' asphyxia
-? asfesa&'t asphyxiate
-? asfesa&'sh asphyxiation
+asfalt asphalt
+asfexa&' asphyxia
+asfexa&'t asphyxiate
+asfexa&'sh asphyxiation
 aspi^nt aspirant
 
 # Page 12 Column 2
-aspea aspirate
+aspra aspirate
 asprash aspiration
 aspi aspire
 asal assail

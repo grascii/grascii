@@ -1012,7 +1012,7 @@ ase~t assert
 ase~te~ asserter
 asesh assertion
 ass assess
-assmn assessment
+assm assessment
 assr assessor
 assrsh assessorship
 aset asset
@@ -1024,24 +1024,24 @@ asedus assiduous
 asin assign
 asin^b assignability
 asinb assignable
-asegtnsh assignation
+asegnsh assignation
 asene assignee
-asimn assignment
+asim assignment
 asinr assignor
 asemelsh assimilation
 asemel^v assimilative
-asemila assimilate
+asemela assimilate
 sst assist
 sstns assistance
-sstnt assistant
-asiz asize
-ashosht associate
+sstn-t assistant
+asiz assize
+asosht associate
 asosh association
-ashoshtv associative
+asoshtv associative
 asot assort
-asotmn assortment
+asot-m assortment
 asa_j assuage
-asa_jmn assuagement
+asa_jm assuagement
 asmb assumable
 asm assume
 asmsh assumption
@@ -1053,21 +1053,21 @@ asera&'n Assyrian
 aste~ aster
 astresk asterisk
 asten astern
-astroi asteroid
+astroe asteroid
 asma asthma
 asm^a asthmatic
-astegnat astigmatism
+astegmat astigmatism
 aste~ astir
 astnsh astonish
-astnd astound
+ast-nd astound
 astrkn astrakhan
 astrl astral
 astra astray
-atri astride
+astri astride
 astrenjse astringency
-astrengnt astringent
-astr^oi astrography
-? astr^o astrology
+astrenjnt astringent
+astr^o-e astrography
+astr^o( astrology
 astrmete~ astrometer
 astron^r astronomer
 astromek astronomic
@@ -1092,36 +1092,36 @@ atlas atlas
 at-mos atmosphere
 at-mosk atmospheric
 at-mos^k atmospherical
-atm aton
+atm atom
 atm^k atomical
 atmiz atomize
 atonb atonable
-atomn atonement
-atros atrocious
+atonm atonement
+atrosh atrocious
 atr^s) atrocity
 atrfe atrophy
 atrpn atropine
 atch attach
 atcha, attache
-atchmn attachment
-atac attack
+atchm attachment
+atak attack
 atn attain
 
 # Page 13 Column 3
-atm^b attainability
+atn^b attainability
 atnb attainable
-? atn-mn attainment
+atn-m attainment
 ata~ attar
-armt attempt
+atm-t attempt
 atn-d attend
 atn-dns attendance
 atn-dn attendant
 tnsh attention
-atntv attentive
+atn-tv attentive
 atneut attenuate
 atneush attenuation
 ates attest
-? ates-sh attestation
+ates-sh attestation
 atek attic
 ati~ attire
 atet attitude
@@ -1138,7 +1138,7 @@ obe~n auburn
 
 # Page 14 Column 1
 oksh auction
-okshe` auctioneer
+okshe~ auctioneer
 odashus audacious
 od^s) audacity
 od^b audibility
@@ -1147,21 +1147,21 @@ odns audience
 odt audit
 odtr auditor
 odtrem auditorium
-ogmn augment
-ogmnsh augmentation
-ogmn^v augmentative
+ogm augment
+ogmsh augmentation
+ogm^v augmentative
 ogr augur
 og August
 ant aunt
-oneol aureole
+oreol aureole
 or^k auricle
 orora aurora
 oskult auscultate
-uskulsh auscultation
-uspess auspices
+oskulsh auscultation
+ospess auspices
 ospesh auspicious
 oste~ austere
-ust^r austerity
+ost^r austerity
 oth^n authentic
 oth^na| authentically
 
@@ -1175,13 +1175,13 @@ othrezsh authorization
 othriz authorize
 othrsh authorship
 otb^or autobiographer
-otb^oi autobiography
+otb^o-e autobiography
 otokrse autocracy
 otok autocrat
 otok^a autocratic
 ot^o autograph
 ot^ok autographic
-ot^oi autography
+ot^o-e autography
 otm^a automatic
 otm^a| automatical
 otmatsm automatism
@@ -1189,7 +1189,7 @@ otmatn automaton
 otnome autonomy
 otpse autopsy
 otm autumn
-otoml autumnal
+otml autumnal
 oselre auxiliary
 aval avail
 avalb available
@@ -1210,14 +1210,14 @@ ava&'tr aviator
 aved avid
 avedte avidity
 avkash avocation
-voi avoid
-voi^b avoidable
-voins avoidance
-avdpoi avoirdupois
+voe avoid
+voe^b avoidable
+voens avoidance
+avdpoe avoirdupois
 avau avow
 'uat await
 'uak awake
-'uakn^' awakening
+'uakn' awakening
 'uod award
 'a_r aware
 'ua away
@@ -1232,12 +1232,12 @@ okd awkward
 # Page 15 Column 2
 on' awning
 ari awry
-akx ax
+aks ax
 aksem axiom
 
 # Page 15 Column 3
 aksem^a axiomatic
-akxs axis
+akss axis
 aksl axle
-? ashu azure
+ash,u azure
 

@@ -31,12 +31,13 @@ class PhraseFlattener(Transformer):
 
     def omitted_to_noun(self, children):
         results = self.__default__(None, children, None)
-        results.append(type("", (object,), {"type": "TO"}))
+        results.append(type("", (object,), {"type": "(TO)"}))
+        results.append(type("", (object,), {"type": "(THE)"}))
         return results
 
     def omitted_to_verb(self, children):
         results = self.__default__(None, children, None)
-        results.append(type("", (object,), {"type": "TO"}))
+        results.append(type("", (object,), {"type": "(TO)"}))
         return results
 
     def __default__(self, data, children, meta):
@@ -62,6 +63,7 @@ def dephase(phrase: str) -> Set[str]:
 
     trees = CollapseAmbiguities().transform(tree)
     for t in trees:
+        print(t.pretty())
         tokens = (token.type for token in trans.transform(t))
         parses.add(" ".join(tokens))
     return parses

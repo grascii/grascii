@@ -242,7 +242,7 @@ bere berry
 berth berth
 bsech beseech
 bset beset
-bsetm besetment
+bset-m besetment
 bsi beside
 bsej besiege
 bseje~ besieger

@@ -29,6 +29,16 @@ class PhraseFlattener(Transformer):
         result.append(token)
         return result
 
+    def omitted_to_noun(self, children):
+        results = self.__default__(None, children, None)
+        results.append(type("", (object,), {"type": "TO"}))
+        return results
+
+    def omitted_to_verb(self, children):
+        results = self.__default__(None, children, None)
+        results.append(type("", (object,), {"type": "TO"}))
+        return results
+
     def __default__(self, data, children, meta):
         result = list()
         for child in children:
@@ -47,6 +57,7 @@ def dephase(phrase: str) -> Set[str]:
     try:
         tree = parser.parse(phrase.upper())
     except UnexpectedInput:
+        print("exception")
         return parses
 
     trees = CollapseAmbiguities().transform(tree)
@@ -59,7 +70,6 @@ def cli_dephrase(args: argparse.Namespace) -> None:
     results = dephase(args.phrase)
     for result in results:
         print(result)
-    
 
 def main() -> None:
     argparser = argparse.ArgumentParser(description)

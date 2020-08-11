@@ -82,7 +82,7 @@ adjective : article | common_adjective | SUCH
 
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
-	| RECENT | PAST | NEXT | LAST
+	| RECENT | PAST | NEXT | LAST | FEW
 
 KIND : "KI"
 EVERY : "EV"
@@ -165,7 +165,7 @@ LOW : "LO"
 SOON : "N"
 
 // fix to guarantee 2
-time_phrase : quantifier? unit AGO?
+time_phrase : preposition? quantifier? unit AGO?
 
 quantifier : FEW | SEVERAL | TEN | ONE | TWO 
 	| THREE | MANY
@@ -177,14 +177,15 @@ ONE : "UN"
 TWO : "TU"
 THREE : "TH)E"
 
-unit : MINUTES | DAYS | WEEKS | MONTHS | YEARS
+unit : MINUTES | HOURS| DAYS | WEEKS | MONTHS | YEARS
 
 MINUTES : "MNET" "S"?
 DAYS : "DA" "S"?
-WEEKS : "EK" "S"?
+WEEKS : WEEK "S"?
 MONTHS : "MNTH" "S"?
 YEARS : "E" "|"? "R" "S"?
-
+HOURS: HOUR "S"?
+HOUR: "R"
 AGO : "G"
 
 infinitive.2 : ( to | short_to ) ( verb | BE adjective? | HAVE have_phrase_ending )

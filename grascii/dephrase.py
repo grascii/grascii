@@ -15,7 +15,6 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     argparser.add_argument("phrase", action="store", 
             help="The phrase to decipher")
 
-
 class PhraseFlattener(Transformer):
 
     optionals = {
@@ -49,33 +48,6 @@ class PhraseFlattener(Transformer):
     def short_to(self, children):
         return [self.create_token("TO")]
 
-    # def omitted_to_noun(self, children):
-        # results = self.__default__(None, children, None)
-        # results.append(self.create_token("(TO)"))
-        # results.append(self.create_token("(THE)"))
-        # return results
-
-    # def omitted_to_verb(self, children):
-        # results = self.__default__(None, children, None)
-        # results.append(self.create_token("(TO)"))
-        # return results
-
-    # def receipt_phrase(self, children):
-        # i = len(children) - 1
-        # while i >= 0 and not isinstance(children[i], Token):
-            # i -= 1
-        # children.insert(i, self.create_token("(IN)"))
-        # print(i)
-        # if i < len(children) - 2:
-            # children.insert(i + 2, self.create_token("(OF)"))
-            # children.insert(i + 3, self.create_token("(YOUR)"))
-        # return self.__default__(None, children, None)
-
-    # def opt_to(self, children):
-        # if len(children):
-            # return self.__default__(None, children, None)
-        # return [self.create_token("(TO)")]
-
     def __default__(self, data, children, meta):
         result = list()
         for child in children:
@@ -89,7 +61,7 @@ class PhraseFlattener(Transformer):
                     result.append(token)
         return result
 
-def dephase(phrase: str) -> Set[str]:
+def dephrase(phrase: str) -> Set[str]:
     g = get_grammar("phrases")
     # parser = Lark(g, parser="earley", ambiguity="resolve")
     # aparser = Lark(g, parser="earley", ambiguity="explicit")
@@ -115,7 +87,7 @@ def dephase(phrase: str) -> Set[str]:
     return parses
 
 def cli_dephrase(args: argparse.Namespace) -> None:
-    results = dephase(args.phrase)
+    results = dephrase(args.phrase)
     for result in results:
         print(result)
 

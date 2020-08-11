@@ -5,31 +5,8 @@ import unittest
 from lark import Lark, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
-from grascii.utils import get_grammar
-
-class PhraseFlattener(Transformer):
-    def start(self, children):
-        result = list()
-        for child in children:
-            for token in child:
-                result.append(token)
-        return result
-
-    def short_to(self, children):
-        token = type('',(object,),{"type": "TO"})()
-        result = list()
-        result.append(token)
-        return result
-
-    def __default__(self, data, children, meta):
-        result = list()
-        for child in children:
-            if isinstance(child, Token):
-                result.append(child)
-            else:
-                for token in child:
-                    result.append(token)
-        return result
+from grascii.grammars import get_grammar
+from grascii.dephrase import PhraseFlattener
 
 class TestLessonPhrases(unittest.TestCase):
 
@@ -48,8 +25,8 @@ class TestLessonPhrases(unittest.TestCase):
             # ambiguity="explicit")
 
     g = get_grammar("phrases")
-    parser = Lark(g, parser="earley", ambiguity="resolve")
-    aparser = Lark(g, parser="earley", ambiguity="explicit")
+    parser = Lark.open(g, parser="earley", ambiguity="resolve")
+    aparser = Lark.open(g, parser="earley", ambiguity="explicit")
 
     trans = PhraseFlattener()
 

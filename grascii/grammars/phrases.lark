@@ -12,10 +12,10 @@ start : subject_phrase
 	| command_phrase
 	| conjunctive_phrase
 
-subject_phrase : conditional? ( ( pronoun ( aux_phrase 
-	| ( to_be NOT? adjective? )
-	| ( to_have | auxillary | to_do) NOT? ) ) 
-	| ( pronoun verb noun? ) )
+subject_phrase : conditional? ((pronoun (aux_phrase 
+	| (to_be NOT? adjective?)
+	| (to_have | auxillary | to_do) NOT?)) 
+	| (pronoun verb noun?))
 
 conditional : IF
 

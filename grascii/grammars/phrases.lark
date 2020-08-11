@@ -356,12 +356,12 @@ command : PLEASE | SHIP | WRITE
 conjunctive_phrase : conjunction ( subject_phrase 
 	| adverb_phrase | to_be | preposition | adjective)
 
-conjunction : AND | THAT
 
 AND : "ND" // or "NT"
 
 
-
+%import .vocab.n
+%import .vocab.conjunction
 
 
 

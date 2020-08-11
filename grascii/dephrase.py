@@ -64,21 +64,23 @@ class PhraseFlattener(Transformer):
 
 def dephase(phrase: str) -> Set[str]:
     g = get_grammar("phrases")
-    parser = Lark(g, parser="earley", ambiguity="resolve")
-    aparser = Lark(g, parser="earley", ambiguity="explicit")
-    # parser = Lark.open("./test.lark", parser="earley", ambiguity="explicit")
+    # parser = Lark(g, parser="earley", ambiguity="resolve")
+    # aparser = Lark(g, parser="earley", ambiguity="explicit")
+    # parser = Lark.open("grammars/phrases.lark", rel_to=__file__, parser="earley", ambiguity="explicit")
+    aparser = Lark.open(g, parser="earley", ambiguity="explicit")
+    parser = Lark.open(g, parser="earley", ambiguity="resolve")
     trans = PhraseFlattener()
     parses: Set[str] = set()
     try:
         tree = parser.parse(phrase.upper())
-        atree = aparser.parse(phrase.upper())
+        # atree = aparser.parse(phrase.upper())
     except UnexpectedInput:
         print("exception")
         return parses
 
     print(tree.pretty())
     trees = CollapseAmbiguities().transform(tree)
-    trees += CollapseAmbiguities().transform(atree)
+    # trees += CollapseAmbiguities().transform(atree)
     for t in trees:
         print(t.pretty())
         tokens = (token.type for token in trans.transform(t))

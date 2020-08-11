@@ -11,6 +11,7 @@ start : subject_phrase
 	| interrogative_phrase
 	| command_phrase
 	| conjunctive_phrase
+	| described_noun
 
 subject_phrase : conditional? ((pronoun (aux_phrase 
 	| (to_be NOT? adjective?)
@@ -81,12 +82,14 @@ adjective : article | common_adjective | SUCH
 
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
-	| RECENT
+	| RECENT | PAST
 
 KIND : "KI"
 EVERY : "EV"
 SORRY : "SO"
 RECENT : "RS)"
+
+PAST: "PAS"
 
 // ?
 EARLY : "E" "~"?
@@ -236,8 +239,8 @@ GLAD : "GL"
 REGRET : "REG"
 WISH : "USH"
 
-omitted_to_noun : ACCORDING | ORDER | 
-	| REFERENCE | REGARD | RELATIVE
+omitted_to_noun: ACCORDING | ORDER
+	| REFERENCE | REGARD | RELATIVE 
 	| RESPECT
 
 ACCORDING : "AKR" ASPIRATE?
@@ -250,7 +253,7 @@ RESPECT : "RES"
 common_noun.2 : MATTER | LETTER | FAVOR | REPLY
 	| ALL | BEHALF | REGARD | ME | SIDE
 	| TIME | HAND | ATTENTION | RIGHT
-	| HIM | ORDER | DATE | DAY
+	| HIM | ORDER | DATE | DAY | WEEK
 
 MATTER : "MAT"
 LETTER : "LE"
@@ -263,6 +266,9 @@ HAND : ASPIRATE? "ND"
 ATTENTION : "TNSH"
 DAY : "DA"
 DATE : "DT"
+
+WEEK: "E"? "K"
+
 
 RIGHT : "RI"
 

@@ -76,7 +76,7 @@ def dephase(phrase: str) -> Set[str]:
         print("exception")
         return parses
 
-    # print(tree.pretty())
+    print(tree.pretty())
     trees = CollapseAmbiguities().transform(tree)
     trees += CollapseAmbiguities().transform(atree)
     for t in trees:

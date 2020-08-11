@@ -183,7 +183,7 @@ MINUTES : "MNET" "S"?
 DAYS : "DA" "S"?
 WEEKS : WEEK "S"?
 MONTHS : "MNTH" "S"?
-YEARS : "E" "|"? "R" "S"?
+YEARS : ("E"? | "E" "|"?) "R" "S"?
 HOURS: HOUR "S"?
 HOUR: "R"
 AGO : "G"

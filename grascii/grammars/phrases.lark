@@ -14,7 +14,7 @@ start : subject_phrase
 	| described_noun
 
 subject_phrase : conditional? ((pronoun (aux_phrase 
-	| (to_be NOT? adjective?)
+	| (to_be NOT? (adjective* | adjective+ to? verb?))
 	| (to_have | auxillary | to_do) NOT?)) 
 	| (pronoun verb noun?))
 
@@ -83,7 +83,7 @@ adjective : article | common_adjective | SUCH
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
 	| RECENT | PAST | NEXT | LAST | FEW
-	| POSSIBLE
+	| POSSIBLE | VERY
 
 KIND : "KI"
 EVERY : "EV"
@@ -132,7 +132,7 @@ THIS : "THS"
 THESE : "THES"
 THOSE : "THS"
 
-aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) ABLE? )
+aux_phrase : ( auxillary ( NOT BE? | NOT? BE ) (ABLE? | adjective to? verb?) )
 	| auxillary? have_phrase
 	| ( auxillary NOT? to_have BEEN? ABLE? )
 	| ( auxillary NOT? verb )
@@ -207,6 +207,7 @@ common_verb : BE | HAVE
 	| SAY | TOLD | WIRE | WRITE
 	| INCLOSE | THINK | WANT
 	| SEND | THANK | DRAW
+	| REPORT | HEAR | LEARN
 
 PAY : "PA"
 FAVOR : "FA"
@@ -231,6 +232,9 @@ WANT : "NT"
 SEND : "SEN"
 THANK : "TH"
 DRAW : "DRO"
+REPORT: "RPR"
+HEAR: ASPIRATE? "E"? "R"
+LEARN: "LEN"
 
 TOLD : "TO"
 
@@ -238,7 +242,7 @@ omitted_to : ( omitted_to_verb verb )
 	| ( preposition? omitted_to_noun noun ) 
 
 omitted_to_verb : ABLE | GLAD | LIKE 
-	| REGRET | WISH
+	| REGRET | WISH | SORRY
 
 LONG_ABLE : "ABL"
 GLAD : "GL"
@@ -304,7 +308,7 @@ salutation : ( YOURS VERY? sal_adverb )
 	| ( VERY? sal_adverb YOURS )
 
 YOURS : "U"
-VERY: "V"
+VERY: "V" "E"?
 
 sal_adverb : TRULY | RESPECTFULLY 
 	| SINCERELY | CORDIALLY

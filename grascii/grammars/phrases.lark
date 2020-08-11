@@ -83,7 +83,7 @@ adjective : article | common_adjective | SUCH
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
 	| RECENT | PAST | NEXT | LAST | FEW
-	| POSSIBLE | VERY
+	| POSSIBLE | VERY | ESTEEMED
 
 KIND : "KI"
 EVERY : "EV"
@@ -93,6 +93,7 @@ RECENT : "RS)"
 PAST: "PAS"
 NEXT: "NES"
 LAST: "LAS"
+ESTEEMED: "E"? "S"
 
 POSSIBLE: "P"
 

@@ -14,6 +14,7 @@ common_noun.2 : MATTER | LETTER | FAVOR | REPLY | ALL | BEHALF | REGARD
 
 common_adjective : KIND | THAT | ALL | EVERY | WHICH | ABLE | EARLY | SORRY
 	| RECENT | PAST | NEXT | LAST | FEW | POSSIBLE | VERY | ESTEEMED | SAME
+  | SURE
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
 
@@ -148,6 +149,7 @@ SAME: "SA" "M"?
 POSSIBLE: "P"
 // ?
 EARLY : "E" "~"?
+SURE: "SH"
 
 // common prepositions
 OF : "O"

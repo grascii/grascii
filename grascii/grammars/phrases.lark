@@ -83,6 +83,7 @@ adjective : article | common_adjective | SUCH
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
 	| RECENT | PAST | NEXT | LAST | FEW
+	| POSSIBLE
 
 KIND : "KI"
 EVERY : "EV"
@@ -92,6 +93,8 @@ RECENT : "RS)"
 PAST: "PAS"
 NEXT: "NES"
 LAST: "LAS"
+
+POSSIBLE: "P"
 
 // ?
 EARLY : "E" "~"?
@@ -147,7 +150,7 @@ adverb.2 : THERE | THUS // | SUCH
 
 THUS : "THUS"
 
-as_phrase : AS as_adj AS
+as_phrase : AS as_adj AS POSSIBLE?
 
 AS : "S"
 

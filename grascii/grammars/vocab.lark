@@ -14,7 +14,7 @@ common_noun.2 : MATTER | LETTER | FAVOR | REPLY | ALL | BEHALF | REGARD
 
 common_adjective : KIND | THAT | ALL | EVERY | WHICH | ABLE | EARLY | SORRY
 	| RECENT | PAST | NEXT | LAST | FEW | POSSIBLE | VERY | ESTEEMED | SAME
-  | SURE
+  | SURE | PLEASED
 
 pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
 
@@ -53,7 +53,7 @@ interrogative : CAN | DO | COULD | WOULD | SHOULD | WHERE | WHY | WHO | HOW
 // common verbs
 PAY : "PA"
 FAVOR : "FA"
-PLEASE : "PL"
+PLEASE : "P" "L"?
 BELIEVE : "BE"
 HONOR : ASPIRATE? "ONOR"
 RECEIVE : "RSE"
@@ -150,6 +150,7 @@ POSSIBLE: "P"
 // ?
 EARLY : "E" "~"?
 SURE: "SH"
+PLEASED: "P"
 
 // common prepositions
 OF : "O"

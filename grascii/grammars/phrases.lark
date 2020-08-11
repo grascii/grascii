@@ -44,8 +44,7 @@ time_phrase : preposition? quantifier? unit AGO?
 
 infinitive.2 : ( to | short_to ) ( verb | BE adjective? | HAVE have_phrase_ending )
 
-short_to : SHORT_TO
-SHORT_TO : "T"
+!short_to : "T"
 
 verb : common_verb | omitted_to_verb
 
@@ -57,16 +56,13 @@ business_phrase : greeting | salutation
 
 greeting : MY? DEAR title
 
-
 // UT VTU UVT UR
 salutation : ( YOURS VERY? sal_adverb )
 	| ( VERY sal_adverb YOURS? )
 	| ( VERY? sal_adverb YOURS )
 
-
 // add NOT?
 receipt_phrase : pronoun to_be IN? RECEIPT noun?
-
 
 interrogative_phrase : interrogative ( ( noun verb? ) 
 	| adjective+ 

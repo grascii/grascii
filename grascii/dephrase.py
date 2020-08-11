@@ -24,8 +24,8 @@ class PhraseFlattener(Transformer):
                 result.append(token)
         return result
 
-    def create_token(self, name: str):
-        return Token(name, name)
+    def create_token(self, name: str, value: str=""):
+        return Token(name, value)
 
     def short_to(self, children):
         return [self.create_token("TO")]
@@ -56,7 +56,10 @@ class PhraseFlattener(Transformer):
         result = list()
         for child in children:
             if isinstance(child, Token):
-                result.append(child)
+                # strip namespace
+                i = child.type.rfind("_")
+                new_type = child.type[i + 1:]
+                result.append(self.create_token(new_type, child.value))
             else:
                 for token in child:
                     result.append(token)

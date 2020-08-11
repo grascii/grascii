@@ -83,7 +83,7 @@ adjective : article | common_adjective | SUCH
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
 	| RECENT | PAST | NEXT | LAST | FEW
-	| POSSIBLE | VERY | ESTEEMED
+	| POSSIBLE | VERY | ESTEEMED | SAME
 
 KIND : "KI"
 EVERY : "EV"
@@ -94,6 +94,7 @@ PAST: "PAS"
 NEXT: "NES"
 LAST: "LAS"
 ESTEEMED: "E"? "S"
+SAME: "SA" "M"?
 
 POSSIBLE: "P"
 
@@ -268,7 +269,7 @@ common_noun.2 : MATTER | LETTER | FAVOR | REPLY
 	| ALL | BEHALF | REGARD | ME | SIDE
 	| TIME | HAND | ATTENTION | RIGHT
 	| HIM | ORDER | DATE | DAY | WEEK
-	| RECEIPT
+	| RECEIPT | MAIL
 
 MATTER : "MAT"
 LETTER : "LE"
@@ -282,6 +283,7 @@ ATTENTION : "TNSH"
 DAY : "DA"
 DATE : "DT"
 
+MAIL: "M"
 WEEK: "E"? "K"
 
 

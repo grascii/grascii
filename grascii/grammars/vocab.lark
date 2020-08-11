@@ -1,18 +1,10 @@
 
-n: "N"
 conjunction : AND | THAT
 
-common_verb : BE | HAVE
-	| PAY | FAVOR 
-	| PLEASE | BELIEVE | HONOR 
-	| RECEIVE | LOOK | SEE 
-	| SHIP | REACH | LIKE 
-	| REPRESENT | SELL | FIND
-	| SAY | TOLD | WIRE | WRITE
-	| INCLOSE | THINK | WANT
-	| SEND | THANK | DRAW
-	| REPORT | HEAR | LEARN
-	| ACKNOWLEDGE
+common_verb : BE | HAVE | PAY | FAVOR | PLEASE | BELIEVE | HONOR 
+	| RECEIVE | LOOK | SEE | SHIP | REACH | LIKE | REPRESENT | SELL | FIND
+	| SAY | TOLD | WIRE | WRITE | INCLOSE | THINK | WANT | SEND | THANK 
+  | DRAW | REPORT | HEAR | LEARN | ACKNOWLEDGE
 
 PAY : "PA"
 FAVOR : "FA"
@@ -54,11 +46,9 @@ HOURS: HOUR "S"?
 HOUR: "R"
 AGO : "G"
 
-common_noun.2 : MATTER | LETTER | FAVOR | REPLY
-	| ALL | BEHALF | REGARD | ME | SIDE
-	| TIME | HAND | ATTENTION | RIGHT
-	| HIM | ORDER | DATE | DAY | WEEK
-	| RECEIPT | MAIL
+common_noun.2 : MATTER | LETTER | FAVOR | REPLY | ALL | BEHALF | REGARD 
+  | ME | SIDE | TIME | HAND | ATTENTION | RIGHT | HIM | ORDER 
+  | DATE | DAY | WEEK | RECEIPT | MAIL
 
 MATTER : "MAT"
 LETTER : "LE"
@@ -84,8 +74,7 @@ were.-1 : WERE
 I : "A"
 YOU : "U"
 WE : "UE"
-// fix this terminal conflict
-THEY : "THE" //| "TH"
+THEY : "TH" "E"? 
 IT : "T"
 HE : "E"	
 

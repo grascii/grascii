@@ -82,7 +82,7 @@ adjective : article | common_adjective | SUCH
 
 common_adjective : KIND | THAT | ALL | EVERY
 	| WHICH | ABLE | EARLY | SORRY
-	| RECENT | PAST
+	| RECENT | PAST | NEXT | LAST
 
 KIND : "KI"
 EVERY : "EV"
@@ -90,6 +90,8 @@ SORRY : "SO"
 RECENT : "RS)"
 
 PAST: "PAS"
+NEXT: "NES"
+LAST: "LAS"
 
 // ?
 EARLY : "E" "~"?

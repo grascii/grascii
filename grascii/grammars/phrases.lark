@@ -63,7 +63,11 @@ salutation : ( YOURS VERY? sal_adverb )
 	| ( VERY? sal_adverb YOURS )
 
 // add NOT?
-receipt_phrase : pronoun to_be IN? RECEIPT noun?
+receipt_phrase : pronoun to_be opt_in RECEIPT opt_of opt_your noun?
+
+opt_in: IN?
+opt_of: OF?
+opt_your: YOUR?
 
 interrogative_phrase : interrogative ( ( noun verb? ) 
 	| adjective+ 
@@ -74,7 +78,7 @@ command_phrase : command ( DO? NOT? verb noun? | noun )
 conjunctive_phrase : conjunction ( subject_phrase 
 	| adverb_phrase | to_be | preposition | adjective)
 
-%import .vocab (DO, NOT, IN, RECEIPT, AS, MY, DEAR, YOURS, VERY, BE, BEEN, ABLE, SUCH, POSSIBLE, AGO, HAVE)
+%import .vocab (DO, NOT, IN, RECEIPT, AS, MY, DEAR, YOURS, VERY, BE, BEEN, ABLE, SUCH, POSSIBLE, AGO, HAVE, YOUR, OF)
 
 %import .vocab (common_verb, conjunction, unit, common_noun, pronoun, to_be, auxiliary, common_adjective, preposition, article, as_adj, omitted_to_verb, omitted_to_noun, title, sal_adverb, interrogative, adverb, conditional, quantifier, to_have, to_do, to, command)
 

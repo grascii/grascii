@@ -17,6 +17,25 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
 
 
 class PhraseFlattener(Transformer):
+
+    optionals = {
+        "opt_to": "TO",
+        "opt_in": "IN",
+        "opt_of": "OF",
+        "opt_your": "YOUR",
+    }
+
+    def __init__(self):
+        for key, value in self.optionals.items():
+            setattr(self, key, self.make_opt(value))
+
+    def make_opt(self, name):
+        def opt(children):
+            if len(children):
+                return self.__default__(None, children, None)
+            return [self.create_token("(" + name + ")")]
+        return opt
+
     def start(self, children):
         result = list()
         for child in children:
@@ -41,21 +60,21 @@ class PhraseFlattener(Transformer):
         # results.append(self.create_token("(TO)"))
         # return results
 
-    def receipt_phrase(self, children):
-        i = len(children) - 1
-        while i >= 0 and not isinstance(children[i], Token):
-            i -= 1
-        children.insert(i, self.create_token("(IN)"))
-        print(i)
-        if i < len(children) - 2:
-            children.insert(i + 2, self.create_token("(OF)"))
-            children.insert(i + 3, self.create_token("(YOUR)"))
-        return self.__default__(None, children, None)
+    # def receipt_phrase(self, children):
+        # i = len(children) - 1
+        # while i >= 0 and not isinstance(children[i], Token):
+            # i -= 1
+        # children.insert(i, self.create_token("(IN)"))
+        # print(i)
+        # if i < len(children) - 2:
+            # children.insert(i + 2, self.create_token("(OF)"))
+            # children.insert(i + 3, self.create_token("(YOUR)"))
+        # return self.__default__(None, children, None)
 
-    def opt_to(self, children):
-        if len(children):
-            return self.__default__(None, children, None)
-        return [self.create_token("(TO)")]
+    # def opt_to(self, children):
+        # if len(children):
+            # return self.__default__(None, children, None)
+        # return [self.create_token("(TO)")]
 
     def __default__(self, data, children, meta):
         result = list()

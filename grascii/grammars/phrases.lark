@@ -14,7 +14,7 @@ start : subject_phrase
 	| described_noun
 
 subject_phrase : conditional? ((pronoun (aux_phrase 
-	| (to_be NOT? (adjective* | adjective+ to? verb?))
+	| (to_be NOT? (adjective* | adjective+ opt_to verb?))
 	| (to_have | auxiliary | to_do) NOT?)) 
 	| (pronoun verb to? verb? noun?))
 
@@ -48,11 +48,12 @@ infinitive.2 : ( to | short_to ) ( verb | BE adjective? | HAVE have_phrase_endin
 
 verb : common_verb | omitted_to_verb
 
-omitted_to : ( omitted_to_verb verb )
-	| ( preposition? omitted_to_noun noun ) 
+omitted_to : ( omitted_to_verb opt_to verb )
+	| ( preposition? omitted_to_noun  opt_to noun ) 
 
-business_phrase : greeting | salutation
-	| receipt_phrase
+opt_to: to?
+
+business_phrase : greeting | salutation | receipt_phrase
 
 greeting : MY? DEAR title
 

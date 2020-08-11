@@ -30,16 +30,16 @@ class PhraseFlattener(Transformer):
     def short_to(self, children):
         return [self.create_token("TO")]
 
-    def omitted_to_noun(self, children):
-        results = self.__default__(None, children, None)
-        results.append(self.create_token("(TO)"))
-        results.append(self.create_token("(THE)"))
-        return results
+    # def omitted_to_noun(self, children):
+        # results = self.__default__(None, children, None)
+        # results.append(self.create_token("(TO)"))
+        # results.append(self.create_token("(THE)"))
+        # return results
 
-    def omitted_to_verb(self, children):
-        results = self.__default__(None, children, None)
-        results.append(self.create_token("(TO)"))
-        return results
+    # def omitted_to_verb(self, children):
+        # results = self.__default__(None, children, None)
+        # results.append(self.create_token("(TO)"))
+        # return results
 
     def receipt_phrase(self, children):
         i = len(children) - 1
@@ -51,6 +51,11 @@ class PhraseFlattener(Transformer):
             children.insert(i + 2, self.create_token("(OF)"))
             children.insert(i + 3, self.create_token("(YOUR)"))
         return self.__default__(None, children, None)
+
+    def opt_to(self, children):
+        if len(children):
+            return self.__default__(None, children, None)
+        return [self.create_token("(TO)")]
 
     def __default__(self, data, children, meta):
         result = list()
@@ -76,14 +81,14 @@ def dephase(phrase: str) -> Set[str]:
     parses: Set[str] = set()
     try:
         tree = parser.parse(phrase.upper())
-        # atree = aparser.parse(phrase.upper())
+        atree = aparser.parse(phrase.upper())
     except UnexpectedInput:
         print("exception")
         return parses
 
     print(tree.pretty())
     trees = CollapseAmbiguities().transform(tree)
-    # trees += CollapseAmbiguities().transform(atree)
+    trees += CollapseAmbiguities().transform(atree)
     for t in trees:
         print(t.pretty())
         tokens = (token.type for token in trans.transform(t))

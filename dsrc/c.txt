@@ -10,7 +10,7 @@ kabus caboose
 kakl cackle
 kaktus cactus
 kadavk cadaveric
-kadab cadaverous
+kadav cadaverous
 kadns cadence
 kadnse cadency
 kadt cadet
@@ -18,18 +18,18 @@ kadtsh cadetship
 kaje~ cadger
 kadlk cadillac
 kafa, cafe
-kajek caffeic
+kafek caffeic
 kafe,n caffeine
 kaftnek caffetannic
 kaj cage
 karn cairn
 kasn caisson
 katf caitiff
-akjol cajole
+kajol cajole
 
 # Page 25 Column 2
 kak cake
-kalbash calabast
+kalbash calabash
 kalam calamitous
 kal^mt calamity
 kalash calash
@@ -53,34 +53,34 @@ kaleko calico
 kalesth calisthenics
 ka call
 ka^r caller
-? kal^er calligrapher
-? kla^ek calligraphic
+kal^er calligrapher
+kal^ek calligraphic
 
 # Page 25 Column 3
-? kal^ekl calligraphical
-? kal^e| calligraphy
+kal^ekl calligraphical
+kal^e| calligraphy
 kalipe calliope
 kalus callous
-kalu callow
+kalo callow
 kam calm
-kamn calmness
+kam-n calmness
 kalml calomel
 kalores calorescence
-kaloc caloric
+kalok caloric
 kalr^s) caloricity
-kalorif calorific
+kaloref calorific
 kalor^f calorification
 kalm-na&'t calumniate
 kalm-na&'tr calumniator
 kalm-nus calumnious
 kalm-ne calumny
 kalvre calvary
-kambrk cabric
+kambrk cambric
 kaml camel
 kameo cameo
 kamera camera
 kamerl^st cameralistic
-kam-mi~ camomile
+kamomi~ camomile
 kamp camp
 kampn campaign
 kamfr camphor
@@ -98,17 +98,19 @@ kans cancel
 kans-sh cancellation
 kanser cancer
 kdlabra candelabra
-kdnt candent
+kd-nt candent
 kdd candid
 kddase candidacy
 kddat candidate
 kddatr candidature
-kddn candidness
+kdd-n candidness
 kded candied
 kdl candle
+kdr candor
+kde candy
 kan cane
 kani canine
-kaniste~ canister
+kaneste~ canister
 kanke~ canker
 kanre cannery
 
@@ -124,13 +126,13 @@ kanust canoeist
 kanun canon
 kanon^k canonical
 kanunes canonist
-kanunis-sh canonization
+kanunez-sh canonization
 kanpe canopy
 kt cant
-ktelp cantaloupe
+ktalp cantaloupe
 ktank cantankerous
 ktata cantata
-ktatres catatrice
+ktatres cantatrice
 kten canteen
 kte~ canter
 kanthres cantharis
@@ -138,7 +140,7 @@ kt^k canticle
 ktelev cantilever
 ktela cantillate
 kto canto
-kantn canton
+kan-tn canton
 ktr cantor
 
 # Page 26 Column 3
@@ -148,7 +150,7 @@ kuchuk caoutchouc
 kap cap
 kap^b capability
 kap capable
-kapsus capacious
+kapshus capacious
 kapas capacitate
 kap^s) capacity
 kaprsn caparison
@@ -156,11 +158,11 @@ kapr caper
 kapf capful
 kapa&'s capias
 kapl^r capillarity
-kapbre capillary
+kaplre capillary
 kpt capital
 kptes capitalist
-kptes-sh capitalization
-kptis capitalize
+kptez-sh capitalization
+kptiz capitalize
 kpta| capitally
 kpt capitol
 kaptlr capitular
@@ -168,7 +170,7 @@ kapt^u capitulate
 kapn capon
 kapres caprice
 kapresh capricious
-kapreprn capricorn
+kaprekrn capricorn
 
 # Page 27 Column 1
 kapsiz capsize
@@ -184,32 +186,32 @@ kpashus captious
 kaptvat captivate
 kaptv captive
 kap^v captivity
-kaprt capture
+kaptr capture
 kr car
 karaf carafe
 karml caramel
 karat carat
 krvan caravan
 kara_ caraway
-krbin barbine
+krbin carbine
 krbne~ carbineer
 krbolk carbolic
 krbn carbon
-krbreshus carbonaceous
+krbnashus carbonaceous
 krbnat carbonate
 krbnek carbonic
 
 # Page 27 Column 2
-krbnizsh carbonization
+krbnezsh carbonization
 krbniz carbonize
-krbnk acrbuncle
+krbnk carbuncle
 ka~d card
 ka~dbor cardboard
 ka~de~ carder
 ka~da&'k cardiac
 ka~dnl cardinal
 ka~dnla cardinalate
-kadnlsh cardinalship
+ka~dnlsh cardinalship
 ka~d^o cardiograph
 ka~d^ok cardiographic
 ka~doe cardioid
@@ -222,7 +224,7 @@ kaf careful
 ? kaln carelessness
 kares caress
 karet caret
-ka^uon careworn
+ka-uon careworn
 kago cargo
 krbu caribou
 karek caricature
@@ -234,10 +236,10 @@ krnj carnage
 krnl carnal
 krnat carnate
 krnsh carnation
-krneln carnilian
-krnus careous
-krniv carnival
-krnivus carivorous
+krneln carnelian
+krnus carneous
+krnev carnival
+krnevus carnivorous
 karl carol
 karm carom
 karaus carouse
@@ -245,22 +247,22 @@ karp carp
 krpntr carpenter
 krpt carpet
 krj carriage
-? kae^r carrier
+kae^r carrier
 karut carrot
-? kae carry
-? kae^o carryall
+kae carry
+kae-o( carryall
 ka~t cart
 ka~tj cartage
-ka~tblansh carte blanche
+*2 ka~tblansh carte blanche
 ka~tel cartel
-ka~te~ cater
+ka~te~ carter
 ka~tlj cartilage
 ka~t^or cartographer
 
 # Page 28 Column 1
 ka~t^ok cartographic
-ka~t^uke cartographically
-ka~t^oe cartography
+ka~t^oke cartographically
+ka~t^o-e cartography
 ka~tn carton
 ka~tun cartoon
 ka~tunes cartoonist
@@ -268,7 +270,7 @@ ka~trej cartridge
 krv carve
 kaskad cascade
 kas case
-kasmn casement
+kasm casement
 kasus caseous
 kash cash
 kashe~ cashier
@@ -291,12 +293,12 @@ kashu casual
 kashusm casualism
 kashute casualty
 kashust casuist
-kataklsm catackysm
+kataklsm cataclysm
 katlepse catalepsy
 katl catalogue
-patakpa Catalpa
-katmnt catamount
-katfneks cataphonics
+katalpa Catalpa
+katmn-t catamount
+kat-fneks cataphonics
 katrk cataract
 kata~ catarrh
 katarl catarrhal
@@ -309,10 +311,10 @@ katek^a| catechetical
 katekes-sh catechisation
 katekesm catechism
 katekiz catechize
-kateg^c categprical
+kateg^k categorical
 kateg category
 kate~ cater
-kate`^r caterer
+kate~^r caterer
 katplr caterpillar
 
 # Page 28 Column 3
@@ -320,25 +322,25 @@ kathed cathedral
 kathod cathode
 kathodel cathodic
 kath Catholic
-? kathpls Catholicism
+katholss Catholicism
 kath^s) Catholicity
 katl cattle
 kkus caucus
 kot caught
 kolflr cauliflower
-ks^l causal
+ks(^l causal
 ks(-sh causation
 ks( cause
 ks(^les causeless
 ks(a_ causeway
 k^st caustic
-kust^s) causticity
+kost^s) causticity
 kotersm cauterism
-koenezsh cauterization
-kuteriz cauterize
+koterezsh cauterization
+koteriz cauterize
 kosh caution
-kushre cautionary
-kushus cautious
+koshre cautionary
+koshus cautious
 kavlkad cavalcade
 kavler cavalier
 kavlre cavalry
@@ -346,13 +348,13 @@ kav cave
 
 # Page 29 Column 1
 kave~n cavern
-kave~nus caverous
+kave~nus cavernous
 kava&'r caviar
 kavl cavil
 k^v cavity
 kavot cavort
-ka&'n cayenne
-ses sease
+ka&en cayenne
+ses cease
 sesl ceaseless
 sesle ceaselessly
 seda~ cedar
@@ -367,8 +369,8 @@ selebse celibacy
 sel cell
 selr cellar
 seleu cellular
-sellue celluloid
-sellus cellulose
+selloe celluloid
+sellos cellulose
 selt Celt
 semn-t cement
 semn-tsh cementation
@@ -383,46 +385,46 @@ sensorsh censorship
 senshub censurable
 senshu censure
 senss census
-cent cent
+sent cent
 sentl cental
 sen-tnra&'l centenarian
 sen-tnre centenary
-sen_tnl centennial
-? sn center
+sen-tnl centennial
+sn^ center
 sn^bor centerboard
 sn^pes centerpiece
-segra centigrade
+sengra centigrade
 sentem centime
-sn_l central
+sn^l central
 sn^lezsh centralization
 sn^liz centralize
-sn^le centerally
+sn^le centrally
 sn^k centric
 sn^kl centrical
-sn^f cnetrifugal
-sn^ptl centipetal
+sn^f centrifugal
+sn^ptl centripetal
 
 # Page 29 Column 3
 sn^d centrode
-sentplek centruplicate
+sentplek centuplicate
 sentrn centurion
 sentre century
 sera&'l cereal
 serbrl cerebral
 serbra cerebrate
 serbrash cerebration
-serbk cerebric
-se~mnl ceremonial
-se~mnlsm ceremonialism
-se~mnus ceremonious
-se~mne ceremony
+serbrk cerebric
+s(emnl ceremonial
+s(emnlsm ceremonialism
+s(emnus ceremonious
+s(emne ceremony
 seres cerise
-stn certain
-stn-te certainty
-satf certificate
-se~t^f certification
+setn certain
+setn-te certainty
+setf certificate
+s(et^f certification
 setf certify
-se~tet certitude
+s(etet certitude
 ssash cessation
 sesh cession
 seshre cessionary
@@ -449,6 +451,7 @@ kameln chameleon
 shame chamois
 shampan champagne
 champn champion
+champnsh championship
 chans chance
 chansel chancel
 chanselr chancellor
@@ -467,7 +470,7 @@ chanl channel
 chant chant
 kaos chaos
 ka^a chaotic
-ka^a|e chaitically
+ka^a|e chaotically
 chap chap
 chapl chapel
 shapron chaperon
@@ -483,7 +486,7 @@ kakezsh characterization
 kakiz characterize
 kak^l characterless
 sharad charade
-charcol charcoal
+charkol charcoal
 chj charge
 chj^b chargeable
 chje~ charger
@@ -492,7 +495,7 @@ chje~ charger
 chare| charily
 charen chariness
 charot chariot
-carote~ charioteer
+charote~ charioteer
 cha~tb charitable
 cha~tbn charitableness
 ch^r charity
@@ -506,9 +509,9 @@ chare chary
 karebdes Charybdis
 chas chase
 kasm chasm
-shase chasses
+shase chassis
 chasn chasten
-chatiz chastize
+chatiz chastise
 chat chat
 shato chateau
 shatlan chatelaine
@@ -525,13 +528,14 @@ chet cheat
 chetb cheatable
 chete~ cheater
 chk check
-kchr checker
-ckek cheek
+chkr checker
+chek cheek
 chep cheep
 che~ cheer
 che~f cheerful
 che~fn cheerfulness
 chere| cheerily
+cheren cheeriness
 che~^e cheeringly
 che~l cheerless
 ches cheese
@@ -542,8 +546,8 @@ kemestre chemistry
 cheresh cherish
 sherut cheroot
 chere cherry
-cherb cherub
-cherbk cherubic
+cherub cherub
+cherubk cherubic
 
 # Page 31 Column 2
 ches chess
@@ -559,50 +563,52 @@ chid chide
 chid^e chidingly
 chef chief
 cheftn chieftain
-shifn chiffon
+shefn chiffon
 shefne~ chiffonier
 chelblan chilblain
 chil child
 chil^d childhood
 chilsh childish
 chilshn childishness
-chil children
-chil chill
-chilen chilliness
-chile chilly
+chel children
+chel chill
+chelen chilliness
+chele chilly
+chim chime
 kemera chimera
 kemerk chimeric
 
 # Page 31 Column 3
 kemer^k chimerical
-chmne chimney
-chin chin
+chm-ne chimney
+chen chin
 china China
 chinamn Chinamen
-chinchila chinchilla
+chenchela chinchilla
 chines Chinese
 chenk chink 
 chep chip
-chipmnk chipmunk
+chepm-nk chipmunk
 kir^o chirograph
 kir^or chirographer
 kir^ok chirographic
 kir^okl chirographical
-kir^oe chirography
-? kir^o chirological
-? kir^os chirology
+kir^o-e chirography
+kir^o( chirological
+kir^o(s chirologist
+kir^o( chirology
 cherp chirp
 chesl chisel
-shivark chivalric
-shivarus chivalrous
-chivare chivalry
-klurl chloral
-klura chlorate
-kluren chlorine
-klunfm chloroform
+shevark chivalric
+shevarus chivalrous
+shevare chivalry
+klorl chloral
+klora chlorate
+kloren chlorine
+klorfm chloroform
 
 # Page 32 Column 1
-klurus chlorous
+klorus chlorous
 chklat chocolate
 choes choice
 ki_r choir
@@ -611,7 +617,7 @@ kolera cholera
 kolrk choleric
 chus choose
 chop chop
-kpd cholr
+kod chord
 chor chore
 koreste~ chorister
 kor^o chorograph
@@ -622,31 +628,31 @@ chos chose
 chosn chosen
 chaude~ chowder
 kris Christ
-krisn christen
-krisndm Christendom
+kresn christen
+kresn-dm Christendom
 kresch Christian
 kresch^nt Christianity
 krisla Christlike
 kres Christmas
-kristid Christmastide
+krestid Christmastide
 
 # Page 32 Column 2
-jrumat chromate
+kromat chromate
 krom^a chromatic
 krom^a|e chromatically
-krumek chromic
+kromek chromic
 kromotip chromotype
-kromek chronic
+kronek chronic
 kron^k chronicle
-kron^kl chronicler
+kron^kr chronicler
 kron^or chronographer
 kron^ok chronographic
-? kron^o chronologic
-? kron^os chronologist
-? kron^o chronology
+kron^o( chronologic
+kron^o(s chronologist
+kron^o( chronology
 kromete~ chronometer
 krometrk chronometric
-cresnthem chrysanthemum
+kresnthem chrysanthemum
 chube chubby
 chuk chuck
 chukl chuckle
@@ -660,9 +666,9 @@ shut chute
 
 # Page 32 Column 3
 side~ cider
-sigr cigar
+segr cigar
 segret cigarette
-sench chinch
+sench cinch
 sendr cinder
 senamn cinnamon
 sifr cipher
@@ -671,7 +677,7 @@ seklet circlet
 s(^t circuit
 s(^tus circuitous
 s(^l circular
-s(^l^r cirularity
+s(^l^r circularity
 s(^liz circularize
 s(^la circulate
 s(^lash circulation
@@ -679,28 +685,29 @@ s(^latr circulator
 s(^ambent circumambient
 s(^amb^u circumambulate
 s(^klsh circumclusion
-s(^dus circumdunce
+s(^dus circumduce
 s(^duk circumduct
 s(^dsh circumduction
 s(^f circumference
 s(^fl circumflect
 s(^flex circumflex
-s(^lfexsh circumflextion
+s(^flexsh circumflexion
 
 # Page 33 Column 1
 s(^feu circumfuse
 s(^feush circumfusion
-s(^luk circumlocution
+s(^lok circumlocution
 s(^lok^re circumlocutory
-s(^nev^b circumnavigable
+s(^nav^b circumnavigable
 s(^nav circumnavigate
+s(^navsh circumnavigation
 s(^nav^r circumnavigator
 s(^rotsh circumrotation
 s(^skrb circumscribable
 s(^skr circumscribe
 s(^skrsh circumscription
 s(^skrv circumscriptive
-s(^sp sircumspect
+s(^sp circumspect
 s(^spsh circumspection
 s(^spn circumspectness
 s(^stns circumstance
@@ -710,16 +717,16 @@ s(^vnt circumvent
 s(^vnsh circumvention
 s(^vntv circumventive
 S(^vol circumvolve
-s(^s circus
+s(^s) circus
 ssten cistern
 setadl citadel
 sitsh citation
 
 # Page 33 Column 2
 sit cite
-setef^f citified
+setef^t citified
 setz citizen
-cetzsh citizenship
+setzsh citizenship
 setra citrate
 setrk citric
 setrn citron
@@ -727,10 +734,10 @@ setrus citrus
 sete city
 svk civic
 sv civil
-sk^an civilian
-sn^l civility
-sves-sh civilization
-svis civilize
+sv^an civilian
+sv^l civility
+svez-sh civilization
+sviz civilize
 klad clad
 kla claim
 kla^b claimable
@@ -740,7 +747,7 @@ klrvoe clairvoyant
 klam clam
 klame clammy
 klamr clamor
-klamp ckamp
+klamp clamp
 klan clan
 klandestn clandestine
 
@@ -768,7 +775,7 @@ klasmat classmate
 klate~ clatter
 klate~^e clatteringly
 klos clause
-klav^c clavicle
+klav^k clavicle
 klo claw
 kla clay
 klen clean

@@ -7,7 +7,6 @@ myenv
 grascii.conf
 *.graphml
 words.txt
-extra_words.txt
 build/
 dist/
 grascii.egg-info/

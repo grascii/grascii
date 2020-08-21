@@ -9,18 +9,18 @@ daft daft
 dagr dagger
 dagtip daguerreotype
 dala&' dahlia
-? dae daily
+dae daily
 dante| daintily
-danten dainteness
+danten daintiness
 dante dainty
 dare dairy
 daremad dairymaid
-dase daisey
+dase daisy
 dale dally
 dmj damage
 dmjb damageable
 dmaskus Damascus
-dmask damash
+dmask damask
 dam dame
 dmp damp
 dmpn dampen
@@ -28,24 +28,24 @@ dmsel damsel
 
 # Page 49 Column 2
 dans dance
-dansr dancer
-dndelin dandelion
+danser dancer
+dn-delin dandelion
 dn-de dandy
 dnje~ danger
 dnjus dangerous
 dangl dangle
 dapr dapper
-kapl dapple
+dapl dapple
 da~ dare
 da~' daring
-ka~^e daringly
+da~^e daringly
 dark dark
 darkn darken
 darknes darkness
 da~t dart
 dash dash
 dashbor dashboard
-dasta~de| dastardly
+dasta~de dastardly
 dta data
 dt date
 datv dative
@@ -62,25 +62,25 @@ don dawn
 da day
 dali daylight
 datm daytime
-da,z daze
+daz, daze
 dazl dazzle
 dekn deacon
 deknes deaconess
 dd dead
-ddn deaden
+dd-n deaden
 ddlok deadlock
 def deaf
 defnes deafness
 de~ deal
 de~^r dealer
-ken dean
+den dean
 de~ dear
-? dee dearly
-de`th dearth
+dee dearly
+de~th dearth
 deth death
 dbar debar
 dbas debase
-kbat debate
+dbat debate
 dbate~ debater
 dboch debauch
 
@@ -96,14 +96,14 @@ dtr debtor
 dbeu debut
 dekad decade
 dekadns decadence
-dekgn gecagon
-dekemp decamp
+dekgn decagon
+dekamp decamp
 dekantr decanter
 dekap decapitate
 deka decay
 dses decease
 dset deceit
-dsetf deceitful
+dset-f deceitful
 dse^b deceivable
 dse deceive
 des December
@@ -114,17 +114,17 @@ dsepsh deception
 dseptv deceptive
 
 # Page 50 Column 2
-dse~n decern
+ds(en decern
 dsi decide
 dsi^te decidedly
 desml decimal
 dsif decipher
 dsif^b decipherable
-dsesh cecision
+dsesh decision
 dsis decisive
 dek deck
 dekl deckle
-? de~m declaim
+? dem declaim
 ? demsh declamation
 ? derb declarable
 ? derash declaration
@@ -139,7 +139,7 @@ dakolta decollete
 dekpo decompose
 dekra decorate
 dekrash decoration
-dekratv deconative
+dekratv decorative
 dekratr decorator
 
 # Page 50 Column 3
@@ -154,7 +154,7 @@ dekrepta decrepitate
 dekreptsh decrepitation
 dekreptu decrepitude
 dekri decry
-ddecat dedicate
+ddekat dedicate
 ddekash dedication
 ddekator dedicator
 ddus deduce
@@ -178,8 +178,8 @@ dfet defeat
 dfek defect
 dfeksh defection
 dfekv defective
-dfnd defent
-dfneb defendable
+dfnd defend
+dfndb defendable
 dft defendant
 dfens defense
 dfensl defenseless
@@ -188,7 +188,7 @@ dfr defer
 dfrns deference
 dfrnsh deferential
 dfins defiance
-dfind defiant
+dfint defiant
 dfeshse deficiency
 dfesht deficient
 dfeset deficit
@@ -196,7 +196,7 @@ dfil defile
 dfinb definable
 dfin define
 dfn definite
-dfnn definiteness
+dfn-n definiteness
 dfnsh definition
 d-fl deflect
 
@@ -219,9 +219,9 @@ defi deify
 dan deign
 dete deity
 djk deject
-djksh defection
+djksh dejection
 dla delay
-delv deleble
+delb deleble
 delektb delectable
 delektsh delectation
 del delegate
@@ -238,23 +238,24 @@ delek delicate
 delektes delicatessen
 dleshus delicious
 dli delight
-klif delightful
+dlif delightful
 dlenat delineate
 dlensh delineation
-dlenar delineator
+dlenatr delineator
 dlenk delinquent
 dler delirious
 dlerm delirium
 dl deliver
 dl^b deliverable
-dlms deliverance
+dlns deliverance
 dl^r deliverer
 dle delivery
 delta delta
+dludb deludable
 dlud delude
 delj deluge
 dlsh delusion
-klusv delusive
+dlusv delusive
 delv delve
 
 # Page 52 Column 1
@@ -262,7 +263,7 @@ dmag demagogue
 dman demand
 dmanb demandable
 dman^nt demandant
-dmrka demarcation
+dmrkash demarcation
 dmen demean
 dmenr demeanor
 demn^t demented
@@ -294,52 +295,52 @@ dnatliz denaturalize
 dnatr denature
 dnil denial
 dnem denim
-dmezn denizen
+dnezn denizen
 dnomnat denominate
 dmomnsh denomination
 dnomnatv denominative
 dnomnatr denominator
 dnot denote
-kanuman denouement
-dnns denounce
+danuman denouement
+dn-ns denounce
 dns dense
 dnste density
-dnt dent
+dn-t dent
 dn-tl dental
-dntes dentist
-dntestre dentistry
-dntsh dentition
-dntoe dentoid
+dn-tes dentist
+dn-testre dentistry
+dn-tsh dentition
+dn-toe dentoid
 dnunsash denunciation
 dni deny
 dodriz deodorize
 dpt depart
 
 # Page 52 Column 3
-dptmn department
+dpt-m department
 dpt^m departmental
-dptr deaprture
+dptr departure
 dpnd depend
 dpndb dependable
 dpnd-ns dependence
 dpnd-nt dependent
 dpk depict
 dple deplete
-dpkesh depketion
-dpkr^b deplorability
+dplesh depletion
+dplr^b deplorability
 dplrb deplorable
-dplr deplor
+dplr deplore
 dpon depone
-dpnt deponent
+dpon deponent
 dpop^u depopulate
 dpop^ush depopulation
 dpor deport
-dpormn deportment
+dporm deportment
 dpo depose
 dpos deposes
 dpos deposit
-kpush deposition
-kpos^r depositor
+dposh deposition
+dpos^r depositor
 dpos^re depository
 dpo depot
 dprav deprave
@@ -348,33 +349,34 @@ dprav deprave
 dpr^v depravity
 dprek deprecate
 dpreksh deprecation
-dprasa&'t depreciate
+dpresha&'t depreciate
 dpresha&'sh depreciation
 dpredsh depredation
 dpres depress
 dpresh depression
-dpravash deprivation
+dprevash deprivation
 dpri deprive
 dpth depth
 dpush deputation
 dpu depute
 dputiz deputize
 dpute deputy
-dral derail dralmn derailment
+dral derail 
+dralm derailment
 dranj derange
-dranjmn derangement
+dranjm derangement
 derlek derelict
 dri deride
 deresh derision
-drevash derivaiton
-deriv drivative
+drevash derivation
+derev derivative
 dri derive
 derogsh derogation
 derogtv derogative
 
 # Page 53 Column 2
 derog derogatory
-derek derrich
+derek derrick
 dsen descend
 dsen^nt descendant
 dsensh descension
@@ -386,20 +388,20 @@ dskrv descriptive
 dskri descry
 dskra desecrate
 dskrash desecration
-dse~t desert
-dse~te~ deserter
+ds(et desert
+ds(ete~ deserter
 dsev deserve
-dsevde| deservedly
+dsevde deservedly
 deskat desiccate
-dsadra desiderate
+dsedra desiderate
 dsedrash desideration
 dseder desideratum
 dsin design
 desg designate
 desgsh designation
-sein^te designedly
+dsin^te designedly
 dsine~ designer
-dsv desirable
+dsb desirable
 
 # Page 53 Column 3
 ds desire
@@ -409,16 +411,16 @@ desk desk
 dsola desolate
 dsolash desolation
 dspar despair
-dspar desperate
+dspra desperate
 dsprash desperation
 dspk despicable
 dspis despise
 dspi despite
 dspoel despoil
-dspont despondent
-dspt despt
+dspond despondent
+dspt despot
 dsp^a despotic
-dsptsm depotism
+dsptsm despotism
 destnsh destination
 destne destiny
 dstet destitute
@@ -432,21 +434,21 @@ dsu^re desultory
 
 # Page 54 Column 1
 dtach detach
-dtachmn detachment
+dtachm detachment
 dta~ detail
 detn detain
 dtek detect
 dtekv detective
 detnsh detention
-? d^ deter
-k^ora deteriorate
+d^ deter
+d^ora deteriorate
 d^orash deterioration
 e~mnsh determination
 e~mn determine
-e~mn^te| determinedly
+e~mn^te determinedly
 d^nt deterrent
 dtes detest
-dtesb detsetable
+dtesb detestable
 dtes-sh detestation
 dthron dethrone
 dtonsh detonation
@@ -454,15 +456,15 @@ dtur detour
 d^k detract
 d^ksh detraction
 d^kr detractor
-d^mn detriment
-d^mnl detrimental
+d^m detriment
+d^ml detrimental
 d^sh detrition
 dvasta devastate
 
 # Page 54 Column 2
-dbastsh devastation
+dvastsh devastation
 dvl develop
-dvlmn development
+dvlm development
 deva&'t deviate
 deva&'sh deviation
 dvis device
@@ -474,7 +476,7 @@ dvt devote
 dvte devotee
 dvosh devotion
 dvaur devour
-dveut devout
+dvaut devout
 du dew
 dudrp dewdrop
 dexte~ dexter
@@ -490,8 +492,8 @@ dig diagonal
 
 # Page 54 Column 3
 da&e^g diagram
-? di^e diagraph
-da^el dial
+di^e diagraph
+da&el dial
 dilek dialect
 dilog dialogue
 dimete~ diameter
@@ -503,28 +505,28 @@ dire diary
 dis dice
 dekr dicker
 dekt dictate
-dketsh dectation
-dekt^r decitator
+dketsh dictation
+dekt^r dictator
 deksh diction
 dekshre dictionary
-dekt^o dectograph
+dekt^o dictograph
 dektm dictum
-ddekt dedactic
-ddekt^k dedactical
+ddakt didactic
+ddakt^k didactical
 di die
-da&e diet
-kit&a tietetic
+da&et diet
+da&et^a dietetic
 df differ
 df difference
 df different
 dfnsh differential
 
 # Page 55 Column 1
-dfnsha^'t defferentiate
+dfnsha&'t differentiate
 dfnsha&'sh differentiation
 dfk difficult
 dfk difficulty
-dfnsd diffidence
+dfdns diffidence
 dfdn-t diffident
 dfeu diffuse
 dfeush diffusion
@@ -536,70 +538,70 @@ djestv digestive
 degr differ
 dejt digit
 degnef dignify
-def^re dignitary
+deg^re dignitary
 deg^nt dignity
 degres digress
 degresh digression
 dik dike
 delap dilapidate
 delapsh dilapidation
-dekatb dilatable
+delatb dilatable
 dela dilate
 delatre dilatory
 delema dilemma
-demetn-te dilettante
+deletn-te dilettante
 
 # Page 55 Column 2
-dekej diligence
-delegnt diligent
+delej diligence
+delejnt diligent
 delut dilute
-delsh dilutin
+delsh dilution
 dem dim
 dim dime
 dmensh dimension
-dmenish diminish
-dmenishb diminishable
-kmeneush diminution
-emdneu diminutive
+dmenesh diminish
+dmeneshb diminishable
+dmeneush diminution
+dmeneu diminutive
 d^mt dimity
 dmpl dimple
 den din
 din dine
 dnjes dinginess
-dnje dinge
+dnje dingy
 dnr dinner
 dn-t dint
 dises diocese
-dix dioxide
+da&ex dioxide
 dep dip
 dfthra&' diphtheria
 dfthong diphthong
 dploma diploma
-dplonse diplomacy
+dplomse diplomacy
 dplomat diplomat
 
 # Page 55 Column 3
-dplom^a doplomatic
-kplomates diplomatist
+dplom^a diplomatic
+dplomates diplomatist
 depr dipper
 di~ dire
 drk direct
-drksh dirction
-drkn dirctness
-drk^r dirctor
+drksh direction
+drkn directness
+drk^r director
 drk^ra directorate
 drk^re directory
 dirf direful
 derj dirge
 de~t dirt
 de~ten dirtiness
-dsib disable
+dsab disable
 dsabeu disabuse
-dsav desadvantage
+dsav disadvantage
 dsavus disadvantageous
 ? da| disagree
-?da|b disagreeable
-?da| disagreement
+? da|b disagreeable
+? da| disagreement
 dsapr disappear
 dsaprns disappearance
 doe disappoint
@@ -608,43 +610,43 @@ dsaprva disapproval
 dsaprv disapprove
 
 # Page 56 Column 1
-dsa~m disarm
+ds(am disarm
 dsara disarrange
-dsste~disaster
+dsste~ disaster
 dsstrus disastrous
 dsband disband
-dsband-mn disbandment
+dsband-m disbandment
 dsbe disbelief
 dsbrs disburse
-dsbrsmn disbursement
+dsbrsm disbursement
 dska~d discard
-dse~n discern
-dse~ne~ discerner
-dse~nb discernible
-dse~mn discernment
+ds(en discern
+ds(ene~ discerner
+ds(enb discernible
+ds(enm discernment
 dschj discharge
 dsip disciple
 dsip^ra&'n disciplinarian
 dsep^re disciplinary
 dsep discipline
 dskla disclaim
-dskls disclse
+dskls disclose
 dsklshu disclosure
 dskul discolor
 dskftr discomfiture
-dskft disconfort
+dskft discomfort
 dskmod discommode
 dskpo discompose
 
 # Page 56 Column 2
 dskposhu discomposure
-dskse`t disconcert
+dsks(et disconcert
 dskek disconnect
-dskeksh discnonection
+dskeksh disconnection
 dsksola disconsolate
 dsktn-t discontent
 dsktn^t discontented
-dsktm discontentment
+dsktn-m discontentment
 dsktnu discontinue
 dskod discord
 dskodn-t discordant
@@ -654,11 +656,12 @@ dsktnans discountenance
 des^r discounter
 dskrj discourage
 dskrs discourse
-dska~dus discourteous
+dske~tus discourteous
 dskv discover
 dskve discovery
-dskre discrede
+dskre discredit
 dskret discreet
+dskrep discrepancy
 dskresh discretion
 dskremn discriminate
 dskremnsh discrimination
@@ -670,7 +673,7 @@ dsksh discussion
 dsdan disdain
 dses disease
 dsmbark disembark
-dsnga disengage
+dsn-ga disengage
 dsntang disentangle
 dsfa disfavor
 dsfgr disfigure
@@ -680,16 +683,16 @@ dsgrasf disgraceful
 dsgis disguise
 dsgus disgust
 desh dish
-dsa~'tn dishearten
+ds'a~tn dishearten
 dsones dishonest
 dsonr dishonor
 dsonrb dishonorable
 dse^nsh disinclination
 dse^n disincline
-dse^nt disinclined
-dsnft disinfect
+dse^nd disinclined
+dsnfk disinfect
 dsnfknt disinfectant
-dsene~'t disinherit
+dsen'e~t disinherit
 dsnteg disintegrate
 dsn^st disinterested
 
@@ -700,7 +703,7 @@ dslok dislocate
 dsloj dislodge
 dsloe disloyal
 dsma dismay
-dsmes dismess
+dsmes dismiss
 dsmesl dismissal
 dsmn-t dismount
 dsoba disobey
@@ -713,7 +716,7 @@ dsp^r disparity
 dsp dispatch
 dspl dispel
 dspns dispense
-dspers disperse
+dsprs disperse
 dsprsh dispersion
 dsplas displace
 dspla display
@@ -731,8 +734,8 @@ dspush disputation
 dspu dispute
 dsko^f disqualification
 dskof disqualify
-dskes-sh disquisiton
-dsre deregard
+dskes-sh disquisition
+dsre disregard
 dsrpu disrepute
 dsres disrespect
 dsrp disrupt
@@ -747,15 +750,15 @@ dsensh dissension
 dsent dissent
 dsentr dissenter
 dsemel dissimilar
-dsem^ush disimulation
+dsem^ush dissimulation
 dspa dissipate
 dspash dissipation
 
 # Page 57 Column 3
 dsolb dissoluble
 dsolut dissolute
-dsolsh disolution
-dsolv dissove
+dsolsh dissolution
+dsolv dissolve
 dsolvnt dissolvent
 dsa_d dissuade
 dsa_sh dissuasion

@@ -249,6 +249,7 @@ cardioid
 carditis
 carminic
 carnate
+carneous
 cartage
 cartographic
 cartographically
@@ -274,6 +275,7 @@ centerboard
 centric
 centrical
 centrode
+centuplicate
 cerebrate
 cerebration
 cerebric
@@ -314,6 +316,7 @@ chirology
 chivalric
 chloral
 chlorate
+chlorous
 choir
 chorograph
 chorographer
@@ -334,8 +337,10 @@ circumambient
 circumambulate
 circumclusion
 circumduct
+circumduce
 circumduction
 circumflect
+circumflexion
 circumfuse
 circumfusion
 circumlocutory
@@ -355,6 +360,8 @@ clansman
 clatteringly
 cleanlily
 cleansable
+clear-cut
+clerkship
 clientage
 clientele
 clingstone
@@ -373,6 +380,7 @@ coiner
 collectanea
 collectedly
 collectedness
+collectiveness
 collectorate
 collectorship
 colligate
@@ -380,6 +388,7 @@ colligation
 collodion
 colloquialize
 colombier
+colonelcy
 colonelship
 colorable
 columnar
@@ -413,7 +422,9 @@ compressive
 compulsatory
 compunctious
 computable
+concealable
 concentrative
+concernedly
 concernment
 conciliative
 concoctive
@@ -433,6 +444,7 @@ confabulate
 confabulation
 confabulatory
 conferee
+conferrable
 confirmable
 confirmative
 confirmer
@@ -443,6 +455,7 @@ confrere
 conge
 congratulant
 conjointly
+conjunctly
 connectedly
 connoisseurship
 connotate
@@ -450,6 +463,7 @@ conquerable
 conscionable
 consecution
 consignation
+consignee
 consignor
 consistence
 consistory
@@ -462,12 +476,15 @@ constitutionalist
 constrainable
 constringe
 constringent
+constructer
 consulship
 consulation
 contaminable
 contaminative
+contemn
 contemplator
 contemptibility
+contestable
 contrabandist
 contractibility
 contractible
@@ -477,9 +494,12 @@ contributive
 contriteness
 contrivable
 controllability
+controvertible
 convenable
+contumacy
 conventionalism
 conventionalist
+conventionalize
 conversable
 conversance
 convincible
@@ -516,6 +536,7 @@ cottolene
 counselorship
 countercharge
 countermandable
+countermarch
 coupler
 courtmartial
 cousinly
@@ -525,6 +546,7 @@ covertness
 craniology
 creatable
 cretonne
+criminate
 criticise
 crownless
 crustily
@@ -533,6 +555,7 @@ cubeb
 cumbrous
 cumulate
 cumulation
+curvilinear
 customhouse
 cutaneous
 cutaway

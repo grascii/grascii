@@ -1,0 +1,257 @@
+
+conjunction : AND | THAT
+
+common_verb : BE | HAVE | PAY | FAVOR | PLEASE | BELIEVE | HONOR 
+	| RECEIVE | LOOK | SEE | SHIP | REACH | LIKE | REPRESENT | SELL | FIND
+	| SAY | TOLD | WIRE | WRITE | INCLOSE | THINK | WANT | SEND | THANK 
+  | DRAW | REPORT | HEAR | LEARN | ACKNOWLEDGE
+
+unit : MINUTES | HOURS| DAYS | WEEKS | MONTHS | YEARS
+
+common_noun.2 : MATTER | LETTER | FAVOR | REPLY | ALL | BEHALF | REGARD 
+  | ME | SIDE | TIME | HAND | ATTENTION | RIGHT | HIM | ORDER 
+  | DATE | DAY | WEEK | RECEIPT | MAIL
+
+common_adjective : KIND | THAT | ALL | EVERY | WHICH | ABLE | EARLY | SORRY
+	| RECENT | PAST | NEXT | LAST | FEW | POSSIBLE | VERY | ESTEEMED | SAME
+  | SURE | PLEASED
+
+pronoun : I | YOU | WE | THEY | IT | HE | WHICH | THIS | THAT
+
+to_be : AM | ARE | IS | WAS | were
+
+to_have : HAVE | HAS | had
+
+preposition : OF | to | IN | ON | WITH | WHICH | THERE | BY | FOR | FROM | at
+
+article : THE | HIS | THEIR | YOUR | OUR | THIS | THESE | THOSE | MY
+
+as_adj : WELL | GOOD | GREAT | MUCH | MANY | LONG | NEAR | LOW | SOON
+
+auxiliary :  SHOULD | COULD | WOULD | CAN | WILL | SHALL | MAY
+
+omitted_to_verb : LONG_ABLE | GLAD | LIKE | REGRET | WISH | BEG | SORRY
+
+omitted_to_noun: ACCORDING | ORDER | REFERENCE | REGARD | RELATIVE | RESPECT
+
+title : SIR | MADAM | MR | MRS | SIRS
+
+sal_adverb : TRULY | RESPECTFULLY | SINCERELY | CORDIALLY
+
+quantifier : FEW | SEVERAL | TEN | ONE | TWO | THREE | MANY
+
+conditional : IF
+
+adverb.2 : THERE | THUS // | SUCH
+
+command : PLEASE | SHIP | WRITE
+
+interrogative : CAN | DO | COULD | WOULD | SHOULD | WHERE | WHY | WHO | HOW
+	| WHAT | WHEN | IS 
+
+
+// common verbs
+PAY : "PA"
+FAVOR : "FA"
+PLEASE : "P" "L"?
+BELIEVE : "BE"
+HONOR : ASPIRATE? "ONOR"
+RECEIVE : "RSE"
+LOOK : "LU"
+SEE : "SE"
+SHIP : "SH"
+REACH : "RECH"
+LIKE : "LA"
+REPRESENT : "RP"
+SELL : "SEL"
+FIND : "FI"
+SAY : "SA"
+WIRE : "IR"
+WRITE : "RI"
+INCLOSE : "NK"
+THINK : "TH'"
+WANT : "NT"
+SEND : "SEN"
+THANK : "TH"
+DRAW : "DRO"
+REPORT: "RPR"
+HEAR: ASPIRATE? "E"? "R"
+LEARN: "LEN"
+ACKNOWLEDGE: "AK"
+TOLD : "TO"
+
+// common units
+MINUTES : "MNET" "S"?
+DAYS : "DA" "S"?
+WEEKS : WEEK "S"?
+MONTHS : "MNTH" "S"?
+YEARS : ("E"? | "E" "|"?) "R" "S"?
+HOURS: HOUR "S"?
+HOUR: "R"
+AGO : "G"
+
+// common nouns 
+MATTER : "MAT"
+LETTER : "LE"
+REPLY : "REP"
+ALL : "O"
+BEHALF : "BF"
+SIDE : "SI"
+TIME : "TM" // or "DM"
+HAND : ASPIRATE? "ND"
+ATTENTION : "TNSH"
+DAY : "DA"
+DATE : "DT"
+MAIL: "M"
+WEEK: "E"? "K"
+
+// common pronouns
+I : "A"
+YOU : "U"
+WE : "UE"
+THEY : "TH" "E"? 
+IT : "T"
+HE : "E"	
+
+// conjugations of 'to be'
+AM : "M"
+ARE : "R"
+IS : "S"
+WAS : "OS"
+WERE : "ER"
+were.-1 : WERE
+
+// auxiliary verbs
+SHOULD : "SHD"
+COULD : "KD"
+WOULD : "D"
+CAN : "K"
+WILL : "L"
+SHALL : "SH"
+MAY : "MA"
+
+// conjugations of 'to have'
+had.-1 : HAD
+HAD : ASPIRATE? "A"? "D"
+HAVE : "V"
+HAS : ASPIRATE? "AS"
+
+// common adjectives
+KIND : "KI"
+EVERY : "EV"
+SORRY : "SO"
+RECENT : "RS)"
+PAST: "PAS"
+NEXT: "NES"
+LAST: "LAS"
+ESTEEMED: "E"? "S"
+SAME: "SA" "M"?
+POSSIBLE: "P"
+// ?
+EARLY : "E" "~"?
+SURE: "SH"
+PLEASED: "P"
+
+// common prepositions
+OF : "O"
+TO : "TU" // | "T"
+to.2 : TO
+IN : "N"
+ON : "ON"
+WITH : "ETH"
+WHICH : "CH"
+// directional?
+THERE : "TH)"
+BY : "B"
+FOR : "F"
+FROM : "FM"
+at : AT
+AT : "T"
+
+// common articles
+THE : "TH"
+HIS : "S"
+THEIR : "TH)"
+YOUR : "U"
+OUR : "R"
+THIS : "THS"
+THESE : "THES"
+THOSE : "THS"
+
+// adjectives used in 'as ... as' phrases
+WELL : "L"
+GOOD : "G"
+GREAT : "GR"
+MUCH : "MCH"
+MANY : "MNE"
+LONG : "LNG"
+NEAR : "NE"
+LOW : "LO"
+SOON : "N"
+
+// common words in after which 'to' is omitted
+LONG_ABLE : "ABL"
+GLAD : "GL"
+REGRET : "REG"
+WISH : "USH"
+BEG: "B"
+ACCORDING : "AKR" ASPIRATE?
+ORDER : "OD"
+REFERENCE : "RF"
+REGARD : "RE"
+RELATIVE : "RELA"
+RESPECT : "RES"
+
+// common itles 
+SIR : "S"
+MADAM : "M"
+MR : "MR"
+MRS : "MRS"
+SIRS : "SS"
+
+// adverbs often used in salutations
+TRULY : "T"
+RESPECTFULLY : "R"
+SINCERELY : "SEN"
+CORDIALLY : "K"
+RECEIPT : "R"
+
+// common interrogative words
+WHERE : "AR"
+WHY : "I"
+WHO : ASPIRATE "U"
+HOW : ASPIRATE? "AU"
+WHAT : "OT"
+WHEN : "EN"
+
+// common quantifiers
+FEW : "F"
+SEVERAL : "SEV"
+TEN : "TN"
+ONE : "UN"
+TWO : "TU"
+THREE : "TH)E"
+
+// miscellaneous 
+NOT : "N"
+THAT : "THA"
+ASPIRATE : "'"
+SUCH : "SCH"
+AS : "S"
+RIGHT : "RI"
+// special rule
+ME : "ME"
+HIM : ASPIRATE? "E"? "M"
+MY : "MA"
+DEAR : "D"
+YOURS : "U"
+VERY: "V" "E"?
+AND : "ND" // or "NT"
+BE : "B"
+BEEN : "B"
+ABLE : "A" "BL"?
+THUS : "THUS"
+to_do : DO | DOES
+DO : "D" "U"?
+DOES : "DUS"
+IF : "EF"

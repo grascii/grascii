@@ -129,11 +129,11 @@ class GrasciiSearcher(Searcher):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         grammar = get_grammar("grascii")
-        self.parser = Lark(grammar, parser="earley", ambiguity="explicit") 
+        self.parser = Lark.open(grammar, parser="earley", ambiguity="explicit")
 
     def parse_grascii(self, grascii: str) -> Union[Tree, bool]:
         """Attempt to parse a grascii string.
-        
+
         :param grascii: The grascii string to parse.
         :returns: A Lark parse tree on a successful parse, or False if the
             parse fails.

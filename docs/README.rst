@@ -108,7 +108,7 @@ sequences on the command line.
 More Options
 ============
 
-For more options, see :doc:`search`.
+For more options, see :doc:`gsearch`.
 
 Grascii Dictionary
 ******************

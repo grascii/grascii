@@ -37,7 +37,12 @@ From the root of the repository, run::
 Grascii Language
 ****************
 
-Explanation and example.
+The Grascii Language is designed to be straightforward for those
+who are familiar with Gregg Shorthand. That is, most strokes are
+represented by the letters that match their sounds. For example,
+the word ``Cross`` would be written as ``KROS``.
+
+For a more detailed overview of the language, see :doc:`language`.
 
 Purpose
 *******
@@ -103,7 +108,7 @@ sequences on the command line.
 More Options
 ============
 
-For more details on Grascii Search, see search.md.
+For more options, see :doc:`search`.
 
 Grascii Dictionary
 ******************
@@ -114,7 +119,7 @@ Shorthand Dictionary.
 There is also the ability to package other words and derivatives into
 the dictionary used by Grascii Search.
 
-For more information, see dictionary.md.
+For more information, see :doc:`dictionary`.
 
 Grascii Dephrase (Experimental)
 *******************************
@@ -125,8 +130,8 @@ It is designed to give the phrase for the most common phrase constructions
 in Gregg Shorthand as well as to provide suggestions for never before
 seen phrases.::
 
-  $ python ./grascii/dephrase.py AVNBA
-  I HAVE NOT BEEN ABLE
+    $ python ./grascii/dephrase.py AVNBA
+    I HAVE NOT BEEN ABLE
 
 Issues
 ******
@@ -149,7 +154,7 @@ It would be great to have help adding more words to the dictionary
 and making dictionaries for other versions of Gregg Shorthand.
 
 If you would like to help with this, please read the dictionary conventions in
-dictionary.md.
+:doc:`dictionary`.
 
 License
 *******

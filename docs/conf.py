@@ -20,8 +20,8 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Grascii'
-copyright = '2020, Chanic Panic'
-author = 'Chanic Panic'
+copyright = '2020, Nicholas Chan'
+author = 'Nicholas Chan'
 
 
 # -- General configuration ---------------------------------------------------

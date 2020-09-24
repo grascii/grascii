@@ -25,13 +25,9 @@ setup(
         "grascii": ["dict/*", "grammars/*.lark", "words/*.txt"]
     },
     install_requires=[
-        "lark-parser>=0.8.6,!=0.8.7,!=0.8.8",
-        "questionary>=1.5.1;python_version>='3.6'",
-        "questionary<=1.4.0;python_version=='3.5'"
+        "lark-parser>=0.10.0",
+        "questionary>=1.5.1",
     ],
-    # extras_require={
-        # "interactive": ["questionary>=1.5.1"]
-    # },
     entry_points={
         "console_scripts" : [
             "grascii = grascii.__main__:main"

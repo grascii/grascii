@@ -10,43 +10,108 @@ search the Grascii dictionary for potential translations.
 Usage
 *****
 
-`python grascii.py search [-h] (-g GRASCII | -r REGEX | -i) [-u {0,1,2}] [-v]`
+.. object:: grascii search ...
 
-`-h`, `--help`
+.. option:: -h, --help
 
 Print a help message and exit.
 
-`g`, `--grascii`
+.. option:: -g <grascii>, --grascii <grascii>
 
 Set a Grascii String to use as a query.
 
-`r`, `--regex`
+.. option:: -e <regex>, --regex <regex>
 
 Set a regular expression to use as a query.
 
-`-i`, `--interactive`
+.. option:: -r <word>, --reverse <word>
+
+Search by word instead of Grascii.
+
+.. option:: -i, --interactive
 
 Run searches in interactive mode. This is the recommended mode for general
-use, as `--grascii` and `--regex` may require using shell escape sequences.
+use, as :option`--grascii` and :option:`--regex` may require using shell escape sequences.
 
-`-u`, `--uncertainty`
+.. option:: -u {0, 1, 2}, --uncertainty {0, 1, 2}
 
 Set the uncertainty level of a Grascii string. 2 represents the greatest
-uncertainty. For more information....
+uncertainty.
 
-`-v`, `--verbose`
+.. option:: -s {match, start, contain}, --search-mode {match, start, contain}
 
-Enable verbose output.
+Set the type of search to perform. 
+
+``match``: Search for words that
+closely match the input. 
+
+``start``; Search for words that start with the input.
+
+``contain``; Search for words that contain the input.
+
+.. option:: -a {discard, retain, strict}, --annotation-mode {discard, retain, strict}
+
+Set how to handle Grascii annotations.
+
+``discard``: Annotations are discarded. Search results may contain
+annotations in any location.
+
+``retain``: Annotations in the input must appear in search results. Other annotations may appear in the results.
+
+``strict``: Annotations in the input must appear in search results. Other annotations may not appear in the results.
+
+.. option:: -p {discard, retain, strict}, --aspirate-mode {discard, retain, strict}
+
+Set how to handle Grascii aspirates.
+
+``discard``: Aspirates are discarded. Search results may contain
+aspirates in any location.
+
+``retain``: Aspirates in the input must appear in search results. Other aspirates may appear in the results.
+
+``strict``: Aspirates in the input must appear in search results. Other aspirates may not appear in the results.
+
+.. option:: -j {discard, retain, strict}, --disjoiner-mode {discard, retain, strict}
+
+Set how to handle Grascii disjoiners.
+
+``discard``: Disjoiners are discarded. Search results may contain
+disjoiners in any location.
+
+``retain``: Disjoiners in the input must appear in search results. Other disjoiners may appear in the results.
+
+``strict``: Disjoiners in the input must appear in search results. Other disjoiners may not appear in the results.
+
+.. option:: -n {best, all}, --interpretation {best, all}
+
+How to handle ambiguous Grascii strings.
+
+``best``: Only search with the best interpretation.
+
+``all``: Search with all interpretations.
+
+.. option:: -f, --fix-first
+
+Apply an uncertainty of 0 to the first stroke.
+
+.. option:: -d <dictionary>, --dictionary <dictionary>
+
+Specify which dictionary to search.
+
+``<dictionary>`` is either a path to the output directory of a built
+dictionary, or a colon followed by the name of an installed dictionary. 
+Ex: ``:preanniversary``.
+
 
 Suggestions
 ===========
 
 * use interactive mode
-* `--regex` is intended for advanced users and advanced searches. Regexes 
+* :option:`--regex` is intended for advanced users and advanced searches. Regexes 
   can be difficult to deal with manually, and most users should use 
-  `--grascii` instead as it handles many of these complications. Using
-  `--regex` is effectively equivalent to
-  `$ grep [regex] dict/*`
+  :option:`--grascii` instead as it handles many of these complications. Using
+  :option:`--regex` is effectively equivalent to
+  ``$ grep [regex] dict/*``
 
 Implementation
 **************

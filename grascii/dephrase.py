@@ -77,11 +77,9 @@ def dephrase(phrase: str) -> Set[str]:
         print("exception")
         return parses
 
-    print(tree.pretty())
     trees = CollapseAmbiguities().transform(tree)
     trees += CollapseAmbiguities().transform(atree)
     for t in trees:
-        print(t.pretty())
         tokens = (token.type for token in trans.transform(t))
         parses.add(" ".join(tokens))
     return parses

@@ -116,8 +116,8 @@ Grascii Dictionary
 Grascii comes with a dictionary for the 1916 version of the Gregg
 Shorthand Dictionary. 
 
-There is also the ability to package other words and derivatives into
-the dictionary used by Grascii Search.
+There is also the ability to build and install your own custom 
+dictionaries.
 
 For more information, see :doc:`dictionary`.
 

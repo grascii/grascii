@@ -12,7 +12,7 @@ Welcome to Grascii's documentation!
 
    README
    language
-   search
+   gsearch
    dictionary
    similarity
    reference

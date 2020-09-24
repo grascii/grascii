@@ -8,8 +8,8 @@ Shorthand Dictionary.
 These mappings of Grascii strings to their corresponding words are
 contained in a series of text files in the ``dsrc`` directory.
 
-These dictionary source files can then be compiled into the dictionary
-format that Grascii Search expects using `grascii.py`'s `build` subcommand.
+These dictionary source files are compiled into the dictionary
+format that Grascii Search expects using ``grascii dictionary build``.
 
 Dictionary Source File Layout
 *****************************
@@ -20,12 +20,12 @@ Basic Entry
 Each entry in a dictionary source file is contained on its own line in
 the following scheme:
 
-`[Grascii String] [Translation]`
+``[Grascii String] [Translation]``
 
-There can be any amount of whitespace surrounding the Grascii String and 
-its Translation.
+There can be any amount of whitespace surrounding the ``Grascii String`` and 
+its ``Translation``.
 
-Both Grascii String and Translation are case-insensitive.
+Both ``Grascii String`` and ``Translation`` are case-insensitive.
 
 Blank Lines
 ===========
@@ -37,7 +37,9 @@ Comments
 
 Lines whose first non-whitespace character is a `#` are ignored.
 
-`# This is a comment`
+::
+
+  # This is a comment
 
 Uncertainties
 =============
@@ -73,17 +75,18 @@ conventions.
   be adjusted during a build.
 * Entries taken from a dictionary are written in Grascii as presented. That
   is, annotations are not applied unless explicitly displayed. By extension,
-  entries should be written in the simplest form possible, annotations only if
+  entries should be written in the simplest form possible. Use areannotations only if
   necessary to distinguish the word from another. This helps generalize the
-  dictionary for better search results. Ex.
-* For the direction annotations on S and TH are only included if the 
+  dictionary for better search results.
+* The direction annotations on S and TH are only included if the 
   character is in the direction contrary to its standard joining based on the
-  characters around it. Ex.
-* For words which include two stokes next to each other that make up a blend, 
-  but are not blended, they are written with a barrier between them `-`. Ex.
+  characters around it.
+* Words which include two stokes next to each other that make up a blend, 
+  but are not blended, are written with a barrier between them `-`.
   While these are stripped in the standard build mode, this information is
   useful for other build types that may be valuable in the future.
-* match sounds for equivs
+* When writing a stroke that has more than one sound, Use the version that
+  matches the sound it makes in the word.
 
 The Build Process
 *****************
@@ -91,7 +94,7 @@ The Build Process
 Input and Output
 ================
 
-The `build` routine takes a set of dictionary source files and outputs a
+The ``build`` routine takes a set of dictionary source files and outputs a
 set of text files in the format expected by Grascii Search.
 
 It outputs files of the form: `A`, `B`, `C`, `D`, etc. where each file
@@ -110,12 +113,12 @@ Entries
 Each entry in an output file is contained on its own line in the following
 scheme:
 
-`[GRASCII STRING] [Translation]`
+``[GRASCII STRING] [Translation]```
 
-Where `GRASCII STRING` is in all uppercase and `Translation`'s first letter
+Where ``GRASCII STRING`` is in all uppercase and ``Translation``'s first letter
 is uppercase, and the rest of the string is lowercase.
 
-There is no whitespace preceding `GRASCII STRING` or following `Translation`
+There is no whitespace preceding ``GRASCII STRING`` or following ``Translation``
 . There is exactly one space between them.
 
 Blank Lines
@@ -129,40 +132,44 @@ Building
 Usage 
 =====
 
-`python grascii.py build [-h] [-o OUTPUT] [-c] [-p] [-s] infiles [infiles ...]`
+.. describe:: grascii dictionary build [-h] [-o OUTPUT] [-c] [-p] [-s] infiles [infiles ...]
 
-`infiles`
+.. option:: <infiles>
 
-The dictionary source files to compile.
+  The dictionary source files to compile.
 
-`-h`, `--help`
+.. option:: -h, --help
 
-Prints a help message and exits.
+  Print a help message and exit.
 
-`-o`, `--output`
+.. option:: -o, --output
 
-Sets the directory in which compiled files will be output.
-Default:
+  Set the directory in which compiled files will be output.
 
-`-c`, `--clean`
+.. option:: -c, --clean
 
-Remove all files in the output directory before compiling.
+  Remove all files in the output directory before compiling.
 
-`-p`, `--parse`
+.. option:: -p, --parse
 
-During the build, all Grascii Strings will be attempted to be parsed to
-verify that it is a valid Grascii string. If the parse fails, an error
-will be reported, and the corresponding entry will not be included in
-the output.
+  During the build, all Grascii Strings will be attempted to be parsed to
+  verify that it is a valid Grascii string. If the parse fails, an error
+  will be reported, and the corresponding entry will not be included in
+  the output.
 
-`-s`, `--spell`
+.. option:: -s, --spell
 
-During the build, all translations will be looked up in a dictionary to
-check the spelling/existence of the word. If the word is not found, a
-warning will be reported, but the corresponding entry will still be 
-included in the output.
+  During the build, all translations will be looked up in a dictionary to
+  check the spelling/existence of the word. If the word is not found, a
+  warning will be reported, but the corresponding entry will still be 
+  included in the output.
 
-Talk about word list and dictionaries.
+.. option:: -k, --check-only
+
+  Only check the input. No output is generated.
+  
+
+.. Talk about word list and dictionaries.
 
 Warnings and Errors
 ===================
@@ -195,7 +202,7 @@ discarded.
 Spelling
 ^^^^^^^^
 
-When the `--spell` flag is set, denotes that an entry's translation
+When the :option:`--spell` flag is set, denotes that an entry's translation
 has not been found in a dictionary.
 
 Possible Errors
@@ -210,15 +217,81 @@ missing.
 Invalid Grascii
 ^^^^^^^^^^^^^^^
 
-When the `--parse` flag is set, denotes that the first word is not a valid
+When the :option:`--parse` flag is set, denotes that the first word is not a valid
 Grascii string.
 
 Suggestions
 -----------
 
-Most of the time, it is acceptable to run the build without the `--parse`
-or `--spell` flags for a quick build.
+Most of the time, it is acceptable to run the build without the :option:`--parse`
+or :option:`--spell` flags for a quick build.
 
-The overhead of `--spell` is reasonable, but enabling `--parse` will greatly
+The overhead of :option:`--spell` is reasonable, but enabling :option:`--parse` will greatly
 increase build times. However, it is recommended to run a build with these
 options and resolving the issues before releasing the dictionary publicly.
+
+Working with Custom Dictionaries
+********************************
+
+It is possible to write your own dictionaries to use with the Grascii 
+tool suite.
+
+1. Make a directory to store your dictionary source files.
+
+::
+
+  $ mkdir mysrc
+
+2. Add source files to this directory that follow the dictionary source file 
+   format.
+
+3. Build your dictionary.
+
+::
+
+   $ grascii dictionary build mysrc/*.txt -o mydict
+
+.. note::
+
+  At this point, your dictionary is usable.
+
+  ::
+    
+    $ grascii search --dictionary ./mydict/ -g AB
+
+  If you would like to install the dictionary so you do not have to
+  keep track of the path, continue with step 4.
+
+4. Install the dictionary.
+
+::
+
+  $ grascii dictionary install --name custom ./mydict/
+  
+
+5. Verify the installation.
+
+::
+
+  $ grascii dictionary list
+  Built-in Dictionaries:
+  preanniversary
+
+  Installed Dictionaries:
+  custom
+
+6. Enjoy.
+
+::
+
+  $ grascii search --dictionary :custom -g AB
+
+
+Uninstalling
+============
+
+Simply run::
+
+  $ grascii dictionary uninstall custom
+
+

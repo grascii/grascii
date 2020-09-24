@@ -237,7 +237,7 @@ class RegexBuilder():
         patterns = list()
         for interp in interpretations:
             regex = self.build_regex(interp)
-            print(regex)
+            # print(regex)
             patterns.append(re.compile(regex))
         return patterns
 
@@ -255,7 +255,7 @@ class RegexBuilder():
         patterns = list()
         for interp in interpretations:
             regex = self.build_regex(interp)
-            print(regex)
+            # print(regex)
             # patterns.append(re.compile(regex))
             patterns.append((interp, re.compile(regex)))
         return patterns

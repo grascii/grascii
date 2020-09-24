@@ -56,8 +56,6 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
             help="apply an uncertainty of 0 to the first token")
     argparser.add_argument("-d", "--dictionary", 
             help="set the dictionary to be searched")
-    argparser.add_argument("-v", "--verbose", action="store_true",
-            help="turn on verbose output")
 
 def search(**kwargs) -> Optional[Iterable[str]]:
     """Run a grascii dictionary search. Parameters can consist of

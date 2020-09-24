@@ -90,7 +90,7 @@ Search provides levels of uncertainty.
 
 Ex.::
 
-    $ python grascii.py -g FND -u1
+    $ grascii search -g FND -u1
     FND Found
     FND Fund
     FTH Forth
@@ -137,7 +137,7 @@ It is designed to give the phrase for the most common phrase constructions
 in Gregg Shorthand as well as to provide suggestions for never before
 seen phrases.::
 
-    $ python ./grascii/dephrase.py AVNBA
+    $ python -m grascii.dephrase AVNBA
     I HAVE NOT BEEN ABLE
 
 Issues

@@ -24,15 +24,22 @@ Prerequisites
 Installation
 ============
 
-Download or clone the repository.
+To use Grascii pre-release, download or clone the repository.
 
 ::
 
-    $ git clone https:github.com/chanicpanic/grascii
+  $ git clone https://github.com/chanicpanic/grascii
 
 From the root of the repository, run::
 
-    $ pip install .
+  $ pip install -e .
+
+Updating
+========
+
+From the root of the repository, run::
+
+  $ git pull origin master
 
 Grascii Language
 ****************
@@ -158,3 +165,10 @@ If you would like to help with this, please read the dictionary conventions in
 
 License
 *******
+
+This project is under the MIT License.
+
+Acknowledgements
+****************
+
+Many thanks to the developers of `Lark <https://github.com/lark-parser/lark>`_, `Questionary <https://github.com/tmbo/questionary>`_, and `appdirs <https://github.com/ActiveState/appdirs>`_.

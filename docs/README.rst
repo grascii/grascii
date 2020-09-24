@@ -139,6 +139,11 @@ seen phrases.::
 
     $ python -m grascii.dephrase AVNBA
     I HAVE NOT BEEN ABLE
+    
+Documentation
+*************
+
+Documentation is available on `Read the Docs <https://grascii.readthedocs.io>`_.
 
 Issues
 ******

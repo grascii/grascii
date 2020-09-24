@@ -1,6 +1,6 @@
 
-Grascii Dictionary
-##################
+Dictionary
+##########
 
 Grascii comes with the Grascii forms of all words in the 1916 Gregg 
 Shorthand Dictionary.

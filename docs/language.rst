@@ -1,6 +1,6 @@
 
-Grascii Language
-################
+Language
+########
 
 What is Grascii?
 ****************

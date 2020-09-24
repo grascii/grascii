@@ -9,13 +9,11 @@ Welcome to Grascii's documentation!
    language
    gsearch
    dictionary
-   similarity
    configuration
-   reference
+   similarity
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`

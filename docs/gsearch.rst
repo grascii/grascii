@@ -1,6 +1,6 @@
 
-Grascii Search
-##############
+Search
+######
 
 The core feature of the Grascii suite is search.
 

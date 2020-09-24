@@ -5,9 +5,9 @@ Grascii
 About the Project
 *****************
 
-Grascii is comprised of a language designed to represent Gregg Shorthand
-forms using the ASCII character set and of the tools revolving around
-the language to facillitate the study of Gregg Shorthand.
+Grascii is a language designed to represent Gregg Shorthand
+forms using the ASCII character set. It also encompasses the set of tools
+using the language to facillitate the study of Gregg Shorthand.
 
 Made With
 *********
@@ -18,15 +18,21 @@ Getting Started
 
 Prerequisites
 =============
-- Grascii runs on Python 3. It has not been tested on Python 3.5 and below.
-- Grascii depends on lark-parser
 
-::
-
-  $ pip install lark-parser
+- Python 3.6+
 
 Installation
 ============
+
+Download or clone the repository.
+
+::
+
+    $ git clone https:github.com/chanicpanic/grascii
+
+From the root of the repository, run::
+
+    $ pip install .
 
 Grascii Language
 ****************
@@ -60,7 +66,8 @@ Ex.::
 
     $ grascii search -g AB
     AB About
-    Results: 1
+    A|B Agreeable
+    Results: 2
 
 Uncertainty
 ===========
@@ -72,6 +79,12 @@ Search provides levels of uncertainty.
 Ex.::
 
     $ python grascii.py -g FND -u1
+    FND Found
+    FND Fund
+    FTH Forth
+    FTH Further
+    SND Sound
+    Results: 5
 
 The ND stroke could also potentially be an under TH or an MT/MD. The search
 accounts for these possibilities. F is also close to S or V.
@@ -79,10 +92,13 @@ accounts for these possibilities. F is also close to S or V.
 Interactive Mode
 ================
 
-For practical usage, it is recommended to run Grascii Search in interactive
+For repeated usage, it is recommended to run Grascii Search in interactive
 mode. For more complex queries, it removes the need of using escape 
-sequences on the command line. It also is more efficient for doing 
-multiple searches in succession.
+sequences on the command line.
+
+::
+
+    $ grascii search -i
 
 More Options
 ============
@@ -103,36 +119,36 @@ For more information, see dictionary.md.
 Grascii Dephrase (Experimental)
 *******************************
 
-Grascii includes an experimental phrase parsing feature which is still under
-major development.
+Grascii includes an experimental phrase parsing module.
 
 It is designed to give the phrase for the most common phrase constructions
 in Gregg Shorthand as well as to provide suggestions for never before
 seen phrases.::
 
-  $ python grascii.py dephrase AVNBA
+  $ python ./grascii/dephrase.py AVNBA
   I HAVE NOT BEEN ABLE
-
-For more information, see dephrase.md.
 
 Issues
 ******
 
-The Grascii Dictionary has not been reviewed for accuracy. If you find any
-incorrect entries, please let me know. 
+The Grascii Dictionary is in the process of being reviewed for accuracy. 
+If you find any incorrect entries, please let me know. 
 
 If you discover any issues with the program or have any
-suggestions, file an issue.
+suggestions, open an issue or pull request.
 
 Contributing
 ************
 
 You are welcome to contribute and make pull requests.
 
-It would be great to have others to add more words to the dictionary
-as well as to make dictionaries for other versions of Gregg Shorthand.
+Dictionary
+==========
 
-If you would like to help, please read the dictionary conventions in
+It would be great to have help adding more words to the dictionary
+and making dictionaries for other versions of Gregg Shorthand.
+
+If you would like to help with this, please read the dictionary conventions in
 dictionary.md.
 
 License

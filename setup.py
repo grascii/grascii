@@ -12,7 +12,7 @@ class CustomBuild(build_py):
     def run(self):
         print(Path("dsrc").glob("*.txt"))
         dictionary.build.build(infiles=Path("dsrc").glob("*.txt"),
-                            output=Path("grascii/dict/preanniversary"),
+                            output=Path("grascii/dictionary/preanniversary"),
                             package=True)
         build_py.run(self)
 

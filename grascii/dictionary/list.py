@@ -22,9 +22,10 @@ def cli_list(args: argparse.Namespace) -> None:
     print()
 
     print("Installed Dictionaries:")
-    for f in DICTIONARY_PATH.iterdir():
-        if f.is_dir():
-            print(f.name)
+    if DICTIONARY_PATH.exists():
+        for f in DICTIONARY_PATH.iterdir():
+            if f.is_dir():
+                print(f.name)
 
 def main() -> None:
     """Run the list command using arguments from sys.argv."""

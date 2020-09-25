@@ -35,14 +35,30 @@ To use Grascii pre-release, clone the repository.
 
   $ git clone https://github.com/chanicpanic/grascii
 
-From the root of the repository, run::
+From the root of the repository:
+
+Build the built-in dictionary::
+
+  $ python setup.py build
+  
+Install the package::
 
   $ pip install -e .
+  
+Verify the installation::
+
+  $ grascii --help
+ 
+If the command fails, it may be that the location of Python scripts is not on your PATH.
+
+You can also try::
+
+  $ python -m grascii --help
 
 Updating
 ========
 
-From the root of the repository, run::
+To update Grascii::
 
   $ git pull origin master
 

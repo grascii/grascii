@@ -20,11 +20,16 @@ Prerequisites
 =============
 
 - Python 3.6+
+- Lark
+
+::
+
+  $ pip install lark-parser --upgrade
 
 Installation
 ============
 
-To use Grascii pre-release, download or clone the repository.
+To use Grascii pre-release, clone the repository.
 
 ::
 

@@ -66,7 +66,7 @@ def dephrase(phrase: str) -> Set[str]:
     # parser = Lark(g, parser="earley", ambiguity="resolve")
     # aparser = Lark(g, parser="earley", ambiguity="explicit")
     # parser = Lark.open("grammars/phrases.lark", rel_to=__file__, parser="earley", ambiguity="explicit")
-    aparser = Lark.open(g, parser="earley", ambiguity="explicit")
+    aparser = Lark.open(g, parser="earley", ambiguity="explicit", lexer='dynamic_complete')
     parser = Lark.open(g, parser="earley", ambiguity="resolve")
     trans = PhraseFlattener()
     parses: Set[str] = set()

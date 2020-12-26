@@ -20,11 +20,6 @@ Prerequisites
 =============
 
 - Python 3.6+
-- Lark
-
-::
-
-  $ pip install lark-parser --upgrade
 
 Installation
 ============

@@ -16,7 +16,10 @@ import sys
 import time
 from typing import TextIO, List, Optional, Union
 
-from lark import Lark, UnexpectedInput
+try:
+    from lark import Lark, UnexpectedInput
+except ImportError:
+    pass
 
 from grascii import defaults, grammar
 from grascii.utils import get_grammar, get_words_file

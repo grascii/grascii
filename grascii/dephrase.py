@@ -63,22 +63,16 @@ class PhraseFlattener(Transformer):
 
 def dephrase(phrase: str) -> Set[str]:
     g = get_grammar("phrases")
-    # parser = Lark(g, parser="earley", ambiguity="resolve")
-    # aparser = Lark(g, parser="earley", ambiguity="explicit")
-    # parser = Lark.open("grammars/phrases.lark", rel_to=__file__, parser="earley", ambiguity="explicit")
-    aparser = Lark.open(g, parser="earley", ambiguity="explicit")
-    parser = Lark.open(g, parser="earley", ambiguity="resolve")
+    parser = Lark.open(g, parser="earley", ambiguity="explicit", lexer='dynamic_complete')
     trans = PhraseFlattener()
     parses: Set[str] = set()
     try:
         tree = parser.parse(phrase.upper())
-        atree = aparser.parse(phrase.upper())
     except UnexpectedInput:
         print("exception")
         return parses
 
     trees = CollapseAmbiguities().transform(tree)
-    trees += CollapseAmbiguities().transform(atree)
     for t in trees:
         tokens = (token.type for token in trans.transform(t))
         parses.add(" ".join(tokens))

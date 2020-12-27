@@ -1,0 +1,14 @@
+
+%import .phrases.start
+%import .grascii.start -> word
+%import .phrases (common_verb, common_adjective, common_noun, adverb, command, omitted_to_verb, omitted_to_noun, unit, quantifier)
+
+%extend common_verb: word
+%extend common_adjective: word
+%extend common_noun: word
+%extend adverb: word
+%extend command: word
+%extend omitted_to_verb: word
+%extend omitted_to_noun: word
+%extend unit: word
+%extend quantifier: word

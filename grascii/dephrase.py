@@ -18,6 +18,8 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
             help="The phrase to decipher")
     argparser.add_argument("-a", "--aggressive", action="store_true",
             default=False, help="perform a more intense dephrasing")
+    argparser.add_argument("--ignore-limit", action="store_true",
+            default=False, help="ignore the 8-character phrase limit")
 
 class NoWordFound(Exception):
     pass
@@ -125,6 +127,12 @@ def dephrase(**kwargs) -> Set[str]:
     return parses
 
 def cli_dephrase(args: argparse.Namespace) -> None:
+    if len(args.phrase) > 8 and args.aggressive and not args.ignore_limit:
+        print("Phrases more than 8 characters in length may take",
+              "an excessively long time to process and produce many",
+              "irrelevant results.")
+        print("To ignore this warning use '--ignore_limit'.")
+        return
     results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
     for result in results:
         print(result)

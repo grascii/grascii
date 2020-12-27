@@ -1,12 +1,14 @@
 
 import argparse
+from functools import lru_cache
 from typing import Set
 import sys
 
 from lark import Lark, Transformer, Token, UnexpectedInput
-from lark.visitors import CollapseAmbiguities
+from lark.visitors import CollapseAmbiguities, v_args, VisitError
 
 from grascii.grammars import get_grammar
+from grascii.searchers import GrasciiFlattener, GrasciiSearcher
 
 
 description = "Decipher a shorthand phrase."
@@ -14,6 +16,19 @@ description = "Decipher a shorthand phrase."
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
     argparser.add_argument("phrase", action="store", 
             help="The phrase to decipher")
+
+class NoWordFound(Exception):
+    pass
+
+class StripNameSpace(Transformer):
+
+    def __init__(self, namespace):
+        self.namespace = namespace + "__"
+
+    def __default__(self, data, children, meta):
+        if data.startswith(self.namespace):
+            data = data[len(self.namespace):]
+        return super().__default__(data, children, meta)
 
 class PhraseFlattener(Transformer):
 
@@ -24,6 +39,10 @@ class PhraseFlattener(Transformer):
         "opt_your": "YOUR",
     }
 
+    _grascii_flattener = GrasciiFlattener()
+
+    _grascii_searcher = GrasciiSearcher()
+
     def __init__(self):
         for key, value in self.optionals.items():
             setattr(self, key, self.make_opt(value))
@@ -32,7 +51,7 @@ class PhraseFlattener(Transformer):
         def opt(children):
             if len(children):
                 return self.__default__(None, children, None)
-            return [self.create_token("(" + name + ")")]
+            return [self.create_token("[" + name + "]")]
         return opt
 
     def start(self, children):
@@ -48,6 +67,22 @@ class PhraseFlattener(Transformer):
     def short_to(self, children):
         return [self.create_token("TO")]
 
+    @lru_cache(maxsize=32)
+    def _search_grascii(self, grascii_str):
+        results = self._grascii_searcher.search(grascii=grascii_str)
+        if not results:
+            raise NoWordFound()
+        words = [result.split()[1].upper() for result in results]
+        string = "(" + "|".join(words) + ")"
+        return self.create_token(string)
+
+    @v_args(tree=True)
+    def word(self, tree):
+        interp = self._grascii_flattener.transform(tree)
+        interp = [item for item in interp if isinstance(item, Token)]
+        grascii_str = "-".join(interp)
+        return self._search_grascii(grascii_str)
+
     def __default__(self, data, children, meta):
         result = list()
         for child in children:
@@ -62,9 +97,9 @@ class PhraseFlattener(Transformer):
         return result
 
 def dephrase(phrase: str) -> Set[str]:
-    g = get_grammar("phrases")
+    g = get_grammar("phrases_extended")
     parser = Lark.open(g, parser="earley", ambiguity="explicit", lexer='dynamic_complete')
-    trans = PhraseFlattener()
+    trans = StripNameSpace('phrases') * PhraseFlattener()
     parses: Set[str] = set()
     try:
         tree = parser.parse(phrase.upper())
@@ -74,8 +109,14 @@ def dephrase(phrase: str) -> Set[str]:
 
     trees = CollapseAmbiguities().transform(tree)
     for t in trees:
-        tokens = (token.type for token in trans.transform(t))
-        parses.add(" ".join(tokens))
+        try:
+            tokens = (token.type for token in trans.transform(t))
+        except VisitError as e:
+            if isinstance(e.orig_exc, NoWordFound):
+                continue
+            raise e
+        else:
+            parses.add(" ".join(tokens))
     return parses
 
 def cli_dephrase(args: argparse.Namespace) -> None:

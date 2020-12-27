@@ -16,6 +16,8 @@ description = "Decipher a shorthand phrase."
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
     argparser.add_argument("phrase", action="store", 
             help="The phrase to decipher")
+    argparser.add_argument("-a", "--aggressive", action="store_true",
+            default=False, help="perform a more intense dephrasing")
 
 class NoWordFound(Exception):
     pass
@@ -96,13 +98,16 @@ class PhraseFlattener(Transformer):
                     result.append(token)
         return result
 
-def dephrase(phrase: str) -> Set[str]:
-    g = get_grammar("phrases_extended")
+def dephrase(**kwargs) -> Set[str]:
+    grammar_name = "phrases_extended" if kwargs["aggressive"] else "phrases"
+    g = get_grammar(grammar_name)
     parser = Lark.open(g, parser="earley", ambiguity="explicit", lexer='dynamic_complete')
-    trans = StripNameSpace('phrases') * PhraseFlattener()
+    trans = PhraseFlattener()
+    if kwargs["aggressive"]:
+        trans = StripNameSpace("phrases") * trans
     parses: Set[str] = set()
     try:
-        tree = parser.parse(phrase.upper())
+        tree = parser.parse(kwargs["phrase"].upper())
     except UnexpectedInput:
         print("exception")
         return parses
@@ -120,7 +125,7 @@ def dephrase(phrase: str) -> Set[str]:
     return parses
 
 def cli_dephrase(args: argparse.Namespace) -> None:
-    results = dephrase(args.phrase)
+    results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
     for result in results:
         print(result)
 

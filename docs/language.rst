@@ -149,16 +149,16 @@ Annotations
 +-------------+----------------------------+---------------------------------+
 |~            |A, E, I, A&', A&E           |Denotes that the                 |
 |             |                            |preceeding circle                |
-|             |                            |vowel is reversed                |
+|             |                            |vowel is reversed.               |
 |             |                            |                                 |
 |             |                            |                                 |
 |             |                            |                                 |
 |             |                            |                                 |
 |             |                            |                                 |
 +-------------+----------------------------+---------------------------------+
-|~            |A, E, I, A&', A&E           |Denotes that the                 |
+|\|           |A, E, I, A&', A&E           |Denotes that the                 |
 |             |                            |preceeding circle                |
-|             |                            |vowel is looped                  |
+|             |                            |vowel is looped.                 |
 |             |                            |                                 |
 |             |                            |                                 |
 |             |                            |                                 |

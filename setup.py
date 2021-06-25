@@ -18,28 +18,7 @@ class CustomBuild(build_py):
 
 
 setup(
-    name="grascii",
-    version="0.1.0.dev0",
-    description="A language and tools to facilitate the study of Gregg Shorthand",
-    author="Nicholas Chan",
-    author_email="chanicpanic@gmail.com",
-    url="https://github.com/chanicpanic/grascii",
-    license="MIT",
-    packages=find_packages(exclude=["tests", "grascii.dict"]),
-    package_data={
-        "grascii": ["dict/*", "grammars/*.lark", "words/*.txt"]
-    },
-    install_requires=[
-        "lark-parser>=0.11.2",
-    ],
-    extras_require={
-        "interactive": ["questionary>=1.5.1"],
-    },
-    entry_points={
-        "console_scripts" : [
-            "grascii = grascii.__main__:main"
-        ]
-    },
+    setup_cfg=True,
     cmdclass={
         "build_py": CustomBuild
     }

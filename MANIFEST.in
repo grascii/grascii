@@ -2,9 +2,10 @@
 include dsrc/*.txt
 include grascii/*.py
 include grascii/grammars/*.lark
-include grascii/words
+include grascii/words/*
+include grascii/defaults.conf
 include docs/*.md
-include README.md starter.conf setup.py
+include setup.py
 recursive-include tests *.py *.txt
-prune grascii/dict
-include grascii/dict/__init__.py
+prune grascii/dictionary
+include grascii/dictionary/__init__.py

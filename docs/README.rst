@@ -26,7 +26,7 @@ Installation
 
 Install the package::
 
-  $ python -m pip install "git+https://github.com/chanicpanic/grascii.git#egg=grascii[interactive]"
+  $ python -m pip install grascii[interactive]
 
 Note: The interactive extra is recommended for the majority of users.
 The interactive extra may be omitted when using the package as a library to
@@ -42,13 +42,6 @@ You can also try::
 
   $ python -m grascii --help
 
-Updating
-========
-
-To update Grascii::
-
-  $ python -m pip install -U "git+https://github.com/chanicpanic/grascii.git#egg=grascii[interactive]"
-
 Grascii Language
 ****************
 
@@ -57,7 +50,7 @@ who are familiar with Gregg Shorthand. That is, most strokes are
 represented by the letters that match their sounds. For example,
 the word ``Cross`` would be written as ``KROS``.
 
-For a more detailed overview of the language, see :doc:`language`.
+For a more detailed overview of the language, see `language <https://grascii.readthedocs.io/en/latest/language.html>`_.
 
 Purpose
 *******
@@ -123,7 +116,7 @@ sequences on the command line.
 More Options
 ============
 
-For more options, see :doc:`gsearch`.
+For more options, see `search <https://grascii.readthedocs.io/en/latest/gsearch.html>`_.
 
 Grascii Dictionary
 ******************
@@ -134,7 +127,7 @@ Shorthand Dictionary.
 There is also the ability to build and install your own custom 
 dictionaries.
 
-For more information, see :doc:`dictionary`.
+For more information, see `dictionary <https://grascii.readthedocs.io/en/latest/dictionary.html>`_.
 
 Grascii Dephrase (Experimental)
 *******************************
@@ -174,7 +167,7 @@ It would be great to have help adding more words to the dictionary
 and making dictionaries for other versions of Gregg Shorthand.
 
 If you would like to help with this, please read the dictionary conventions in
-:doc:`dictionary`.
+`dictionary <https://grascii.readthedocs.io/en/latest/dictionary.html>`_.
 
 License
 *******

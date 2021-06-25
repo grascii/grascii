@@ -30,7 +30,7 @@ setup(
         "grascii": ["dict/*", "grammars/*.lark", "words/*.txt"]
     },
     install_requires=[
-        "lark-parser>=0.10.0",
+        "lark-parser>=0.11.2",
         "questionary>=1.5.1",
     ],
     entry_points={

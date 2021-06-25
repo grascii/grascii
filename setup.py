@@ -27,7 +27,7 @@ setup(
     license="MIT",
     packages=find_packages(exclude=["tests", "grascii.dict"]),
     package_data={
-        "grascii": ["dict/*", "grammars/*.lark", "words/*.txt"]
+        "grascii": ["dict/*", "grammars/*.lark", "words/*.txt", "grascii/defaults.conf"]
     },
     install_requires=[
         "lark-parser>=0.11.2",

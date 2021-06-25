@@ -24,22 +24,14 @@ Prerequisites
 Installation
 ============
 
-To use Grascii pre-release, clone the repository.
-
-::
-
-  $ git clone https://github.com/chanicpanic/grascii
-
-From the root of the repository:
-
-Build the built-in dictionary::
-
-  $ python setup.py build
-  
 Install the package::
 
-  $ pip install -e .
-  
+  $ python -m pip install "git+https://github.com/chanicpanic/grascii.git#egg=grascii[interactive]"
+
+Note: The interactive extra is recommended for the majority of users.
+The interactive extra may be omitted when using the package as a library to
+reduce dependencies.
+
 Verify the installation::
 
   $ grascii --help
@@ -55,7 +47,7 @@ Updating
 
 To update Grascii::
 
-  $ git pull origin master
+  $ python -m pip install -U "git+https://github.com/chanicpanic/grascii.git#egg=grascii[interactive]"
 
 Grascii Language
 ****************

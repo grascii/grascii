@@ -3,8 +3,12 @@ Contains an implementation of an Interactive Searcher for an
 interactive cli experience.
 """
 
-import questionary
-from questionary.prompts.common import Choice, Separator
+try:
+    import questionary
+    from questionary.prompts.common import Choice, Separator
+except ImportError:
+    raise ImportError("Grascii: interactive extra dependencies are not installed")
+
 from lark import Tree
 from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple
 

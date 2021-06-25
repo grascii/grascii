@@ -15,7 +15,14 @@ from typing import Union, List, Dict, Set, Iterable, Match, Pattern, cast, Optio
 
 from grascii import regen, defaults
 from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
-from grascii.interactive import InteractiveSearcher
+
+SUPPORTS_INTERACTIVE = False
+try:
+    from grascii.interactive import InteractiveSearcher
+    SUPPORTS_INTERACTIVE = True
+except ImportError as e:
+    pass
+
 
 description = "Search a Grascii Dictionary"
 
@@ -79,6 +86,9 @@ def search(**kwargs) -> Optional[Iterable[str]]:
     if kwargs.get("grascii"):
         searcher = GrasciiSearcher(**kwargs)
     elif kwargs.get("interactive"):
+        if not SUPPORTS_INTERACTIVE:
+            print("The interactive extra is not installed", file=sys.stderr)
+            return
         searcher = InteractiveSearcher(**kwargs)
     elif kwargs.get("reverse"):
         searcher = ReverseSearcher(**kwargs)
@@ -93,11 +103,12 @@ def cli_search(args: argparse.Namespace) -> None:
     """
 
     results = search(**{k: v for k, v in vars(args).items() if v is not None})
-    count = 0
-    for result in results:
-        print(result.strip())
-        count += 1
-    print("Results:", count)
+    if results is not None:
+        count = 0
+        for result in results:
+            print(result.strip())
+            count += 1
+        print("Results:", count)
 
 def main() -> None:
     """Run a search using arguments retrieved from sys.argv."""

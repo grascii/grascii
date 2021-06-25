@@ -3,8 +3,9 @@ include dsrc/*.txt
 include grascii/*.py
 include grascii/grammars/*.lark
 include grascii/words
+include grascii/defaults.conf
 include docs/*.md
-include README.md starter.conf setup.py
+include README.md setup.py
 recursive-include tests *.py *.txt
 prune grascii/dict
 include grascii/dict/__init__.py

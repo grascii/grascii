@@ -31,8 +31,10 @@ setup(
     },
     install_requires=[
         "lark-parser>=0.11.2",
-        "questionary>=1.5.1",
     ],
+    extras_require={
+        "interactive": ["questionary>=1.5.1"],
+    },
     entry_points={
         "console_scripts" : [
             "grascii = grascii.__main__:main"

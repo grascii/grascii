@@ -6,6 +6,7 @@ implementations of it.
 from abc import ABC, abstractmethod
 from functools import reduce
 import re
+import sys
 from typing import Union, List, Set, Iterable, Dict, TypeVar, Callable, Pattern, Tuple, Match
 
 from lark import Lark, Tree, UnexpectedInput, Transformer, Token
@@ -119,12 +120,7 @@ class Searcher(ABC):
 
 class GrasciiSearcher(Searcher):
 
-    """A subclass of Searcher that performs a search given a Grascii
-       string
-
-
-       
-       """
+    """A subclass of Searcher that performs a search given a Grascii string"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -142,8 +138,8 @@ class GrasciiSearcher(Searcher):
         try:
             return self.parser.parse(grascii)
         except UnexpectedInput as e:
-            # print("Syntax Error")
-            # print(e.get_context(grascii))
+            print("Invalid Grascii String", file=sys.stderr)
+            print(e.get_context(grascii), file=sys.stderr)
             return False
 
     def flatten_tree(self, parse_tree: Tree) -> List[Interpretation]:
@@ -237,9 +233,8 @@ class GrasciiSearcher(Searcher):
         self.extract_search_args(**kwargs)
         tree = self.parse_grascii(grascii)
         if not tree:
-            raise Exception
             return
-        
+
         interpretations = self.flatten_tree(tree)
         interpretations = list(self.get_unique_interpretations(interpretations).values())
         builder = regen.RegexBuilder(
@@ -250,7 +245,7 @@ class GrasciiSearcher(Searcher):
             disjoiner_mode=self.disjoiner_mode,
             fix_first=self.fix_first
         )
-        
+
         interps = interpretations[0:1] if self.interpretation_mode == "best" else interpretations
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)

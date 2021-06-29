@@ -111,7 +111,6 @@ def dephrase(**kwargs) -> Set[str]:
     try:
         tree = parser.parse(kwargs["phrase"].upper())
     except UnexpectedInput:
-        print("exception")
         return parses
 
     trees = CollapseAmbiguities().transform(tree)
@@ -134,8 +133,13 @@ def cli_dephrase(args: argparse.Namespace) -> None:
         print("To ignore this warning use '--ignore_limit'.")
         return
     results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
-    for result in results:
-        print(result)
+    if results:
+        for result in results:
+            print(result)
+    else:
+        print("No results")
+        if not args.aggressive:
+            print("You may try again with --aggressive to consider more possibilities.")
 
 def main() -> None:
     argparser = argparse.ArgumentParser(description)

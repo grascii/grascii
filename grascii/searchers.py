@@ -68,7 +68,7 @@ class Searcher(ABC):
     """An abstract base class for objects that search Grascii dictionaries."""
 
     def __init__(self, **kwargs):
-        self.dictionaries = kwargs.get("dictionaries") if kwargs.get("dictionaries") else [defaults.SEARCH["Dictionary"]]
+        self.dictionaries = kwargs.get("dictionaries") if kwargs.get("dictionaries") else defaults.SEARCH["Dictionary"].split()
 
     def perform_search(self, patterns: Iterable[Tuple[T, Pattern]], starting_letters: Set[str], metric: Callable[[T, Match], int]) -> Iterable[str]:
         """Performs a search of a Grascii Dictionary.

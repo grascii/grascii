@@ -1,5 +1,5 @@
 
-include dsrc/*.txt
+include dsrc/preanniversary/*.txt
 include grascii/*.py
 include grascii/grammars/*.lark
 include grascii/words/*

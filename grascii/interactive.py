@@ -5,7 +5,7 @@ interactive cli experience.
 
 try:
     import questionary
-    from questionary.prompts.common import Choice, Separator
+    from questionary.prompts.common import Choice
 except ImportError:
     raise ImportError("Grascii: interactive extra dependencies are not installed")
 
@@ -13,6 +13,7 @@ from lark import Tree
 from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple
 
 from grascii import regen, metrics
+from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.searchers import GrasciiSearcher, Interpretation
 
 T = TypeVar("T")
@@ -25,6 +26,10 @@ class InteractiveSearcher(GrasciiSearcher):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.available_dicts = set(self.dictionaries)
+        installed = map(lambda s: ":" + s, get_installed())
+        built_ins = map(lambda s: ":" + s, get_built_ins())
+        self.available_dicts.update(installed, built_ins)
 
     def search(self, **kwargs):
         """
@@ -93,6 +98,7 @@ class InteractiveSearcher(GrasciiSearcher):
                              Choice(title="Aspirate Mode [{}]".format(self.aspirate_mode.value), value=4),
                              Choice(title="Disjoiner Mode [{}]".format(self.disjoiner_mode.value), value=5),
                              Choice(title="Fix First [{}]".format(self.fix_first), value=6),
+                             Choice(title="Dictionaries [{} selected]".format(len(self.dictionaries)), value=7),
                              "Back"]
                             ).ask()
 
@@ -110,6 +116,8 @@ class InteractiveSearcher(GrasciiSearcher):
                         self.change_arg("disjoiner_mode", list(regen.Strictness), convert=self.get_enum_value, display_name="Disjoiner mode")
                     elif action == 6:
                         self.change_arg("fix_first", [True, False], display_name="Fix First")
+                    elif action == 7:
+                        self.select_dictionaries()
                                            
     def get_enum_value(self, enum):
         return enum.value
@@ -117,7 +125,7 @@ class InteractiveSearcher(GrasciiSearcher):
     def change_arg(self, arg_name, options: Iterable[T], display_name: str=None, convert: Callable[[T], str]=str) -> None:
         """Prompt the user to select the value of a search parameter and set
             the new value.
-        
+
         :param arg_name: The name of the argument to change.
         :param options: A collection of choices to present to the user.
         :param display_name: The title of the prompt.
@@ -133,6 +141,17 @@ class InteractiveSearcher(GrasciiSearcher):
         setting = questionary.select(title, choices).ask()
         if setting is not None:
             setattr(self, arg_name, setting)
+
+    def select_dictionaries(self) -> None:
+        choices = []
+        for dict_name in self.available_dicts:
+            selected = dict_name in self.dictionaries
+            choices.append(Choice(title=dict_name, value=dict_name, checked=selected))
+        title = "Choose Dictionaries"
+        dictionaries = questionary.checkbox(title, choices,
+                validate=lambda l: True if len(l) > 0 else "Select at least one dictionary").ask()
+        if dictionaries:
+            self.dictionaries = dictionaries
 
     def interactive_search(self, previous: str=None) -> Optional[str]:
         """Run an interactive search.

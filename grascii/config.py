@@ -6,6 +6,7 @@ $ python -m grascii.config --help
 """
 
 import argparse
+from configparser import ConfigParser
 from pathlib import Path, PurePath
 from shutil import copyfile
 import sys
@@ -18,6 +19,7 @@ try:
 except ImportError as e:
     pass
 
+from grascii import regen
 from grascii.appdirs import user_config_dir
 
 APP_NAME = "grascii"
@@ -69,6 +71,91 @@ def create_config() -> None:
     src = Path(__file__).with_name("defaults.conf")
     copyfile(src, get_config_file_path())
 
+def interactive_edit_config() -> None:
+    config = ConfigParser()
+    # TODO: read as package resource
+    config.read_file(Path(__file__).with_name("defaults.conf").open())
+    config.read(get_config_file_path())
+
+    questions = [
+        {
+            "type": "confirm",
+            "name": "Search",
+            "message": "Configure search?",
+            "default": True,
+            "auto_enter": False
+        },
+        {
+            "type": "select",
+            "name": "Uncertainty",
+            "message": "Uncertainty",
+            "choices": [str(i) for i in range(3)],
+            "when": lambda x: x["Search"],
+            "default": config["Search"].get("Uncertainty"),
+        },
+        {
+            "type": "select",
+            "name": "SearchMode",
+            "message": "Search mode",
+            "choices": [e.value for e in regen.SearchMode],
+            "when": lambda x: x["Search"],
+            "default": config["Search"].get("SearchMode"),
+        },
+        {
+            "type": "select",
+            "name": "AnnotationMode",
+            "message": "Annotation mode",
+            "choices": [e.value for e in regen.Strictness],
+            "when": lambda x: x["Search"],
+            "default": config["Search"].get("AnnotationMode"),
+        },
+        {
+            "type": "select",
+            "name": "AspirateMode",
+            "message": "Aspirate mode",
+            "choices": [e.value for e in regen.Strictness],
+            "when": lambda x: x["Search"],
+            "default": config["Search"].get("AspirateMode"),
+        },
+        {
+            "type": "select",
+            "name": "DisjoinerMode",
+            "message": "Disjoiner mode",
+            "choices": [e.value for e in regen.Strictness],
+            "when": lambda x: x["Search"],
+            "default": config["Search"].get("DisjoinerMode"),
+        },
+        {
+            "type": "select",
+            "name": "Interpretation",
+            "message": "Interpretation",
+            "choices": ["best", "all"],
+            "when": lambda x: x["Search"],
+            "default": config["Search"].get("Interpretation"),
+        },
+        {
+            "type": "confirm",
+            "name": "Build",
+            "message": "Configure build?",
+            "default": True,
+            "auto_enter": False
+        },
+        {
+            "type": "path",
+            "name": "BuildDirectory",
+            "message": "Build Output Directory",
+            "when": lambda x: x["Build"],
+            "default": config["Build"].get("BuildDirectory"),
+        },
+
+    ]
+
+    print(questionary.prompt(questions))
+    with open(get_config_file_path(), 'w') as config_file:
+        config.write(config_file)
+
+
+
 def delete_config() -> None:
     """Delete a configuration file."""
 
@@ -104,6 +191,8 @@ def cli_config(args: argparse.Namespace) -> None:
                       "configuration, run again with --force or --interactive.", file=sys.stderr)
                 return
         create_config()
+        if args.interactive:
+            interactive_edit_config()
         print("Configuration file created at", get_config_file_path())
     elif args.delete:
         if not config_exists():

@@ -42,6 +42,8 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
             help="Delete an existing configuration file.")
     group.add_argument("-w", "--where", action="store_true",
             help="Print the path to the configuration file and exit.")
+    group.add_argument("-e", "--edit", action="store_true",
+            help="Edit config options.")
     argparser.add_argument("-f", "--force", action="store_true",
             help="Allow overwriting of an existing configuration file.")
     argparser.add_argument("-i", "--interactive", action="store_true",
@@ -194,6 +196,9 @@ def cli_config(args: argparse.Namespace) -> None:
         if args.interactive:
             interactive_edit_config()
         print("Configuration file created at", get_config_file_path())
+    elif args.edit:
+        if args.interactive:
+            interactive_edit_config()
     elif args.delete:
         if not config_exists():
             print("Configuration file does not exist.", file=sys.stderr)

@@ -43,6 +43,8 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
             help="enable syntax checking on grascii strings")
     argparser.add_argument("-s", "--spell", action="store_true",
             help="enable spell checking on english words")
+    argparser.add_argument("-n", "--count", dest="count_words", action="store_true",
+            help="enable word count validation")
     argparser.add_argument("-k", "--check-only", action="store_true",
             help="only check input; no output is generated")
 
@@ -58,12 +60,14 @@ class DictionaryBuilder():
         building.
     :param parse: Whether to enable parse checking of grascii strings.
     :param spell: Whether to enable spell checking of words.
+    :param count_words: Whether to enable word count validation.
     :param check_only: Check source files without generating output.
     :param output: The directory where to output the dictionary files.
     :type infiles: Iterable[Union[Path, str]]
     :type clean: bool
     :type parse: bool
     :type spell: bool
+    :type count_words: bool
     :type check_only: bool
     :type output: Union[Path, str]
     """
@@ -76,6 +80,7 @@ class DictionaryBuilder():
         self.clean = kwargs.get("clean", False)
         self.parse = kwargs.get("parse", False)
         self.spell = kwargs.get("spell", False)
+        self.count_words = kwargs.get("count_words", False)
         self.check_only = kwargs.get("check_only", False)
         self.package = kwargs.get("package", False)
         self.output = kwargs.get("output", defaults.BUILD["BuildDirectory"])
@@ -194,10 +199,11 @@ class DictionaryBuilder():
                 else:
                     count = None
             if count and len(tokens) != count + 1:
-                self.log_warning(file_name, line, line_number, 
-                        "Incorrect number of words:",
-                        "Expected:", str(count), "Got:", str(len(tokens) - 1))
-                return None
+                if self.count_words:
+                    self.log_warning(file_name, line, line_number,
+                            "Incorrect number of words:",
+                            "Expected:", str(count), "Got:", str(len(tokens) - 1))
+                    return None
         return tokens
 
     def check_grascii(self, grascii: str, file_name: os.PathLike, line: str, line_number: int) -> bool:

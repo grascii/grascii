@@ -46,6 +46,8 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     argparser.add_argument("-k", "--check-only", action="store_true",
             help="only check input; no output is generated")
 
+class NoMatchingOutputFile(Exception):
+    pass
 
 class DictionaryBuilder():
 
@@ -95,7 +97,7 @@ class DictionaryBuilder():
         while index < len(grascii) and grascii[index] not in grammar.HARD_CHARACTERS:
             index += 1
         if index == len(grascii):
-            raise Exception()
+            raise NoMatchingOutputFile()
 
         char = grascii[index]
         try:
@@ -298,7 +300,11 @@ class DictionaryBuilder():
                     if not self.check_word(word, f.filename(), line, f.filelineno()):
                         continue
                    
-                    self.write_entry(grascii, word)
+                    try:
+                        self.write_entry(grascii, word)
+                    except NoMatchingOutputFile:
+                        self.log_error(f.filename(), line, f.filelineno(), "No output file for", grascii, word)
+                        continue
         finally:
             self.close_output_files()
 

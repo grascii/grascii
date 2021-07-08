@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
-import argparse
-from glob import glob
 from pathlib import Path
-from setuptools import setup, find_packages
+from setuptools import setup
 from setuptools.command.build_py import build_py
 
 from grascii import dictionary

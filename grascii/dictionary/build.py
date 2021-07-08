@@ -203,7 +203,6 @@ class DictionaryBuilder():
                     self.log_warning(file_name, line, line_number,
                             "Incorrect number of words:",
                             "Expected:", str(count), "Got:", str(len(tokens) - 1))
-                    return None
         return tokens
 
     def check_grascii(self, grascii: str, file_name: os.PathLike, line: str, line_number: int) -> bool:

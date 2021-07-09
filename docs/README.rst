@@ -5,9 +5,17 @@ Grascii
 About the Project
 *****************
 
-Grascii is a language designed to represent Gregg Shorthand
-forms using the ASCII character set. It also encompasses the set of tools
-using the language to facillitate the study of Gregg Shorthand.
+Grascii is a language used to represent Gregg Shorthand forms using the ASCII
+character set (characters found on a standard keyboard). The Grascii Project,
+also referred to as Grascii, encompasses the set of tools and resources
+accompanying the language that facilitate the reading, writing, and study of
+Gregg Shorthand at all levels.
+
+Useful Links
+************
+
+- `Full Documentation (readthedocs) <https://grascii.readthedocs.io>`_
+- `Additional Dictionaries <https://github.com/grascii/dictionaries>`_
 
 Made With
 *********
@@ -28,15 +36,15 @@ Install the package::
 
   $ python -m pip install grascii[interactive]
 
-Note: The interactive extra is recommended for the majority of users.
-The interactive extra may be omitted when using the package as a library to
+Note: We recommend the interactive extra for the majority of users. You may
+omit the interactive extra when using the package as a library to
 reduce dependencies.
 
 Verify the installation::
 
   $ grascii --help
  
-If the command fails, it may be that the location of Python scripts is not on your PATH.
+If the command fails, your PATH may not contain the location of Python scripts.
 
 You can also try::
 
@@ -45,32 +53,28 @@ You can also try::
 Grascii Language
 ****************
 
-The Grascii Language is designed to be straightforward for those
-who are familiar with Gregg Shorthand. That is, most strokes are
-represented by the letters that match their sounds. For example,
-the word ``Cross`` would be written as ``KROS``.
+The Grascii Language aims to be straightforward for those who are familiar with
+Gregg Shorthand. That is, Grascii represents most strokes with the letters that
+match their sounds. For example, the word ``Cross`` is written as ``KROS``.
 
-For a more detailed overview of the language, see `language <https://grascii.readthedocs.io/en/latest/language.html>`_.
-
-Purpose
-*******
-
-When studying shorthand, a student may come across a form which is 
-unfamiliar, new, or represents an unknown word. Traditionally, a student
-could refer to the dictionary which maps English words to their 
-corresponding shorthand forms. However, this technique can be tricky and
-inefficient as the student must guess the word in English to
-compare to the unknown form. This is likened to the process of using a
-dictionary to determine the spelling of a word. This is where the main tool
-comes in: Grascii Search.
+For a more detailed overview of the language, see `language
+<https://grascii.readthedocs.io/en/latest/language.html>`_.
 
 Grascii Search 
 **************
 
-The Grascii forms of all entries of the 1916 Gregg Shorthand Dictionary
-have been collected. The Grascii Search Feature allows a user to query with
-a Grascii string to search the Grascii dictionary for similar matches
-which tell what corresponding English word goes with the form.
+Grascii Search is the headline tool of the Grascii Project. It provides many
+useful options for searching Grascii Dictionaries (reverse Gregg Shorthand
+dictionaries).
+
+Motivation
+==========
+
+The existence of shorthand dictionaries have aided the conversion of longhand
+to shorthand. However, the reverse has remained a challenge since the
+inception of Gregg Shorthand. Grascii Search solves this problem by allowing
+users to identify the longhand corresponding to a shorthand form by performing
+a search based on its Grascii representation.
 
 Basic Usage
 ===========
@@ -85,8 +89,7 @@ Ex.::
 Uncertainty
 ===========
 
-It is acknowledged that when looking at a form, a stroke may be mistaken
-for one of similar form whether by proportion error etc. Thus, Grascii
+Occassionally, a stroke is mistaken for one of similar form. Thus, Grascii
 Search provides levels of uncertainty.
 
 Ex.::
@@ -99,19 +102,22 @@ Ex.::
     SND Sound
     Results: 5
 
-The ND stroke could also potentially be an under TH or an MT/MD. The search
-accounts for these possibilities. F is also close to S or V.
+The ND stroke could also be an under TH or an MT/MD. The search accounts for
+these possibilities with Forth and Further. F is also close to S or V,
+resulting in Sound.
 
 Interactive Mode
 ================
 
-For repeated usage, it is recommended to run Grascii Search in interactive
-mode. For more complex queries, it removes the need of using escape 
+For repeated usage, we recommend running Grascii Search in interactive mode.
+For more complex queries, interactive mode removes the need of using escape
 sequences on the command line.
 
 ::
 
     $ grascii search -i
+
+Note: Requires the interactive extra
 
 More Options
 ============
@@ -121,11 +127,13 @@ For more options, see `search <https://grascii.readthedocs.io/en/latest/gsearch.
 Grascii Dictionary
 ******************
 
-Grascii comes with a dictionary for the 1916 version of the Gregg
-Shorthand Dictionary. 
+Grascii comes with a dictionary based on the 1916 Gregg Shorthand Dictionary.
 
-There is also the ability to build and install your own custom 
-dictionaries.
+More dictionaries for other versions of Gregg and dictionaries including
+phrases are available for installation at the `Grascii Dictionaries repository
+<https://github.com/grascii/dictionaries>`_.
+
+You can also write, build, and install your own custom dictionaries.
 
 For more information, see `dictionary <https://grascii.readthedocs.io/en/latest/dictionary.html>`_.
 
@@ -134,9 +142,8 @@ Grascii Dephrase (Experimental)
 
 Grascii includes an experimental phrase parsing module.
 
-It is designed to give the phrase for the most common phrase constructions
-in Gregg Shorthand as well as to provide suggestions for never before
-seen phrases.::
+It attempts to give the phrase for the most common phrase constructions in
+Gregg Shorthand and provide suggestions for never before seen phrases::
 
     $ python -m grascii.dephrase AVNBA
     I HAVE NOT BEEN ABLE
@@ -146,35 +153,43 @@ Documentation
 
 Documentation is available on `Read the Docs <https://grascii.readthedocs.io>`_.
 
-Issues
-******
-
-The Grascii Dictionary is in the process of being reviewed for accuracy. 
-If you find any incorrect entries, please let me know. 
-
-If you discover any issues with the program or have any
-suggestions, open an issue or pull request.
-
 Contributing
 ************
 
-You are welcome to contribute and make pull requests.
+Contributions of any kind are welcome and appreciated. You can contribute by:
+
+- Reporting bugs or unexpected behavior
+- Fixing bugs and solving issues
+- Helping implement new features
+- Editing documentation for correctness, completeness, and clarity
+- Sharing thoughts and suggestions to improve the Grascii Language
 
 Dictionary
 ==========
 
-It would be great to have help adding more words to the dictionary
-and making dictionaries for other versions of Gregg Shorthand.
+If you find an error in any of the dictionaries, please open an issue or pull
+request at the `dictionaries repository <https://github.com/grascii/dictionaries>`_.
 
-If you would like to help with this, please read the dictionary conventions in
-`dictionary <https://grascii.readthedocs.io/en/latest/dictionary.html>`_.
+Contributions to the dictionaries repository are also welcome to correct errors
+and create more dictionaries.
 
 License
 *******
 
-This project is under the MIT License.
+This project is under the `MIT License <https://github.com/grascii/grascii/blob/master/LICENSE.txt>`_.
 
 Acknowledgements
 ****************
 
-Many thanks to the developers of `Lark <https://github.com/lark-parser/lark>`_, `Questionary <https://github.com/tmbo/questionary>`_, and `appdirs <https://github.com/ActiveState/appdirs>`_.
+Many thanks to the developers of `Lark <https://github.com/lark-parser/lark>`_, `Questionary <https://github.com/tmbo/questionary>`_, `appdirs <https://github.com/ActiveState/appdirs>`_ and `Qwertigraphy <https://github.com/codepoke-kk/qwertigraphy>`_.
+
+Maintainer's Note
+*****************
+
+Grascii is not completely stable, but I hope others find the project useful. I
+try to open draft pull requests with task lists to keep the community informed
+of upcoming features and the direction of the project. If you notice that there
+has not been any activity for a couple of weeks, feel free to leave a comment
+requesting a status update.
+
+-- chanicpanic

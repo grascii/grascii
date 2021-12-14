@@ -96,7 +96,8 @@ Apply an uncertainty of 0 to the first stroke.
 
 .. option:: -d <dictionary>, --dictionary <dictionary>
 
-Specify which dictionary to search.
+Specify which dictionary to search. This option may be used more than once to
+search multiple dictionaries at the same time.
 
 ``<dictionary>`` is either a path to the output directory of a built
 dictionary, or a colon followed by the name of an installed dictionary. 

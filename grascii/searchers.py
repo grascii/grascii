@@ -65,10 +65,10 @@ T = TypeVar("T")
 
 class Searcher(ABC):
 
-    """An abstract base class for objects that search as Grascii dictionary."""
+    """An abstract base class for objects that search Grascii dictionaries."""
 
     def __init__(self, **kwargs):
-        self.dictionary = kwargs.get("dictionary", defaults.SEARCH["Dictionary"])
+        self.dictionaries = kwargs.get("dictionaries") if kwargs.get("dictionaries") else defaults.SEARCH["Dictionary"].split()
 
     def perform_search(self, patterns: Iterable[Tuple[T, Pattern]], starting_letters: Set[str], metric: Callable[[T, Match], int]) -> Iterable[str]:
         """Performs a search of a Grascii Dictionary.
@@ -86,29 +86,30 @@ class Searcher(ABC):
             sorted by the results of metric.
         """
         sorted_results: List[Tuple[str, int]] = list()
-        for item in sorted(starting_letters):
-            try:
-                with get_dict_file(self.dictionary, item) as dictionary:
-                    for line in dictionary:
-                        found_match = False
-                        diff = 2^32 - 1
-                        for interp, pattern in patterns:
-                            match = pattern.search(line)
-                            if match:
-                                found_match = True
-                                diff = min(diff, metric(interp, match))
-                        if found_match:
-                            i = len(sorted_results)
-                            sorted_results.append((line, diff))
-                            while i > 0:
-                                if sorted_results[i][1] < sorted_results[i - 1][1]:
-                                    tmp = sorted_results[i - 1]
-                                    sorted_results[i - 1] = sorted_results[i]
-                                    sorted_results[i] = tmp
-                                i -= 1
-            except FileNotFoundError:
-                pass
-                # print("Error: Could not find", dict_path + item)
+        for dict_name in self.dictionaries:
+            for item in sorted(starting_letters):
+                try:
+                    with get_dict_file(dict_name, item) as dictionary:
+                        for line in dictionary:
+                            found_match = False
+                            diff = 2^32 - 1
+                            for interp, pattern in patterns:
+                                match = pattern.search(line)
+                                if match:
+                                    found_match = True
+                                    diff = min(diff, metric(interp, match))
+                            if found_match:
+                                i = len(sorted_results)
+                                sorted_results.append((line, diff))
+                                while i > 0:
+                                    if sorted_results[i][1] < sorted_results[i - 1][1]:
+                                        tmp = sorted_results[i - 1]
+                                        sorted_results[i - 1] = sorted_results[i]
+                                        sorted_results[i] = tmp
+                                    i -= 1
+                except FileNotFoundError:
+                    pass
+                    # print("Error: Could not find", dict_path + item)
         for tup in sorted_results:
             yield tup[0]
 

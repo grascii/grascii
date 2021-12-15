@@ -1,6 +1,19 @@
 
 # Changelog
 
+## 0.3.0 - 2021-12-14
+
+### Added
+
+- New interactive search mode setting to select the dictionaries to search.
+
+### Changed
+
+- The search `-d/--dictionary` option can be specified multiple times to search
+  more than one dictionary at a time.
+- The config file `[Search] Dictionary` option now accepts a list of
+  dictionaries.
+
 ## 0.2.2 - 2021-07-08
 
 ### Added

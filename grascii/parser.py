@@ -1,7 +1,7 @@
 from functools import reduce
 from typing import Union, List
 
-from lark import Lark, Tree, UnexpectedInput, Transformer, Token
+from lark import Lark, Tree, Transformer, Token
 from lark.visitors import CollapseAmbiguities
 
 from grascii import grammar

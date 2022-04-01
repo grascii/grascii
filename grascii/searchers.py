@@ -65,7 +65,7 @@ class Searcher(ABC):
                     pass
                     # print("Error: Could not find", dict_path + item)
         for tup in sorted_results:
-            yield tup[0]
+            yield tup[0].strip()
 
     @abstractmethod
     def search(self, **kwargs):
@@ -100,7 +100,7 @@ class GrasciiSearcher(Searcher):
             self.aspirate_mode = regen.Strictness(defaults.DEFAULTS["Search"]["AspirateMode"])
         try:
             self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"]))
-        except:
+        except ValueError:
             self.disjoiner_mode = regen.Strictness(defaults.DEFAULTS["Search"]["DisjoinerMode"])
         self.fix_first = kwargs.get("fix_first", False)
         self.interpretation_mode = kwargs.get("interpretation", defaults.SEARCH["Interpretation"])
@@ -118,9 +118,9 @@ class GrasciiSearcher(Searcher):
         :type grascii: str
         :type uncertainty: int: 0, 1, or 2
         :type search_mode: str: one of regen.SearchMode values
-        :type annotation_mode: one of regen.Strictness values
-        :type aspirate_mode: one of regen.Strictness values
-        :type disjoiner_mode: one of regen.Strictness values
+        :type annotation_mode: str: one of regen.Strictness values
+        :type aspirate_mode: str: one of regen.Strictness values
+        :type disjoiner_mode: str: one of regen.Strictness values
         :type fix_first: bool
         :type interpretation: "best" or "all"
         :returns: A list of search results.

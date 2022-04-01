@@ -9,12 +9,14 @@ try:
 except ImportError:
     raise ImportError("Grascii: interactive extra dependencies are not installed")
 
-from lark import Tree
-from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple
+from lark import Tree, UnexpectedInput
+import sys
+from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple, List
 
 from grascii import regen, metrics
 from grascii.dictionary.list import get_built_ins, get_installed
-from grascii.searchers import GrasciiSearcher, Interpretation
+from grascii.parser import Interpretation, interpretation_to_string
+from grascii.searchers import GrasciiSearcher
 
 T = TypeVar("T")
 
@@ -66,10 +68,8 @@ class InteractiveSearcher(GrasciiSearcher):
             return 0
         prompt = "Choose an interpretation to use in the search:"
         choices = [Choice(title="all", value=0)]
-        i = 1
-        for interp in interpretations:
-            choices.append(Choice(title=self.interpretation_to_string(interp), value=i))
-            i += 1
+        for i, interp in enumerate(interpretations):
+            choices.append(Choice(title=interpretation_to_string(interp), value=i + 1))
         return questionary.select(prompt, choices).ask()
 
     def run_interactive(self) -> None:
@@ -161,12 +161,9 @@ class InteractiveSearcher(GrasciiSearcher):
         :returns: The search string used.
         """
 
-        search, tree = self.get_grascii_search(previous)
+        search, interpretations = self.get_grascii_search(previous)
         if search is None:
             return previous
-        parses = self.flatten_tree(tree)
-        display_interpretations = self.get_unique_interpretations(parses)
-        interpretations = list(display_interpretations.values())
         index = self.choose_interpretation(interpretations)
         builder = regen.RegexBuilder(
                 uncertainty=self.uncertainty,
@@ -204,11 +201,11 @@ class InteractiveSearcher(GrasciiSearcher):
         print()
         return search
             
-    def get_grascii_search(self, previous: Optional[str]=None) -> Tuple[Optional[str], Optional[Tree]]:
+    def get_grascii_search(self, previous: Optional[str]=None) -> Tuple[Optional[str], Optional[List[Interpretation]]]:
         """Prompt the user for a grascii string.
         
         :param previous: The previous grascii string used in a search.
-        :returns: A grascii string and a grascii parse tree.
+        :returns: A grascii string and associated interpretations
         """
 
         while True:
@@ -222,8 +219,11 @@ class InteractiveSearcher(GrasciiSearcher):
             if search == "":
                 continue
             search = search.upper()
-            result = self.parse_grascii(search)
-            if not result:
+            try:
+                interpretations = self._parser.interpret(search)
+            except UnexpectedInput as e:
+                print("Invalid Grascii String", file=sys.stderr)
+                print(e.get_context(search), file=sys.stderr)
                 previous = search
                 continue
-            return search, result
+            return search, interpretations

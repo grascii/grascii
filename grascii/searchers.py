@@ -33,7 +33,7 @@ class Searcher(ABC):
             a Grascii Dictionary.
         :param metric: A function taking an interpretation and a regular 
             expression match that returns a positive integer signifying the
-            differnce between the interpretation and the match. 0 means the
+            difference between the interpretation and the match. 0 means the
             two are equivalent. The greater the value, the more different
             they are.
         :returns: A collection strings of the form "[grascii] [translation]"

@@ -102,6 +102,7 @@ class Outline:
                 stroke.prev = prev_stroke
                 stroke.prev_consonant = prev_consonant
                 stroke.prev_vowel = prev_vowel
+                stroke.prev_char = prev_char
                 if item in grammar.CONSONANTS:
                     while needs_next_consonant:
                         needs_next_consonant.pop().next_consonant = stroke
@@ -208,16 +209,9 @@ class Outline:
                 if not current_stroke.has_direction_annotation():
                     # 34. The clockwise TH is given the preference, but when
                     # joined to O, R, L the other form is used
-                    if current_stroke.next:
-                        if current_stroke.next.stroke in {"O", "R", "L"}:
-                            current_stroke.annotations.insert(0, grammar.RIGHT)
-                        else:
-                            current_stroke.annotations.insert(0, grammar.LEFT)
-                    elif current_stroke.prev:
-                        if current_stroke.prev.stroke in {"O", "R", "L"}:
-                            current_stroke.annotations.insert(0, grammar.RIGHT)
-                        else:
-                            current_stroke.annotations.insert(0, grammar.LEFT)
+                    if (current_stroke.next_char and current_stroke.next_char.stroke in {"O", "R", "L"}) or \
+                            (current_stroke.prev_char and current_stroke.prev_char.stroke in {"O", "R", "L"}):
+                        current_stroke.annotations.insert(0, grammar.RIGHT)
                     else:
                         current_stroke.annotations.insert(0, grammar.LEFT)
                 set_TH_direction_and_curve(current_stroke)

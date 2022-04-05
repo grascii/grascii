@@ -28,7 +28,7 @@ class TestInferredDirections(unittest.TestCase):
                 ("S)", "S)"),
                 ("S(", "S(")]
         self.run_tests(tests)
-#check s sandwiched between curves
+
     def test_s_joined_to_curves(self):
         tests = [
                 ("SPRA", "S(PRA"),
@@ -90,6 +90,26 @@ class TestInferredDirections(unittest.TestCase):
                 ("GUST", "GUS)T"),
                 ("GRASHUS", "GRASHUS)"),
                 ("VESHUS", "VESHUS)")
+                ]
+        self.run_tests(tests)
+
+    def test_sandwiched_s(self):
+        tests = [
+                ("UOSP", "UOS(P"),
+                ("PAST", "PAS(T"),
+                ("UESP", "UES(P"),
+                ("UESTF", "UES)TF"),
+                ("GOSEP", "GOS(EP"),
+                ("TRESPAS", "TRES(PAS("),
+                ("TRESL", "TRES(L"),
+                ("VEST", "VES)T"),
+                ("KASK", "KAS)K"),
+                ("KASM", "KAS)M"),
+                ("RESK", "RES(K"),
+                ("ASAL", "AS(AL"),
+                ("DOSEL", "DOS(EL"),
+                ("FLASK", "FLAS(K"),
+                ("KLASP", "KLAS(P")
                 ]
         self.run_tests(tests)
 

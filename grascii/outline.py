@@ -203,51 +203,52 @@ class Outline:
                 # Rule 35
                 stroke.add_annotation(grammar.RIGHT)
                 return
-            if stroke.next_char:
-                if stroke.next_char.head_type.curve == Curve.LOOP:
-                    if stroke.next_consonant:
-                        # Rule 30 + 31
-                        set_S_direction_based_on_curves(stroke, stroke.next_consonant.head_type, is_before=True)
-                        return
-                # Rule 31
-                set_S_direction_based_on_curves(stroke, stroke.next_char.head_type, is_before=True)
-                return
+            # When S is between two characters, most of the time its direction
+            # is based on the preceding character.
             if stroke.prev_char:
                 if stroke.prev_char.tail_type.curve == Curve.LOOP:
                     if stroke.prev_consonant:
                         # Rule 30 + 31
-                        set_S_direction_based_on_curves(stroke, stroke.prev_consonant.tail_type, is_before=False)
-                        return
+                        if set_S_direction_based_on_curves(stroke, stroke.prev_consonant.tail_type, is_before=False):
+                            return
                 # Rule 31
-                set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False)
-                return
+                if set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False):
+                    return
+            if stroke.next_char:
+                if stroke.next_char.head_type.curve == Curve.LOOP:
+                    if stroke.next_consonant:
+                        # Rule 30 + 31
+                        if set_S_direction_based_on_curves(stroke, stroke.next_consonant.head_type, is_before=True):
+                            return
+                # Rule 31
+                if set_S_direction_based_on_curves(stroke, stroke.next_char.head_type, is_before=True):
+                    return
 
             # Rule 33
             stroke.add_annotation(grammar.RIGHT)
 
-        def set_S_direction_based_on_curves(stroke: Stroke, stroke_type: StrokeType, is_before: bool) -> None:
+        def set_S_direction_based_on_curves(stroke: Stroke, stroke_type: StrokeType, is_before: bool) -> bool:
             if stroke_type.curve == Curve.CLOCKWISE:
                 # Rule 30
                 stroke.add_annotation(grammar.RIGHT)
-                return
+                return True
             elif stroke_type.curve == Curve.COUNTER_CLOCKWISE:
                 # Rule 30
                 stroke.add_annotation(grammar.LEFT)
-                return
+                return True
             elif stroke_type.curve == Curve.LINE:
                 if stroke_type.direction == Direction.SOUTH_WEST:
                     # Rule 32
                     stroke.add_annotation(grammar.RIGHT)
-                    return
+                    return True
                 else:
                     # Rule 31
                     if is_before:
                         stroke.add_annotation(grammar.RIGHT)
                     else:
                         stroke.add_annotation(grammar.LEFT)
-                    return
-            # Rule 33
-            stroke.add_annotation(grammar.RIGHT)
+                    return True
+            return False
 
         def set_TH_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "TH"

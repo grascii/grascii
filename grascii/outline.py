@@ -191,7 +191,20 @@ class Outline:
                 set_S_direction_and_curve(current_stroke)
             elif current_stroke.stroke == "TH":
                 if not current_stroke.has_direction_annotation():
-                    current_stroke.annotations.insert(0, grammar.LEFT)
+                    # 34. The clockwise TH is given the preference, but when
+                    # joined to O, R, L the other form is used
+                    if current_stroke.next:
+                        if current_stroke.next.stroke in {"O", "R", "L"}:
+                            current_stroke.annotations.insert(0, grammar.RIGHT)
+                        else:
+                            current_stroke.annotations.insert(0, grammar.LEFT)
+                    elif current_stroke.prev:
+                        if current_stroke.prev.stroke in {"O", "R", "L"}:
+                            current_stroke.annotations.insert(0, grammar.RIGHT)
+                        else:
+                            current_stroke.annotations.insert(0, grammar.LEFT)
+                    else:
+                        current_stroke.annotations.insert(0, grammar.LEFT)
                 set_TH_direction_and_curve(current_stroke)
 
             current_stroke = current_stroke.next

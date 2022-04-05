@@ -76,3 +76,31 @@ class TestInferredDirections(unittest.TestCase):
                 ("TH)", "TH)"),
                 ("TH(", "TH(")]
         self.run_tests(tests)
+
+    def test_th_joinings(self):
+        tests = [
+                ("THEK", "TH(EK"),
+                ("THEM", "TH(EM"),
+                ("DUTH", "DUTH("),
+                ("THO", "TH)O"),
+                ("THRO", "TH)RO"),
+                ("ATHLET", "ATH)LET"),
+                ("MOTH", "MOTH)"),
+                ("ERTH", "ERTH)"),
+                ("'ELTH", "'ELTH)")
+                ]
+        self.run_tests(tests)
+
+    def test_s_th_words(self):
+        tests = [
+                ("AS", "AS)"),
+                ("SE", "S)E"),
+                ("ESA", "ES)A"),
+                ("'ETH", "'ETH("),
+                ("'ATH", "'ATH("),
+                ("THE", "TH(E"),
+                ("THES", "TH(ES)"),
+                ("SES", "S)ES)"),
+                ("SETH", "S)ETH(")
+                ]
+        self.run_tests(tests)

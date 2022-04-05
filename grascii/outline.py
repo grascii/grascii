@@ -1,6 +1,6 @@
 
 from enum import Enum
-from typing import Optional
+from typing import Optional, NamedTuple
 
 from grascii import grammar
 from grascii.parser import Interpretation
@@ -22,6 +22,10 @@ class Curve(Enum):
     CLOCKWISE = 2
     COUNTER_CLOCKWISE = 3
 
+class StrokeType(NamedTuple):
+    direction: Optional[Direction]
+    curve: Optional[Curve]
+
 class Stroke:
 
     def __init__(self,
@@ -31,10 +35,10 @@ class Stroke:
                  tail_direction: Optional[Direction]=None,
                  tail_curve: Optional[Curve]=None) -> None:
         self.stroke = stroke
-        self.head_direction = head_direction
-        self.head_curve = head_curve
-        self.tail_direction = tail_direction if tail_direction else head_direction
-        self.tail_curve = tail_curve if tail_curve else head_curve
+        self.head_type = StrokeType(head_direction, head_curve)
+        td = tail_direction if tail_direction else head_direction
+        tc = tail_curve if tail_curve else head_curve
+        self.tail_type = StrokeType(td, tc)
         self.annotations: List[str] = []
         self.next: Optional[Stroke] = None
         self.prev: Optional[Stroke] = None
@@ -73,9 +77,9 @@ class Stroke:
             return cls(stroke, Direction.NORTH_EAST, Curve.CLOCKWISE)
         if stroke in {"NG", "NK"}:
             return cls(stroke, Direction.SOUTH_EAST, Curve.LINE)
-        if stroke in {"DF", "DV", "TV"}:
+        if stroke in {"DF", "DV", "TV", "U"}:
             return cls(stroke, Direction.NORTH_EAST, Curve.CLOCKWISE, Direction.SOUTH_WEST, Curve.CLOCKWISE)
-        if stroke in {"PNT", "PND", "JNT", "JND"}:
+        if stroke in {"PNT", "PND", "JNT", "JND", "O"}:
             return cls(stroke, Direction.SOUTH_EAST, Curve.COUNTER_CLOCKWISE, Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE)
         return cls(stroke)
 
@@ -137,25 +141,21 @@ class Outline:
 
         def set_S_direction_and_curve(stroke):
             assert stroke.has_direction_annotation()
-            stroke.head_direction = Direction.SOUTH_WEST
-            stroke.tail_direction = Direction.SOUTH_WEST
             if stroke.has_annotation(grammar.RIGHT):
-                stroke.head_curve = Curve.CLOCKWISE
-                stroke.tail_curve = Curve.CLOCKWISE
+                stroke.head_type = StrokeType(Direction.SOUTH_WEST, Curve.CLOCKWISE)
+                stroke.tail_type = StrokeType(Direction.SOUTH_WEST, Curve.CLOCKWISE)
             elif stroke.has_annotation(grammar.LEFT):
-                stroke.head_curve = Curve.COUNTER_CLOCKWISE
-                stroke.tail_curve = Curve.COUNTER_CLOCKWISE
+                stroke.head_type = StrokeType(Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE)
+                stroke.tail_type = StrokeType(Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE)
 
         def set_TH_direction_and_curve(stroke):
             assert stroke.has_direction_annotation()
-            stroke.head_direction = Direction.NORTH_EAST
-            stroke.tail_direction = Direction.NORTH_EAST
             if stroke.has_annotation(grammar.RIGHT):
-                stroke.head_curve = Curve.COUNTER_CLOCKWISE
-                stroke.tail_curve = Curve.COUNTER_CLOCKWISE
+                stroke.head_type = StrokeType(Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE)
+                stroke.tail_type = StrokeType(Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE)
             elif stroke.has_annotation(grammar.LEFT):
-                stroke.head_curve = Curve.CLOCKWISE
-                stroke.tail_curve = Curve.CLOCKWISE
+                stroke.head_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
+                stroke.tail_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
 
         # def check_adjacent_consonant(stroke, adjacent_consonant):
             # 30. When S is joined to a curve, S is written in the same
@@ -179,24 +179,24 @@ class Outline:
                     if not current_stroke.prev_char and current_stroke.next_char and current_stroke.next_char.stroke == "O":
                         current_stroke.annotations.insert(0, grammar.RIGHT)
                     elif current_stroke.next_consonant:
-                        if current_stroke.next_consonant.head_curve == Curve.CLOCKWISE:
+                        if current_stroke.next_consonant.head_type.curve == Curve.CLOCKWISE:
                             current_stroke.annotations.insert(0, grammar.RIGHT)
-                        elif current_stroke.next_consonant.head_curve == Curve.COUNTER_CLOCKWISE:
+                        elif current_stroke.next_consonant.head_type.curve == Curve.COUNTER_CLOCKWISE:
                             current_stroke.annotations.insert(0, grammar.LEFT)
-                        elif current_stroke.next_consonant.head_curve == Curve.LINE:
-                            if current_stroke.next_consonant.head_direction == Direction.SOUTH_WEST:
+                        elif current_stroke.next_consonant.head_type.curve == Curve.LINE:
+                            if current_stroke.next_consonant.head_type.direction == Direction.SOUTH_WEST:
                                 current_stroke.annotations.insert(0, grammar.RIGHT)
                             else:
                                 current_stroke.annotations.insert(0, grammar.RIGHT)
                         else:
                             current_stroke.annotations.insert(0, grammar.RIGHT)
                     elif current_stroke.prev_consonant:
-                        if current_stroke.prev_consonant.tail_curve == Curve.CLOCKWISE:
+                        if current_stroke.prev_consonant.tail_type.curve == Curve.CLOCKWISE:
                             current_stroke.annotations.insert(0, grammar.RIGHT)
-                        elif current_stroke.prev_consonant.tail_curve == Curve.COUNTER_CLOCKWISE:
+                        elif current_stroke.prev_consonant.tail_type.curve == Curve.COUNTER_CLOCKWISE:
                             current_stroke.annotations.insert(0, grammar.LEFT)
-                        elif current_stroke.prev_consonant.tail_curve == Curve.LINE:
-                            if current_stroke.prev_consonant.tail_direction == Direction.SOUTH_WEST:
+                        elif current_stroke.prev_consonant.tail_type.curve == Curve.LINE:
+                            if current_stroke.prev_consonant.tail_type.direction == Direction.SOUTH_WEST:
                                 current_stroke.annotations.insert(0, grammar.RIGHT)
                             else:
                                 current_stroke.annotations.insert(0, grammar.LEFT)

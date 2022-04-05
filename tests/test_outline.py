@@ -113,6 +113,17 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_sandwiched_s2(self):
+        tests = [
+                ("VESTRE", "VES)TRE"),
+                ("OFSET", "OFS)ET"),
+                ("BOST", "BOS(T"),
+                ("TAST", "TAS(T"),
+                ("DESK", "DES(K"),
+                ("MASK", "MAS(K")
+                ]
+        self.run_tests(tests)
+
     def test_lone_th(self):
         tests = [("TH", "TH("),
                 ("TH)", "TH)"),

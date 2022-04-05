@@ -124,6 +124,18 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_z(self):
+        tests = [
+                ("GAZ,", "GAZ),"),
+                ("FAZ,", "FAZ),"),
+                ("ZELUS", "Z(ELUS"),
+                ("ZERO", "Z(ERO"),
+                ("MAZ", "MAZ("),
+                ("RAZ", "RAZ("),
+                ("DOZ", "DOZ("),
+                ("LAZE", "LAZ(E")
+                ]
+
     def test_lone_th(self):
         tests = [("TH", "TH("),
                 ("TH)", "TH)"),

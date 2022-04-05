@@ -82,6 +82,17 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_s_u(self):
+        tests = [
+                ("US", "US)"),
+                ("BUS", "BUS)"),
+                ("FUS", "FUS)"),
+                ("GUST", "GUS)T"),
+                ("GRASHUS", "GRASHUS)"),
+                ("VESHUS", "VESHUS)")
+                ]
+        self.run_tests(tests)
+
     def test_lone_th(self):
         tests = [("TH", "TH("),
                 ("TH)", "TH)"),
@@ -115,3 +126,4 @@ class TestInferredDirections(unittest.TestCase):
                 ("SETH", "S)ETH(")
                 ]
         self.run_tests(tests)
+

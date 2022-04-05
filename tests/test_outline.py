@@ -71,6 +71,17 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_s_o(self):
+        tests = [
+                ("SO", "S)O"),
+                ("SORO", "S)ORO"),
+                ("SOL", "S)OL"),
+                ("SOFA", "S)OFA"),
+                ("SOP", "S)OP"),
+                ("SOD", "S)OD")
+                ]
+        self.run_tests(tests)
+
     def test_lone_th(self):
         tests = [("TH", "TH("),
                 ("TH)", "TH)"),

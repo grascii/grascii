@@ -41,7 +41,9 @@ class Stroke:
         self.next_consonant: Optional[Stroke] = None
         self.prev_consonant: Optional[Stroke] = None
         self.next_vowel: Optional[Stroke] = None
-        self.prev_vowel = None
+        self.prev_vowel: Optional[Stroke] = None
+        self.next_char: Optional[Stroke] = None
+        self.prev_char: Optional[Stroke] = None
 
     def has_annotation(self, annotation: str) -> bool:
         return annotation in self.annotations
@@ -85,9 +87,11 @@ class Outline:
         self.last = None
         needs_next_consonant = []
         needs_next_vowel = []
+        needs_next_char = []
         prev_stroke = None
         prev_vowel = None
         prev_consonant = None
+        prev_char = None
         for item in interpretation:
             if not isinstance(item, list):
                 stroke = Stroke.create(item)
@@ -102,17 +106,26 @@ class Outline:
                     while needs_next_consonant:
                         needs_next_consonant.pop().next_consonant = stroke
                     prev_consonant = stroke
+                    while needs_next_char:
+                        needs_next_char.pop().next_char = stroke
+                    prev_char = stroke
                 elif item in grammar.VOWELS:
                     while needs_next_vowel:
                         needs_next_vowel.pop().next_vowel = stroke
                     prev_vowel = stroke
+                    while needs_next_char:
+                        needs_next_char.pop().next_char = stroke
+                    prev_char = stroke
                 elif item == grammar.DISJOINER:
                     needs_next_consonant.clear()
                     needs_next_vowel.clear()
+                    needs_next_char.clear()
                     prev_consonant = None
                     prev_vowel = None
+                    prev_char = None
                 needs_next_consonant.append(stroke)
                 needs_next_vowel.append(stroke)
+                needs_next_char.append(stroke)
                 self.last = stroke
                 prev_stroke = stroke
             else:
@@ -162,7 +175,9 @@ class Outline:
         while current_stroke:
             if current_stroke.stroke in {"S", "Z"}:
                 if not current_stroke.has_direction_annotation():
-                    if current_stroke.next_consonant:
+                    if not current_stroke.prev_char and current_stroke.next_char and current_stroke.next_char.stroke == "O":
+                        current_stroke.annotations.insert(0, grammar.RIGHT)
+                    elif current_stroke.next_consonant:
                         if current_stroke.next_consonant.head_curve == Curve.CLOCKWISE:
                             current_stroke.annotations.insert(0, grammar.RIGHT)
                         elif current_stroke.next_consonant.head_curve == Curve.COUNTER_CLOCKWISE:

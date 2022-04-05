@@ -92,9 +92,20 @@ class Stroke:
 
 class Outline:
 
-    def __init__(self, interpretation: Interpretation):
+    """
+    An Outline is an alternative to Interpretation as a representation of a
+    Grascii string. It is structured as a linked list and is better for
+    contextual processing of strokes. Outlines infer the directions of
+    directional characters and explicitly add direction annotations.
+    """
+
+    def __init__(self, interpretation: Interpretation) -> None:
         self.first = None
         self.last = None
+        self._build(interpretation)
+        self._infer_directions()
+
+    def _build(self, interpretation: Interpretation) -> None:
         needs_next_consonant = []
         needs_next_vowel = []
         needs_next_char = []
@@ -141,9 +152,32 @@ class Outline:
                 prev_stroke = stroke
             else:
                 prev_stroke.annotations = item.copy()
-        self.infer_directions()
 
-    def infer_directions(self) -> None:
+    def _infer_directions(self) -> None:
+        """
+        Add direction annotations to strokes without explicit directions.
+        This method sets the directions of S/Z and TH according to the following
+        rules from the Preanniversary edition of Gregg Shorthand:
+
+        30. When S is joined to a curve, S is written in the same direction as
+        the curve to which it is joined. A circle vowel occurring at the joining
+        does not affect the application of this rule.
+
+        31. When S is joined to T, D, N, M, the S is used which forms a sharp
+        angle. A circle vowel occurring at the joining does not affect the
+        application of this rule.
+
+        32. When S is joined to SH, CH, J the S is used which is written with
+        the clockwise movement.
+
+        33. In words consisting of S or TH, or both, and a circle vowel, S or TH
+        should be written with the clockwise movement.
+
+        34. The clockwise TH is given the preference, but when joined to O, R,
+        L the other form is used.
+
+        35. In words beginning with so, the comma S is used.
+        """
 
         def set_S_stroke_type(stroke: Stroke) -> None:
             assert stroke.has_direction_annotation()
@@ -162,21 +196,6 @@ class Outline:
             elif stroke.has_annotation(grammar.LEFT):
                 stroke.head_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
                 stroke.tail_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
-
-        # def check_adjacent_consonant(stroke, adjacent_consonant):
-            # 30. When S is joined to a curve, S is written in the same
-            # direction as the curve to which it is joined. A circle
-            # vowel occuring at the joining does not affect the
-            # application of this rule.
-            # 31. When S is joined to T, D, N, M, the S is used which forms a
-            # sharp angle. A circle vowel occuring at the joining does not
-            # affect the application of this rule
-            # 32. When S is joined to SH, CH, J the S is used which is written
-            # with the clockwise movement
-            # if :
-                # if consonant.head_curve == Curve.CLOCKWISE:
-                    # stroke.annotations.insert(0, grammar.RIGHT)
-                # elif consonant.head_curve == Curve.CLOCKWISE
 
         def set_S_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "S" or stroke.stroke == "Z"
@@ -203,6 +222,7 @@ class Outline:
                 set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False)
                 return
 
+            # Rule 33
             stroke.add_annotation(grammar.RIGHT)
 
         def set_S_direction_based_on_curves(stroke: Stroke, stroke_type: StrokeType, is_before: bool) -> None:
@@ -226,16 +246,17 @@ class Outline:
                     else:
                         stroke.add_annotation(grammar.LEFT)
                     return
+            # Rule 33
             stroke.add_annotation(grammar.RIGHT)
 
         def set_TH_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "TH"
-            # 34. The clockwise TH is given the preference, but when
-            # joined to O, R, L the other form is used
             if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"}) or \
                     (stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"}):
+                # Rule 34
                 stroke.add_annotation(grammar.RIGHT)
             else:
+                # Rule 33
                 stroke.add_annotation(grammar.LEFT)
 
         current_stroke = self.first

@@ -20,9 +20,11 @@ def interpretation_to_string(interpretation: Interpretation) -> str:
         if isinstance(token, list):
             builder += token
         else:
-            if builder and builder[-1] != "^" and token != "^":
-                builder.append("-")
-            builder.append(token)
+            if builder and builder[-1] != grammar.DISJOINER and token != grammar.DISJOINER \
+                    and builder[-1] != grammar.BOUNDARY and token != grammar.BOUNDARY:
+                builder.append(grammar.BOUNDARY)
+            if token != grammar.BOUNDARY:
+                builder.append(token)
         return builder
 
     return "".join(reduce(reducer, interpretation, []))
@@ -34,6 +36,9 @@ class GrasciiFlattener(Transformer):
     annotation lists. Each terminal is its own element in the interpretation,
     but sequences of annotation terminals are grouped into their own sublist.
     """
+
+    def __init__(self, preserve_boundaries: bool=False) -> None:
+        self.preserve_boundaries = preserve_boundaries
 
     def start(self, children) -> Interpretation:
         """Returns the final result of the transformation.
@@ -52,7 +57,7 @@ class GrasciiFlattener(Transformer):
                     else:
                         # start new annotation list
                         result.append([token])
-                else:
+                elif token != grammar.BOUNDARY or self.preserve_boundaries:
                     result.append(token)
         return result
 
@@ -75,15 +80,16 @@ class GrasciiParser():
     def __init__(self) -> None:
         grammar = get_grammar("grascii")
         self._parser: Lark = Lark.open(grammar, parser="earley", ambiguity="explicit")
-        self._flattener: Transformer = GrasciiFlattener()
-        self._collapser: Transformer = CollapseAmbiguities()
 
     def parse(self, grascii: str) -> Tree:
         return self._parser.parse(grascii)
 
-    def interpret(self, grascii: str) -> List[Interpretation]:
+    def interpret(self,
+                  grascii: str,
+                  preserve_boundaries: bool=False) -> List[Interpretation]:
         tree = self.parse(grascii)
-        trees = self._collapser.transform(tree)
-        interpretations = [self._flattener.transform(tree) for tree in trees]
+        trees = CollapseAmbiguities().transform(tree)
+        flattener = GrasciiFlattener(preserve_boundaries)
+        interpretations = [flattener.transform(tree) for tree in trees]
         unique_interpretations = {interpretation_to_string(interp): interp for interp in interpretations}
         return list(unique_interpretations.values())

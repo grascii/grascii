@@ -193,3 +193,30 @@ class TestInferredDirections(unittest.TestCase):
                 ("PO,L", "PO,L")
                 ]
         self.run_tests(tests)
+
+    def test_lone_u(self):
+        tests = [
+                ("U", "U"),
+                ("U)", "U)"),
+                ]
+        self.run_tests(tests)
+
+    def test_u_joinings(self):
+        tests = [
+                ("NUN", "NU)N"),
+                ("MUD", "MU)D"),
+                ("MUF", "MU)F"),
+                ("MUN", "MU)N"),
+                ("MUG", "MU)G"),
+                ("MUD", "MU)D"),
+                ("KUL", "KU)L"),
+                ("GUL", "GU)L"),
+                ("FUT", "FUT"),
+                ("'UK", "'UK"),
+                ("PUF", "PUF"),
+                ("JUG", "JUG"),
+                ("TUF", "TUF"),
+                ("KUF", "KUF"),
+                ("GUSH", "GUSH")
+                ]
+        self.run_tests(tests)

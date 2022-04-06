@@ -155,12 +155,15 @@ class Outline:
 
     def _infer_directions(self) -> None:
         """
-        Add direction annotations to strokes without explicit directions.
-        This method sets the directions of S/Z and TH according to the following
-        rules from the Preanniversary edition of Gregg Shorthand:
+        Add direction annotations to strokes without explicit directions.  This
+        method sets the directions of O, U, S/Z, and TH according to the
+        following rules from the Preanniversary edition of Gregg Shorthand:
 
         20. The O-hook is placed on its side before N, M, R, L except when
         preceded by a downward character.
+
+        22. The OO-hook is always placed on its side after N or M; it is also
+        placed on its side after K or G when followed by R or L.
 
         30. When S is joined to a curve, S is written in the same direction as
         the curve to which it is joined. A circle vowel occurring at the joining
@@ -270,6 +273,17 @@ class Outline:
                     # Rule 20
                     stroke.add_annotation(grammar.LEFT)
 
+        def set_U_direction(stroke: Stroke) -> None:
+            assert stroke.stroke == "U"
+            if stroke.prev_char:
+                if stroke.prev_char.stroke in {"N", "M", "MN", "MM"}:
+                    # Rule 22
+                    stroke.add_annotation(grammar.RIGHT)
+                elif stroke.prev_char.stroke in {"K", "G"}:
+                    if stroke.next_char and stroke.next_char.stroke in {"R", "L"}:
+                        # Rule 22
+                        stroke.add_annotation(grammar.RIGHT)
+
         current_stroke = self.first
         while current_stroke:
             if current_stroke.stroke in {"S", "Z"}:
@@ -283,6 +297,9 @@ class Outline:
             elif current_stroke.stroke == "O":
                 if not current_stroke.has_direction_annotation():
                     set_O_direction(current_stroke)
+            elif current_stroke.stroke == "U":
+                if not current_stroke.has_direction_annotation():
+                    set_U_direction(current_stroke)
             current_stroke = current_stroke.next
 
     def __str__(self) -> str:

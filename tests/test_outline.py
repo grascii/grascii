@@ -170,3 +170,26 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_lone_o(self):
+        tests = [
+                ("O", "O"),
+                ("O(", "O(")
+                ]
+        self.run_tests(tests)
+
+    def test_o_joinings(self):
+        tests = [
+                ("ON", "O(N"),
+                ("OR", "O(R"),
+                ("MON", "MO(N"),
+                ("'OL", "'O(L"),
+                ("DOM", "DO(M"),
+                ("NOM", "NO(M"),
+                ("MOD", "MOD"),
+                ("SHOL", "SHOL"),
+                ("FOM", "FOM"),
+                ("BOCH", "BOCH"),
+                ("ROG", "ROG"),
+                ("PO,L", "PO,L")
+                ]
+        self.run_tests(tests)

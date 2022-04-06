@@ -159,6 +159,9 @@ class Outline:
         This method sets the directions of S/Z and TH according to the following
         rules from the Preanniversary edition of Gregg Shorthand:
 
+        20. The O-hook is placed on its side before N, M, R, L except when
+        preceded by a downward character.
+
         30. When S is joined to a curve, S is written in the same direction as
         the curve to which it is joined. A circle vowel occurring at the joining
         does not affect the application of this rule.
@@ -260,6 +263,13 @@ class Outline:
                 # Rule 33
                 stroke.add_annotation(grammar.LEFT)
 
+        def set_O_direction(stroke: Stroke) -> None:
+            assert stroke.stroke == "O"
+            if stroke.next_char and stroke.next_char.stroke in {"N", "M", "MN", "MM", "R", "L"}:
+                if not stroke.prev_char or (stroke.prev_char.tail_type.direction != Direction.SOUTH_WEST):
+                    # Rule 20
+                    stroke.add_annotation(grammar.LEFT)
+
         current_stroke = self.first
         while current_stroke:
             if current_stroke.stroke in {"S", "Z"}:
@@ -270,6 +280,9 @@ class Outline:
                 if not current_stroke.has_direction_annotation():
                     set_TH_direction(current_stroke)
                 set_TH_stroke_type(current_stroke)
+            elif current_stroke.stroke == "O":
+                if not current_stroke.has_direction_annotation():
+                    set_O_direction(current_stroke)
             current_stroke = current_stroke.next
 
     def __str__(self) -> str:

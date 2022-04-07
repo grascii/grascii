@@ -11,7 +11,7 @@ class TestInferredDirections(unittest.TestCase):
     def run_tests(self, tests):
         for test in tests:
             with self.subTest(word=test[0], expected=test[1]):
-                interpretation = self.parser.interpret(test[0])[0]
+                interpretation = self.parser.interpret(test[0], preserve_boundaries=True)[0]
                 outline = Outline(interpretation)
                 self.assertEqual(str(outline), test[1])
 
@@ -218,5 +218,78 @@ class TestInferredDirections(unittest.TestCase):
                 ("TUF", "TUF"),
                 ("KUF", "KUF"),
                 ("GUSH", "GUSH")
+                ]
+        self.run_tests(tests)
+
+    def test_s_boundaries(self):
+        tests = [
+                ("LSN", "LS(N"),
+                ("L-SN", "L-S)N"),
+                ("LOBSTE~", "LOBS(TE~"),
+                ("LOB-STE~", "LOB-S)TE~"),
+                ("LONSM", "LO(NS(M"),
+                ("LON-SM", "LO(N-S)M"),
+                ("LESR", "LES(R"),
+                ("LESN", "LES(N"),
+                ("LE-SN", "LE-S)N"),
+                ("RSN", "RS(N"),
+                ("R-SN", "R-S)N"),
+                ("RSED", "RS(ED"),
+                ("R-SED", "R-S)ED"),
+                ("DSET", "DS(ET"),
+                ("D-SET", "D-S)ET"),
+                ("OS", "OS("),
+                ("O-S", "O-S)")
+                ]
+        self.run_tests(tests)
+
+    def test_o_boundaries(self):
+        tests = [
+                ("NOR", "NO(R"),
+                ("NO-R", "NO-R"),
+                ("TOL", "TO(L"),
+                ("TO-L", "TO-L"),
+                ("CHOR", "CHOR"),
+                ("CHO-R", "CHO-R"),
+                ("CH-OR", "CH-O(R"),
+                ("GON", "GO(N"),
+                ("GO-N", "GO-N"),
+                ("JON", "JON"),
+                ("JO-N", "JO-N"),
+                ("J-ON", "J-O(N"),
+                ("DOM", "DO(M"),
+                ("DO-M", "DO-M")
+                ]
+        self.run_tests(tests)
+
+    def test_u_boundaries(self):
+        tests = [
+                ("NUN", "NU)N"),
+                ("N-UN", "N-UN"),
+                ("MUT", "MU)T"),
+                ("M-UT", "M-UT"),
+                ("MNU", "MNU)"),
+                ("MN-U", "MN-U"),
+                ("KUT", "KUT"),
+                ("KUR", "KU)R"),
+                ("KU-R", "KU-R"),
+                ("GUL", "GU)L"),
+                ("G-UL", "G-UL"),
+                ("GU-L", "GU-L")
+                ]
+        self.run_tests(tests)
+
+    def test_th_boundaries(self):
+        tests = [
+                ("THR", "TH)R"),
+                ("TH-R", "TH(-R"),
+                ("OTH", "OTH)"),
+                ("O-TH", "O-TH("),
+                ("THL", "TH)L"),
+                ("TH-L", "TH(-L"),
+                ("RTHO", "RTH)O"),
+                ("R-THO", "R-TH)O"),
+                ("RTH-O", "RTH)-O"),
+                ("R-TH-O", "R-TH(-O")
                 ]
         self.run_tests(tests)

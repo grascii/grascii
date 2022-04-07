@@ -8,7 +8,8 @@ from lark import Lark, Transformer, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities, v_args, VisitError
 
 from grascii.grammars import get_grammar
-from grascii.searchers import GrasciiFlattener, GrasciiSearcher
+from grascii.parser import GrasciiFlattener
+from grascii.searchers import GrasciiSearcher
 
 
 description = "Decipher a shorthand phrase."

@@ -1,7 +1,7 @@
 
 import unittest
 
-from grascii.parser import GrasciiParser
+from grascii.parser import GrasciiParser, interpretation_to_string
 from grascii.outline import Outline
 
 class TestInferredDirections(unittest.TestCase):
@@ -293,3 +293,26 @@ class TestInferredDirections(unittest.TestCase):
                 ("R-TH-O", "R-TH(-O")
                 ]
         self.run_tests(tests)
+
+class TestToInterpretation(unittest.TestCase):
+
+    parser = GrasciiParser()
+
+    def test_to_interpretation(self):
+        tests = [
+                ("JENERK", "J-E-N-E-R-K"),
+                ("GAT", "G-A-T"),
+                ("LASH", "L-A-SH"),
+                ("MON", "M-O(-N"),
+                ("'OL", "'-O(-L"),
+                ("L-SN", "L-S)-N"),
+                ("LOBSTE~", "L-O-B-S(-T-E~"),
+                ("ESA", "E-S)-A"),
+                ("'ETH", "'-E-TH("),
+                ("TRESPAS", "T-R-E-S(-P-A-S("),
+                ]
+        for test in tests:
+            with self.subTest(word=test[0], expected=test[1]):
+                interpretation = self.parser.interpret(test[0], preserve_boundaries=True)[0]
+                outline = Outline(interpretation)
+                self.assertEqual(interpretation_to_string(outline.to_interpretation()), test[1])

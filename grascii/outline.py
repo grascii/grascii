@@ -317,3 +317,13 @@ class Outline:
             builder += current_stroke.annotations
             current_stroke = current_stroke.next
         return "".join(builder)
+
+    def to_interpretation(self) -> Interpretation:
+        interpretation: Interpretation = []
+        current_stroke = self.first
+        while current_stroke:
+            interpretation.append(current_stroke.stroke)
+            if current_stroke.annotations:
+                interpretation.append(current_stroke.annotations)
+            current_stroke = current_stroke.next
+        return interpretation

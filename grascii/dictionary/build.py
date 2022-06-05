@@ -160,7 +160,7 @@ class DictionaryBuilder():
         """Load a parser to check grascii strings."""
 
         if self.parse:
-            self.parser = Lark(get_grammar("grascii"), parser="earley", ambiguity="resolve")
+            self.parser = Lark(get_grammar("grascii"), parser="earley", ambiguity="forest")
 
     def load_word_set(self) -> None:
         """Load a set of words to check the spelling of words."""

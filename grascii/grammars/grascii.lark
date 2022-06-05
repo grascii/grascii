@@ -1,5 +1,5 @@
 
-start : _preroot? _root _postroot? | _preroot
+start : _preroot? _root _postroot? | _preroot | A_OR_AN
 _preroot : prefix DISJOINER
 _postroot : DISJOINER suffix
 
@@ -61,6 +61,8 @@ circle_diphthong : ( AE | EA ) REVERSE?
 	| I REVERSE? LOOP?
  
 hook_diphthong : EU | AU | OE
+
+A_OR_AN : "'"
 
 DISJOINER : "^"
 _BOUNDARY : "-"

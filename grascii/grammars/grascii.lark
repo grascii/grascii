@@ -1,15 +1,9 @@
+start: _root ( DISJOINER _root ( DISJOINER _root? )? )? | _root DISJOINER
 
-start : _preroot? _root _postroot? | _preroot
-_preroot : prefix DISJOINER
-_postroot : DISJOINER suffix
+_root : ASPIRATE~0..2 _string ASPIRATE~0..2
+_string : _letter | _string ASPIRATE? ( _BOUNDARY | INTERSECTION )? _letter
 
-_root : ASPIRATE? _string "^"? ING~0..2
-_string : _letter | _string ( _BOUNDARY | INTERSECTION )? _letter
-
-prefix : _root 
-suffix : _root
-
-_letter : ASPIRATE? ( consonant | vowel )
+_letter : ( consonant | vowel )
 
 consonant : standard_consonant
 	| blended_consonant
@@ -19,7 +13,7 @@ standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
 	| CH | J | X
 
-blended_consonant.2 : _over_blend
+blended_consonant.20 : _over_blend
 	| _men
 	| _gent
 	| _def
@@ -29,23 +23,21 @@ blended_consonant.2 : _over_blend
 	| NG | NK
 	| LD
 
-_over_blend.2 : TN | DN | TM | DM
-_men.3 : MN | MM
-_gent.3 : JNT | JND | PND | PNT
+_over_blend.20 : TN | DN | TM | DM
+_men.30 : MN | MM
+_gent.30 : JNT | JND | PND | PNT
 
 _ses : ( SS | XS ) direction?
 
 // this priority? ex. individual NDV
 // what about -ntive? NTV
-_def.-1 : DF | DV | TV
+_def.-10 : DF | DV | TV
 
-annotatable_consonant : directed_consonant | oblique_consonant
+annotatable_consonant : ( directed_consonant | SH ) OBLIQUE?
 
 directed_consonant : ( S | Z | TH ) direction?
 
 direction : LEFT | RIGHT
-
-oblique_consonant : ( directed_consonant | SH ) OBLIQUE?
 
 vowel : ( circle_vowel | hook_vowel | diphthong ) WUNDERBAR?
 
@@ -55,7 +47,7 @@ sound : MEDIUM_SOUND | LONG_SOUND
 
 hook_vowel : ( O LEFT? | U RIGHT? ) sound?
 
-diphthong.2 : circle_diphthong | hook_diphthong
+diphthong.20 : circle_diphthong | hook_diphthong
 
 circle_diphthong : ( AE | EA ) REVERSE?
 	| I REVERSE? LOOP?
@@ -65,25 +57,29 @@ hook_diphthong : EU | AU | OE
 DISJOINER : "^"
 _BOUNDARY : "-"
 INTERSECTION : "\\"
-ING : "'"
+
+// The terminal priorities are necessary to resolve conflicts with LALR.
+// For Earley, the terminal priorities are insignificant.
+// The rule priorities which carry ten times more weight will cause blended
+// consonants to be preferred.
 
 K : "K"
 G : "G"
 R : "R"
 L : "L"
-N : "N"
-M : "M"
+N.2 : "N"
+M.2 : "M"
 T : "T"
-D : "D"
+D.2 : "D"
 P : "P"
 B : "B"
 F : "F"
 V : "V"
 CH : "CH"
 J : "J"
-S : "S"
+S.2 : "S"
 Z : "Z"
-X : "X"
+X.2 : "X"
 LD : "LD"
 NG : "NG"
 NK : "NK"
@@ -109,7 +105,7 @@ MM : "MM"
 DT : "DT"
 TD : "TD"
 DD : "DD"
-SH : "SH"
+SH.2 : "SH"
 TH : "TH"
 A : "A"
 E : "E"
@@ -132,16 +128,3 @@ MEDIUM_SOUND : "."
 LONG_SOUND : ","
 REVERSE : "~"
 LOOP : "|"
-
-%ignore " "
-
-
-
-
-
-
-
-
-
-
-

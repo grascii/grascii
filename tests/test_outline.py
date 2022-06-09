@@ -294,6 +294,21 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_th_circle_vowel(self):
+        tests = [
+                ("THER", "TH)ER"),
+                ("THE-R", "TH(E-R"),
+                ("THIROE", "TH)IROE"),
+                ("TH-IROE", "TH(-IROE"),
+                ("LATH", "LATH)"),
+                ("LA-TH", "LA-TH("),
+                ("RATH", "RATH)"),
+                ("R-ATH", "R-ATH("),
+                ("THA&ER", "TH)A&ER"),
+                ("LA&'TH", "LA&'TH)")
+                ]
+        self.run_tests(tests)
+
 class TestToInterpretation(unittest.TestCase):
 
     parser = GrasciiParser()

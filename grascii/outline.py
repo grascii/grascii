@@ -138,7 +138,7 @@ class Outline:
                     while needs_next_char:
                         needs_next_char.pop().next_char = stroke
                     prev_char = stroke
-                elif item == grammar.DISJOINER:
+                elif item == grammar.BOUNDARY or item == grammar.DISJOINER:
                     needs_next_consonant.clear()
                     needs_next_vowel.clear()
                     needs_next_char.clear()
@@ -261,9 +261,12 @@ class Outline:
 
         def set_TH_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "TH"
-            if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"} and stroke.next.stroke != grammar.BOUNDARY) or \
-                    (stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"} and stroke.prev.stroke != grammar.BOUNDARY):
+            if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"}) or \
+                    (stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"}):
                 # Rule 34
+                stroke.add_annotation(grammar.RIGHT)
+            elif (stroke.next_char and stroke.next_char.stroke in {"A", "E", "I", "A&'", "A&E"} and stroke.next_consonant and stroke.next_consonant.stroke in {"R", "L"}) or \
+                    (stroke.prev_char and stroke.prev_char.stroke in {"A", "E", "I", "A&'", "A&E"} and stroke.prev_consonant and stroke.prev_consonant.stroke in {"R", "L"}):
                 stroke.add_annotation(grammar.RIGHT)
             else:
                 # Rule 33

@@ -234,6 +234,10 @@ class Outline:
                         # Rule 30 + 31
                         if set_S_direction_based_on_curves(stroke, stroke.prev_consonant.tail_type, is_before=False):
                             return
+                    elif stroke.prev_char.stroke == "I" and not stroke.prev_char.prev_char:
+                        # Addendum 3
+                        stroke.add_annotation(grammar.LEFT)
+                        return
                 # Rule 31
                 if set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False):
                         return
@@ -281,6 +285,7 @@ class Outline:
                 stroke.add_annotation(grammar.RIGHT)
             elif (stroke.next_char and stroke.next_char.stroke in {"A", "E", "I", "A&'", "A&E"} and stroke.next_consonant and stroke.next_consonant.stroke in {"R", "L"}) or \
                     (stroke.prev_char and stroke.prev_char.stroke in {"A", "E", "I", "A&'", "A&E"} and stroke.prev_consonant and stroke.prev_consonant.stroke in {"R", "L"}):
+                # Addendum 2
                 stroke.add_annotation(grammar.RIGHT)
             else:
                 # Rule 33

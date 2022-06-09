@@ -124,6 +124,22 @@ class TestInferredDirections(unittest.TestCase):
                 ]
         self.run_tests(tests)
 
+    def test_s_after_i(self):
+        tests = [
+                ("ISI", "IS(I"),
+                ("I-SI", "I-S)I"),
+                ("ISBERG", "IS(BERG"),
+                ("ISKREM", "IS(KREM"),
+                ("IS^K", "IS(^K"),
+                ("ISOLA", "IS(OLA"),
+                ("I-SOLASH", "I-S)OLASH"),
+                ("NIS", "NIS("),
+                ("VIS", "VIS)"),
+                ("UIS", "UIS)"),
+                ("U-IS", "U-IS("),
+                ]
+        self.run_tests(tests)
+
     def test_z(self):
         tests = [
                 ("GAZ,", "GAZ),"),

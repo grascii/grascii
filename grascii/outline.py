@@ -155,7 +155,7 @@ class Outline:
 
     def _infer_directions(self) -> None:
         """
-        Add direction annotations to strokes without explicit directions.  This
+        Add direction annotations to strokes without explicit directions. This
         method sets the directions of O, U, S/Z, and TH according to the
         following rules from the Preanniversary edition of Gregg Shorthand:
 
@@ -183,6 +183,24 @@ class Outline:
         L the other form is used.
 
         35. In words beginning with so, the comma S is used.
+
+        Addendums
+        =========
+
+        The following addendums are used to address cases not covered by the
+        above rules. These rules do not appear explicitly in the Gregg
+        manual, but may be inferred, or simply chosen to ease the
+        implementation.
+
+        1. When S is between two consonants, its direction is based on the
+        preceding character unless there is a syllable break forcing its
+        direction to be based on the next character.
+
+        2. When TH is joined to R or L, the under TH is used. A circle vowel
+        occurring at the joining does not affect the application of this rule.
+
+        3. In words beginning with IS, the left S is used.
+
         """
 
         def set_S_stroke_type(stroke: Stroke) -> None:
@@ -209,29 +227,25 @@ class Outline:
                 # Rule 35
                 stroke.add_annotation(grammar.RIGHT)
                 return
-            # In general, when S is between two characters, its direction
-            # is based on the preceding character unless there is a syllable
-            # break forcing its direction to be based on the next character.
+            # Addendum 1
             if stroke.prev_char:
-                if stroke.prev.stroke != grammar.BOUNDARY:
-                    if stroke.prev_char.tail_type.curve == Curve.LOOP:
-                        if stroke.prev_consonant:
-                            # Rule 30 + 31
-                            if set_S_direction_based_on_curves(stroke, stroke.prev_consonant.tail_type, is_before=False):
-                                return
-                    # Rule 31
-                    if set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False):
+                if stroke.prev_char.tail_type.curve == Curve.LOOP:
+                    if stroke.prev_consonant:
+                        # Rule 30 + 31
+                        if set_S_direction_based_on_curves(stroke, stroke.prev_consonant.tail_type, is_before=False):
+                            return
+                # Rule 31
+                if set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False):
                         return
             if stroke.next_char:
-                if stroke.next.stroke != grammar.BOUNDARY:
-                    if stroke.next_char.head_type.curve == Curve.LOOP:
-                        if stroke.next_consonant:
-                            # Rule 30 + 31
-                            if set_S_direction_based_on_curves(stroke, stroke.next_consonant.head_type, is_before=True):
-                                return
-                    # Rule 31
-                    if set_S_direction_based_on_curves(stroke, stroke.next_char.head_type, is_before=True):
-                        return
+                if stroke.next_char.head_type.curve == Curve.LOOP:
+                    if stroke.next_consonant:
+                        # Rule 30 + 31
+                        if set_S_direction_based_on_curves(stroke, stroke.next_consonant.head_type, is_before=True):
+                            return
+                # Rule 31
+                if set_S_direction_based_on_curves(stroke, stroke.next_char.head_type, is_before=True):
+                    return
 
             # Rule 33
             stroke.add_annotation(grammar.RIGHT)
@@ -275,24 +289,21 @@ class Outline:
         def set_O_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "O"
             if stroke.next_char and stroke.next_char.stroke in {"N", "M", "MN", "MM", "R", "L"}:
-                if stroke.next.stroke != grammar.BOUNDARY:
-                    if (not stroke.prev or stroke.prev.stroke == grammar.BOUNDARY) or \
-                       (not stroke.prev_char or stroke.prev_char.tail_type.direction != Direction.SOUTH_WEST):
-                        # Rule 20
-                        stroke.add_annotation(grammar.LEFT)
+                if (not stroke.prev) or \
+                   (not stroke.prev_char or stroke.prev_char.tail_type.direction != Direction.SOUTH_WEST):
+                    # Rule 20
+                    stroke.add_annotation(grammar.LEFT)
 
         def set_U_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "U"
             if stroke.prev_char:
-                if stroke.prev.stroke != grammar.BOUNDARY:
-                    if stroke.prev_char.stroke in {"N", "M", "MN", "MM"}:
+                if stroke.prev_char.stroke in {"N", "M", "MN", "MM"}:
+                    # Rule 22
+                    stroke.add_annotation(grammar.RIGHT)
+                elif stroke.prev_char.stroke in {"K", "G"}:
+                    if stroke.next_char and stroke.next_char.stroke in {"R", "L"}:
                         # Rule 22
                         stroke.add_annotation(grammar.RIGHT)
-                    elif stroke.prev_char.stroke in {"K", "G"}:
-                        if stroke.next_char and stroke.next_char.stroke in {"R", "L"}:
-                            if stroke.next.stroke != grammar.BOUNDARY:
-                                # Rule 22
-                                stroke.add_annotation(grammar.RIGHT)
 
         current_stroke = self.first
         while current_stroke:

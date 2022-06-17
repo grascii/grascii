@@ -251,9 +251,7 @@ class TestAnnotationRegex(unittest.TestCase):
     def test_mutually_exclusive_annotations(self):
         pass
 
-
-
-class TestDisjoiners(unittest.TestCase):
+class RegexBuilderTester(unittest.TestCase):
 
     def run_tests(self, builder, tests):
         for test in tests:
@@ -265,6 +263,8 @@ class TestDisjoiners(unittest.TestCase):
                         self.assertRegex(text, regex)
                     else:
                         self.assertNotRegex(text, regex)
+
+class TestDisjoiners(RegexBuilderTester):
 
     def test_strictness_low(self):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.LOW)
@@ -303,20 +303,14 @@ class TestDisjoiners(unittest.TestCase):
         self.run_tests(builder, tests)
 
     def test_prefixes(self):
-        pass
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.HIGH)
+        tests = [
+            (["U"], [("U^", False), ("U", True)]),
+            (["U", "^"], [("U^", True), ("U", False)])
+        ]
+        self.run_tests(builder, tests)
 
-class TestAspirates(unittest.TestCase):
-
-    def run_tests(self, builder, tests):
-        for test in tests:
-            interp = test[0]
-            for text, expected in test[1]:
-                regex = builder.build_regex(interp)
-                with self.subTest(interpretation=interp, text=text):
-                    if expected:
-                        self.assertRegex(text, regex)
-                    else:
-                        self.assertNotRegex(text, regex)
+class TestAspirates(RegexBuilderTester):
 
     def test_strictness_low(self):
         builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
@@ -496,19 +490,8 @@ class TestUncertaintyRegex(unittest.TestCase):
         self.run_tests(2, tests)
 
 
-class TestSearchMode(unittest.TestCase):
+class TestSearchMode(RegexBuilderTester):
 
-    def run_tests(self, builder, tests):
-        for test in tests:
-            interp = test[0]
-            for text, expected in test[1]:
-                regex = builder.build_regex(interp)
-                with self.subTest(interpretation=interp, text=text):
-                    if expected:
-                        self.assertRegex(text, regex)
-                    else:
-                        self.assertNotRegex(text, regex)
-    
     def test_match(self):
         builder = regen.RegexBuilder(search_mode=regen.SearchMode.MATCH)
         tests = [
@@ -531,18 +514,7 @@ class TestSearchMode(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
-class TestFixFirst(unittest.TestCase):
-
-    def run_tests(self, builder, tests):
-        for test in tests:
-            interp = test[0]
-            for text, expected in test[1]:
-                regex = builder.build_regex(interp)
-                with self.subTest(interpretation=interp, text=text):
-                    if expected:
-                        self.assertRegex(text, regex)
-                    else:
-                        self.assertNotRegex(text, regex)
+class TestFixFirst(RegexBuilderTester):
 
     def test_fix_first_off(self):
         builder = regen.RegexBuilder(fix_first=False, uncertainty=1)
@@ -603,15 +575,6 @@ class TestStartingLetters(unittest.TestCase):
                 ("M", True)])
         ]
         self.run_tests(builder, tests)
-
-
-class TestRegexBuilder(unittest.TestCase):
-    pass
-
-
-         
-
-    
 
 if __name__ == "__main__":
     unittest.main()

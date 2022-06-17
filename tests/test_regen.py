@@ -390,6 +390,33 @@ class TestAspirates(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
+    def test_ing_strictness_low(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
+        tests = [
+            (["TH"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'", "'"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_ing_strictness_medium(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["TH"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'"], [("TH", False), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'", "'"], [("TH", False), ("TH'", False), ("TH''", True), ("'TH'", False), ("THE'", False), ("TH'''", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_ing_strictness_high(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.HIGH)
+        tests = [
+            (["TH"], [("TH", True), ("TH'", False), ("TH''", False), ("'TH'", False), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'"], [("TH", False), ("TH'", True), ("TH''", False), ("'TH'", False), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'", "'"], [("TH", False), ("TH'", False), ("TH''", True), ("'TH'", False), ("THE'", False), ("TH'''", False)])
+        ]
+        self.run_tests(builder, tests)
+
     def test_double_aspirate(self):
         pass
         

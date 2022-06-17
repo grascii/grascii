@@ -12,7 +12,7 @@ from grascii.similarities import get_similar
 from grascii.types import Interpretation
 
 class SearchMode(Enum):
-    """An enum representing different searh modes."""
+    """An enum representing different search modes."""
 
     MATCH = "match"
     START = "start"
@@ -189,6 +189,20 @@ class RegexBuilder():
 
         if self.search_mode is SearchMode.CONTAIN:
             builder.append(".*")
+
+        if self.search_mode is SearchMode.MATCH:
+            if self.aspirate_mode is Strictness.LOW:
+                for j in range(2):
+                    builder.append(aspirate)
+                    builder.append("?")
+            elif self.aspirate_mode is Strictness.MEDIUM:
+                if builder[-1] != aspirate:
+                    for j in range(2):
+                        builder.append(aspirate)
+                        builder.append("?")
+                elif builder[-2] != aspirate:
+                    builder.append(aspirate)
+                    builder.append("?")
 
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.CONTAIN:

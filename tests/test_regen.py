@@ -270,7 +270,7 @@ class TestDisjoiners(unittest.TestCase):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.LOW)
         tests = [
             (["A", "B"], [("AB", True), ("A^B", True)]),
-            (["A", "^", "B"], [("AB", True), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", True), ("A^B", True), ("A^^B", False)]),
             (["A", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
             (["A", "^", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
             (["A", "B", "^", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
@@ -282,7 +282,7 @@ class TestDisjoiners(unittest.TestCase):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.MEDIUM)
         tests = [
             (["A", "B"], [("AB", True), ("A^B", True)]),
-            (["A", "^", "B"], [("AB", False), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", False), ("A^B", True), ("A^^B", False)]),
             (["A", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
             (["A", "^", "B", "D"], [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", True)]),
             (["A", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", True)]),
@@ -294,7 +294,7 @@ class TestDisjoiners(unittest.TestCase):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.HIGH)
         tests = [
             (["A", "B"], [("AB", True), ("A^B", False)]),
-            (["A", "^", "B"], [("AB", False), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", False), ("A^B", True), ("A^^B", False)]),
             (["A", "B", "D"], [("ABD", True), ("A^BD", False), ("AB^D", False), ("A^B^D", False)]),
             (["A", "^", "B", "D"], [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", False)]),
             (["A", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", False)]),
@@ -338,7 +338,7 @@ class TestAspirates(unittest.TestCase):
             (["A", "'", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
                 ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
             (["A", "D", "'", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
-                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True), ("AD''E", False)]),
         ]
         self.run_tests(builder, tests)
 
@@ -362,7 +362,7 @@ class TestAspirates(unittest.TestCase):
             (["A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", True), ("AD'E", False), ("'A'DE", True),
                 ("'AD'E", False), ("A'D'E", True), ("'A'D'E", True)]),
             (["A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", True), ("'A'DE", False),
-                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True), ("AD''E", False)]),
         ]
         self.run_tests(builder, tests)
 
@@ -386,7 +386,7 @@ class TestAspirates(unittest.TestCase):
             (["A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", True), ("AD'E", False), ("'A'DE", False),
                 ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
             (["A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", True), ("'A'DE", False),
-                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False), ("AD''E", False)]),
         ]
         self.run_tests(builder, tests)
 

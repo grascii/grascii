@@ -161,12 +161,12 @@ class RegexBuilder():
             uncertainty = self.uncertainty if found_first or not self.fix_first else 0
             insert_aspirate = False
             if token in grammar.STROKES:
-                if builder[-1] != re.escape(grammar.ASPIRATE) and self.aspirate_mode is Strictness.MEDIUM and found_first:
+                if builder[-1] != aspirate and self.aspirate_mode is Strictness.MEDIUM and found_first:
                     insert_aspirate = True
                 if self.disjoiner_mode is Strictness.LOW and found_first:
                     builder.append(disjoiner)
                     builder.append("?")
-                if builder[-1] != re.escape(grammar.DISJOINER) and self.disjoiner_mode is Strictness.MEDIUM and found_first:
+                if builder[-1] != disjoiner and self.disjoiner_mode is Strictness.MEDIUM and found_first:
                     builder.append(disjoiner)
                     builder.append("?")
                 if self.aspirate_mode is Strictness.LOW:

@@ -133,10 +133,10 @@ class RegexBuilder():
                     builder.append(aspirate)
                     i += 1
                 if i < 2:
-                    builder.append(aspirate)
-                    builder.append("?")
-
-        if self.search_mode is SearchMode.CONTAIN:
+                    for j in range(2 - i):
+                        builder.append(aspirate)
+                        builder.append("?")
+        elif self.search_mode is SearchMode.CONTAIN:
             builder.append(r"\S*")
 
         found_first = False

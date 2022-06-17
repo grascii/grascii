@@ -417,8 +417,32 @@ class TestAspirates(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
-    def test_double_aspirate(self):
-        pass
+    def test_double_aspirate_strictness_low(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
+        tests = [
+            (["E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "'","E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_double_aspirate_strictness_medium(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "E", "D"], [("ED", False), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "'","E", "D"], [("ED", False), ("'ED", False), ("''ED", True), ("'''ED", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_double_aspirate_strictness_high(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.HIGH)
+        tests = [
+            (["E", "D"], [("ED", True), ("'ED", False), ("''ED", False), ("'''ED", False)]),
+            (["'", "E", "D"], [("ED", False), ("'ED", True), ("''ED", False), ("'''ED", False)]),
+            (["'", "'","E", "D"], [("ED", False), ("'ED", False), ("''ED", True), ("'''ED", False)])
+        ]
+        self.run_tests(builder, tests)
         
 class TestUncertaintyRegex(unittest.TestCase):
     

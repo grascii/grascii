@@ -472,10 +472,11 @@ class TestSearchMode(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
-    def test_contains(self):
+    def test_contain(self):
         builder = regen.RegexBuilder(search_mode=regen.SearchMode.CONTAIN)
         tests = [
-            (["A", "B"], [("AB", True), ("ABU", True), ("DAB", True)])
+            (["A", "B"], [("AB", True), ("ABU", True), ("DAB", True)]),
+            (["X"], [("ANEX Annex", True), ("VEXN Vixen", True), ("ZANTHUS Xanthous", False), ("ZEBK Xebec", False), ("ZEBK xebec", False), ("ZEBK eXbec", False), ("ZEBK ebec abXD", False)])
         ]
         self.run_tests(builder, tests)
 

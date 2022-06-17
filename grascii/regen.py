@@ -121,11 +121,10 @@ class RegexBuilder():
         aspirate = "(" + re.escape(grammar.ASPIRATE) + ")"
         disjoiner = "(" + re.escape(grammar.DISJOINER) + ")"
 
-        builder = list()
+        builder = list("^")
         i = 0
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.START:
-            builder.append("^")
             if self.aspirate_mode is Strictness.LOW:
                 builder.append(aspirate)
                 builder.append("?")
@@ -138,7 +137,7 @@ class RegexBuilder():
                     builder.append("?")
 
         if self.search_mode is SearchMode.CONTAIN:
-            builder.append(".*")
+            builder.append(r"\S*")
 
         found_first = False
 

@@ -54,7 +54,7 @@ class InteractiveSearcher(GrasciiSearcher):
         self.extract_search_args(**kwargs)
         self.run_interactive()
 
-    def choose_interpretation(self, interpretations: Sequence[Interpretation]) -> int:
+    def choose_interpretation(self, interpretations: Sequence[Interpretation]) -> Optional[int]:
         """Prompt the user to choose an interpretation(s).
         
         :param interpretations: A collection of Interpretations to present
@@ -168,6 +168,8 @@ class InteractiveSearcher(GrasciiSearcher):
         display_interpretations = self.get_unique_interpretations(parses)
         interpretations = list(display_interpretations.values())
         index = self.choose_interpretation(interpretations)
+        if index is None:
+            return search
         builder = regen.RegexBuilder(
                 uncertainty=self.uncertainty,
                 search_mode=self.search_mode, 

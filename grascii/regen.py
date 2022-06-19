@@ -12,7 +12,7 @@ from grascii.similarities import get_similar
 from grascii.types import Interpretation
 
 class SearchMode(Enum):
-    """An enum representing different searh modes."""
+    """An enum representing different search modes."""
 
     MATCH = "match"
     START = "start"
@@ -118,25 +118,33 @@ class RegexBuilder():
         :returns: A regular expression.
         """
 
+        # aspirate and disjoiner are put in a regex group so they can be
+        # compared later for calculating match metrics
         aspirate = "(" + re.escape(grammar.ASPIRATE) + ")"
         disjoiner = "(" + re.escape(grammar.DISJOINER) + ")"
 
+        # grascii words are the first word of a dictionary entry which starts
+        # at the beginning of the line
         builder = list("^")
         i = 0
         if self.search_mode is SearchMode.MATCH or \
                 self.search_mode is SearchMode.START:
+            # match up to two aspirates at the beginning of a word
             if self.aspirate_mode is Strictness.LOW:
-                builder.append(aspirate)
-                builder.append("?")
-            if self.aspirate_mode is Strictness.MEDIUM:
+                for j in range(2):
+                    builder.append(aspirate)
+                    builder.append("?")
+            elif self.aspirate_mode is Strictness.MEDIUM:
+                # retain existing aspirates and make others optional
                 while i < len(interpretation) and interpretation[i] == grammar.ASPIRATE:
                     builder.append(aspirate)
                     i += 1
                 if i < 2:
-                    builder.append(aspirate)
-                    builder.append("?")
-
-        if self.search_mode is SearchMode.CONTAIN:
+                    for j in range(2 - i):
+                        builder.append(aspirate)
+                        builder.append("?")
+        elif self.search_mode is SearchMode.CONTAIN:
+            # match any characters up to the end of the grascii word
             builder.append(r"\S*")
 
         found_first = False
@@ -147,6 +155,7 @@ class RegexBuilder():
             if token == grammar.ASPIRATE:
                 if self.aspirate_mode is Strictness.MEDIUM or \
                         self.aspirate_mode is Strictness.HIGH:
+                    # retain a non-optional aspirate
                     builder.append(aspirate)
                 i += 1
                 continue
@@ -154,32 +163,31 @@ class RegexBuilder():
             if token == grammar.DISJOINER:
                 if self.disjoiner_mode is Strictness.MEDIUM or \
                         self.disjoiner_mode is Strictness.HIGH:
+                    # retain a non-optional disjoiner
                     builder.append(disjoiner)
                 i += 1
                 continue
 
             uncertainty = self.uncertainty if found_first or not self.fix_first else 0
-            insert_aspirate = False
             if token in grammar.STROKES:
-                if builder[-1] != re.escape(grammar.ASPIRATE) and self.aspirate_mode is Strictness.MEDIUM and found_first:
-                    insert_aspirate = True
-                if self.disjoiner_mode is Strictness.LOW and found_first:
-                    builder.append(disjoiner)
-                    builder.append("?")
-                if builder[-1] != re.escape(grammar.DISJOINER) and self.disjoiner_mode is Strictness.MEDIUM and found_first:
-                    builder.append(disjoiner)
-                    builder.append("?")
-                if self.aspirate_mode is Strictness.LOW:
-                    builder.append(aspirate)
-                    builder.append("?")
-                if insert_aspirate:
-                    builder.append(aspirate)
-                    builder.append("?")
+                last_character = builder[-1]
+                if found_first:
+                    if self.disjoiner_mode is Strictness.LOW or \
+                            (self.disjoiner_mode is Strictness.MEDIUM and last_character != disjoiner):
+                        # match optional disjoiner
+                        builder.append(disjoiner)
+                        builder.append("?")
+                    if self.aspirate_mode is Strictness.LOW or \
+                            (self.aspirate_mode is Strictness.MEDIUM and last_character != aspirate):
+                        # match optional aspirate
+                        builder.append(aspirate)
+                        builder.append("?")
                 found_first = True
 
-            if token in grammar.ANNOTATIONS:
-                if i + 1 < len(interpretation):
-                    if isinstance(interpretation[i + 1], list):
+                if token in grammar.ANNOTATIONS:
+                    # this token may have annotations
+                    if i + 1 < len(interpretation) and \
+                            isinstance(interpretation[i + 1], list):
                         builder.append(self.make_uncertainty_regex(token, uncertainty, interpretation[i + 1]))
                         i += 2
                         continue
@@ -187,11 +195,19 @@ class RegexBuilder():
             builder.append(self.make_uncertainty_regex(token, uncertainty))
             i += 1
 
-        if self.search_mode is SearchMode.CONTAIN:
-            builder.append(".*")
+        if self.search_mode is SearchMode.MATCH:
+            # match up to two aspirates at the end of the word
+            if self.aspirate_mode is Strictness.LOW or self.aspirate_mode is Strictness.MEDIUM:
+                if builder[-1] != aspirate:
+                    for j in range(2):
+                        builder.append(aspirate)
+                        builder.append("?")
+                elif builder[-2] != aspirate:
+                    builder.append(aspirate)
+                    builder.append("?")
 
-        if self.search_mode is SearchMode.MATCH or \
-                self.search_mode is SearchMode.CONTAIN:
+        if self.search_mode is SearchMode.MATCH:
+            # match the end of the word/line
             builder.append(r"(?:\Z|\s)")
 
         return "".join(builder)
@@ -224,23 +240,6 @@ class RegexBuilder():
 
         return letters
 
-    def generate_patterns(self, interpretations: List[Interpretation]) -> List[Pattern]:
-        """Generates a set of compiled regular expressions from a list
-        of interpretations.
-        
-        :param interpretations: A list of interpretations to generate 
-            patterns for.
-        :returns: A list of Patterns.
-        """
-
-        patterns = list()
-        for interp in interpretations:
-            regex = self.build_regex(interp)
-            # print(regex)
-            patterns.append(re.compile(regex))
-        return patterns
-
-
     def generate_patterns_map(self, interpretations: List[Interpretation]) -> List[Tuple[Interpretation, Pattern]]:
         """Generates a set of compiled regular expressions from a list
         of interpretations.
@@ -254,7 +253,5 @@ class RegexBuilder():
         patterns = list()
         for interp in interpretations:
             regex = self.build_regex(interp)
-            # print(regex)
-            # patterns.append(re.compile(regex))
             patterns.append((interp, re.compile(regex)))
         return patterns

@@ -251,9 +251,7 @@ class TestAnnotationRegex(unittest.TestCase):
     def test_mutually_exclusive_annotations(self):
         pass
 
-
-
-class TestDisjoiners(unittest.TestCase):
+class RegexBuilderTester(unittest.TestCase):
 
     def run_tests(self, builder, tests):
         for test in tests:
@@ -266,11 +264,13 @@ class TestDisjoiners(unittest.TestCase):
                     else:
                         self.assertNotRegex(text, regex)
 
+class TestDisjoiners(RegexBuilderTester):
+
     def test_strictness_low(self):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.LOW)
         tests = [
             (["A", "B"], [("AB", True), ("A^B", True)]),
-            (["A", "^", "B"], [("AB", True), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", True), ("A^B", True), ("A^^B", False)]),
             (["A", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
             (["A", "^", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
             (["A", "B", "^", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
@@ -282,7 +282,7 @@ class TestDisjoiners(unittest.TestCase):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.MEDIUM)
         tests = [
             (["A", "B"], [("AB", True), ("A^B", True)]),
-            (["A", "^", "B"], [("AB", False), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", False), ("A^B", True), ("A^^B", False)]),
             (["A", "B", "D"], [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)]),
             (["A", "^", "B", "D"], [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", True)]),
             (["A", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", True)]),
@@ -294,7 +294,7 @@ class TestDisjoiners(unittest.TestCase):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.HIGH)
         tests = [
             (["A", "B"], [("AB", True), ("A^B", False)]),
-            (["A", "^", "B"], [("AB", False), ("A^B", True)]),
+            (["A", "^", "B"], [("AB", False), ("A^B", True), ("A^^B", False)]),
             (["A", "B", "D"], [("ABD", True), ("A^BD", False), ("AB^D", False), ("A^B^D", False)]),
             (["A", "^", "B", "D"], [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", False)]),
             (["A", "B", "^", "D"], [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", False)]),
@@ -303,20 +303,14 @@ class TestDisjoiners(unittest.TestCase):
         self.run_tests(builder, tests)
 
     def test_prefixes(self):
-        pass
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.HIGH)
+        tests = [
+            (["U"], [("U^", False), ("U", True)]),
+            (["U", "^"], [("U^", True), ("U", False)])
+        ]
+        self.run_tests(builder, tests)
 
-class TestAspirates(unittest.TestCase):
-
-    def run_tests(self, builder, tests):
-        for test in tests:
-            interp = test[0]
-            for text, expected in test[1]:
-                regex = builder.build_regex(interp)
-                with self.subTest(interpretation=interp, text=text):
-                    if expected:
-                        self.assertRegex(text, regex)
-                    else:
-                        self.assertNotRegex(text, regex)
+class TestAspirates(RegexBuilderTester):
 
     def test_strictness_low(self):
         builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
@@ -338,7 +332,7 @@ class TestAspirates(unittest.TestCase):
             (["A", "'", "D", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
                 ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
             (["A", "D", "'", "E"], [("ADE", True), ("'ADE", True), ("A'DE", True), ("AD'E", True), ("'A'DE", True),
-                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True), ("AD''E", False)]),
         ]
         self.run_tests(builder, tests)
 
@@ -362,7 +356,7 @@ class TestAspirates(unittest.TestCase):
             (["A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", True), ("AD'E", False), ("'A'DE", True),
                 ("'AD'E", False), ("A'D'E", True), ("'A'D'E", True)]),
             (["A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", True), ("'A'DE", False),
-                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True)]),
+                ("'AD'E", True), ("A'D'E", True), ("'A'D'E", True), ("AD''E", False)]),
         ]
         self.run_tests(builder, tests)
 
@@ -386,12 +380,63 @@ class TestAspirates(unittest.TestCase):
             (["A", "'", "D", "E"], [("ADE", False), ("'ADE", False), ("A'DE", True), ("AD'E", False), ("'A'DE", False),
                 ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
             (["A", "D", "'", "E"], [("ADE", False), ("'ADE", False), ("A'DE", False), ("AD'E", True), ("'A'DE", False),
-                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False)]),
+                ("'AD'E", False), ("A'D'E", False), ("'A'D'E", False), ("AD''E", False)]),
         ]
         self.run_tests(builder, tests)
 
-    def test_double_aspirate(self):
-        pass
+    def test_ing_strictness_low(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
+        tests = [
+            (["TH"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'", "'"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_ing_strictness_medium(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["TH"], [("TH", True), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'"], [("TH", False), ("TH'", True), ("TH''", True), ("'TH'", True), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'", "'"], [("TH", False), ("TH'", False), ("TH''", True), ("'TH'", False), ("THE'", False), ("TH'''", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_ing_strictness_high(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.HIGH)
+        tests = [
+            (["TH"], [("TH", True), ("TH'", False), ("TH''", False), ("'TH'", False), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'"], [("TH", False), ("TH'", True), ("TH''", False), ("'TH'", False), ("THE'", False), ("TH'''", False)]),
+            (["TH", "'", "'"], [("TH", False), ("TH'", False), ("TH''", True), ("'TH'", False), ("THE'", False), ("TH'''", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_double_aspirate_strictness_low(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.LOW)
+        tests = [
+            (["E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "'","E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_double_aspirate_strictness_medium(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["E", "D"], [("ED", True), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "E", "D"], [("ED", False), ("'ED", True), ("''ED", True), ("'''ED", False)]),
+            (["'", "'","E", "D"], [("ED", False), ("'ED", False), ("''ED", True), ("'''ED", False)])
+        ]
+        self.run_tests(builder, tests)
+
+    def test_double_aspirate_strictness_high(self):
+        builder = regen.RegexBuilder(aspirate_mode=regen.Strictness.HIGH)
+        tests = [
+            (["E", "D"], [("ED", True), ("'ED", False), ("''ED", False), ("'''ED", False)]),
+            (["'", "E", "D"], [("ED", False), ("'ED", True), ("''ED", False), ("'''ED", False)]),
+            (["'", "'","E", "D"], [("ED", False), ("'ED", False), ("''ED", True), ("'''ED", False)])
+        ]
+        self.run_tests(builder, tests)
         
 class TestUncertaintyRegex(unittest.TestCase):
     
@@ -445,19 +490,8 @@ class TestUncertaintyRegex(unittest.TestCase):
         self.run_tests(2, tests)
 
 
-class TestSearchMode(unittest.TestCase):
+class TestSearchMode(RegexBuilderTester):
 
-    def run_tests(self, builder, tests):
-        for test in tests:
-            interp = test[0]
-            for text, expected in test[1]:
-                regex = builder.build_regex(interp)
-                with self.subTest(interpretation=interp, text=text):
-                    if expected:
-                        self.assertRegex(text, regex)
-                    else:
-                        self.assertNotRegex(text, regex)
-    
     def test_match(self):
         builder = regen.RegexBuilder(search_mode=regen.SearchMode.MATCH)
         tests = [
@@ -480,18 +514,7 @@ class TestSearchMode(unittest.TestCase):
         ]
         self.run_tests(builder, tests)
 
-class TestFixFirst(unittest.TestCase):
-
-    def run_tests(self, builder, tests):
-        for test in tests:
-            interp = test[0]
-            for text, expected in test[1]:
-                regex = builder.build_regex(interp)
-                with self.subTest(interpretation=interp, text=text):
-                    if expected:
-                        self.assertRegex(text, regex)
-                    else:
-                        self.assertNotRegex(text, regex)
+class TestFixFirst(RegexBuilderTester):
 
     def test_fix_first_off(self):
         builder = regen.RegexBuilder(fix_first=False, uncertainty=1)
@@ -552,15 +575,6 @@ class TestStartingLetters(unittest.TestCase):
                 ("M", True)])
         ]
         self.run_tests(builder, tests)
-
-
-class TestRegexBuilder(unittest.TestCase):
-    pass
-
-
-         
-
-    
 
 if __name__ == "__main__":
     unittest.main()

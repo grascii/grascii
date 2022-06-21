@@ -1,5 +1,4 @@
-
-include dsrc/preanniversary/*.txt
+include dictionaries/builtins/preanniversary/*.txt
 include grascii/*.py
 include grascii/grammars/*.lark
 include grascii/words/*
@@ -7,5 +6,4 @@ include grascii/defaults.conf
 include docs/*.rst
 include setup.py
 recursive-include tests *.py *.txt
-prune grascii/dictionary
-include grascii/dictionary/__init__.py
+prune grascii/dictionary/preanniversary

@@ -8,8 +8,7 @@ from grascii import dictionary
 
 class CustomBuild(build_py):
     def run(self):
-        print(Path("dsrc").glob("*.txt"))
-        dictionary.build.build(infiles=Path("dsrc/preanniversary").glob("*.txt"),
+        dictionary.build.build(infiles=Path("dictionaries/builtins/preanniversary").glob("*.txt"),
                             output=Path("grascii/dictionary/preanniversary"),
                             package=True)
         build_py.run(self)

@@ -1,4 +1,6 @@
-start: _root ( DISJOINER _root ( DISJOINER _root? )? )? | _root DISJOINER
+start: _root ( DISJOINER _root ( DISJOINER _root? )? )?
+  | _root DISJOINER
+  | ASPIRATE
 
 _root : ASPIRATE~0..2 _string ASPIRATE~0..2
 _string : _letter | _string ASPIRATE? ( _BOUNDARY | INTERSECTION )? _letter

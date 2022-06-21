@@ -16,7 +16,6 @@ class CustomBuild(build_py):
 
 
 setup(
-    setup_cfg=True,
     cmdclass={
         "build_py": CustomBuild
     }

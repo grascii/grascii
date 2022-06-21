@@ -16,14 +16,15 @@ import sys
 import time
 from typing import TextIO, List, Optional, Union
 
-try:
-    from lark import Lark, UnexpectedInput
-except ImportError:
-    pass
-
 from grascii import defaults, grammar
-from grascii.parser import GrasciiValidator
 from grascii.utils import get_grammar, get_words_file
+_VALIDATOR_AVAILABLE = False
+try:
+    from grascii.parser import GrasciiValidator
+    _VALIDATOR_AVAILABLE = True
+except ImportError:
+    # Builds can still be run if Lark is not available
+    pass
 
 description = "Build a Grascii Dictionary"
 
@@ -161,6 +162,9 @@ class DictionaryBuilder():
         """Load a parser to check grascii strings."""
 
         if self.parse:
+            if not _VALIDATOR_AVAILABLE:
+                print("lark is unavailable. --parse will be ignored", file=sys.stderr)
+                return
             # Disable cache for now
             # It could be enabled, but we have to be careful about clearing the
             # cache after grammar changes
@@ -215,7 +219,7 @@ class DictionaryBuilder():
         :returns: False if parse checking is enabled and a parse fails.
         """
 
-        if self.parse:
+        if self.parse and _VALIDATOR_AVAILABLE:
             if not self.parser.validate(grascii):
                 self.log_error(file_name, line, line_number, "Failed to parse", grascii)
                 return False

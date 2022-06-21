@@ -22,6 +22,7 @@ except ImportError:
     pass
 
 from grascii import defaults, grammar
+from grascii.parser import GrasciiValidator
 from grascii.utils import get_grammar, get_words_file
 
 description = "Build a Grascii Dictionary"
@@ -160,7 +161,10 @@ class DictionaryBuilder():
         """Load a parser to check grascii strings."""
 
         if self.parse:
-            self.parser = Lark(get_grammar("grascii"), parser="earley", ambiguity="forest")
+            # Disable cache for now
+            # It could be enabled, but we have to be careful about clearing the
+            # cache after grammar changes
+            self.parser = GrasciiValidator(use_cache=False)
 
     def load_word_set(self) -> None:
         """Load a set of words to check the spelling of words."""
@@ -212,9 +216,7 @@ class DictionaryBuilder():
         """
 
         if self.parse:
-            try:
-                self.parser.parse(grascii)
-            except UnexpectedInput:
+            if not self.parser.validate(grascii):
                 self.log_error(file_name, line, line_number, "Failed to parse", grascii)
                 return False
         return True

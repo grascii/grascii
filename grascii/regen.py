@@ -8,8 +8,8 @@ import re
 from typing import List, Union, Iterable, Set, Pattern, Tuple
 
 from grascii import grammar
+from grascii.parser import Interpretation
 from grascii.similarities import get_similar
-from grascii.types import Interpretation
 
 class SearchMode(Enum):
     """An enum representing different search modes."""

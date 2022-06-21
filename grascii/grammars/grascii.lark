@@ -3,7 +3,7 @@ start: _root ( DISJOINER _root ( DISJOINER _root? )? )?
   | ASPIRATE
 
 _root : ASPIRATE~0..2 _string ASPIRATE~0..2
-_string : _letter | _string ASPIRATE? ( _BOUNDARY | INTERSECTION )? _letter
+_string : _letter | _string ASPIRATE? ( BOUNDARY | INTERSECTION )? _letter
 
 _letter : ( consonant | vowel )
 
@@ -57,7 +57,7 @@ circle_diphthong : ( AE | EA ) REVERSE?
 hook_diphthong : EU | AU | OE
 
 DISJOINER : "^"
-_BOUNDARY : "-"
+BOUNDARY : "-"
 INTERSECTION : "\\"
 
 // The terminal priorities are necessary to resolve conflicts with LALR.

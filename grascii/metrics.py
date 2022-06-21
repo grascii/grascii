@@ -7,8 +7,8 @@ import string
 from typing import List, Union, Set, Match, Tuple, cast
 
 from grascii import grammar
+from grascii.parser import Interpretation
 from grascii.similarities import get_similar
-from grascii.types import Interpretation
 
 
 def convert_interpretation(interp: Interpretation) -> List[Tuple[str, Set[str]]]:

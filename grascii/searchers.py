@@ -4,62 +4,16 @@ implementations of it.
 """
 
 from abc import ABC, abstractmethod
-from functools import reduce
 import re
 import sys
-from typing import Union, List, Set, Iterable, Dict, TypeVar, Callable, Pattern, Tuple, Match
+from typing import List, Set, Iterable, TypeVar, Callable, Pattern, Tuple, Match
 
-from lark import Lark, Tree, UnexpectedInput, Transformer, Token
-from lark.visitors import CollapseAmbiguities
+from lark import UnexpectedInput
 
 from grascii import regen, metrics, grammar, defaults
 from grascii.dictionary import get_dict_file
-from grascii.grammars import get_grammar
-from grascii.types import Interpretation
+from grascii.parser import GrasciiParser
 
-
-class GrasciiFlattener(Transformer):
-
-    """This is a Lark Transformer that converts a parsed Grascii string
-    into an Interpretation. An Interpretation is a list of terminals and
-    annotation lists. Each terminal is its own element in the interpretation,
-    but sequences of annotation terminals are grouped into their own sublist.
-    """
-
-    def start(self, children) -> Interpretation:
-        """Returns the final result of the transformation.
-        
-        :meta private:
-        """
-
-        result: Interpretation = list()
-        for child in children:
-            for token in child:
-                if token in grammar.ANNOTATION_CHARACTERS:
-                    # pack annotation terminals into sublist
-                    if isinstance(result[-1], list):
-                        # add to previous annotation list
-                        result[-1].append(token)
-                    else:
-                        # start new annotation list
-                        result.append([token])
-                else:
-                    result.append(token)
-        return result
-
-    def __default__(self, data, children, meta) -> List[str]:
-        """The default visitor function for nodes in the parse tree.
-        Returns a flat list of strings."""
-
-        result: List[str] = list()
-        for child in children:
-            if isinstance(child, Token):
-                result.append(child)
-            else:
-                # flatten iterable
-                for token in child:
-                    result.append(token)
-        return result
 
 T = TypeVar("T")
 
@@ -79,7 +33,7 @@ class Searcher(ABC):
             a Grascii Dictionary.
         :param metric: A function taking an interpretation and a regular 
             expression match that returns a positive integer signifying the
-            differnce between the interpretation and the match. 0 means the
+            difference between the interpretation and the match. 0 means the
             two are equivalent. The greater the value, the more different
             they are.
         :returns: A collection strings of the form "[grascii] [translation]"
@@ -111,7 +65,7 @@ class Searcher(ABC):
                     pass
                     # print("Error: Could not find", dict_path + item)
         for tup in sorted_results:
-            yield tup[0]
+            yield tup[0].strip()
 
     @abstractmethod
     def search(self, **kwargs):
@@ -125,64 +79,7 @@ class GrasciiSearcher(Searcher):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        grammar = get_grammar("grascii")
-        self.parser = Lark.open(grammar, parser="earley", ambiguity="explicit")
-
-    def parse_grascii(self, grascii: str) -> Union[Tree, bool]:
-        """Attempt to parse a grascii string.
-
-        :param grascii: The grascii string to parse.
-        :returns: A Lark parse tree on a successful parse, or False if the
-            parse fails.
-        """
-
-        try:
-            return self.parser.parse(grascii)
-        except UnexpectedInput as e:
-            print("Invalid Grascii String", file=sys.stderr)
-            print(e.get_context(grascii), file=sys.stderr)
-            return False
-
-    def flatten_tree(self, parse_tree: Tree) -> List[Interpretation]:
-        """Extract a list of all possible Interpretations from a grascii
-            parse tree.
-
-        :param parse_tree: A Lark parse tree from a parsed grascii string.
-        :returns: A list of all possible Interpretations.
-        """
-
-        trees = CollapseAmbiguities().transform(parse_tree)
-        trans = GrasciiFlattener()
-        return [trans.transform(tree) for tree in trees]
-
-    def interpretation_to_string(self, interpretation: Interpretation) -> str:
-        """Generate a string representation of an Interpretation.
-        
-        :param interpretation: An Interpretation to generate a string for.
-        :returns: A string representation of an Interpretation
-        """
-
-        def reducer(builder, token):
-            if isinstance(token, list):
-                builder += token
-            else:
-                if builder and builder[-1] != "^" and token != "^":
-                    builder.append("-")
-                builder.append(token)
-            return builder
-
-        return "".join(reduce(reducer, interpretation, []))
-
-    def get_unique_interpretations(self, interpretations: List[Interpretation]) -> Dict[str, Interpretation]:
-        """Generate a collection of all unique Interpretations in another
-        collection by comparing string representations.
-        
-        :param interpretations: A collection of Interpretations to process
-        :returns: A dictionary mapping interpretation string representations
-            to Interpretations.
-        """
-
-        return {self.interpretation_to_string(interp): interp for interp in interpretations}
+        self._parser = GrasciiParser()
 
     def extract_search_args(self, **kwargs):
         """Get the relevant arguments for search."""
@@ -203,7 +100,7 @@ class GrasciiSearcher(Searcher):
             self.aspirate_mode = regen.Strictness(defaults.DEFAULTS["Search"]["AspirateMode"])
         try:
             self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"]))
-        except:
+        except ValueError:
             self.disjoiner_mode = regen.Strictness(defaults.DEFAULTS["Search"]["DisjoinerMode"])
         self.fix_first = kwargs.get("fix_first", False)
         self.interpretation_mode = kwargs.get("interpretation", defaults.SEARCH["Interpretation"])
@@ -221,9 +118,9 @@ class GrasciiSearcher(Searcher):
         :type grascii: str
         :type uncertainty: int: 0, 1, or 2
         :type search_mode: str: one of regen.SearchMode values
-        :type annotation_mode: one of regen.Strictness values
-        :type aspirate_mode: one of regen.Strictness values
-        :type disjoiner_mode: one of regen.Strictness values
+        :type annotation_mode: str: one of regen.Strictness values
+        :type aspirate_mode: str: one of regen.Strictness values
+        :type disjoiner_mode: str: one of regen.Strictness values
         :type fix_first: bool
         :type interpretation: "best" or "all"
         :returns: A list of search results.
@@ -232,12 +129,14 @@ class GrasciiSearcher(Searcher):
 
         grascii = kwargs["grascii"].upper()
         self.extract_search_args(**kwargs)
-        tree = self.parse_grascii(grascii)
-        if not tree:
+
+        try:
+            interpretations = self._parser.interpret(grascii)
+        except UnexpectedInput as e:
+            print("Invalid Grascii String", file=sys.stderr)
+            print(e.get_context(grascii), file=sys.stderr)
             return
 
-        interpretations = self.flatten_tree(tree)
-        interpretations = list(self.get_unique_interpretations(interpretations).values())
         builder = regen.RegexBuilder(
             uncertainty=self.uncertainty,
             search_mode=self.search_mode,

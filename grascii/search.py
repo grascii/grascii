@@ -104,11 +104,9 @@ def cli_search(args: argparse.Namespace) -> None:
 
     results = search(**{k: v for k, v in vars(args).items() if v is not None})
     if results is not None:
-        count = 0
         for result in results:
-            print(result.strip())
-            count += 1
-        print("Results:", count)
+            print(result)
+        print("Results:", len(results))
 
 def main() -> None:
     """Run a search using arguments retrieved from sys.argv."""

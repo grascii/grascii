@@ -10,9 +10,9 @@ from pathlib import Path, PurePath
 from shutil import copyfile
 import sys
 
+from grascii import APP_NAME
 from grascii.appdirs import user_config_dir
 
-APP_NAME = "grascii"
 CONF_DIRECTORY = user_config_dir(APP_NAME)
 CONF_FILE_NAME = APP_NAME + ".conf"
 

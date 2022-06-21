@@ -1,10 +1,12 @@
 from functools import reduce
+from pathlib import Path
 from typing import Union, List
 
-from lark import Lark, Tree, Transformer, Token
+from lark import Lark, Tree, Transformer, Token, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from grascii import grammar
+from grascii import grammar, APP_NAME, __version__
+from grascii.appdirs import user_cache_dir
 from grascii.grammars import get_grammar
 
 Interpretation = List[Union[str, List[str]]]
@@ -38,6 +40,7 @@ class GrasciiFlattener(Transformer):
     """
 
     def __init__(self, preserve_boundaries: bool=False) -> None:
+        super().__init__()
         self.preserve_boundaries = preserve_boundaries
 
     def start(self, children) -> Interpretation:
@@ -46,7 +49,7 @@ class GrasciiFlattener(Transformer):
         :meta private:
         """
 
-        result: Interpretation = list()
+        result: Interpretation = []
         for child in children:
             for token in child:
                 if token in grammar.ANNOTATION_CHARACTERS:
@@ -65,7 +68,7 @@ class GrasciiFlattener(Transformer):
         """The default visitor function for nodes in the parse tree.
         Returns a flat list of strings."""
 
-        result: List[str] = list()
+        result: List[str] = []
         for child in children:
             if isinstance(child, Token):
                 result.append(child)
@@ -74,6 +77,25 @@ class GrasciiFlattener(Transformer):
                 for token in child:
                     result.append(token)
         return result
+
+_LALR_CACHE_DIR = Path(user_cache_dir(appname=APP_NAME, version=__version__)) / "grammars"
+_LALR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+_LALR_CACHE_FILE = _LALR_CACHE_DIR / "grascii.lark.cache"
+
+class GrasciiValidator():
+
+    def __init__(self, use_cache: bool=False) -> None:
+        grammar = get_grammar("grascii")
+        self._validator: Lark = Lark.open(grammar,
+                                          parser="lalr",
+                                          cache=str(_LALR_CACHE_FILE) if use_cache else False)
+
+    def validate(self, grascii: str) -> bool:
+        try:
+            self._validator.parse(grascii)
+            return True
+        except UnexpectedInput:
+            return False
 
 class GrasciiParser():
 

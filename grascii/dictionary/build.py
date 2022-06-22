@@ -17,15 +17,18 @@ import time
 from typing import TextIO, List, Optional, NamedTuple, Dict, Set
 
 from grascii import defaults, grammar
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+
 _VALIDATOR_AVAILABLE = False
 try:
     from grascii.parser import GrasciiValidator
     _VALIDATOR_AVAILABLE = True
 except ImportError:
     # Builds can still be run if Lark is not available
-    pass
+    logger.warning("Failed to import GrasciiValidator. Is lark installed?")
 
-logger = logging.getLogger(__name__)
 
 description = "Build a Grascii Dictionary"
 
@@ -51,6 +54,8 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
                            help="enable word count validation")
     argparser.add_argument("-k", "--check-only", action="store_true",
                            help="only check input; no output is generated")
+    argparser.add_argument("-v", "--verbose", dest="verbosity", action="count", default=0,
+                           help="increase output verbosity")
 
 
 class NoMatchingOutputFile(Exception):
@@ -77,6 +82,7 @@ class DictionaryBuilder():
     :param count_words: Whether to enable word count validation.
     :param check_only: Check source files without generating output.
     :param output: The directory where to output the dictionary files.
+    :param verbosity: Increase the output verbosity
     :type infiles: Iterable[Union[Path, str]]
     :type clean: bool
     :type parse: bool
@@ -101,6 +107,11 @@ class DictionaryBuilder():
         self.output: os.PathLike = kwargs.get("output", defaults.BUILD["BuildDirectory"])
         self.src_files: List[os.PathLike] = kwargs["infiles"]
         self.time: float = -1
+        verbosity: int = kwargs.get("verbosity", 0)
+        levels = [logging.WARNING, logging.INFO, logging.DEBUG]
+        verbosity = min(verbosity, len(levels))
+        if verbosity > 0:
+            logger.setLevel(levels[verbosity])
 
     def get_output_file(self, grascii: str) -> TextIO:
         """Get an output file corresponding to the first alphabetic characters
@@ -122,7 +133,9 @@ class DictionaryBuilder():
             self.entry_counts[char] += 1
             return result
         except KeyError:
-            self.out_files[char] = pathlib.Path(self.output, char).open("w")
+            out_file = pathlib.Path(self.output, char)
+            self.out_files[char] = out_file.open("w")
+            logger.info("Opened output file: %s", out_file)
             self.entry_counts[char] = 1
             return self.out_files[char]
 
@@ -137,7 +150,7 @@ class DictionaryBuilder():
         """
 
         self.warnings.append(BuildMessage(file_name, line, line_number, message, logging.WARNING))
-        logger.warning(f"W: {file_name}:{line_number} {message}\n{line.strip()}")
+        logger.warning(f"{file_name}:{line_number} {message}\n{line.strip()}")
 
     def log_error(self, file_name: str, line: str, line_number: int, message: str) -> None:
         """Print a build error to stderr.
@@ -150,7 +163,7 @@ class DictionaryBuilder():
         """
 
         self.errors.append(BuildMessage(file_name, line, line_number, message, logging.ERROR))
-        logger.error(f"E: {file_name}:{line_number} {message}\n{line.strip()}")
+        logger.error(f"{file_name}:{line_number} {message}\n{line.strip()}")
 
     def prepare_output_dir(self) -> None:
         """Make and clean the output directory if necessary."""
@@ -159,9 +172,11 @@ class DictionaryBuilder():
             out_dir = pathlib.Path(self.output)
             out_dir.mkdir(parents=True, exist_ok=True)
             if self.clean:
+                logger.info("Cleaning output directory: %s", out_dir)
                 for entry in out_dir.iterdir():
                     entry.unlink()
             if self.package:
+                logger.info("Creating __init__.py in %s", out_dir)
                 out_dir.joinpath("__init__.py").touch()
 
     def load_parser(self) -> None:
@@ -169,12 +184,13 @@ class DictionaryBuilder():
 
         if self.parse:
             if not _VALIDATOR_AVAILABLE:
-                print("lark is unavailable. --parse will be ignored", file=sys.stderr)
+                logger.warning("lark is unavailable. --parse will be ignored")
                 return
             # Disable cache for now
             # It could be enabled, but we have to be careful about clearing the
             # cache after grammar changes
             self.parser = GrasciiValidator(use_cache=False)
+            logger.info("Created GrasciiValidator")
 
     def load_word_set(self) -> None:
         """Load a set of words to check the spelling of words."""
@@ -183,6 +199,7 @@ class DictionaryBuilder():
             self.words = set()
             with self.words_file.open("r") as words:
                 self.words |= set(line.strip().capitalize() for line in words)
+            logger.info("Loaded words from %s", self.words_file)
 
     def check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
         """Check a dictionary source file line for comments, uncertainty,
@@ -256,6 +273,7 @@ class DictionaryBuilder():
 
         for f in self.out_files.values():
             f.close()
+        logger.info("Closed output files")
 
     def print_build_summary(self) -> None:
         """Print a summary of the build including warning, error, and entry counts
@@ -284,6 +302,11 @@ class DictionaryBuilder():
 
         # time the build
         start_time = time.perf_counter()
+
+        logger.info("Starting build")
+
+        if self.check_only:
+            logger.info("Only checking source files. Output files will not be generated.")
 
         self.load_word_set()
         self.load_parser()
@@ -318,6 +341,7 @@ class DictionaryBuilder():
 
         end_time = time.perf_counter()
         self.time = end_time - start_time
+        logger.info("Build completed in %s seconds", self.time)
 
 
 def build(**kwargs) -> None:

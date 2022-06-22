@@ -47,6 +47,19 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
         entry_count = sum(val for val in builder.entry_counts.values())
         self.assertEqual(entry_count, 12)
 
+    def test_spelling(self):
+        builder = DictionaryBuilder(infiles=[Path("tests/dictionaries/spell.txt")],
+                                    output=self.output_dir, count_words=True,
+                                    words_file=Path("tests/dictionaries/words.txt"))
+        builder.build()
+        self.assertEqual(len(builder.warnings), 5)
+        self.assertEqual(len(builder.errors), 0)
+        for warning in builder.warnings:
+            self.assertEqual(warning.level, logging.WARNING)
+            self.assertRegex(warning.message, "not in words")
+        entry_count = sum(val for val in builder.entry_counts.values())
+        self.assertEqual(entry_count, 9)
+
     def test_too_few_words(self):
         builder = DictionaryBuilder(infiles=[Path("tests/dictionaries/too_few_words.txt")],
                                     output=self.output_dir, count_words=True)

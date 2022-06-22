@@ -14,10 +14,9 @@ import pathlib
 import re
 import sys
 import time
-from typing import TextIO, List, Optional, NamedTuple, Dict
+from typing import TextIO, List, Optional, NamedTuple, Dict, Set
 
 from grascii import defaults, grammar
-from grascii.utils import get_words_file
 _VALIDATOR_AVAILABLE = False
 try:
     from grascii.parser import GrasciiValidator
@@ -46,8 +45,8 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
                            help="clean the output directory before building")
     argparser.add_argument("-p", "--parse", action="store_true",
                            help="enable syntax checking on grascii strings")
-    argparser.add_argument("-s", "--spell", action="store_true",
-                           help="enable spell checking on english words")
+    argparser.add_argument("-w", "--words", dest="words_file", type=pathlib.Path,
+                           help="path to a words file for spell checking")
     argparser.add_argument("-n", "--count", dest="count_words", action="store_true",
                            help="enable word count validation")
     argparser.add_argument("-k", "--check-only", action="store_true",
@@ -74,14 +73,14 @@ class DictionaryBuilder():
     :param clean: Whether to delete all files in the output directory before
         building.
     :param parse: Whether to enable parse checking of grascii strings.
-    :param spell: Whether to enable spell checking of words.
+    :param words_file: A Path to a words file for spell checking
     :param count_words: Whether to enable word count validation.
     :param check_only: Check source files without generating output.
     :param output: The directory where to output the dictionary files.
     :type infiles: Iterable[Union[Path, str]]
     :type clean: bool
     :type parse: bool
-    :type spell: bool
+    :type words_file: pathlib.Path
     :type count_words: bool
     :type check_only: bool
     :type output: Union[Path, str]
@@ -94,7 +93,8 @@ class DictionaryBuilder():
         self.errors: List[BuildMessage] = []
         self.clean: bool = kwargs.get("clean", False)
         self.parse: bool = kwargs.get("parse", False)
-        self.spell: bool = kwargs.get("spell", False)
+        self.words_file: Optional[pathlib.Path] = kwargs.get("words_file")
+        self.words: Set[str] = set()
         self.count_words: bool = kwargs.get("count_words", False)
         self.check_only: bool = kwargs.get("check_only", False)
         self.package: bool = kwargs.get("package", False)
@@ -179,11 +179,9 @@ class DictionaryBuilder():
     def load_word_set(self) -> None:
         """Load a set of words to check the spelling of words."""
 
-        self.words = set()
-        if self.spell:
-            with get_words_file("words.txt") as words:
-                self.words |= set(line.strip().capitalize() for line in words)
-            with get_words_file("extra_words.txt") as words:
+        if self.words_file:
+            self.words = set()
+            with self.words_file.open("r") as words:
                 self.words |= set(line.strip().capitalize() for line in words)
 
     def check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
@@ -235,9 +233,9 @@ class DictionaryBuilder():
             exist in the word set.
         """
 
-        if self.spell:
+        if self.words:
             if word not in self.words:
-                self.log_warning(file_name, line, line_number, f"{word} not in dictionary")
+                self.log_warning(file_name, line, line_number, f"{word} not in words file")
                 return False
         return True
 
@@ -301,12 +299,13 @@ class DictionaryBuilder():
                     grascii = tokens[0].upper()
                     # remove '-' characters
                     grascii = "".join(grascii.split("-"))
-                    word = " ".join(t.capitalize() for t in tokens[1:])
+                    word_list = []
+                    for word in tokens[1:]:
+                        word_list.append(word.capitalize())
+                        self.check_word(word_list[-1], f.filename(), line, f.filelineno())
+                    word = " ".join(word_list)
 
                     if not self.check_grascii(grascii, f.filename(), line, f.filelineno()):
-                        continue
-
-                    if not self.check_word(word, f.filename(), line, f.filelineno()):
                         continue
 
                     try:

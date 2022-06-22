@@ -20,8 +20,8 @@ import sphinx_rtd_theme
 # -- Project information -----------------------------------------------------
 
 project = 'Grascii'
-copyright = '2020, Nicholas Chan'
-author = 'Nicholas Chan'
+copyright = '2022'
+author = 'chanicpanic'
 
 
 # -- General configuration ---------------------------------------------------
@@ -34,7 +34,6 @@ master_doc = "index"
 extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc'
-    # 'recommonmark'
 ]
 
 # Add any paths that contain templates here, relative to this directory.

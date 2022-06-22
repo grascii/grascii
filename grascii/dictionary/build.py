@@ -90,6 +90,7 @@ class DictionaryBuilder():
     :type count_words: bool
     :type check_only: bool
     :type output: Union[Path, str]
+    :type verbosity: int
     """
 
     def __init__(self, **kwargs) -> None:
@@ -113,7 +114,7 @@ class DictionaryBuilder():
         if verbosity > 0:
             logger.setLevel(levels[verbosity])
 
-    def get_output_file(self, grascii: str) -> TextIO:
+    def _get_output_file(self, grascii: str) -> TextIO:
         """Get an output file corresponding to the first alphabetic characters
         in a grascii string.
 
@@ -139,33 +140,33 @@ class DictionaryBuilder():
             self.entry_counts[char] = 1
             return self.out_files[char]
 
-    def log_warning(self, file_name: str, line: str, line_number: int, message: str) -> None:
+    def _log_warning(self, file_name: str, line: str, line_number: int, message: str) -> None:
         """Print a build warning to stderr.
 
         :param file_name: The name of the dictionary source file that caused a
             warning.
         :param line: The line that generated the warning.
         :param line_number: The line number that generated the warning.
-        :param message: A collection of strings to print as a message.
+        :param message: A string to print
         """
 
         self.warnings.append(BuildMessage(file_name, line, line_number, message, logging.WARNING))
         logger.warning(f"{file_name}:{line_number} {message}\n{line.strip()}")
 
-    def log_error(self, file_name: str, line: str, line_number: int, message: str) -> None:
+    def _log_error(self, file_name: str, line: str, line_number: int, message: str) -> None:
         """Print a build error to stderr.
 
         :param file_name: The name of the dictionary source file that caused a
             error.
         :param line: The line that generated the error.
         :param line_number: The line number that generated the error.
-        :param message: A collection of strings to print as a message.
+        :param message: A string to print
         """
 
         self.errors.append(BuildMessage(file_name, line, line_number, message, logging.ERROR))
         logger.error(f"{file_name}:{line_number} {message}\n{line.strip()}")
 
-    def prepare_output_dir(self) -> None:
+    def _prepare_output_dir(self) -> None:
         """Make and clean the output directory if necessary."""
 
         if not self.check_only:
@@ -179,7 +180,7 @@ class DictionaryBuilder():
                 logger.info("Creating __init__.py in %s", out_dir)
                 out_dir.joinpath("__init__.py").touch()
 
-    def load_parser(self) -> None:
+    def _load_parser(self) -> None:
         """Load a parser to check grascii strings."""
 
         if self.parse:
@@ -192,7 +193,7 @@ class DictionaryBuilder():
             self.parser = GrasciiValidator(use_cache=False)
             logger.info("Created GrasciiValidator")
 
-    def load_word_set(self) -> None:
+    def _load_word_set(self) -> None:
         """Load a set of words to check the spelling of words."""
 
         if self.words_file:
@@ -201,7 +202,7 @@ class DictionaryBuilder():
                 self.words |= set(line.strip().capitalize() for line in words)
             logger.info("Loaded words from %s", self.words_file)
 
-    def check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
+    def _check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
         """Check a dictionary source file line for comments, uncertainty,
         and incorrect token counts.
 
@@ -213,7 +214,7 @@ class DictionaryBuilder():
             if tokens[0][0] == "#":
                 return None
             if tokens[0] == "?":
-                self.log_warning(file_name, line, line_number, "Uncertainty")
+                self._log_warning(file_name, line, line_number, "Uncertainty")
                 tokens = tokens[1:]
             match = re.match(r"\*(\d+)", tokens[0])
             count = 1
@@ -222,16 +223,16 @@ class DictionaryBuilder():
                 assert match[1], match
                 count = int(match[1])
             if len(tokens) < count + 1:
-                self.log_error(file_name, line, line_number,
+                self._log_error(file_name, line, line_number,
                                f"Too few words: Expected: {count} Got: {len(tokens) - 1}")
                 return None
             if count and len(tokens) > count + 1:
                 if self.count_words:
-                    self.log_warning(file_name, line, line_number,
+                    self._log_warning(file_name, line, line_number,
                                      f"Too many words: Expected: {count} Got: {len(tokens) - 1}")
         return tokens
 
-    def check_grascii(self, grascii: str, file_name: str, line: str, line_number: int) -> bool:
+    def _check_grascii(self, grascii: str, file_name: str, line: str, line_number: int) -> bool:
         """Check the parsabliity of a grascii string.
 
         :returns: False if parse checking is enabled and a parse fails.
@@ -239,11 +240,11 @@ class DictionaryBuilder():
 
         if self.parse and _VALIDATOR_AVAILABLE:
             if not self.parser.validate(grascii):
-                self.log_error(file_name, line, line_number, f"Failed to parse {grascii}")
+                self._log_error(file_name, line, line_number, f"Failed to parse {grascii}")
                 return False
         return True
 
-    def check_word(self, word: str, file_name: str, line: str, line_number: int) -> bool:
+    def _check_word(self, word: str, file_name: str, line: str, line_number: int) -> bool:
         """Check the existence of a word in the word set.
 
         :returns: False if spell checking is enabled and the word does not
@@ -252,11 +253,11 @@ class DictionaryBuilder():
 
         if self.words:
             if word not in self.words:
-                self.log_warning(file_name, line, line_number, f"{word} not in words file")
+                self._log_warning(file_name, line, line_number, f"{word} not in words file")
                 return False
         return True
 
-    def write_entry(self, grascii: str, word: str) -> None:
+    def _write_entry(self, grascii: str, word: str) -> None:
         """Write an entry to an output file.
 
         :param grascii: The grascii string to write.
@@ -264,11 +265,11 @@ class DictionaryBuilder():
         """
 
         if not self.check_only:
-            out = self.get_output_file(grascii)
+            out = self._get_output_file(grascii)
             out.write(grascii + " ")
             out.write(word + "\n")
 
-    def close_output_files(self) -> None:
+    def _close_output_files(self) -> None:
         """Close all output files."""
 
         for f in self.out_files.values():
@@ -308,14 +309,14 @@ class DictionaryBuilder():
         if self.check_only:
             logger.info("Only checking source files. Output files will not be generated.")
 
-        self.load_word_set()
-        self.load_parser()
-        self.prepare_output_dir()
+        self._load_word_set()
+        self._load_parser()
+        self._prepare_output_dir()
 
         try:
             with FileInput(self.src_files) as f:
                 for line in f:
-                    tokens = self.check_line(f.filename(), line, f.filelineno())
+                    tokens = self._check_line(f.filename(), line, f.filelineno())
                     if not tokens:
                         continue
 
@@ -325,19 +326,19 @@ class DictionaryBuilder():
                     word_list = []
                     for word in tokens[1:]:
                         word_list.append(word.capitalize())
-                        self.check_word(word_list[-1], f.filename(), line, f.filelineno())
+                        self._check_word(word_list[-1], f.filename(), line, f.filelineno())
                     word = " ".join(word_list)
 
-                    if not self.check_grascii(grascii, f.filename(), line, f.filelineno()):
+                    if not self._check_grascii(grascii, f.filename(), line, f.filelineno()):
                         continue
 
                     try:
-                        self.write_entry(grascii, word)
+                        self._write_entry(grascii, word)
                     except NoMatchingOutputFile:
-                        self.log_error(f.filename(), line, f.filelineno(), f"No output file for {grascii} {word}")
+                        self._log_error(f.filename(), line, f.filelineno(), f"No output file for {grascii} {word}")
                         continue
         finally:
-            self.close_output_files()
+            self._close_output_files()
 
         end_time = time.perf_counter()
         self.time = end_time - start_time

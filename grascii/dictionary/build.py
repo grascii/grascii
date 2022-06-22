@@ -164,8 +164,6 @@ class DictionaryBuilder():
             if self.package:
                 out_dir.joinpath("__init__.py").touch()
 
-        # premake out files?
-
     def load_parser(self) -> None:
         """Load a parser to check grascii strings."""
 
@@ -201,23 +199,21 @@ class DictionaryBuilder():
                 return None
             if tokens[0] == "?":
                 self.log_warning(file_name, line, line_number, "Uncertainty")
-                # tokens.pop(0)
                 tokens = tokens[1:]
-            if len(tokens) < 2:
-                self.log_error(file_name, line, line_number, "Too few words")
-                return None
-            match = re.match(r"\*(\d*)", tokens[0])
-            count: Optional[int] = 1
+            match = re.match(r"\*(\d+)", tokens[0])
+            count = 1
             if match:
                 tokens = tokens[1:]
-                if match[1]:
-                    count = int(match[1])
-                else:
-                    count = None
-            if count and len(tokens) != count + 1:
+                assert match[1], match
+                count = int(match[1])
+            if len(tokens) < count + 1:
+                self.log_error(file_name, line, line_number,
+                               f"Too few words: Expected: {count} Got: {len(tokens) - 1}")
+                return None
+            if count and len(tokens) > count + 1:
                 if self.count_words:
                     self.log_warning(file_name, line, line_number,
-                                     f"Incorrect number of words: Expected: {count} Got {len(tokens) - 1}")
+                                     f"Too many words: Expected: {count} Got: {len(tokens) - 1}")
         return tokens
 
     def check_grascii(self, grascii: str, file_name: str, line: str, line_number: int) -> bool:
@@ -278,7 +274,7 @@ class DictionaryBuilder():
             print("Wrote", val, "entries to", os.path.join(self.output, key))
         if total > 0:
             print()
-        formatted_time = "f{self.time:.5f}"
+        formatted_time = f"{self.time:.5f}"
         print("Finished Build in", formatted_time, "seconds")
         if not self.check_only:
             print("Entries:", total)

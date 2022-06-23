@@ -1,4 +1,3 @@
-
 import argparse
 from functools import lru_cache
 from typing import Set
@@ -14,26 +13,37 @@ from grascii.searchers import GrasciiSearcher
 
 description = "Decipher a shorthand phrase."
 
+
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
-    argparser.add_argument("phrase", action="store", 
-            help="The phrase to decipher")
-    argparser.add_argument("-a", "--aggressive", action="store_true",
-            default=False, help="perform a more intense dephrasing")
-    argparser.add_argument("--ignore-limit", action="store_true",
-            default=False, help="ignore the 8-character phrase limit")
+    argparser.add_argument("phrase", action="store", help="The phrase to decipher")
+    argparser.add_argument(
+        "-a",
+        "--aggressive",
+        action="store_true",
+        default=False,
+        help="perform a more intense dephrasing",
+    )
+    argparser.add_argument(
+        "--ignore-limit",
+        action="store_true",
+        default=False,
+        help="ignore the 8-character phrase limit",
+    )
+
 
 class NoWordFound(Exception):
     pass
 
-class StripNameSpace(Transformer):
 
+class StripNameSpace(Transformer):
     def __init__(self, namespace):
         self.namespace = namespace + "__"
 
     def __default__(self, data, children, meta):
         if data.startswith(self.namespace):
-            data = data[len(self.namespace):]
+            data = data[len(self.namespace) :]
         return super().__default__(data, children, meta)
+
 
 class PhraseFlattener(Transformer):
 
@@ -57,16 +67,17 @@ class PhraseFlattener(Transformer):
             if len(children):
                 return self.__default__(None, children, None)
             return [self.create_token("[" + name + "]")]
+
         return opt
 
     def start(self, children):
-        result = list()
+        result = []
         for child in children:
             for token in child:
                 result.append(token)
         return result
 
-    def create_token(self, name: str, value: str=""):
+    def create_token(self, name: str, value: str = ""):
         return Token(name, value)
 
     def short_to(self, children):
@@ -89,22 +100,25 @@ class PhraseFlattener(Transformer):
         return self._search_grascii(grascii_str)
 
     def __default__(self, data, children, meta):
-        result = list()
+        result = []
         for child in children:
             if isinstance(child, Token):
                 # strip namespace
                 i = child.type.rfind("_")
-                new_type = child.type[i + 1:]
+                new_type = child.type[i + 1 :]
                 result.append(self.create_token(new_type, child.value))
             else:
                 for token in child:
                     result.append(token)
         return result
 
+
 def dephrase(**kwargs) -> Set[str]:
     grammar_name = "phrases_extended" if kwargs["aggressive"] else "phrases"
     g = get_grammar(grammar_name)
-    parser = Lark.open(g, parser="earley", ambiguity="explicit", lexer='dynamic_complete')
+    parser = Lark.open(
+        g, parser="earley", ambiguity="explicit", lexer="dynamic_complete"
+    )
     trans = PhraseFlattener()
     if kwargs["aggressive"]:
         trans = StripNameSpace("phrases") * trans
@@ -126,11 +140,14 @@ def dephrase(**kwargs) -> Set[str]:
             parses.add(" ".join(tokens))
     return parses
 
+
 def cli_dephrase(args: argparse.Namespace) -> None:
     if len(args.phrase) > 8 and args.aggressive and not args.ignore_limit:
-        print("Phrases more than 8 characters in length may take",
-              "an excessively long time to process and produce many",
-              "irrelevant results.")
+        print(
+            "Phrases more than 8 characters in length may take",
+            "an excessively long time to process and produce many",
+            "irrelevant results.",
+        )
         print("To ignore this warning use '--ignore_limit'.")
         return
     results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
@@ -142,11 +159,13 @@ def cli_dephrase(args: argparse.Namespace) -> None:
         if not args.aggressive:
             print("You may try again with --aggressive to consider more possibilities.")
 
+
 def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     cli_dephrase(args)
+
 
 if __name__ == "__main__":
     main()

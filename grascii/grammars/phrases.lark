@@ -1,8 +1,8 @@
 
-start : subject_phrase 
-	| prep_phrase 
+start : subject_phrase
+	| prep_phrase
 	| aux_phrase
-	| adverb_phrase 
+	| adverb_phrase
 	| as_phrase
 	| time_phrase
 	| infinitive
@@ -13,12 +13,12 @@ start : subject_phrase
 	| conjunctive_phrase
 	| described_noun
 
-subject_phrase : conditional? ((pronoun (aux_phrase 
+subject_phrase : conditional? ((pronoun (aux_phrase
 	| (to_be NOT? (adjective* | adjective+ opt_to verb?))
-	| (to_have | auxiliary | to_do) NOT?)) 
+	| (to_have | auxiliary | to_do) NOT?))
 	| (pronoun verb to? verb? noun?))
 
-prep_phrase : preposition ( adjective+ | noun | adverb ) 
+prep_phrase : preposition ( adjective+ | noun | adverb )
 
 noun.2 : described_noun | plain_noun
 
@@ -49,7 +49,7 @@ infinitive.2 : ( to | short_to ) ( verb | BE adjective? | HAVE have_phrase_endin
 verb : common_verb | omitted_to_verb
 
 omitted_to : ( omitted_to_verb opt_to verb )
-	| ( preposition? omitted_to_noun  opt_to noun ) 
+	| ( preposition? omitted_to_noun  opt_to noun )
 
 opt_to: to?
 
@@ -69,16 +69,15 @@ opt_in: IN?
 opt_of: OF?
 opt_your: YOUR?
 
-interrogative_phrase : interrogative ( ( noun verb? ) 
-	| adjective+ 
+interrogative_phrase : interrogative ( ( noun verb? )
+	| adjective+
 	| adverb )
 
 command_phrase : command ( DO? NOT? verb noun? | noun )
 
-conjunctive_phrase : conjunction ( subject_phrase 
+conjunctive_phrase : conjunction ( subject_phrase
 	| adverb_phrase | to_be | preposition | adjective)
 
 %import .vocab (DO, NOT, IN, RECEIPT, AS, MY, DEAR, YOURS, VERY, BE, BEEN, ABLE, SUCH, POSSIBLE, AGO, HAVE, YOUR, OF)
 
 %import .vocab (common_verb, conjunction, unit, common_noun, pronoun, to_be, auxiliary, common_adjective, preposition, article, as_adj, omitted_to_verb, omitted_to_noun, title, sal_adverb, interrogative, adverb, conditional, quantifier, to_have, to_do, to, command)
-

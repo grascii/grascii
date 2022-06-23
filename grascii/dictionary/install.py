@@ -1,4 +1,3 @@
-
 import argparse
 from pathlib import Path, PurePath
 from shutil import copy
@@ -11,18 +10,33 @@ description = "Install a Grascii Dictionary"
 
 DICTIONARY_PATH = Path(user_data_dir(APP_NAME), "dictionaries")
 
+
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
-    argparser.add_argument("-n", "--name", action="store",
-            help="The name to give to the installed dictionary.")
-    argparser.add_argument("-f", "--force", action="store_true",
-            help="Allow overwriting of an existing installed dictionary.")
-    argparser.add_argument("dictionary", action="store", type=Path,
-            help="Path to the built dictionary to install.")
+    argparser.add_argument(
+        "-n",
+        "--name",
+        action="store",
+        help="The name to give to the installed dictionary.",
+    )
+    argparser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="Allow overwriting of an existing installed dictionary.",
+    )
+    argparser.add_argument(
+        "dictionary",
+        action="store",
+        type=Path,
+        help="Path to the built dictionary to install.",
+    )
+
 
 def install_dict(src: Path, dest: Path) -> None:
     files = src.glob("[A-Z]")
     for f in files:
         copy(f, dest)
+
 
 def cli_install(args: argparse.Namespace) -> None:
     if args.name:
@@ -45,7 +59,6 @@ def cli_install(args: argparse.Namespace) -> None:
     print("Successfully installed", args.dictionary, "as", name)
 
 
-
 def main() -> None:
     """Run the install command using arguments from sys.argv."""
 
@@ -53,6 +66,7 @@ def main() -> None:
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     cli_install(args)
+
 
 if __name__ == "__main__":
     main()

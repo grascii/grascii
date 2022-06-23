@@ -43,7 +43,7 @@ reduce dependencies.
 Verify the installation::
 
   $ grascii --help
- 
+
 If the command fails, your PATH may not contain the location of Python scripts.
 
 You can also try::
@@ -60,7 +60,7 @@ match their sounds. For example, the word ``Cross`` is written as ``KROS``.
 For a more detailed overview of the language, see `language
 <https://grascii.readthedocs.io/en/latest/language.html>`_.
 
-Grascii Search 
+Grascii Search
 **************
 
 Grascii Search is the headline tool of the Grascii Project. It provides many
@@ -147,7 +147,7 @@ Gregg Shorthand and provide suggestions for never before seen phrases::
 
     $ python -m grascii.dephrase AVNBA
     I HAVE NOT BEEN ABLE
-    
+
 Documentation
 *************
 

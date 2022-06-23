@@ -11,12 +11,14 @@ from grascii import grammar
 from grascii.parser import Interpretation
 from grascii.similarities import get_similar
 
+
 class SearchMode(Enum):
     """An enum representing different search modes."""
 
     MATCH = "match"
     START = "start"
     CONTAIN = "contain"
+
 
 class Strictness(Enum):
     """An enum representing different levels of strictness for handling
@@ -26,10 +28,11 @@ class Strictness(Enum):
     MEDIUM = "retain"
     HIGH = "strict"
 
-class RegexBuilder():
+
+class RegexBuilder:
     """A class used for generating regular expressions used to search from
     a grascii string based on grascii search options.
-    
+
     :param uncertainty: The uncertainty of the grascii string.
     :param search_mode: The search mode to use.
     :param annotation_mode: How to handle annotations in the search.
@@ -45,18 +48,18 @@ class RegexBuilder():
     """
 
     def __init__(self, **kwargs):
-        self.uncertainty = kwargs.get('uncertainty', 0)
-        self.search_mode = kwargs.get('search_mode', SearchMode.MATCH)
-        self.fix_first = kwargs.get('fix_first', False)
-        self.annotation_mode = kwargs.get('annotation_mode', Strictness.LOW)
-        self.aspirate_mode = kwargs.get('aspirate_mode', Strictness.LOW)
-        self.disjoiner_mode = kwargs.get('disjoiner_mode', Strictness.HIGH)
+        self.uncertainty = kwargs.get("uncertainty", 0)
+        self.search_mode = kwargs.get("search_mode", SearchMode.MATCH)
+        self.fix_first = kwargs.get("fix_first", False)
+        self.annotation_mode = kwargs.get("annotation_mode", Strictness.LOW)
+        self.aspirate_mode = kwargs.get("aspirate_mode", Strictness.LOW)
+        self.disjoiner_mode = kwargs.get("disjoiner_mode", Strictness.HIGH)
 
     def make_annotation_regex(self, stroke: str, annotations: Iterable[str]) -> str:
         """Create a regular expression that matches the stroke with
         the acceptable annotations and given annotations according to
         the search options.
-        
+
         :param stroke: The stroke for which to generate annotations.
         :param annotations: A collection of annotations used in generating
             the regular expression.
@@ -71,9 +74,11 @@ class RegexBuilder():
 
         possible = grammar.ANNOTATIONS.get(stroke, list())
 
-        if self.annotation_mode is Strictness.MEDIUM or \
-                self.annotation_mode is Strictness.HIGH:
-            builder = list()
+        if (
+            self.annotation_mode is Strictness.MEDIUM
+            or self.annotation_mode is Strictness.HIGH
+        ):
+            builder = []
             i = 0
             while i < len(possible):
                 match = False
@@ -90,11 +95,12 @@ class RegexBuilder():
 
         return stroke + "".join([pack(tup) for tup in possible])
 
-
-    def make_uncertainty_regex(self, stroke: str, uncertainty: int, annotations: list=list()) -> str:
+    def make_uncertainty_regex(
+        self, stroke: str, uncertainty: int, annotations: list = []
+    ) -> str:
         """Create a regular expression that matches a stroke within a given
         uncertainty while applying provided annotations.
-        
+
         :param stroke: The stroke for which to generate alternatives.
         :param uncertainty: The uncertainty to apply to the stroke.
         :param annotations: A list of annotations to use in the generation.
@@ -112,8 +118,8 @@ class RegexBuilder():
     def build_regex(self, interpretation: Interpretation) -> str:
         """Create a regular expression from a grascii interpretation based
         on the constructor search parameters.
-        
-        :param interpretation: The interpretation for which to generate a 
+
+        :param interpretation: The interpretation for which to generate a
             regular expression.
         :returns: A regular expression.
         """
@@ -127,8 +133,7 @@ class RegexBuilder():
         # at the beginning of the line
         builder = list("^")
         i = 0
-        if self.search_mode is SearchMode.MATCH or \
-                self.search_mode is SearchMode.START:
+        if self.search_mode is SearchMode.MATCH or self.search_mode is SearchMode.START:
             # match up to two aspirates at the beginning of a word
             if self.aspirate_mode is Strictness.LOW:
                 for j in range(2):
@@ -153,16 +158,20 @@ class RegexBuilder():
             token = interpretation[i]
 
             if token == grammar.ASPIRATE:
-                if self.aspirate_mode is Strictness.MEDIUM or \
-                        self.aspirate_mode is Strictness.HIGH:
+                if (
+                    self.aspirate_mode is Strictness.MEDIUM
+                    or self.aspirate_mode is Strictness.HIGH
+                ):
                     # retain a non-optional aspirate
                     builder.append(aspirate)
                 i += 1
                 continue
 
             if token == grammar.DISJOINER:
-                if self.disjoiner_mode is Strictness.MEDIUM or \
-                        self.disjoiner_mode is Strictness.HIGH:
+                if (
+                    self.disjoiner_mode is Strictness.MEDIUM
+                    or self.disjoiner_mode is Strictness.HIGH
+                ):
                     # retain a non-optional disjoiner
                     builder.append(disjoiner)
                 i += 1
@@ -172,13 +181,17 @@ class RegexBuilder():
             if token in grammar.STROKES:
                 last_character = builder[-1]
                 if found_first:
-                    if self.disjoiner_mode is Strictness.LOW or \
-                            (self.disjoiner_mode is Strictness.MEDIUM and last_character != disjoiner):
+                    if self.disjoiner_mode is Strictness.LOW or (
+                        self.disjoiner_mode is Strictness.MEDIUM
+                        and last_character != disjoiner
+                    ):
                         # match optional disjoiner
                         builder.append(disjoiner)
                         builder.append("?")
-                    if self.aspirate_mode is Strictness.LOW or \
-                            (self.aspirate_mode is Strictness.MEDIUM and last_character != aspirate):
+                    if self.aspirate_mode is Strictness.LOW or (
+                        self.aspirate_mode is Strictness.MEDIUM
+                        and last_character != aspirate
+                    ):
                         # match optional aspirate
                         builder.append(aspirate)
                         builder.append("?")
@@ -186,9 +199,14 @@ class RegexBuilder():
 
                 if token in grammar.ANNOTATIONS:
                     # this token may have annotations
-                    if i + 1 < len(interpretation) and \
-                            isinstance(interpretation[i + 1], list):
-                        builder.append(self.make_uncertainty_regex(token, uncertainty, interpretation[i + 1]))
+                    if i + 1 < len(interpretation) and isinstance(
+                        interpretation[i + 1], list
+                    ):
+                        builder.append(
+                            self.make_uncertainty_regex(
+                                token, uncertainty, interpretation[i + 1]
+                            )
+                        )
                         i += 2
                         continue
 
@@ -197,7 +215,10 @@ class RegexBuilder():
 
         if self.search_mode is SearchMode.MATCH:
             # match up to two aspirates at the end of the word
-            if self.aspirate_mode is Strictness.LOW or self.aspirate_mode is Strictness.MEDIUM:
+            if (
+                self.aspirate_mode is Strictness.LOW
+                or self.aspirate_mode is Strictness.MEDIUM
+            ):
                 if builder[-1] != aspirate:
                     for j in range(2):
                         builder.append(aspirate)
@@ -215,8 +236,8 @@ class RegexBuilder():
     def get_starting_letters(self, interpretations: List[Interpretation]) -> Set[str]:
         """Get a set of starting letters based on the given interpretations
         factoring in uncertainty.
-        
-        :param interpretations: A list of interpretations to generate 
+
+        :param interpretations: A list of interpretations to generate
             starting letters for.
         :returns: A set of characters.
         """
@@ -232,7 +253,7 @@ class RegexBuilder():
                         strokes = get_similar(token, 0)
                     else:
                         strokes = get_similar(token, self.uncertainty)
-                    flattened_strokes = list()
+                    flattened_strokes = []
                     for tup in strokes:
                         flattened_strokes += [s for s in tup]
                     letters |= set(string[0] for string in flattened_strokes)
@@ -240,17 +261,19 @@ class RegexBuilder():
 
         return letters
 
-    def generate_patterns_map(self, interpretations: List[Interpretation]) -> List[Tuple[Interpretation, Pattern]]:
+    def generate_patterns_map(
+        self, interpretations: List[Interpretation]
+    ) -> List[Tuple[Interpretation, Pattern]]:
         """Generates a set of compiled regular expressions from a list
         of interpretations.
-        
-        :param interpretations: A list of interpretations to generate 
+
+        :param interpretations: A list of interpretations to generate
             patterns for.
-        :returns: A list of Interpretations with their corresponding 
+        :returns: A list of Interpretations with their corresponding
             Patterns.
         """
 
-        patterns = list()
+        patterns = []
         for interp in interpretations:
             regex = self.build_regex(interp)
             patterns.append((interp, re.compile(regex)))

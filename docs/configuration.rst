@@ -21,4 +21,3 @@ Editing the Configuration
 To change the defaults, open the generated configuration file
 and make your desired changes. The available options are described
 in the default file.
-

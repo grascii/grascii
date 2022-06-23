@@ -11,6 +11,7 @@ from grascii.grammars import get_grammar
 
 Interpretation = List[Union[str, List[str]]]
 
+
 def interpretation_to_string(interpretation: Interpretation) -> str:
     """Generate a string representation of an Interpretation.
 
@@ -22,14 +23,20 @@ def interpretation_to_string(interpretation: Interpretation) -> str:
         if isinstance(token, list):
             builder += token
         else:
-            if builder and builder[-1] != grammar.DISJOINER and token != grammar.DISJOINER \
-                    and builder[-1] != grammar.BOUNDARY and token != grammar.BOUNDARY:
+            if (
+                builder
+                and builder[-1] != grammar.DISJOINER
+                and token != grammar.DISJOINER
+                and builder[-1] != grammar.BOUNDARY
+                and token != grammar.BOUNDARY
+            ):
                 builder.append(grammar.BOUNDARY)
             if token != grammar.BOUNDARY:
                 builder.append(token)
         return builder
 
     return "".join(reduce(reducer, interpretation, []))
+
 
 class GrasciiFlattener(Transformer):
 
@@ -39,7 +46,7 @@ class GrasciiFlattener(Transformer):
     but sequences of annotation terminals are grouped into their own sublist.
     """
 
-    def __init__(self, preserve_boundaries: bool=False) -> None:
+    def __init__(self, preserve_boundaries: bool = False) -> None:
         super().__init__()
         self.preserve_boundaries = preserve_boundaries
 
@@ -78,17 +85,20 @@ class GrasciiFlattener(Transformer):
                     result.append(token)
         return result
 
-_LALR_CACHE_DIR = Path(user_cache_dir(appname=APP_NAME, version=__version__)) / "grammars"
+
+_LALR_CACHE_DIR = (
+    Path(user_cache_dir(appname=APP_NAME, version=__version__)) / "grammars"
+)
 _LALR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 _LALR_CACHE_FILE = _LALR_CACHE_DIR / "grascii.lark.cache"
 
-class GrasciiValidator():
 
-    def __init__(self, use_cache: bool=False) -> None:
+class GrasciiValidator:
+    def __init__(self, use_cache: bool = False) -> None:
         grammar = get_grammar("grascii")
-        self._validator: Lark = Lark.open(grammar,
-                                          parser="lalr",
-                                          cache=str(_LALR_CACHE_FILE) if use_cache else False)
+        self._validator: Lark = Lark.open(
+            grammar, parser="lalr", cache=str(_LALR_CACHE_FILE) if use_cache else False
+        )
 
     def validate(self, grascii: str) -> bool:
         try:
@@ -97,8 +107,8 @@ class GrasciiValidator():
         except UnexpectedInput:
             return False
 
-class GrasciiParser():
 
+class GrasciiParser:
     def __init__(self) -> None:
         grammar = get_grammar("grascii")
         self._parser: Lark = Lark.open(grammar, parser="earley", ambiguity="explicit")
@@ -106,12 +116,14 @@ class GrasciiParser():
     def parse(self, grascii: str) -> Tree:
         return self._parser.parse(grascii)
 
-    def interpret(self,
-                  grascii: str,
-                  preserve_boundaries: bool=False) -> List[Interpretation]:
+    def interpret(
+        self, grascii: str, preserve_boundaries: bool = False
+    ) -> List[Interpretation]:
         tree = self.parse(grascii)
         trees = CollapseAmbiguities().transform(tree)
         flattener = GrasciiFlattener(preserve_boundaries)
         interpretations = [flattener.transform(tree) for tree in trees]
-        unique_interpretations = {interpretation_to_string(interp): interp for interp in interpretations}
+        unique_interpretations = {
+            interpretation_to_string(interp): interp for interp in interpretations
+        }
         return list(unique_interpretations.values())

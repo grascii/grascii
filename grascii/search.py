@@ -19,6 +19,7 @@ from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, S
 SUPPORTS_INTERACTIVE = False
 try:
     from grascii.interactive import InteractiveSearcher
+
     SUPPORTS_INTERACTIVE = True
 except ImportError as e:
     pass
@@ -26,43 +27,74 @@ except ImportError as e:
 
 description = "Search a Grascii Dictionary"
 
+
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
     """Configure an ArgumentParser parser to parse the search command-line
     options.
-    
+
     :param argparser: A fresh ArgumentParser to configure.
     """
 
     group = argparser.add_mutually_exclusive_group(required=True)
-    group.add_argument("-g", "--grascii", 
-            help="the grascii string to search for")
-    group.add_argument("-e", "--regexp", 
-            help="a custom regular expression to use in the search")
-    group.add_argument("-r", "--reverse", 
-            help="search by word instead")
-    group.add_argument("-i", "--interactive", action="store_true",
-            help="run in interactive mode")
-    argparser.add_argument("-u", "--uncertainty", type=int, choices=range(3),
-            help="the uncertainty of the search term")
-    argparser.add_argument("-s", "--search-mode",
-            choices=[mode.value for mode in regen.SearchMode],
-            help="the kind of search to perform")
-    argparser.add_argument("-a", "--annotation-mode",
-            choices=[mode.value for mode in regen.Strictness],
-            help="how to handle annotations in grascii")
-    argparser.add_argument("-p", "--aspirate-mode",
-            choices=[mode.value for mode in regen.Strictness],
-            help="how to handle aspirates in grascii")
-    argparser.add_argument("-j", "--disjoiner-mode",
-            choices=[mode.value for mode in regen.Strictness],
-            help="how to handle disjoiners in grascii")
-    argparser.add_argument("-n", "--interpretation", 
-            choices=["best", "all"],
-            help="how to handle ambiguous grascii strings")
-    argparser.add_argument("-f", "--fix-first", action="store_true",
-            help="apply an uncertainty of 0 to the first token")
-    argparser.add_argument("-d", "--dictionary", dest="dictionaries",
-            action="append", help="add a dictionary to be searched")
+    group.add_argument("-g", "--grascii", help="the grascii string to search for")
+    group.add_argument(
+        "-e", "--regexp", help="a custom regular expression to use in the search"
+    )
+    group.add_argument("-r", "--reverse", help="search by word instead")
+    group.add_argument(
+        "-i", "--interactive", action="store_true", help="run in interactive mode"
+    )
+    argparser.add_argument(
+        "-u",
+        "--uncertainty",
+        type=int,
+        choices=range(3),
+        help="the uncertainty of the search term",
+    )
+    argparser.add_argument(
+        "-s",
+        "--search-mode",
+        choices=[mode.value for mode in regen.SearchMode],
+        help="the kind of search to perform",
+    )
+    argparser.add_argument(
+        "-a",
+        "--annotation-mode",
+        choices=[mode.value for mode in regen.Strictness],
+        help="how to handle annotations in grascii",
+    )
+    argparser.add_argument(
+        "-p",
+        "--aspirate-mode",
+        choices=[mode.value for mode in regen.Strictness],
+        help="how to handle aspirates in grascii",
+    )
+    argparser.add_argument(
+        "-j",
+        "--disjoiner-mode",
+        choices=[mode.value for mode in regen.Strictness],
+        help="how to handle disjoiners in grascii",
+    )
+    argparser.add_argument(
+        "-n",
+        "--interpretation",
+        choices=["best", "all"],
+        help="how to handle ambiguous grascii strings",
+    )
+    argparser.add_argument(
+        "-f",
+        "--fix-first",
+        action="store_true",
+        help="apply an uncertainty of 0 to the first token",
+    )
+    argparser.add_argument(
+        "-d",
+        "--dictionary",
+        dest="dictionaries",
+        action="append",
+        help="add a dictionary to be searched",
+    )
+
 
 def search(**kwargs) -> Optional[Iterable[str]]:
     """Run a grascii dictionary search. Parameters can consist of
@@ -96,9 +128,10 @@ def search(**kwargs) -> Optional[Iterable[str]]:
         searcher = RegexSearcher(**kwargs)
     return searcher.search(**kwargs)
 
+
 def cli_search(args: argparse.Namespace) -> None:
     """Run a search using arguments parsed from the command line.
-    
+
     :param args: A namespace of parsed arguments.
     """
 
@@ -108,6 +141,7 @@ def cli_search(args: argparse.Namespace) -> None:
             print(result)
         print("Results:", len(results))
 
+
 def main() -> None:
     """Run a search using arguments retrieved from sys.argv."""
 
@@ -116,6 +150,7 @@ def main() -> None:
     args = argparser.parse_args(sys.argv[1:])
     cli_search(args)
     search(**{k: v for k, v in vars(args).items() if v is not None})
+
 
 if __name__ == "__main__":
     main()

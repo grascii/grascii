@@ -1,4 +1,3 @@
-
 import os
 import unittest
 
@@ -8,21 +7,22 @@ from lark.visitors import CollapseAmbiguities
 from grascii.grammars import get_grammar
 from grascii.dephrase import PhraseFlattener
 
+
 class TestLessonPhrases(unittest.TestCase):
 
     # def __init__(self):
-        # super.__init__(self)
-        # self.parser = Lark.open("phrases.lark",
-                # parser="earley")
+    # super.__init__(self)
+    # self.parser = Lark.open("phrases.lark",
+    # parser="earley")
 
     # parser = Lark.open("../grammars/phrases.lark",
-            # rel_to=__file__,
-            # parser="earley")
+    # rel_to=__file__,
+    # parser="earley")
 
     # aparser = Lark.open("../grammars/phrases.lark",
-            # rel_to=__file__,
-            # parser="earley",
-            # ambiguity="explicit")
+    # rel_to=__file__,
+    # parser="earley",
+    # ambiguity="explicit")
 
     g = get_grammar("phrases")
     parser = Lark.open(g, parser="earley", ambiguity="resolve")
@@ -47,7 +47,6 @@ class TestLessonPhrases(unittest.TestCase):
                         if not self.ambiguous_check(phrase, expected):
                             self.fail(msg="failed ambiguity test")
 
-
     def ambiguous_check(self, phrase, expected):
         tree = self.aparser.parse(phrase)
         trees = CollapseAmbiguities().transform(tree)
@@ -60,7 +59,6 @@ class TestLessonPhrases(unittest.TestCase):
 
         return expected in parses
 
-
     def test_lesson1(self):
         self._test_lesson(1)
 
@@ -72,7 +70,7 @@ class TestLessonPhrases(unittest.TestCase):
 
     def test_lesson4(self):
         self._test_lesson(4)
-        
+
     def test_lesson5(self):
         self._test_lesson(5)
 
@@ -110,21 +108,6 @@ class TestLessonPhrases(unittest.TestCase):
     def test_lesson19a(self):
         self._test_lesson("19a")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

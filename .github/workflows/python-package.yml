@@ -19,7 +19,10 @@ jobs:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
@@ -43,7 +46,10 @@ jobs:
     name: Check Manifest
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:

@@ -8,50 +8,67 @@ $ python -m grascii.build --help
 
 import argparse
 from fileinput import FileInput
+import logging
 import os
 import pathlib
 import re
-import string
 import sys
 import time
-from typing import TextIO, List, Optional, Union
+from typing import TextIO, List, Optional, NamedTuple, Dict, Set
 
 from grascii import defaults, grammar
-from grascii.utils import get_grammar, get_words_file
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
+
 _VALIDATOR_AVAILABLE = False
 try:
     from grascii.parser import GrasciiValidator
     _VALIDATOR_AVAILABLE = True
 except ImportError:
     # Builds can still be run if Lark is not available
-    pass
+    logger.warning("Failed to import GrasciiValidator. Is lark installed?")
+
 
 description = "Build a Grascii Dictionary"
+
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
     """Configure an ArgumentParser parser to parse the build command-line
     options.
-    
+
     :param argparser: A fresh ArgumentParser to configure.
     """
 
     argparser.add_argument("infiles", nargs="+", type=pathlib.Path,
-            help="the files to package")
+                           help="the files to package")
     argparser.add_argument("-o", "--output", type=os.path.abspath,
-            help="path to a directory to output dictionary files")
+                           help="path to a directory to output dictionary files")
     argparser.add_argument("-c", "--clean", action="store_true",
-            help="clean the output directory before building")
+                           help="clean the output directory before building")
     argparser.add_argument("-p", "--parse", action="store_true",
-            help="enable syntax checking on grascii strings")
-    argparser.add_argument("-s", "--spell", action="store_true",
-            help="enable spell checking on english words")
+                           help="enable syntax checking on grascii strings")
+    argparser.add_argument("-w", "--words", dest="words_file", type=pathlib.Path,
+                           help="path to a words file for spell checking")
     argparser.add_argument("-n", "--count", dest="count_words", action="store_true",
-            help="enable word count validation")
+                           help="enable word count validation")
     argparser.add_argument("-k", "--check-only", action="store_true",
-            help="only check input; no output is generated")
+                           help="only check input; no output is generated")
+    argparser.add_argument("-v", "--verbose", dest="verbosity", action="count", default=0,
+                           help="increase output verbosity")
+
 
 class NoMatchingOutputFile(Exception):
     pass
+
+
+class BuildMessage(NamedTuple):
+    file_name: str
+    line: str
+    line_number: int
+    message: str
+    level: int
+
 
 class DictionaryBuilder():
 
@@ -61,41 +78,46 @@ class DictionaryBuilder():
     :param clean: Whether to delete all files in the output directory before
         building.
     :param parse: Whether to enable parse checking of grascii strings.
-    :param spell: Whether to enable spell checking of words.
+    :param words_file: A Path to a words file for spell checking
     :param count_words: Whether to enable word count validation.
     :param check_only: Check source files without generating output.
     :param output: The directory where to output the dictionary files.
+    :param verbosity: Increase the output verbosity
     :type infiles: Iterable[Union[Path, str]]
     :type clean: bool
     :type parse: bool
-    :type spell: bool
+    :type words_file: pathlib.Path
     :type count_words: bool
     :type check_only: bool
     :type output: Union[Path, str]
+    :type verbosity: int
     """
 
-    def __init__(self, **kwargs):
-        self.out_files = {}
-        self.entry_counts = {}
-        self.warnings = 0
-        self.errors = 0
-        self.clean = kwargs.get("clean", False)
-        self.parse = kwargs.get("parse", False)
-        self.spell = kwargs.get("spell", False)
-        self.count_words = kwargs.get("count_words", False)
-        self.check_only = kwargs.get("check_only", False)
-        self.package = kwargs.get("package", False)
-        self.output = kwargs.get("output", defaults.BUILD["BuildDirectory"])
-        self.src_files = kwargs["infiles"]
-        if kwargs.get("verbose", False):
-            self.vprint = lambda *a, **k: None
-        else:
-            self.vprint = print
+    def __init__(self, **kwargs) -> None:
+        self.out_files: Dict[str, TextIO] = {}
+        self.entry_counts: Dict[str, int] = {}
+        self.warnings: List[BuildMessage] = []
+        self.errors: List[BuildMessage] = []
+        self.clean: bool = kwargs.get("clean", False)
+        self.parse: bool = kwargs.get("parse", False)
+        self.words_file: Optional[pathlib.Path] = kwargs.get("words_file")
+        self.words: Set[str] = set()
+        self.count_words: bool = kwargs.get("count_words", False)
+        self.check_only: bool = kwargs.get("check_only", False)
+        self.package: bool = kwargs.get("package", False)
+        self.output: os.PathLike = kwargs.get("output", defaults.BUILD["BuildDirectory"])
+        self.src_files: List[os.PathLike] = kwargs["infiles"]
+        self.time: float = -1
+        verbosity: int = kwargs.get("verbosity", 0)
+        levels = [logging.WARNING, logging.INFO, logging.DEBUG]
+        verbosity = min(verbosity, len(levels))
+        if verbosity > 0:
+            logger.setLevel(levels[verbosity])
 
-    def get_output_file(self, grascii: str) -> TextIO:
+    def _get_output_file(self, grascii: str) -> TextIO:
         """Get an output file corresponding to the first alphabetic characters
         in a grascii string.
-        
+
         :param grascii: A grascii string to get an output file for.
         :returns: A text stream.
         """
@@ -112,78 +134,78 @@ class DictionaryBuilder():
             self.entry_counts[char] += 1
             return result
         except KeyError:
-            self.out_files[char] = pathlib.Path(self.output, char).open("w")
+            out_file = pathlib.Path(self.output, char)
+            self.out_files[char] = out_file.open("w")
+            logger.info("Opened output file: %s", out_file)
             self.entry_counts[char] = 1
             return self.out_files[char]
 
-    def log_warning(self, file_name: os.PathLike, line: str, line_number: int, *message: Union[str, List[str]]) -> None:
+    def _log_warning(self, file_name: str, line: str, line_number: int, message: str) -> None:
         """Print a build warning to stderr.
-        
-        :param file_name: The name of the dictionary source file that caused a 
+
+        :param file_name: The name of the dictionary source file that caused a
             warning.
         :param line: The line that generated the warning.
         :param line_number: The line number that generated the warning.
-        :param message: A collection of strings to print as a message.
+        :param message: A string to print
         """
 
-        print("W:", str(file_name) + ":" + str(line_number), *message, file=sys.stderr)
-        print(line.strip(), file=sys.stderr)
-        self.warnings += 1
+        self.warnings.append(BuildMessage(file_name, line, line_number, message, logging.WARNING))
+        logger.warning(f"{file_name}:{line_number} {message}\n{line.strip()}")
 
-    def log_error(self, file_name: os.PathLike, line: str, line_number: int, *message: Union[str, List[str]]):
+    def _log_error(self, file_name: str, line: str, line_number: int, message: str) -> None:
         """Print a build error to stderr.
-        
-        :param file_name: The name of the dictionary source file that caused a 
+
+        :param file_name: The name of the dictionary source file that caused a
             error.
         :param line: The line that generated the error.
         :param line_number: The line number that generated the error.
-        :param message: A collection of strings to print as a message.
+        :param message: A string to print
         """
-        
-        print("E:", str(file_name) + ":" + str(line_number), *message, file=sys.stderr)
-        print(line.strip(), file=sys.stderr)
-        self.errors += 1
 
-    def prepare_output_dir(self) -> None:
+        self.errors.append(BuildMessage(file_name, line, line_number, message, logging.ERROR))
+        logger.error(f"{file_name}:{line_number} {message}\n{line.strip()}")
+
+    def _prepare_output_dir(self) -> None:
         """Make and clean the output directory if necessary."""
 
         if not self.check_only:
-            self.out_dir = pathlib.Path(self.output)
-            self.out_dir.mkdir(parents=True, exist_ok=True)
+            out_dir = pathlib.Path(self.output)
+            out_dir.mkdir(parents=True, exist_ok=True)
             if self.clean:
-                for entry in self.out_dir.iterdir():
-                    entry.unlink
+                logger.info("Cleaning output directory: %s", out_dir)
+                for entry in out_dir.iterdir():
+                    entry.unlink()
             if self.package:
-                self.out_dir.joinpath("__init__.py").touch()
+                logger.info("Creating __init__.py in %s", out_dir)
+                out_dir.joinpath("__init__.py").touch()
 
-        # premake out files?
-
-    def load_parser(self) -> None:
+    def _load_parser(self) -> None:
         """Load a parser to check grascii strings."""
 
         if self.parse:
             if not _VALIDATOR_AVAILABLE:
-                print("lark is unavailable. --parse will be ignored", file=sys.stderr)
+                logger.warning("lark is unavailable. --parse will be ignored")
                 return
             # Disable cache for now
             # It could be enabled, but we have to be careful about clearing the
             # cache after grammar changes
             self.parser = GrasciiValidator(use_cache=False)
+            logger.info("Created GrasciiValidator")
 
-    def load_word_set(self) -> None:
+    def _load_word_set(self) -> None:
         """Load a set of words to check the spelling of words."""
 
-        self.words = set()
-        if self.spell:
-            with get_words_file("words.txt") as words:
-                    self.words |= set(line.strip().capitalize() for line in words)
-            with get_words_file("extra_words.txt") as words:
-                    self.words |= set(line.strip().capitalize() for line in words)
+        if self.words_file:
+            self.words = set()
+            with self.words_file.open("r") as words:
+                self.words |= set(line.strip().capitalize() for line in words)
+            logger.info("Loaded words from %s", self.words_file)
 
-    def check_line(self, file_name: os.PathLike, line: str, line_number: int) -> Optional[List[str]]:
+    def _check_line(self, file_name: str, line: str, line_number: int) -> Optional[List[str]]:
         """Check a dictionary source file line for comments, uncertainty,
         and incorrect token counts.
-        
+
         :returns: A list of tokens from the line or None if the line contains
             an error."""
 
@@ -192,74 +214,72 @@ class DictionaryBuilder():
             if tokens[0][0] == "#":
                 return None
             if tokens[0] == "?":
-                self.log_warning(file_name, line, line_number, "Uncertainty")
-                # tokens.pop(0)
+                self._log_warning(file_name, line, line_number, "Uncertainty")
                 tokens = tokens[1:]
-            if len(tokens) < 2:
-                self.log_error(file_name, line, line_number, "Too few words")
-                return None
-            match = re.match(r"\*(\d*)", tokens[0])           
-            count: Optional[int] = 1
+            match = re.match(r"\*(\d+)", tokens[0])
+            count = 1
             if match:
                 tokens = tokens[1:]
-                if match[1]:
-                    count = int(match[1])
-                else:
-                    count = None
-            if count and len(tokens) != count + 1:
+                assert match[1], match
+                count = int(match[1])
+            if len(tokens) < count + 1:
+                self._log_error(file_name, line, line_number,
+                               f"Too few words: Expected: {count} Got: {len(tokens) - 1}")
+                return None
+            if count and len(tokens) > count + 1:
                 if self.count_words:
-                    self.log_warning(file_name, line, line_number,
-                            "Incorrect number of words:",
-                            "Expected:", str(count), "Got:", str(len(tokens) - 1))
+                    self._log_warning(file_name, line, line_number,
+                                     f"Too many words: Expected: {count} Got: {len(tokens) - 1}")
         return tokens
 
-    def check_grascii(self, grascii: str, file_name: os.PathLike, line: str, line_number: int) -> bool:
+    def _check_grascii(self, grascii: str, file_name: str, line: str, line_number: int) -> bool:
         """Check the parsabliity of a grascii string.
-        
+
         :returns: False if parse checking is enabled and a parse fails.
         """
 
         if self.parse and _VALIDATOR_AVAILABLE:
             if not self.parser.validate(grascii):
-                self.log_error(file_name, line, line_number, "Failed to parse", grascii)
+                self._log_error(file_name, line, line_number, f"Failed to parse {grascii}")
                 return False
         return True
 
-    def check_word(self, word: str, file_name: os.PathLike, line: str, line_number: int) -> bool:
+    def _check_word(self, word: str, file_name: str, line: str, line_number: int) -> bool:
         """Check the existence of a word in the word set.
-        
+
         :returns: False if spell checking is enabled and the word does not
             exist in the word set.
         """
 
-        if self.spell:
+        if self.words:
             if word not in self.words:
-                self.log_warning(file_name, line, line_number, word, "not in dictionary")
+                self._log_warning(file_name, line, line_number, f"{word} not in words file")
                 return False
         return True
 
-    def write_entry(self, grascii: str, word: str) -> None:
+    def _write_entry(self, grascii: str, word: str) -> None:
         """Write an entry to an output file.
-        
+
         :param grascii: The grascii string to write.
         :param word: The grascii string's corresponding word to write.
         """
 
         if not self.check_only:
-            out = self.get_output_file(grascii)
+            out = self._get_output_file(grascii)
             out.write(grascii + " ")
             out.write(word + "\n")
 
-    def close_output_files(self) -> None:
+    def _close_output_files(self) -> None:
         """Close all output files."""
 
         for f in self.out_files.values():
             f.close()
+        logger.info("Closed output files")
 
-    def print_build_summary(self, time: float) -> None:
+    def print_build_summary(self) -> None:
         """Print a summary of the build including warning, error, and entry counts
         as well as the time taken.
-        
+
         :param time: The time in seconds taken to run the build.
         """
 
@@ -271,56 +291,59 @@ class DictionaryBuilder():
             print("Wrote", val, "entries to", os.path.join(self.output, key))
         if total > 0:
             print()
-        formatted_time = "{:.5f}".format(time)
+        formatted_time = f"{self.time:.5f}"
         print("Finished Build in", formatted_time, "seconds")
         if not self.check_only:
             print("Entries:", total)
-        print("Warnings:", self.warnings)
-        print("Errors:", self.errors)
-
+        print("Warnings:", len(self.warnings))
+        print("Errors:", len(self.errors))
 
     def build(self) -> None:
         """Run the build based on the build settings given in the constructor."""
 
         # time the build
-        start_time = time.perf_counter() 
+        start_time = time.perf_counter()
 
-        self.load_word_set()
-        self.load_parser()
-        self.prepare_output_dir()
+        logger.info("Starting build")
+
+        if self.check_only:
+            logger.info("Only checking source files. Output files will not be generated.")
+
+        self._load_word_set()
+        self._load_parser()
+        self._prepare_output_dir()
 
         try:
-            # for src_file in self.src_files:
-                # with open(src_file) as src_file:
-                    # for i, line in enumerate(src_file):
-
             with FileInput(self.src_files) as f:
                 for line in f:
-                    tokens = self.check_line(f.filename(), line, f.filelineno())
+                    tokens = self._check_line(f.filename(), line, f.filelineno())
                     if not tokens:
                         continue
 
                     grascii = tokens[0].upper()
                     # remove '-' characters
                     grascii = "".join(grascii.split("-"))
-                    word = " ".join(t.capitalize() for t in tokens[1:])
+                    word_list = []
+                    for word in tokens[1:]:
+                        word_list.append(word.capitalize())
+                        self._check_word(word_list[-1], f.filename(), line, f.filelineno())
+                    word = " ".join(word_list)
 
-                    if not self.check_grascii(grascii, f.filename(), line, f.filelineno()):
+                    if not self._check_grascii(grascii, f.filename(), line, f.filelineno()):
                         continue
 
-                    if not self.check_word(word, f.filename(), line, f.filelineno()):
-                        continue
-                   
                     try:
-                        self.write_entry(grascii, word)
+                        self._write_entry(grascii, word)
                     except NoMatchingOutputFile:
-                        self.log_error(f.filename(), line, f.filelineno(), "No output file for", grascii, word)
+                        self._log_error(f.filename(), line, f.filelineno(), f"No output file for {grascii} {word}")
                         continue
         finally:
-            self.close_output_files()
+            self._close_output_files()
 
         end_time = time.perf_counter()
-        self.print_build_summary(end_time - start_time)
+        self.time = end_time - start_time
+        logger.info("Build completed in %s seconds", self.time)
+
 
 def build(**kwargs) -> None:
     """Run a dictionary build.
@@ -331,13 +354,17 @@ def build(**kwargs) -> None:
     builder = DictionaryBuilder(**kwargs)
     builder.build()
 
+
 def cli_build(args: argparse.Namespace) -> None:
     """Run a build using arguments parsed from the command line.
-    
+
     :param args: A namespace of parsed arguments.
     """
 
-    build(**{k: v for k, v in vars(args).items() if v is not None})
+    builder = DictionaryBuilder(**{k: v for k, v in vars(args).items() if v is not None})
+    builder.build()
+    builder.print_build_summary()
+
 
 def main() -> None:
     """Run a build using arguments retrieved from sys.argv."""
@@ -347,6 +374,6 @@ def main() -> None:
     args = argparser.parse_args(sys.argv[1:])
     cli_build(args)
 
+
 if __name__ == "__main__":
     main()
-

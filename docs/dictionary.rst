@@ -5,8 +5,8 @@ Dictionary
 Grascii comes with the Grascii forms of all words in the 1916 Gregg 
 Shorthand Dictionary.
 
-These mappings of Grascii strings to their corresponding words are
-contained in a series of text files in the ``dsrc`` directory.
+These mappings of Grascii strings to their corresponding words are contained in
+a series of text files in the ``dictionaries/builtins`` subdirectories.
 
 These dictionary source files are compiled into the dictionary
 format that Grascii Search expects using ``grascii dictionary build``.
@@ -157,27 +157,29 @@ Usage
   will be reported, and the corresponding entry will not be included in
   the output.
 
-.. option:: -s, --spell
+.. option:: -w, --words
 
-  During the build, all translations will be looked up in a dictionary to
-  check the spelling/existence of the word. If the word is not found, a
-  warning will be reported, but the corresponding entry will still be 
-  included in the output.
+  Provide a path to a line-separated words file. If provided, all translations
+  will be looked up in the words file to check the spelling/existence of the
+  word. If the word is not found, a warning will be reported, but the
+  corresponding entry will still be included in the output.
 
 .. option:: -n, --count
 
   During the build, all lines are checked to have a single Grascii String
   followed by a translation of an expected number of words (default 1). If the
-  expected number of words in the translation does not match the actual
+  expected number of words in the translation is less than the actual
   number of words, a warning will be reported, but the corresponding entry will
   still be included in the output.
 
 .. option:: -k, --check-only
 
   Only check the input. No output is generated.
-  
 
-.. Talk about word list and dictionaries.
+.. option:: -v, --verbose
+
+  Increase the output verbosity. May be specified up to two times.
+
 
 Warnings and Errors
 ===================
@@ -199,10 +201,10 @@ Uncertainty
 
 Reports that an entry beginning with `?` has been found.
 
-Incorrect token count
-^^^^^^^^^^^^^^^^^^^^^
+Too many tokens
+^^^^^^^^^^^^^^^
 
-When the :option:`--count` flag is set, denotes that an unexpected number of
+When the :option:`--count` flag is set, denotes that too many
 tokens have been found in a source entry. The first word on a line is
 interpreted as a Grascii string and the rest are interpreted as its
 translation. By default, the translation is expected to be one word in length.
@@ -213,8 +215,8 @@ of words in the translation. Example entry: `*2 uer we are`.
 Spelling
 ^^^^^^^^
 
-When the :option:`--spell` flag is set, denotes that an entry's translation
-has not been found in a dictionary.
+When a words file is provided with :option:`--words`, denotes that one or more
+parts of an entry's translation has not been found in the words file.
 
 Possible Errors
 ---------------
@@ -222,28 +224,29 @@ Possible Errors
 Too few tokens
 ^^^^^^^^^^^^^^
 
-Reports that there is only one word on a line. A translation may be 
-missing.
+Denotes that there are too few words on a line. A translation may be
+missing or incomplete.
 
 Invalid Grascii
 ^^^^^^^^^^^^^^^
 
-When the :option:`--parse` flag is set, denotes that the first word is not a valid
-Grascii string.
+When the :option:`--parse` flag is set, denotes that the first word is not a
+valid Grascii string.
 
 Suggestions
 -----------
 
-Most of the time, it is acceptable to run the build without the :option:`--parse`
-or :option:`--spell` flags for a quick build.
-
-The overhead of :option:`--spell` is reasonable, but enabling :option:`--parse` will greatly
-increase build times. However, it is recommended to run a build with these
-options and resolving the issues before releasing the dictionary publicly.
+Most of the time, it is acceptable to run the build without the
+:option:`--parse` flag for a quick build. However, it is recommended to run a
+build with this option and resolve the issues before releasing the dictionary
+publicly.
 
 The :option:`--count` flag is recommended for standard dictionaries, but may be
 omitted for phrase dictionaries in which the majority of translations are more
 than one word in length.
+
+On Unix systems, words files for the :option:`--words` option may be found in
+`/usr/share/dict` or `/usr/dict`.
 
 Working with Custom Dictionaries
 ********************************

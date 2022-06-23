@@ -1,8 +1,17 @@
-include dictionaries/builtins/preanniversary/*.txt
-include grascii/*.py
-include grascii/grammars/*.lark
+recursive-include grascii *.lark
 include grascii/defaults.conf
-include docs/*.rst
-include setup.py
-recursive-include tests *.py *.txt
 prune grascii/dictionary/preanniversary
+
+prune dictionaries
+recursive-include dictionaries/builtins *.txt
+prune dictionaries/builtins/preanniversary-phrases-preview
+
+recursive-include docs *.rst Makefile
+include docs/conf.py
+include docs/make.bat
+
+recursive-include images *.png
+
+recursive-include tests *.py *.txt
+include *.md
+exclude .gitmodules

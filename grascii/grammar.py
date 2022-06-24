@@ -20,12 +20,12 @@
 :var BOUNDARY: The character corresponding to a boundary.
 :var INTERSECTION: The character corresponding to an intersection.
 :var ALPHABET: The set of valid characters in the grascii language.
-:var ANNOTATIONS: A dictionary of annotatable strokes to a sequence of 
+:var ANNOTATIONS: A dictionary of annotatable strokes to a sequence of
     acceptable annotations on the corresponding stroke. The sequece contains
     tuples of annotations. The tuples are ordered in the same order they
     must appear in a strict grascii string. The tuples contain mutually
     exclusive annotations. Ex: MEDIUM_SOUND and LONG_SOUND
-""" 
+"""
 
 from typing import Dict, List, Tuple
 
@@ -55,8 +55,17 @@ INTERSECTION = "\\"
 
 ALPHABET = set("ABCDEFGIJKLMNOPRSTUVXZ'.,|~_()^-&\\")
 
-_CIRCLE_VOWEL_ANNOTATIONS: List[Tuple[str, ...]] = [(REVERSE,), (LOOP,), (MEDIUM_SOUND, LONG_SOUND), (WUNDERBAR,)]
-_CIRCLE_DIPHTHONG_ANNOTATIONS: List[Tuple[str, ...]] = [(REVERSE,), (LOOP,), (WUNDERBAR,)]
+_CIRCLE_VOWEL_ANNOTATIONS: List[Tuple[str, ...]] = [
+    (REVERSE,),
+    (LOOP,),
+    (MEDIUM_SOUND, LONG_SOUND),
+    (WUNDERBAR,),
+]
+_CIRCLE_DIPHTHONG_ANNOTATIONS: List[Tuple[str, ...]] = [
+    (REVERSE,),
+    (LOOP,),
+    (WUNDERBAR,),
+]
 _HOOK_DIPHTHONG_ANNOTATIONS: List[Tuple[str, ...]] = [(WUNDERBAR,)]
 _DIRECTED_CONSONANT_ANNOTATIONS: List[Tuple[str, ...]] = [(LEFT, RIGHT), (OBLIQUE,)]
 
@@ -74,5 +83,5 @@ ANNOTATIONS: Dict[str, List[Tuple[str, ...]]] = {
     "S": _DIRECTED_CONSONANT_ANNOTATIONS,
     "Z": _DIRECTED_CONSONANT_ANNOTATIONS,
     "TH": _DIRECTED_CONSONANT_ANNOTATIONS,
-    "SH": [(OBLIQUE,)]
+    "SH": [(OBLIQUE,)],
 }

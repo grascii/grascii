@@ -3,17 +3,20 @@ Contains metrics for comparing search queries to regular expression matches.
 """
 
 import string
-from typing import List, Set, Match, NamedTuple
+from typing import List, Match, NamedTuple, Set
 
 from grascii import grammar
 from grascii.parser import Interpretation
 from grascii.similarities import get_similar
 
+
 class AnnotatedStroke(NamedTuple):
     stroke: str
     annotations: Set[str]
 
+
 GrasciiSequence = List[AnnotatedStroke]
+
 
 def convert_interpretation(interp: Interpretation) -> GrasciiSequence:
     """Convert an interpretation into a GrasciiSequence
@@ -56,19 +59,13 @@ def convert_match(match: Match) -> GrasciiSequence:
             sequence.append(AnnotatedStroke(group, set()))
     return sequence
 
+
 BASE_COST = 4
 
-COSTS = {
-    "~": 2,
-    "|": 2,
-    ".": 1,
-    ",": 1,
-    "(": 1,
-    ")": 1,
-    "_": 1
-}
+COSTS = {"~": 2, "|": 2, ".": 1, ",": 1, "(": 1, ")": 1, "_": 1}
 ASP_COST = 1
 DIS_COST = BASE_COST
+
 
 def compute_ins_del_cost(stroke: AnnotatedStroke) -> int:
     """Compute the insertion and deletion cost of a stroke and its
@@ -89,6 +86,7 @@ def compute_ins_del_cost(stroke: AnnotatedStroke) -> int:
     assert cost > 0, stroke
     cost += sum(COSTS.get(annotation, 0) for annotation in stroke.annotations)
     return cost
+
 
 def get_distance(stroke1: str, stroke2: str) -> int:
     """Calculate the distance between two strokes in a similarity graph.
@@ -111,6 +109,7 @@ def get_distance(stroke1: str, stroke2: str) -> int:
             return distance
     return 3
 
+
 def compute_sub_cost(stroke1: AnnotatedStroke, stroke2: AnnotatedStroke) -> int:
     """Compute the cost of substituting an annotated stroke with another one.
 
@@ -128,6 +127,7 @@ def compute_sub_cost(stroke1: AnnotatedStroke, stroke2: AnnotatedStroke) -> int:
     if stroke1.stroke == stroke2.stroke:
         return 0
     return max(compute_ins_del_cost(stroke1), compute_ins_del_cost(stroke2))
+
 
 def match_distance(seq1: GrasciiSequence, seq2: GrasciiSequence) -> int:
     """Compute a weighed Levenshtein distance between two sequences of annotated
@@ -155,6 +155,7 @@ def match_distance(seq1: GrasciiSequence, seq2: GrasciiSequence) -> int:
         vec0, vec1 = vec1, vec0
 
     return vec0[len(seq2)]
+
 
 def standard(interp: Interpretation, match: Match) -> int:
     """Compute the standard metric for a grascii search.

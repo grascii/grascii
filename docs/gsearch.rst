@@ -4,7 +4,7 @@ Search
 
 The core feature of the Grascii suite is search.
 
-Fundamentally, it allows one to enter a Grascii string as a query and 
+Fundamentally, it allows one to enter a Grascii string as a query and
 search the Grascii dictionary for potential translations.
 
 Usage
@@ -40,10 +40,10 @@ uncertainty.
 
 .. option:: -s {match, start, contain}, --search-mode {match, start, contain}
 
-Set the type of search to perform. 
+Set the type of search to perform.
 
 ``match``: Search for words that
-closely match the input. 
+closely match the input.
 
 ``start``; Search for words that start with the input.
 
@@ -100,7 +100,7 @@ Specify which dictionary to search. This option may be used more than once to
 search multiple dictionaries at the same time.
 
 ``<dictionary>`` is either a path to the output directory of a built
-dictionary, or a colon followed by the name of an installed dictionary. 
+dictionary, or a colon followed by the name of an installed dictionary.
 Ex: ``:preanniversary``.
 
 
@@ -108,8 +108,8 @@ Suggestions
 ===========
 
 * use interactive mode
-* :option:`--regex` is intended for advanced users and advanced searches. Regexes 
-  can be difficult to deal with manually, and most users should use 
+* :option:`--regex` is intended for advanced users and advanced searches. Regexes
+  can be difficult to deal with manually, and most users should use
   :option:`--grascii` instead as it handles many of these complications. Using
   :option:`--regex` is effectively equivalent to
   ``$ grep [regex] dict/*``
@@ -132,7 +132,6 @@ The search procedure when given a Grascii query is as follows:
    for each token are built into the regex which may or may not occur.
 6. A set of starting letters is tracked which are the first alphabetic
    characters required to be accepted by any regex.
-7. The dictionary files corresponding to these letters are opened and 
+7. The dictionary files corresponding to these letters are opened and
    each line is searched with each regex.
 8. Any lines that have a matching regex are returned.
-

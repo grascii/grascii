@@ -1,37 +1,46 @@
 """
-Contains the base class for Searchers as well as multiple concrete 
-implementations of it. 
+Contains the base class for Searchers as well as multiple concrete
+implementations of it.
 """
 
-from abc import ABC, abstractmethod
 import re
 import sys
-from typing import List, Set, Iterable, TypeVar, Callable, Pattern, Tuple, Match
+from abc import ABC, abstractmethod
+from typing import Callable, Iterable, List, Match, Pattern, Set, Tuple, TypeVar
 
 from lark import UnexpectedInput
 
-from grascii import regen, metrics, grammar, defaults
+from grascii import defaults, grammar, metrics, regen
 from grascii.dictionary import get_dict_file
 from grascii.parser import GrasciiParser
 
-
 T = TypeVar("T")
+
 
 class Searcher(ABC):
 
     """An abstract base class for objects that search Grascii dictionaries."""
 
     def __init__(self, **kwargs):
-        self.dictionaries = kwargs.get("dictionaries") if kwargs.get("dictionaries") else defaults.SEARCH["Dictionary"].split()
+        self.dictionaries = (
+            kwargs.get("dictionaries")
+            if kwargs.get("dictionaries")
+            else defaults.SEARCH["Dictionary"].split()
+        )
 
-    def perform_search(self, patterns: Iterable[Tuple[T, Pattern]], starting_letters: Set[str], metric: Callable[[T, Match], int]) -> Iterable[str]:
+    def perform_search(
+        self,
+        patterns: Iterable[Tuple[T, Pattern]],
+        starting_letters: Set[str],
+        metric: Callable[[T, Match], int],
+    ) -> Iterable[str]:
         """Performs a search of a Grascii Dictionary.
-        
+
         :param patterns: A collection of compiled regular expression patterns
             with a corresponding interpretation.
         :param starting_letters: A set of letters used to index the search in
             a Grascii Dictionary.
-        :param metric: A function taking an interpretation and a regular 
+        :param metric: A function taking an interpretation and a regular
             expression match that returns a positive integer signifying the
             difference between the interpretation and the match. 0 means the
             two are equivalent. The greater the value, the more different
@@ -39,14 +48,14 @@ class Searcher(ABC):
         :returns: A collection strings of the form "[grascii] [translation]"
             sorted by the results of metric.
         """
-        sorted_results: List[Tuple[str, int]] = list()
+        sorted_results: List[Tuple[str, int]] = []
         for dict_name in self.dictionaries:
             for item in sorted(starting_letters):
                 try:
                     with get_dict_file(dict_name, item) as dictionary:
                         for line in dictionary:
                             found_match = False
-                            diff = 2^32 - 1
+                            diff = 2 ^ 32 - 1
                             for interp, pattern in patterns:
                                 match = pattern.search(line)
                                 if match:
@@ -73,6 +82,7 @@ class Searcher(ABC):
         options and returns the results."""
         ...
 
+
 class GrasciiSearcher(Searcher):
 
     """A subclass of Searcher that performs a search given a Grascii string"""
@@ -84,26 +94,46 @@ class GrasciiSearcher(Searcher):
     def extract_search_args(self, **kwargs):
         """Get the relevant arguments for search."""
 
-        self.uncertainty = kwargs.get("uncertainty", defaults.SEARCH.getint("Uncertainty"))
+        self.uncertainty = kwargs.get(
+            "uncertainty", defaults.SEARCH.getint("Uncertainty")
+        )
         # handle enum conversion error?
         try:
-            self.search_mode = regen.SearchMode(kwargs.get("search_mode", defaults.SEARCH["SearchMode"]))
+            self.search_mode = regen.SearchMode(
+                kwargs.get("search_mode", defaults.SEARCH["SearchMode"])
+            )
         except ValueError:
-            self.search_mode = regen.SearchMode(defaults.DEFAULTS["Search"]["SearchMode"])
+            self.search_mode = regen.SearchMode(
+                defaults.DEFAULTS["Search"]["SearchMode"]
+            )
         try:
-            self.annotation_mode = regen.Strictness(kwargs.get("annotation_mode", defaults.SEARCH["AnnotationMode"]))
+            self.annotation_mode = regen.Strictness(
+                kwargs.get("annotation_mode", defaults.SEARCH["AnnotationMode"])
+            )
         except ValueError:
-            self.annotation_mode = regen.Strictness(defaults.DEFAULTS["Search"]["AnnotationMode"])
+            self.annotation_mode = regen.Strictness(
+                defaults.DEFAULTS["Search"]["AnnotationMode"]
+            )
         try:
-            self.aspirate_mode = regen.Strictness(kwargs.get("aspirate_mode", defaults.SEARCH["AspirateMode"]))
+            self.aspirate_mode = regen.Strictness(
+                kwargs.get("aspirate_mode", defaults.SEARCH["AspirateMode"])
+            )
         except ValueError:
-            self.aspirate_mode = regen.Strictness(defaults.DEFAULTS["Search"]["AspirateMode"])
+            self.aspirate_mode = regen.Strictness(
+                defaults.DEFAULTS["Search"]["AspirateMode"]
+            )
         try:
-            self.disjoiner_mode = regen.Strictness(kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"]))
+            self.disjoiner_mode = regen.Strictness(
+                kwargs.get("disjoiner_mode", defaults.SEARCH["DisjoinerMode"])
+            )
         except ValueError:
-            self.disjoiner_mode = regen.Strictness(defaults.DEFAULTS["Search"]["DisjoinerMode"])
+            self.disjoiner_mode = regen.Strictness(
+                defaults.DEFAULTS["Search"]["DisjoinerMode"]
+            )
         self.fix_first = kwargs.get("fix_first", False)
-        self.interpretation_mode = kwargs.get("interpretation", defaults.SEARCH["Interpretation"])
+        self.interpretation_mode = kwargs.get(
+            "interpretation", defaults.SEARCH["Interpretation"]
+        )
 
     def search(self, **kwargs):
         """
@@ -143,15 +173,20 @@ class GrasciiSearcher(Searcher):
             aspirate_mode=self.aspirate_mode,
             annotation_mode=self.annotation_mode,
             disjoiner_mode=self.disjoiner_mode,
-            fix_first=self.fix_first
+            fix_first=self.fix_first,
         )
 
-        interps = interpretations[0:1] if self.interpretation_mode == "best" else interpretations
+        interps = (
+            interpretations[0:1]
+            if self.interpretation_mode == "best"
+            else interpretations
+        )
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
 
         results = self.perform_search(patterns, starting_letters, metrics.standard)
         return list(results)
+
 
 class RegexSearcher(Searcher):
 
@@ -172,10 +207,14 @@ class RegexSearcher(Searcher):
         print(regex)
         pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
-        metric = lambda str, Match: 0
+
+        def metric(s: str, m: Match):
+            return 0
+
         starting_letters = grammar.HARD_CHARACTERS
         results = self.perform_search(patterns, starting_letters, metric)
         return list(results)
+
 
 class ReverseSearcher(RegexSearcher):
 

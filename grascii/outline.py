@@ -1,9 +1,9 @@
-
 from enum import Enum
-from typing import Optional, NamedTuple, List
+from typing import List, NamedTuple, Optional
 
 from grascii import grammar
 from grascii.parser import Interpretation
+
 
 class Direction(Enum):
 
@@ -16,6 +16,7 @@ class Direction(Enum):
     SOUTH_EAST = "SE"
     SOUTH_WEST = "SW"
 
+
 class Curve(Enum):
 
     LINE = 1
@@ -23,18 +24,21 @@ class Curve(Enum):
     COUNTER_CLOCKWISE = 3
     LOOP = 4
 
+
 class StrokeType(NamedTuple):
     direction: Optional[Direction]
     curve: Optional[Curve]
 
-class Stroke:
 
-    def __init__(self,
-                 stroke: str,
-                 head_direction: Optional[Direction]=None,
-                 head_curve: Optional[Curve]=None,
-                 tail_direction: Optional[Direction]=None,
-                 tail_curve: Optional[Curve]=None) -> None:
+class Stroke:
+    def __init__(
+        self,
+        stroke: str,
+        head_direction: Optional[Direction] = None,
+        head_curve: Optional[Curve] = None,
+        tail_direction: Optional[Direction] = None,
+        tail_curve: Optional[Curve] = None,
+    ) -> None:
         self.stroke = stroke
         self.head_type = StrokeType(head_direction, head_curve)
         td = tail_direction if tail_direction else head_direction
@@ -60,7 +64,7 @@ class Stroke:
         self.annotations.insert(0, annotation)
 
     @classmethod
-    def create(cls, stroke: str) -> 'Stroke':
+    def create(cls, stroke: str) -> "Stroke":
         if stroke in {"A", "E", "I", "A&'", "A&E"}:
             return cls(stroke, None, Curve.LOOP)
         if stroke in {"K", "G"}:
@@ -84,9 +88,21 @@ class Stroke:
         if stroke in {"NG", "NK"}:
             return cls(stroke, Direction.SOUTH_EAST, Curve.LINE)
         if stroke in {"DF", "DV", "TV", "U"}:
-            return cls(stroke, Direction.NORTH_EAST, Curve.CLOCKWISE, Direction.SOUTH_WEST, Curve.CLOCKWISE)
+            return cls(
+                stroke,
+                Direction.NORTH_EAST,
+                Curve.CLOCKWISE,
+                Direction.SOUTH_WEST,
+                Curve.CLOCKWISE,
+            )
         if stroke in {"PNT", "PND", "JNT", "JND", "O"}:
-            return cls(stroke, Direction.SOUTH_EAST, Curve.COUNTER_CLOCKWISE, Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE)
+            return cls(
+                stroke,
+                Direction.SOUTH_EAST,
+                Curve.COUNTER_CLOCKWISE,
+                Direction.NORTH_EAST,
+                Curve.COUNTER_CLOCKWISE,
+            )
         return cls(stroke)
 
 
@@ -209,21 +225,33 @@ class Outline:
                 stroke.head_type = StrokeType(Direction.SOUTH_WEST, Curve.CLOCKWISE)
                 stroke.tail_type = StrokeType(Direction.SOUTH_WEST, Curve.CLOCKWISE)
             elif stroke.has_annotation(grammar.LEFT):
-                stroke.head_type = StrokeType(Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE)
-                stroke.tail_type = StrokeType(Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE)
+                stroke.head_type = StrokeType(
+                    Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE
+                )
+                stroke.tail_type = StrokeType(
+                    Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE
+                )
 
         def set_TH_stroke_type(stroke: Stroke) -> None:
             assert stroke.has_direction_annotation()
             if stroke.has_annotation(grammar.RIGHT):
-                stroke.head_type = StrokeType(Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE)
-                stroke.tail_type = StrokeType(Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE)
+                stroke.head_type = StrokeType(
+                    Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE
+                )
+                stroke.tail_type = StrokeType(
+                    Direction.NORTH_EAST, Curve.COUNTER_CLOCKWISE
+                )
             elif stroke.has_annotation(grammar.LEFT):
                 stroke.head_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
                 stroke.tail_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
 
         def set_S_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "S" or stroke.stroke == "Z"
-            if not stroke.prev_char and stroke.next_char and stroke.next_char.stroke == "O":
+            if (
+                not stroke.prev_char
+                and stroke.next_char
+                and stroke.next_char.stroke == "O"
+            ):
                 # Rule 35
                 stroke.add_annotation(grammar.RIGHT)
                 return
@@ -232,29 +260,42 @@ class Outline:
                 if stroke.prev_char.tail_type.curve == Curve.LOOP:
                     if stroke.prev_consonant:
                         # Rule 30 + 31
-                        if set_S_direction_based_on_curves(stroke, stroke.prev_consonant.tail_type, is_before=False):
+                        if set_S_direction_based_on_curves(
+                            stroke, stroke.prev_consonant.tail_type, is_before=False
+                        ):
                             return
-                    elif stroke.prev_char.stroke == "I" and not stroke.prev_char.prev_char:
+                    elif (
+                        stroke.prev_char.stroke == "I"
+                        and not stroke.prev_char.prev_char
+                    ):
                         # Addendum 3
                         stroke.add_annotation(grammar.LEFT)
                         return
                 # Rule 31
-                if set_S_direction_based_on_curves(stroke, stroke.prev_char.tail_type, is_before=False):
-                        return
+                if set_S_direction_based_on_curves(
+                    stroke, stroke.prev_char.tail_type, is_before=False
+                ):
+                    return
             if stroke.next_char:
                 if stroke.next_char.head_type.curve == Curve.LOOP:
                     if stroke.next_consonant:
                         # Rule 30 + 31
-                        if set_S_direction_based_on_curves(stroke, stroke.next_consonant.head_type, is_before=True):
+                        if set_S_direction_based_on_curves(
+                            stroke, stroke.next_consonant.head_type, is_before=True
+                        ):
                             return
                 # Rule 31
-                if set_S_direction_based_on_curves(stroke, stroke.next_char.head_type, is_before=True):
+                if set_S_direction_based_on_curves(
+                    stroke, stroke.next_char.head_type, is_before=True
+                ):
                     return
 
             # Rule 33
             stroke.add_annotation(grammar.RIGHT)
 
-        def set_S_direction_based_on_curves(stroke: Stroke, stroke_type: StrokeType, is_before: bool) -> bool:
+        def set_S_direction_based_on_curves(
+            stroke: Stroke, stroke_type: StrokeType, is_before: bool
+        ) -> bool:
             if stroke_type.curve == Curve.CLOCKWISE:
                 # Rule 30
                 stroke.add_annotation(grammar.RIGHT)
@@ -279,12 +320,22 @@ class Outline:
 
         def set_TH_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "TH"
-            if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"}) or \
-                    (stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"}):
+            if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"}) or (
+                stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"}
+            ):
                 # Rule 34
                 stroke.add_annotation(grammar.RIGHT)
-            elif (stroke.next_char and stroke.next_char.stroke in {"A", "E", "I", "A&'", "A&E"} and stroke.next_consonant and stroke.next_consonant.stroke in {"R", "L"}) or \
-                    (stroke.prev_char and stroke.prev_char.stroke in {"A", "E", "I", "A&'", "A&E"} and stroke.prev_consonant and stroke.prev_consonant.stroke in {"R", "L"}):
+            elif (
+                stroke.next_char
+                and stroke.next_char.stroke in {"A", "E", "I", "A&'", "A&E"}
+                and stroke.next_consonant
+                and stroke.next_consonant.stroke in {"R", "L"}
+            ) or (
+                stroke.prev_char
+                and stroke.prev_char.stroke in {"A", "E", "I", "A&'", "A&E"}
+                and stroke.prev_consonant
+                and stroke.prev_consonant.stroke in {"R", "L"}
+            ):
                 # Addendum 2
                 stroke.add_annotation(grammar.RIGHT)
             else:
@@ -293,9 +344,18 @@ class Outline:
 
         def set_O_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "O"
-            if stroke.next_char and stroke.next_char.stroke in {"N", "M", "MN", "MM", "R", "L"}:
-                if (not stroke.prev) or \
-                   (not stroke.prev_char or stroke.prev_char.tail_type.direction != Direction.SOUTH_WEST):
+            if stroke.next_char and stroke.next_char.stroke in {
+                "N",
+                "M",
+                "MN",
+                "MM",
+                "R",
+                "L",
+            }:
+                if (not stroke.prev) or (
+                    not stroke.prev_char
+                    or stroke.prev_char.tail_type.direction != Direction.SOUTH_WEST
+                ):
                     # Rule 20
                     stroke.add_annotation(grammar.LEFT)
 

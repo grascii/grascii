@@ -1,5 +1,5 @@
 """
-Contains an implementation of an Interactive Searcher for an 
+Contains an implementation of an Interactive Searcher for an
 interactive cli experience.
 """
 
@@ -9,16 +9,18 @@ try:
 except ImportError:
     raise ImportError("Grascii: interactive extra dependencies are not installed")
 
-from lark import Tree, UnexpectedInput
 import sys
-from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple, List
+from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 
-from grascii import regen, metrics
+from lark import UnexpectedInput
+
+from grascii import metrics, regen
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.parser import Interpretation, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
 
 T = TypeVar("T")
+
 
 class InteractiveSearcher(GrasciiSearcher):
     """This subclass of GrasciiSearcher runs an interactive search
@@ -56,9 +58,11 @@ class InteractiveSearcher(GrasciiSearcher):
         self.extract_search_args(**kwargs)
         self.run_interactive()
 
-    def choose_interpretation(self, interpretations: Sequence[Interpretation]) -> Optional[int]:
+    def choose_interpretation(
+        self, interpretations: Sequence[Interpretation]
+    ) -> Optional[int]:
         """Prompt the user to choose an interpretation(s).
-        
+
         :param interpretations: A collection of Interpretations to present
             to the user
         :returns: The index of the selected item in interpretations.
@@ -77,11 +81,15 @@ class InteractiveSearcher(GrasciiSearcher):
 
         previous_search = None
         while True:
-            action = questionary.select("What would you like to do?",
-                    ["New Search",
-                     Choice("Modify Search", disabled=not previous_search),
-                     "Edit Settings",
-                     "Exit"]).ask()
+            action = questionary.select(
+                "What would you like to do?",
+                [
+                    "New Search",
+                    Choice("Modify Search", disabled=not previous_search),
+                    "Edit Settings",
+                    "Exit",
+                ],
+            ).ask()
 
             if action is None or action == "Exit":
                 exit()
@@ -91,38 +99,99 @@ class InteractiveSearcher(GrasciiSearcher):
                 previous_search = self.interactive_search(previous_search)
             elif action == "Edit Settings":
                 while True:
-                    action = questionary.select("Search Settings",
-                            [Choice(title="Uncertainty [{}]".format(self.uncertainty), value=1),
-                             Choice(title="Search Mode [{}]".format(self.search_mode.value), value=2),
-                             Choice(title="Annotation Mode [{}]".format(self.annotation_mode.value), value=3),
-                             Choice(title="Aspirate Mode [{}]".format(self.aspirate_mode.value), value=4),
-                             Choice(title="Disjoiner Mode [{}]".format(self.disjoiner_mode.value), value=5),
-                             Choice(title="Fix First [{}]".format(self.fix_first), value=6),
-                             Choice(title="Dictionaries [{} selected]".format(len(self.dictionaries)), value=7),
-                             "Back"]
-                            ).ask()
+                    action = questionary.select(
+                        "Search Settings",
+                        [
+                            Choice(
+                                title="Uncertainty [{}]".format(self.uncertainty),
+                                value=1,
+                            ),
+                            Choice(
+                                title="Search Mode [{}]".format(self.search_mode.value),
+                                value=2,
+                            ),
+                            Choice(
+                                title="Annotation Mode [{}]".format(
+                                    self.annotation_mode.value
+                                ),
+                                value=3,
+                            ),
+                            Choice(
+                                title="Aspirate Mode [{}]".format(
+                                    self.aspirate_mode.value
+                                ),
+                                value=4,
+                            ),
+                            Choice(
+                                title="Disjoiner Mode [{}]".format(
+                                    self.disjoiner_mode.value
+                                ),
+                                value=5,
+                            ),
+                            Choice(
+                                title="Fix First [{}]".format(self.fix_first), value=6
+                            ),
+                            Choice(
+                                title="Dictionaries [{} selected]".format(
+                                    len(self.dictionaries)
+                                ),
+                                value=7,
+                            ),
+                            "Back",
+                        ],
+                    ).ask()
 
                     if action is None or action == "Back":
                         break
                     elif action == 1:
-                        self.change_arg("uncertainty", range(3), display_name="Uncertainty")
+                        self.change_arg(
+                            "uncertainty", range(3), display_name="Uncertainty"
+                        )
                     elif action == 2:
-                        self.change_arg("search_mode", list(regen.SearchMode), convert=self.get_enum_value, display_name="Search mode")
+                        self.change_arg(
+                            "search_mode",
+                            list(regen.SearchMode),
+                            convert=self.get_enum_value,
+                            display_name="Search mode",
+                        )
                     elif action == 3:
-                        self.change_arg("annotation_mode", list(regen.Strictness), convert=self.get_enum_value, display_name="Annotation mode")
+                        self.change_arg(
+                            "annotation_mode",
+                            list(regen.Strictness),
+                            convert=self.get_enum_value,
+                            display_name="Annotation mode",
+                        )
                     elif action == 4:
-                        self.change_arg("aspirate_mode", list(regen.Strictness), convert=self.get_enum_value, display_name="Aspirate mode")
+                        self.change_arg(
+                            "aspirate_mode",
+                            list(regen.Strictness),
+                            convert=self.get_enum_value,
+                            display_name="Aspirate mode",
+                        )
                     elif action == 5:
-                        self.change_arg("disjoiner_mode", list(regen.Strictness), convert=self.get_enum_value, display_name="Disjoiner mode")
+                        self.change_arg(
+                            "disjoiner_mode",
+                            list(regen.Strictness),
+                            convert=self.get_enum_value,
+                            display_name="Disjoiner mode",
+                        )
                     elif action == 6:
-                        self.change_arg("fix_first", [True, False], display_name="Fix First")
+                        self.change_arg(
+                            "fix_first", [True, False], display_name="Fix First"
+                        )
                     elif action == 7:
                         self.select_dictionaries()
-                                           
+
     def get_enum_value(self, enum):
         return enum.value
 
-    def change_arg(self, arg_name, options: Iterable[T], display_name: str=None, convert: Callable[[T], str]=str) -> None:
+    def change_arg(
+        self,
+        arg_name,
+        options: Iterable[T],
+        display_name: str = None,
+        convert: Callable[[T], str] = str,
+    ) -> None:
         """Prompt the user to select the value of a search parameter and set
             the new value.
 
@@ -133,10 +202,12 @@ class InteractiveSearcher(GrasciiSearcher):
             type T.
         """
 
-        choices = list()
+        choices = []
         for option in options:
             selected = getattr(self, arg_name) == option
-            choices.append(Choice(title=convert(option), value=option, checked=selected))
+            choices.append(
+                Choice(title=convert(option), value=option, checked=selected)
+            )
         title = display_name if display_name else "Set " + arg_name
         setting = questionary.select(title, choices).ask()
         if setting is not None:
@@ -148,12 +219,15 @@ class InteractiveSearcher(GrasciiSearcher):
             selected = dict_name in self.dictionaries
             choices.append(Choice(title=dict_name, value=dict_name, checked=selected))
         title = "Choose Dictionaries"
-        dictionaries = questionary.checkbox(title, choices,
-                validate=lambda l: True if len(l) > 0 else "Select at least one dictionary").ask()
+        dictionaries = questionary.checkbox(
+            title,
+            choices,
+            validate=lambda l: True if len(l) > 0 else "Select at least one dictionary",
+        ).ask()
         if dictionaries:
             self.dictionaries = dictionaries
 
-    def interactive_search(self, previous: str=None) -> Optional[str]:
+    def interactive_search(self, previous: str = None) -> Optional[str]:
         """Run an interactive search.
 
         :param previous: The previous search performed in this interactive
@@ -168,17 +242,17 @@ class InteractiveSearcher(GrasciiSearcher):
         if index is None:
             return search
         builder = regen.RegexBuilder(
-                uncertainty=self.uncertainty,
-                search_mode=self.search_mode, 
-                fix_first=self.fix_first, 
-                annotation_mode=self.annotation_mode, 
-                aspirate_mode=self.aspirate_mode, 
-                disjoiner_mode=self.disjoiner_mode
+            uncertainty=self.uncertainty,
+            search_mode=self.search_mode,
+            fix_first=self.fix_first,
+            annotation_mode=self.annotation_mode,
+            aspirate_mode=self.aspirate_mode,
+            disjoiner_mode=self.disjoiner_mode,
         )
         if index == 0:
             interps = interpretations
         else:
-            interps = interpretations[index - 1: index]
+            interps = interpretations[index - 1 : index]
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
         results = self.perform_search(patterns, starting_letters, metrics.standard)
@@ -187,25 +261,25 @@ class InteractiveSearcher(GrasciiSearcher):
         for result in results:
             count += 1
             action = "Next"
-            if not display_all: 
-                action = questionary.select("Search Results",
-                        ["Next",
-                         "Display All",
-                         "End Search" 
-                        ]).ask()
+            if not display_all:
+                action = questionary.select(
+                    "Search Results", ["Next", "Display All", "End Search"]
+                ).ask()
             print(result.strip())
             if action is None or action == "End Search":
                 break
             elif action == "Display All":
                 display_all = True
-            
+
         print("Results:", count)
         print()
         return search
-            
-    def get_grascii_search(self, previous: Optional[str]=None) -> Tuple[Optional[str], Optional[List[Interpretation]]]:
+
+    def get_grascii_search(
+        self, previous: Optional[str] = None
+    ) -> Tuple[Optional[str], Optional[List[Interpretation]]]:
         """Prompt the user for a grascii string.
-        
+
         :param previous: The previous grascii string used in a search.
         :returns: A grascii string and associated interpretations
         """

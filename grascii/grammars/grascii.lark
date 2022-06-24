@@ -9,7 +9,7 @@ _letter : ( consonant | vowel )
 
 consonant : standard_consonant
 	| blended_consonant
-	| annotatable_consonant	
+	| annotatable_consonant
 
 standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
@@ -53,7 +53,7 @@ diphthong.20 : circle_diphthong | hook_diphthong
 
 circle_diphthong : ( AE | EA ) REVERSE?
 	| I REVERSE? LOOP?
- 
+
 hook_diphthong : EU | AU | OE
 
 DISJOINER : "^"

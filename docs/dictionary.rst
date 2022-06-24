@@ -2,7 +2,7 @@
 Dictionary
 ##########
 
-Grascii comes with the Grascii forms of all words in the 1916 Gregg 
+Grascii comes with the Grascii forms of all words in the 1916 Gregg
 Shorthand Dictionary.
 
 These mappings of Grascii strings to their corresponding words are contained in
@@ -22,7 +22,7 @@ the following scheme:
 
 ``[Grascii String] [Translation]``
 
-There can be any amount of whitespace surrounding the ``Grascii String`` and 
+There can be any amount of whitespace surrounding the ``Grascii String`` and
 its ``Translation``.
 
 Both ``Grascii String`` and ``Translation`` are case-insensitive.
@@ -64,7 +64,7 @@ conventions.
   the corresponding page and column number in the dictionary. Entries in
   different pages/columns are separated by a blank line.
 * Comments should have `#` as the first character of the line, and there
-  should be a single space following the `#` before the first word of the 
+  should be a single space following the `#` before the first word of the
   comment.
 * If applicable, `?` should be the first character of the line, and there
   should be a single space following the `?` before the Grascii string.
@@ -129,7 +129,7 @@ Output files contain no blank lines.
 Building
 ********
 
-Usage 
+Usage
 =====
 
 .. describe:: grascii dictionary build [-h] [-o OUTPUT] [-c] [-p] [-s] infiles [infiles ...]
@@ -186,7 +186,7 @@ Warnings and Errors
 
 During a build, you may encounter warnings and errors.
 
-Warnings indicate that something unusual has been found with an entry. 
+Warnings indicate that something unusual has been found with an entry.
 Entries that receive a warning may warrant special attention/review.
 However, these entries will still be included in the final output.
 
@@ -251,7 +251,7 @@ On Unix systems, words files for the :option:`--words` option may be found in
 Working with Custom Dictionaries
 ********************************
 
-It is possible to write your own dictionaries to use with the Grascii 
+It is possible to write your own dictionaries to use with the Grascii
 tool suite.
 
 1. Make a directory to store your dictionary source files.
@@ -260,7 +260,7 @@ tool suite.
 
   $ mkdir mysrc
 
-2. Add source files to this directory that follow the dictionary source file 
+2. Add source files to this directory that follow the dictionary source file
    format.
 
 3. Build your dictionary.
@@ -274,7 +274,7 @@ tool suite.
   At this point, your dictionary is usable.
 
   ::
-    
+
     $ grascii search --dictionary ./mydict/ -g AB
 
   If you would like to install the dictionary so you do not have to
@@ -285,7 +285,7 @@ tool suite.
 ::
 
   $ grascii dictionary install --name custom ./mydict/
-  
+
 
 5. Verify the installation.
 
@@ -311,5 +311,3 @@ Uninstalling
 Simply run::
 
   $ grascii dictionary uninstall custom
-
-

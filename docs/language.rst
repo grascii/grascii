@@ -16,7 +16,7 @@ in grascii.lark.
 Grascii is moderately ambiguous. However, as the shorthand system is also
 ambiguous, it is reasonable that Grascii inherits this attribute.
 
-The current definition of Grascii is based on the Pre-anniversary (1916) 
+The current definition of Grascii is based on the Pre-anniversary (1916)
 version of Gregg Shorthand.
 
 It aims to describe the shorthand forms accurately and succinctly. It also
@@ -239,13 +239,12 @@ Examples
 Unsupported Language Features
 *****************************
 
-- Grascii does provide a way of distinguishing between smooth and sharp 
-  joinings. There is no plan to make it possible to make this distinction in 
+- Grascii does provide a way of distinguishing between smooth and sharp
+  joinings. There is no plan to make it possible to make this distinction in
   the future.
 - Intersection is currently not implemented. Proposed symbol to denote two
   intersected characters: \\.
-- RD is currently not implemented as it does not appear in Gregg 1916, 
+- RD is currently not implemented as it does not appear in Gregg 1916,
   although, it is a form in subsequent versions.
 - There is no way of distinguishing the capitalization of a form.
 - The under joining/short vowel sound is not included.
-

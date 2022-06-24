@@ -1,15 +1,15 @@
 
 conjunction : AND | THAT
 
-common_verb : BE | HAVE | PAY | FAVOR | PLEASE | BELIEVE | HONOR 
+common_verb : BE | HAVE | PAY | FAVOR | PLEASE | BELIEVE | HONOR
 	| RECEIVE | LOOK | SEE | SHIP | REACH | LIKE | REPRESENT | SELL | FIND
-	| SAY | TOLD | WIRE | WRITE | INCLOSE | THINK | WANT | SEND | THANK 
+	| SAY | TOLD | WIRE | WRITE | INCLOSE | THINK | WANT | SEND | THANK
   | DRAW | REPORT | HEAR | LEARN | ACKNOWLEDGE
 
 unit : MINUTES | HOURS| DAYS | WEEKS | MONTHS | YEARS
 
-common_noun.2 : MATTER | LETTER | FAVOR | REPLY | ALL | BEHALF | REGARD 
-  | ME | SIDE | TIME | HAND | ATTENTION | RIGHT | HIM | ORDER 
+common_noun.2 : MATTER | LETTER | FAVOR | REPLY | ALL | BEHALF | REGARD
+  | ME | SIDE | TIME | HAND | ATTENTION | RIGHT | HIM | ORDER
   | DATE | DAY | WEEK | RECEIPT | MAIL
 
 common_adjective : KIND | THAT | ALL | EVERY | WHICH | ABLE | EARLY | SORRY
@@ -47,7 +47,7 @@ adverb.2 : THERE | THUS // | SUCH
 command : PLEASE | SHIP | WRITE
 
 interrogative : CAN | DO | COULD | WOULD | SHOULD | WHERE | WHY | WHO | HOW
-	| WHAT | WHEN | IS 
+	| WHAT | WHEN | IS
 
 
 // common verbs
@@ -90,7 +90,7 @@ HOURS: HOUR "S"?
 HOUR: "R"
 AGO : "G"
 
-// common nouns 
+// common nouns
 MATTER : "MAT"
 LETTER : "LE"
 REPLY : "REP"
@@ -109,9 +109,9 @@ WEEK: "E"? "K"
 I : "A"
 YOU : "U"
 WE : "UE"
-THEY : "TH" "E"? 
+THEY : "TH" "E"?
 IT : "T"
-HE : "E"	
+HE : "E"
 
 // conjugations of 'to be'
 AM : "M"
@@ -202,7 +202,7 @@ REGARD : "RE"
 RELATIVE : "RELA"
 RESPECT : "RES"
 
-// common itles 
+// common itles
 SIR : "S"
 MADAM : "M"
 MR : "MR"
@@ -232,7 +232,7 @@ ONE : "UN"
 TWO : "TU"
 THREE : "TH)E"
 
-// miscellaneous 
+// miscellaneous
 NOT : "N"
 THAT : "THA"
 ASPIRATE : "'"

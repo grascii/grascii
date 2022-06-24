@@ -129,6 +129,8 @@ class RegexBuilder:
         aspirate = "(" + re.escape(grammar.ASPIRATE) + ")"
         disjoiner = "(" + re.escape(grammar.DISJOINER) + ")"
 
+        disjoiner_count = 0
+
         # grascii words are the first word of a dictionary entry which starts
         # at the beginning of the line
         builder = list("^")
@@ -174,6 +176,7 @@ class RegexBuilder:
                 ):
                     # retain a non-optional disjoiner
                     builder.append(disjoiner)
+                disjoiner_count += 1
                 i += 1
                 continue
 
@@ -214,6 +217,7 @@ class RegexBuilder:
             i += 1
 
         if self.search_mode is SearchMode.MATCH:
+            last_character = builder[-1]
             # match up to two aspirates at the end of the word
             if (
                 self.aspirate_mode is Strictness.LOW
@@ -226,6 +230,15 @@ class RegexBuilder:
                 elif builder[-2] != aspirate:
                     builder.append(aspirate)
                     builder.append("?")
+
+            # match up to one disjoiner at the end of a word
+            if self.disjoiner_mode is Strictness.LOW or (
+                self.disjoiner_mode is Strictness.MEDIUM
+                and disjoiner_count < 3
+                and last_character != disjoiner
+            ):
+                builder.append(disjoiner)
+                builder.append("?")
 
         if self.search_mode is SearchMode.MATCH:
             # match the end of the word/line

@@ -423,19 +423,53 @@ class TestDisjoiners(RegexBuilderTester):
             (["A", "^", "B"], [("AB", True), ("A^B", True), ("A^^B", False)]),
             (
                 ["A", "B", "D"],
-                [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)],
+                [
+                    ("ABD", True),
+                    ("A^BD", True),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
             (
                 ["A", "^", "B", "D"],
-                [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)],
+                [
+                    ("ABD", True),
+                    ("A^BD", True),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
             (
                 ["A", "B", "^", "D"],
-                [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)],
+                [
+                    ("ABD", True),
+                    ("A^BD", True),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
             (
                 ["A", "^", "B", "^", "D"],
-                [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)],
+                [
+                    ("ABD", True),
+                    ("A^BD", True),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
+            ),
+            (
+                ["A", "^", "B", "^", "D", "^"],
+                [
+                    ("ABD", True),
+                    ("A^BD", True),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
         ]
         self.run_tests(builder, tests)
@@ -447,19 +481,53 @@ class TestDisjoiners(RegexBuilderTester):
             (["A", "^", "B"], [("AB", False), ("A^B", True), ("A^^B", False)]),
             (
                 ["A", "B", "D"],
-                [("ABD", True), ("A^BD", True), ("AB^D", True), ("A^B^D", True)],
+                [
+                    ("ABD", True),
+                    ("A^BD", True),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
             (
                 ["A", "^", "B", "D"],
-                [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", True)],
+                [
+                    ("ABD", False),
+                    ("A^BD", True),
+                    ("AB^D", False),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
             (
                 ["A", "B", "^", "D"],
-                [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", True)],
+                [
+                    ("ABD", False),
+                    ("A^BD", False),
+                    ("AB^D", True),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
             ),
             (
                 ["A", "^", "B", "^", "D"],
-                [("ABD", False), ("A^BD", False), ("AB^D", False), ("A^B^D", True)],
+                [
+                    ("ABD", False),
+                    ("A^BD", False),
+                    ("AB^D", False),
+                    ("A^B^D", True),
+                    ("A^B^D^", True),
+                ],
+            ),
+            (
+                ["A", "^", "B", "^", "D", "^"],
+                [
+                    ("ABD", False),
+                    ("A^BD", False),
+                    ("AB^D", False),
+                    ("A^B^D", False),
+                    ("A^B^D^", True),
+                ],
             ),
         ]
         self.run_tests(builder, tests)
@@ -472,27 +540,72 @@ class TestDisjoiners(RegexBuilderTester):
             (
                 ["A", "B", "D"],
                 [("ABD", True), ("A^BD", False), ("AB^D", False), ("A^B^D", False)],
+                ("A^B^D^", False),
             ),
             (
                 ["A", "^", "B", "D"],
-                [("ABD", False), ("A^BD", True), ("AB^D", False), ("A^B^D", False)],
+                [
+                    ("ABD", False),
+                    ("A^BD", True),
+                    ("AB^D", False),
+                    ("A^B^D", False),
+                    ("A^B^D^", False),
+                ],
             ),
             (
                 ["A", "B", "^", "D"],
-                [("ABD", False), ("A^BD", False), ("AB^D", True), ("A^B^D", False)],
+                [
+                    ("ABD", False),
+                    ("A^BD", False),
+                    ("AB^D", True),
+                    ("A^B^D", False),
+                    ("A^B^D^", False),
+                ],
             ),
             (
                 ["A", "^", "B", "^", "D"],
-                [("ABD", False), ("A^BD", False), ("AB^D", False), ("A^B^D", True)],
+                [
+                    ("ABD", False),
+                    ("A^BD", False),
+                    ("AB^D", False),
+                    ("A^B^D", True),
+                    ("A^B^D^", False),
+                ],
+            ),
+            (
+                ["A", "^", "B", "^", "D", "^"],
+                [
+                    ("ABD", False),
+                    ("A^BD", False),
+                    ("AB^D", False),
+                    ("A^B^D", False),
+                    ("A^B^D^", True),
+                ],
             ),
         ]
         self.run_tests(builder, tests)
 
-    def test_prefixes(self):
+    def test_prefixes_strictness_low(self):
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.LOW)
+        tests = [
+            (["U"], [("U^", True), ("U", True)]),
+            (["U", "^"], [("U^", True), ("U", True), ("U^^", False)]),
+        ]
+        self.run_tests(builder, tests)
+
+    def test_prefixes_strictness_medium(self):
+        builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.MEDIUM)
+        tests = [
+            (["U"], [("U^", True), ("U", True)]),
+            (["U", "^"], [("U^", True), ("U", False), ("U^^", False)]),
+        ]
+        self.run_tests(builder, tests)
+
+    def test_prefixes_strictness_high(self):
         builder = regen.RegexBuilder(disjoiner_mode=regen.Strictness.HIGH)
         tests = [
             (["U"], [("U^", False), ("U", True)]),
-            (["U", "^"], [("U^", True), ("U", False)]),
+            (["U", "^"], [("U^", True), ("U", False), ("U^^", False)]),
         ]
         self.run_tests(builder, tests)
 

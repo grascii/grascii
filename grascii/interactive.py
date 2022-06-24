@@ -9,11 +9,12 @@ try:
 except ImportError:
     raise ImportError("Grascii: interactive extra dependencies are not installed")
 
-from lark import Tree, UnexpectedInput
 import sys
-from typing import Iterable, Sequence, TypeVar, Callable, Optional, Tuple, List
+from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 
-from grascii import regen, metrics
+from lark import UnexpectedInput
+
+from grascii import metrics, regen
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.parser import Interpretation, interpretation_to_string
 from grascii.searchers import GrasciiSearcher

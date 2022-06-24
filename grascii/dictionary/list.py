@@ -1,10 +1,8 @@
 import argparse
-from pathlib import Path, PurePath
-from shutil import copy
 import sys
 from typing import Collection
 
-from pkg_resources import resource_listdir, resource_isdir
+from pkg_resources import resource_isdir, resource_listdir
 
 from grascii.dictionary.install import DICTIONARY_PATH
 

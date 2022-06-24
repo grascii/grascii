@@ -1,10 +1,7 @@
 import argparse
-from pathlib import Path, PurePath
-from shutil import copy, rmtree
 import sys
+from shutil import rmtree
 
-from grascii.appdirs import user_data_dir
-from grascii.config import APP_NAME
 from grascii.dictionary.install import DICTIONARY_PATH
 
 description = "Uninstall a Grascii Dictionary"

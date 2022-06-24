@@ -3,9 +3,9 @@ Contains RegexBuilder for generating regular expression to use in grascii
 searches.
 """
 
-from enum import Enum
 import re
-from typing import List, Union, Iterable, Set, Pattern, Tuple
+from enum import Enum
+from typing import Iterable, List, Pattern, Set, Tuple
 
 from grascii import grammar
 from grascii.parser import Interpretation

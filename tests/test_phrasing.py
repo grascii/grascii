@@ -1,11 +1,11 @@
 import os
 import unittest
 
-from lark import Lark, Transformer, Token
+from lark import Lark
 from lark.visitors import CollapseAmbiguities
 
-from grascii.grammars import get_grammar
 from grascii.dephrase import PhraseFlattener
+from grascii.grammars import get_grammar
 
 
 class TestLessonPhrases(unittest.TestCase):
@@ -43,7 +43,7 @@ class TestLessonPhrases(unittest.TestCase):
                     parsed = " ".join(tokens)
                     try:
                         self.assertEqual(parsed, expected)
-                    except AssertionError as error:
+                    except AssertionError:
                         if not self.ambiguous_check(phrase, expected):
                             self.fail(msg="failed ambiguity test")
 

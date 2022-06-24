@@ -3,7 +3,7 @@ Contains metrics for comparing search queries to regular expression matches.
 """
 
 import string
-from typing import List, Set, Match, NamedTuple
+from typing import List, Match, NamedTuple, Set
 
 from grascii import grammar
 from grascii.parser import Interpretation

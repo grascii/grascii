@@ -7,14 +7,14 @@ $ python -m grascii.build --help
 """
 
 import argparse
-from fileinput import FileInput
 import logging
 import os
 import pathlib
 import re
 import sys
 import time
-from typing import TextIO, List, Optional, NamedTuple, Dict, Set
+from fileinput import FileInput
+from typing import Dict, List, NamedTuple, Optional, Set, TextIO
 
 from grascii import defaults, grammar
 

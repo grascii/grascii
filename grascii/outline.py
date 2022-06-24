@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, NamedTuple, List
+from typing import List, NamedTuple, Optional
 
 from grascii import grammar
 from grascii.parser import Interpretation

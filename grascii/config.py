@@ -6,9 +6,9 @@ $ python -m grascii.config --help
 """
 
 import argparse
+import sys
 from pathlib import Path, PurePath
 from shutil import copyfile
-import sys
 
 from grascii import APP_NAME
 from grascii.appdirs import user_config_dir

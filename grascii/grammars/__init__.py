@@ -1,8 +1,6 @@
 """Contains grammars used by grascii."""
 
-import io
 from pathlib import Path
-from pkg_resources import resource_string
 
 
 def get_grammar(name: str) -> str:

@@ -1,6 +1,6 @@
 """Contains methods for detemining the similarity of grascii strokes."""
 
-from typing import Tuple, Hashable, List, Set, cast, Dict, Iterable
+from typing import Dict, Hashable, Iterable, List, Set, Tuple, cast
 
 equiv_nodes: Dict[str, Tuple[str, ...]] = {
     "S": ("S", "Z"),

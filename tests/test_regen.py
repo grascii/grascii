@@ -1,9 +1,8 @@
 import re
 import unittest
-
 from typing import List, Tuple
 
-from grascii import regen, grammar, similarities
+from grascii import grammar, regen
 
 
 class TestAnnotationRegex(unittest.TestCase):

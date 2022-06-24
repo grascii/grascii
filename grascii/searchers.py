@@ -3,17 +3,16 @@ Contains the base class for Searchers as well as multiple concrete
 implementations of it.
 """
 
-from abc import ABC, abstractmethod
 import re
 import sys
-from typing import List, Set, Iterable, TypeVar, Callable, Pattern, Tuple, Match
+from abc import ABC, abstractmethod
+from typing import Callable, Iterable, List, Match, Pattern, Set, Tuple, TypeVar
 
 from lark import UnexpectedInput
 
-from grascii import regen, metrics, grammar, defaults
+from grascii import defaults, grammar, metrics, regen
 from grascii.dictionary import get_dict_file
 from grascii.parser import GrasciiParser
-
 
 T = TypeVar("T")
 
@@ -208,7 +207,10 @@ class RegexSearcher(Searcher):
         print(regex)
         pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
-        metric = lambda str, Match: 0
+
+        def metric(s: str, m: Match):
+            return 0
+
         starting_letters = grammar.HARD_CHARACTERS
         results = self.perform_search(patterns, starting_letters, metric)
         return list(results)

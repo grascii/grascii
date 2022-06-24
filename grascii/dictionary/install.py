@@ -1,7 +1,7 @@
 import argparse
-from pathlib import Path, PurePath
-from shutil import copy
 import sys
+from pathlib import Path
+from shutil import copy
 
 from grascii.appdirs import user_data_dir
 from grascii.config import APP_NAME

@@ -1,12 +1,14 @@
 import argparse
 import io
+import sys
 from pathlib import Path
 from typing import TextIO
-import sys
 
-from pkg_resources import resource_stream, resource_exists
+from pkg_resources import resource_exists, resource_stream
 
-from grascii.dictionary import list as list_dict, install, uninstall, build
+from grascii.dictionary import build, install
+from grascii.dictionary import list as list_dict
+from grascii.dictionary import uninstall
 from grascii.dictionary.install import DICTIONARY_PATH
 
 description = "Create and manage Grascii dictionaries"

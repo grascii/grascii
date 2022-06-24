@@ -1,11 +1,11 @@
 from functools import reduce
 from pathlib import Path
-from typing import Union, List
+from typing import List, Union
 
-from lark import Lark, Tree, Transformer, Token, UnexpectedInput
+from lark import Lark, Token, Transformer, Tree, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from grascii import grammar, APP_NAME, __version__
+from grascii import APP_NAME, __version__, grammar
 from grascii.appdirs import user_cache_dir
 from grascii.grammars import get_grammar
 

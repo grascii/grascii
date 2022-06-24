@@ -6,14 +6,10 @@ $ python -m grascii.search --help
 """
 
 import argparse
-from configparser import ConfigParser
-import io
-import os
-import re
 import sys
-from typing import Union, List, Dict, Set, Iterable, Match, Pattern, cast, Optional
+from typing import Iterable, Optional
 
-from grascii import regen, defaults
+from grascii import regen
 from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
 
 SUPPORTS_INTERACTIVE = False
@@ -21,7 +17,7 @@ try:
     from grascii.interactive import InteractiveSearcher
 
     SUPPORTS_INTERACTIVE = True
-except ImportError as e:
+except ImportError:
     pass
 
 

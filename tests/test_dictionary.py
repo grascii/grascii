@@ -1,6 +1,6 @@
-from pathlib import Path
 import logging
 import unittest
+from pathlib import Path
 
 from grascii.dictionary.build import DictionaryBuilder
 

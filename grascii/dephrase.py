@@ -1,15 +1,14 @@
 import argparse
+import sys
 from functools import lru_cache
 from typing import Set
-import sys
 
-from lark import Lark, Transformer, Token, UnexpectedInput
-from lark.visitors import CollapseAmbiguities, v_args, VisitError
+from lark import Lark, Token, Transformer, UnexpectedInput
+from lark.visitors import CollapseAmbiguities, VisitError, v_args
 
 from grascii.grammars import get_grammar
 from grascii.parser import GrasciiFlattener
 from grascii.searchers import GrasciiSearcher
-
 
 description = "Decipher a shorthand phrase."
 

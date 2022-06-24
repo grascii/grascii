@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import sys
 import argparse
-import os
+import sys
 
-from grascii import search, config, dictionary
+from grascii import config, dictionary, search
 
 
 def main() -> None:

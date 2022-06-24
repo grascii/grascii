@@ -1,7 +1,7 @@
 import unittest
 
-from grascii.parser import GrasciiParser, interpretation_to_string
 from grascii.outline import Outline
+from grascii.parser import GrasciiParser, interpretation_to_string
 
 
 class TestInferredDirections(unittest.TestCase):
@@ -142,13 +142,14 @@ class TestInferredDirections(unittest.TestCase):
         tests = [
             ("GAZ,", "GAZ),"),
             ("FAZ,", "FAZ),"),
-            ("ZELUS", "Z(ELUS"),
+            ("ZELUS", "Z(ELUS)"),
             ("ZERO", "Z(ERO"),
             ("MAZ", "MAZ("),
             ("RAZ", "RAZ("),
             ("DOZ", "DOZ("),
             ("LAZE", "LAZ(E"),
         ]
+        self.run_tests(tests)
 
     def test_lone_th(self):
         tests = [("TH", "TH("), ("TH)", "TH)"), ("TH(", "TH(")]

@@ -3,6 +3,10 @@
 
 version: 2
 
+submodules:
+  include:
+    - dictionaries
+
 build:
   os: ubuntu-20.04
   tools:
@@ -17,4 +21,8 @@ formats:
 
 python:
   install:
-  - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+        - interactive

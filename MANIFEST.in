@@ -9,7 +9,7 @@ prune dictionaries/builtins/preanniversary-phrases-preview
 recursive-include docs *.rst Makefile
 recursive-include docs/images *.png
 prune docs/reference
-include docs/conf.py docs/make.bat docs/requirements.txt
+include docs/conf.py docs/make.bat
 
 recursive-include tests *.py *.txt
 include *.md

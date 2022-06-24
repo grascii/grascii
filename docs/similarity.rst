@@ -13,5 +13,5 @@ uncertainty from the target node when performing a breadth-first-search.
 
 The similarity graph is shown below.
 
-.. image:: ../images/sim_graph.png
+.. image:: images/sim_graph.png
   :width: 600px

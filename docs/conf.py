@@ -29,7 +29,10 @@ master_doc = "index"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx_rtd_theme", "sphinx.ext.autodoc"]
+extensions = ["sphinx_rtd_theme", "sphinx.ext.autodoc", "sphinxcontrib.apidoc"]
+apidoc_module_dir = "../grascii"
+apidoc_excluded_paths = ["../grascii/appdirs.py"]
+apidoc_output_dir = "reference"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

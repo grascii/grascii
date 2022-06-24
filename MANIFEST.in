@@ -7,10 +7,10 @@ recursive-include dictionaries/builtins *.txt
 prune dictionaries/builtins/preanniversary-phrases-preview
 
 recursive-include docs *.rst Makefile
+recursive-include docs/images *.png
+prune docs/reference
 include docs/conf.py
 include docs/make.bat
-
-recursive-include images *.png
 
 recursive-include tests *.py *.txt
 include *.md

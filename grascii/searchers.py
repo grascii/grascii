@@ -204,7 +204,6 @@ class RegexSearcher(Searcher):
         """
 
         regex = kwargs["regexp"]
-        print(regex)
         pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
 
@@ -232,5 +231,5 @@ class ReverseSearcher(RegexSearcher):
         """
 
         word = kwargs["reverse"]
-        kwargs["regexp"] = r".*\s" + word.capitalize()
+        kwargs["regexp"] = r"(?i).+\s" + f"((.*\\s)?{word})"
         return super().search(**kwargs)

@@ -10,7 +10,7 @@ output_dir = "tests/dictionaries/tosearch"
 
 def setUpModule():
     rmtree(output_dir, ignore_errors=True)
-    infiles = Path("tests/dictionaries/search.txt")
+    infiles = [Path("tests/dictionaries/search.txt")]
     builder = DictionaryBuilder(infiles=infiles, output=output_dir)
     builder.build()
 

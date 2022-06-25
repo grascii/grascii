@@ -55,12 +55,14 @@ class Searcher(ABC):
                     with get_dict_file(dict_name, item) as dictionary:
                         for line in dictionary:
                             found_match = False
-                            diff = 2 ^ 32 - 1
+                            diff = None
                             for interp, pattern in patterns:
                                 match = pattern.search(line)
                                 if match:
                                     found_match = True
-                                    diff = min(diff, metric(interp, match))
+                                    distance = metric(interp, match)
+                                    if diff is None or distance < diff:
+                                        diff = distance
                             if found_match:
                                 i = len(sorted_results)
                                 sorted_results.append((line, diff))
@@ -207,8 +209,12 @@ class RegexSearcher(Searcher):
         pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
 
-        def metric(s: str, m: Match):
-            return 0
+        if "metric" in kwargs:
+            metric = kwargs["metric"]
+        else:
+
+            def metric(s: str, m: Match):
+                return 0
 
         starting_letters = grammar.HARD_CHARACTERS
         results = self.perform_search(patterns, starting_letters, metric)
@@ -231,5 +237,14 @@ class ReverseSearcher(RegexSearcher):
         """
 
         word = kwargs["reverse"]
-        kwargs["regexp"] = r"(?i).+\s" + f"((.*\\s)?{word})"
+        kwargs["regexp"] = (
+            r"(?i)(?P<grascii>.+?\s+)"
+            + f"(?P<translation>(.*\\s)?(?P<word>{word}).*)(\\s|\\Z)"
+        )
+
+        def metric(s: str, match: Match):
+            word_start = match.start("word") - match.end("grascii")
+            return word_start, len(match.group("translation"))
+
+        kwargs["metric"] = metric
         return super().search(**kwargs)

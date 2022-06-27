@@ -117,7 +117,6 @@ class TestBuiltins(unittest.TestCase):
     def setUpClass(cls):
         logging.getLogger("grascii.dictionary.build").setLevel(logging.CRITICAL)
 
-    @unittest.skip("There are a couple parse errors to resolve")
     def test_preanniversary(self):
         inputs = Path("dictionaries/builtins/preanniversary/").glob("*.txt")
         builder = DictionaryBuilder(

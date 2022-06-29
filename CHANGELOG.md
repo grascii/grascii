@@ -7,6 +7,10 @@
 
 - Some classes and functions that are considered to be part of the public API are importable from the top-level `grascii`.
 
+### Fixed
+
+- Included `TV` in `grammar.STROKES`.
+
 ## 0.4.0 - 2022-06-27
 
 ### Added

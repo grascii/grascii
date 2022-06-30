@@ -5,11 +5,35 @@ Contains metrics for comparing search queries to regular expression matches.
 from __future__ import annotations
 
 import string
-from typing import List, Match, NamedTuple, Set
+from abc import ABCMeta, abstractmethod
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    List,
+    Match,
+    NamedTuple,
+    Optional,
+    Set,
+    Tuple,
+    TypeVar,
+)
 
 from grascii import grammar
 from grascii.parser import Interpretation
 from grascii.similarities import get_similar
+
+if TYPE_CHECKING:
+    from grascii.searchers import SearchResult
+
+
+class Comparable(metaclass=ABCMeta):
+    @abstractmethod
+    def __lt__(self, other: Any) -> bool:
+        ...
+
+
+CT = TypeVar("CT", bound=Comparable)
 
 
 class AnnotatedStroke(NamedTuple):
@@ -159,7 +183,22 @@ def match_distance(seq1: GrasciiSequence, seq2: GrasciiSequence) -> int:
     return vec0[len(seq2)]
 
 
-def standard(interp: Interpretation, match: Match) -> int:
+IT = TypeVar("IT")
+
+
+def determine_shortest_distance(
+    matches: Tuple[IT, Match[str]], func: Callable[[IT, Match[str]], CT]
+) -> CT:
+    distance: Optional[CT] = None
+    for interp, match in matches:
+        new_distance = func(interp, match)
+        if distance is None or new_distance < distance:
+            distance = new_distance
+    assert distance is not None
+    return distance
+
+
+def standard(result: "SearchResult[Interpretation]") -> CT:
     """Compute the standard metric for a grascii search.
 
     :param interp: The interpretation to compare to the match
@@ -167,6 +206,24 @@ def standard(interp: Interpretation, match: Match) -> int:
     :returns: A distance.
     """
 
-    seq1 = convert_interpretation(interp)
-    seq2 = convert_match(match)
-    return match_distance(seq1, seq2)
+    def distance(interp: Interpretation, match: Match) -> int:
+        seq1 = convert_interpretation(interp)
+        seq2 = convert_match(match)
+        return match_distance(seq1, seq2)
+
+    return determine_shortest_distance(result.matches, distance)
+
+
+def get_trivial() -> "Callable[[SearchResult[IT]], CT]":
+    def trivial(result: "SearchResult[IT]") -> int:
+        return 0
+
+    return trivial
+
+
+def translation_standard(result: "SearchResult[str]") -> CT:
+    def distance(s: str, match: Match[str]) -> Tuple[int, int]:
+        word_start = match.start("word") - match.end("grascii")
+        return word_start, len(match.group("translation"))
+
+    return determine_shortest_distance(result.matches, distance)

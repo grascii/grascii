@@ -16,7 +16,7 @@ from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 
 from lark import UnexpectedInput
 
-from grascii import metrics, regen
+from grascii import regen
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.parser import Interpretation, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
@@ -257,7 +257,7 @@ class InteractiveSearcher(GrasciiSearcher):
             interps = interpretations[index - 1 : index]
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
-        results = self.perform_search(patterns, starting_letters, metrics.standard)
+        results = self.perform_search(patterns, starting_letters)
         count = 0
         display_all = False
         for result in results:
@@ -267,7 +267,7 @@ class InteractiveSearcher(GrasciiSearcher):
                 action = questionary.select(
                     "Search Results", ["Next", "Display All", "End Search"]
                 ).ask()
-            print(result.strip())
+            print(result.entry.grascii, result.entry.translation)
             if action is None or action == "End Search":
                 break
             elif action == "Display All":

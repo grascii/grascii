@@ -124,7 +124,7 @@ def search(**kwargs) -> Optional[Iterable[str]]:
         searcher = ReverseSearcher(**kwargs)
     else:
         searcher = RegexSearcher(**kwargs)
-    return searcher.search(**kwargs)
+    return searcher.sorted_search(**kwargs)
 
 
 def cli_search(args: argparse.Namespace) -> None:

@@ -2,6 +2,7 @@
 Contains the base class for Searchers as well as multiple concrete
 implementations of it.
 """
+from __future__ import annotations
 
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ import re
 import sys
 from abc import ABC, abstractmethod
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Generic,
@@ -28,11 +30,12 @@ from lark.exceptions import UnexpectedInput
 
 from grascii import defaults, grammar, metrics, regen
 from grascii.dictionary import get_dict_file
-from grascii.metrics import Comparable
 from grascii.parser import GrasciiParser, Interpretation
 
+if TYPE_CHECKING:
+    from grascii.metrics import Comparable
+
 IT = TypeVar("IT")
-CT = TypeVar("CT", bound=Comparable)
 
 
 class DictionaryEntry(NamedTuple):
@@ -109,18 +112,20 @@ class Searcher(ABC, Generic[IT]):
 
     def sorted_search(
         self,
-        metric: Callable[[SearchResult[IT]], CT] = metrics.get_trivial(),
+        metric: Callable[[SearchResult[IT]], Comparable] = metrics.trivial,
         **kwargs: Any,
     ) -> Sequence[SearchResult[IT]]:
 
         results = []
-        for result in self.search(**kwargs):
-            results.append((result, metric(result)))
-            i = len(results) - 1
-            while i > 0:
-                if results[i][1] < results[i - 1][1]:
-                    results[i - 1], results[i] = results[i], results[i - 1]
-                i -= 1
+        search_results = self.search(**kwargs)
+        if search_results:
+            for result in search_results:
+                results.append((result, metric(result)))
+                i = len(results) - 1
+                while i > 0:
+                    if results[i][1] < results[i - 1][1]:
+                        results[i - 1], results[i] = results[i], results[i - 1]
+                    i -= 1
         return [result for result, _ in results]
 
 
@@ -229,7 +234,9 @@ class GrasciiSearcher(Searcher[Interpretation]):
 
     def sorted_search(
         self,
-        metric: Callable[[SearchResult[Interpretation]], CT] = metrics.standard,
+        metric: Callable[
+            [SearchResult[Interpretation]], Comparable
+        ] = metrics.grascii_standard,
         **kwargs: Any,
     ) -> Sequence[SearchResult[Interpretation]]:
         return super().sorted_search(metric, **kwargs)
@@ -283,7 +290,9 @@ class ReverseSearcher(RegexSearcher):
 
     def sorted_search(
         self,
-        metric: Callable[[SearchResult[str]], CT] = metrics.translation_standard,
+        metric: Callable[
+            [SearchResult[str]], Comparable
+        ] = metrics.translation_standard,
         **kwargs: Any,
     ) -> Sequence[SearchResult[str]]:
         return super().sorted_search(metric, **kwargs)

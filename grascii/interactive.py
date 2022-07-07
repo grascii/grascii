@@ -3,6 +3,8 @@ Contains an implementation of an Interactive Searcher for an
 interactive cli experience.
 """
 
+from __future__ import annotations
+
 try:
     import questionary
     from questionary.prompts.common import Choice

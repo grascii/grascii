@@ -5,6 +5,8 @@ This can be invoked as a standalone program:
 $ python -m grascii.search --help
 """
 
+from __future__ import annotations
+
 import argparse
 import sys
 from typing import Iterable, Optional

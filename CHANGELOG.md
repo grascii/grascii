@@ -1,6 +1,12 @@
 
 # Changelog
 
+## Unreleased
+
+### Removed
+
+- Dropped Python 3.6 support
+
 ## 0.4.1 - 2022-06-29
 
 ### Added

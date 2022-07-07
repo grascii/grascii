@@ -3,6 +3,8 @@ Contains the base class for Searchers as well as multiple concrete
 implementations of it.
 """
 
+from __future__ import annotations
+
 import re
 import sys
 from abc import ABC, abstractmethod

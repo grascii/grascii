@@ -3,6 +3,8 @@ Contains RegexBuilder for generating regular expression to use in grascii
 searches.
 """
 
+from __future__ import annotations
+
 import re
 from enum import Enum
 from typing import Iterable, List, Pattern, Set, Tuple

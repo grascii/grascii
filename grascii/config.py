@@ -5,6 +5,8 @@ This can be invoked as a standalone program:
 $ python -m grascii.config --help
 """
 
+from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path, PurePath

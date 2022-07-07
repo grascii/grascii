@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from grascii.dictionary import Dictionary
 from grascii.dictionary.build import DictionaryBuilder
 from grascii.dictionary.common import (
     DictionaryAlreadyExists,
@@ -140,11 +141,55 @@ class TestBuiltins(unittest.TestCase):
         self.assertEqual(len(builder.errors), 0)
 
 
-class TestList:
-    @pytest.fixture
-    def tmp_dict_path(self, tmp_path, monkeypatch):
-        monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", tmp_path)
+@pytest.fixture
+def tmp_dict_path(tmp_path, monkeypatch):
+    dict_path = tmp_path / "installed"
+    dict_path.mkdir()
+    monkeypatch.setattr("grascii.dictionary.INSTALLATION_DIR", dict_path)
+    monkeypatch.setattr("grascii.dictionary.install.INSTALLATION_DIR", dict_path)
+    monkeypatch.setattr("grascii.dictionary.uninstall.INSTALLATION_DIR", dict_path)
+    monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", dict_path)
+    return dict_path
 
+
+@pytest.fixture(scope="module")
+def tmp_build_path(tmp_path_factory):
+    build_path = tmp_path_factory.mktemp("search", numbered=False)
+    builder = DictionaryBuilder(
+        infiles=Path("tests/dictionaries/search.txt"), output=build_path
+    )
+    builder.build()
+    return build_path
+
+
+class TestNewDictionary:
+    def test_builtin(self):
+        Dictionary.new(":preanniversary")
+
+    def test_installed_does_not_exist(self):
+        with pytest.raises(DictionaryNotFound):
+            Dictionary.new(":unknown")
+
+    def test_installed(self, tmp_dict_path, tmp_build_path):
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
+        Dictionary.new(":search")
+
+    def test_path(self):
+        Dictionary.new(Path("grascii/dictionary/preanniversary"))
+
+    def test_string(self):
+        Dictionary.new("grascii/dictionary/preanniversary")
+
+    def test_path_does_not_exist(self):
+        with pytest.raises(DictionaryNotFound):
+            Dictionary.new(Path("unknown"))
+
+    def test_string_does_not_exist(self):
+        with pytest.raises(DictionaryNotFound):
+            Dictionary.new("unknown")
+
+
+class TestList:
     def test_list_no_installed(self, tmp_dict_path):
         assert len(get_installed()) == 0
 
@@ -155,24 +200,6 @@ class TestList:
 
 
 class TestInstall:
-    @pytest.fixture
-    def tmp_dict_path(self, tmp_path, monkeypatch):
-        dict_path = tmp_path / "installed"
-        dict_path.mkdir()
-        monkeypatch.setattr("grascii.dictionary.install.INSTALLATION_DIR", dict_path)
-        monkeypatch.setattr("grascii.dictionary.uninstall.INSTALLATION_DIR", dict_path)
-        monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", dict_path)
-        return dict_path
-
-    @pytest.fixture(scope="class")
-    def tmp_build_path(self, tmp_path_factory):
-        build_path = tmp_path_factory.mktemp("search", numbered=False)
-        builder = DictionaryBuilder(
-            infiles=Path("tests/dictionaries/search.txt"), output=build_path
-        )
-        builder.build()
-        return build_path
-
     def test_install(self, tmp_dict_path, tmp_build_path):
         assert len(get_installed()) == 0
         assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"

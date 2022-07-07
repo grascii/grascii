@@ -6,6 +6,8 @@ This can be invoked as a standalone program:
 $ python -m grascii.build --help
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 import os

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 from grascii.metrics import convert_interpretation, match_distance

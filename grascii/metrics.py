@@ -2,6 +2,8 @@
 Contains metrics for comparing search queries to regular expression matches.
 """
 
+from __future__ import annotations
+
 import string
 from typing import List, Match, NamedTuple, Set
 

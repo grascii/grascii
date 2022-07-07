@@ -27,6 +27,8 @@
     exclusive annotations. Ex: MEDIUM_SOUND and LONG_SOUND
 """
 
+from __future__ import annotations
+
 from typing import Dict, List, Tuple
 
 _STROKES = "A AU A&' A&E B CH D DD DF DM DN DT DV E EU F G I J JND JNT K L LD \

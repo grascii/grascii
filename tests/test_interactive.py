@@ -31,7 +31,7 @@ class InteractiveTester(unittest.TestCase):
         self.c.close(force=True)
 
     def expect(self, patterns):
-        return self.c.expect([pexpect.TIMEOUT] + patterns, timeout=2)
+        return self.c.expect([pexpect.TIMEOUT] + patterns, timeout=5)
 
     def new_search(self):
         self.c.sendline()

@@ -4,8 +4,6 @@ implementations of it.
 """
 from __future__ import annotations
 
-from __future__ import annotations
-
 import re
 import sys
 from abc import ABC, abstractmethod
@@ -29,7 +27,7 @@ from typing import (
 from lark.exceptions import UnexpectedInput
 
 from grascii import defaults, grammar, metrics, regen
-from grascii.dictionary import get_dict_file
+from grascii.dictionary import Dictionary, DictionaryNotFound
 from grascii.parser import GrasciiParser, Interpretation
 
 if TYPE_CHECKING:
@@ -49,7 +47,7 @@ class SearchResult(Generic[IT]):
         self,
         matches: List[Tuple[IT, Match[str]]],
         entry: DictionaryEntry,
-        dictionary: str,
+        dictionary: Dictionary,
     ) -> None:
         self.matches = matches
         self.entry = entry
@@ -61,11 +59,19 @@ class Searcher(ABC, Generic[IT]):
     """An abstract base class for objects that search Grascii dictionaries."""
 
     def __init__(self, **kwargs: Any) -> None:
-        self.dictionaries: List[str] = (
+        dictionaries = (
             kwargs.get("dictionaries")
             if kwargs.get("dictionaries")
             else defaults.SEARCH["Dictionary"].split()
         )
+        self.dictionaries = []
+        for name in dictionaries:
+            try:
+                dictionary = Dictionary.new(name)
+            except DictionaryNotFound:
+                pass
+            else:
+                self.dictionaries.append(dictionary)
 
     def perform_search(
         self,
@@ -86,14 +92,14 @@ class Searcher(ABC, Generic[IT]):
         :returns: A collection strings of the form "[grascii] [translation]"
             sorted by the results of metric.
         """
-        for dict_name in self.dictionaries:
+        for dictionary in self.dictionaries:
             for item in sorted(starting_letters):
                 try:
-                    dict_file = get_dict_file(dict_name, item)
+                    dict_file = dictionary.open(item)
                 except FileNotFoundError:
                     continue
-                with dict_file as dictionary:
-                    for line in dictionary:
+                with dict_file:
+                    for line in dict_file:
                         matches = []
                         for interp, pattern in patterns:
                             match = pattern.search(line)
@@ -102,7 +108,7 @@ class Searcher(ABC, Generic[IT]):
                         if matches:
                             grascii, translation = line.strip().split(maxsplit=1)
                             entry = DictionaryEntry(grascii, translation)
-                            yield SearchResult(matches, entry, dict_name)
+                            yield SearchResult(matches, entry, dictionary)
 
     @abstractmethod
     def search(self, **kwargs: Any) -> Optional[Iterable[SearchResult[IT]]]:

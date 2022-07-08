@@ -13,15 +13,17 @@ from pkg_resources import resource_exists, resource_stream
 from grascii.dictionary import build, install
 from grascii.dictionary import list as list_dict
 from grascii.dictionary import uninstall
-from grascii.dictionary.common import INSTALLATION_DIR
+from grascii.dictionary.common import (
+    BUILTINS_PACKAGE,
+    INSTALLATION_DIR,
+    DictionaryNotFound,
+    get_dictionary_installed_name,
+    get_dictionary_path_name,
+    is_dictionary_installed_name,
+)
 from grascii.dictionary.install import install_dictionary  # noqa: F401
 from grascii.dictionary.list import get_built_ins, get_installed  # noqa: F401
 from grascii.dictionary.uninstall import uninstall_dictionary  # noqa: F401
-
-if sys.version_info >= (3, 9):
-    from importlib.resources import files
-else:
-    from importlib_resources import files
 
 description = "Create and manage Grascii dictionaries"
 
@@ -64,13 +66,6 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     list_parser.set_defaults(func=list_dict.cli_list)
 
 
-class DictionaryNotFoundError(Exception):
-    pass
-
-
-BUILTIN_PACKAGE = "grascii.dictionary"
-
-
 class DictionaryType(Enum):
     BUILTIN = 0
     INSTALLED = 1
@@ -83,6 +78,8 @@ class Dictionary:
     ) -> None:
         self.path = path
         self.name = name if name is not None else path.name
+        if dtype is DictionaryType.BUILTIN or dtype is DictionaryType.INSTALLED:
+            self.name = get_dictionary_installed_name(self.name)
         self.type = dtype
 
     def open(self, name: str) -> TextIO:
@@ -90,18 +87,22 @@ class Dictionary:
 
     @classmethod
     def new(cls, name: Union[str, os.PathLike]) -> Dictionary:
-        if isinstance(name, str) and len(name) > 1 and name[0] == ":":
-            installed_name = name[1:]
-            dictionary_path = files(BUILTIN_PACKAGE).joinpath(installed_name)
+        if isinstance(name, str) and is_dictionary_installed_name(name):
+            if sys.version_info >= (3, 9):
+                from importlib.resources import files
+            else:
+                from importlib_resources import files
+            path_name = get_dictionary_path_name(name)
+            dictionary_path = files(BUILTINS_PACKAGE).joinpath(path_name)
             if dictionary_path.is_dir():
                 return Dictionary(dictionary_path, DictionaryType.BUILTIN)
-            dictionary_path = DICTIONARY_PATH / installed_name
+            dictionary_path = INSTALLATION_DIR / path_name
             if dictionary_path.is_dir():
                 return Dictionary(dictionary_path, DictionaryType.INSTALLED)
         dictionary_path = Path(name)
         if dictionary_path.is_dir():
             return Dictionary(dictionary_path, DictionaryType.LOCAL)
-        raise DictionaryNotFoundError()
+        raise DictionaryNotFound(name)
 
 
 def get_dict_file(dictionary: str, name: str) -> TextIO:

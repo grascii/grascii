@@ -124,7 +124,7 @@ def search(**kwargs) -> Optional[Iterable[str]]:
         searcher = ReverseSearcher(**kwargs)
     else:
         searcher = RegexSearcher(**kwargs)
-    return searcher.search(**kwargs)
+    return searcher.sorted_search(**kwargs)
 
 
 def cli_search(args: argparse.Namespace) -> None:
@@ -136,7 +136,7 @@ def cli_search(args: argparse.Namespace) -> None:
     results = search(**{k: v for k, v in vars(args).items() if v is not None})
     if results is not None:
         for result in results:
-            print(result)
+            print(result.entry.grascii, result.entry.translation)
         print("Results:", len(results))
 
 

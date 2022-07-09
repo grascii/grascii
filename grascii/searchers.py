@@ -2,29 +2,66 @@
 Contains the base class for Searchers as well as multiple concrete
 implementations of it.
 """
+from __future__ import annotations
 
 from __future__ import annotations
 
 import re
 import sys
 from abc import ABC, abstractmethod
-from typing import Callable, Iterable, List, Match, Pattern, Set, Tuple, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generic,
+    Iterable,
+    List,
+    Match,
+    NamedTuple,
+    Optional,
+    Pattern,
+    Sequence,
+    Set,
+    Tuple,
+    TypeVar,
+)
 
-from lark import UnexpectedInput
+from lark.exceptions import UnexpectedInput
 
 from grascii import defaults, grammar, metrics, regen
 from grascii.dictionary import get_dict_file
-from grascii.parser import GrasciiParser
+from grascii.parser import GrasciiParser, Interpretation
 
-T = TypeVar("T")
+if TYPE_CHECKING:
+    from grascii.metrics import Comparable
+
+IT = TypeVar("IT")
 
 
-class Searcher(ABC):
+class DictionaryEntry(NamedTuple):
+
+    grascii: str
+    translation: str
+
+
+class SearchResult(Generic[IT]):
+    def __init__(
+        self,
+        matches: List[Tuple[IT, Match[str]]],
+        entry: DictionaryEntry,
+        dictionary: str,
+    ) -> None:
+        self.matches = matches
+        self.entry = entry
+        self.dictionary = dictionary
+
+
+class Searcher(ABC, Generic[IT]):
 
     """An abstract base class for objects that search Grascii dictionaries."""
 
-    def __init__(self, **kwargs):
-        self.dictionaries = (
+    def __init__(self, **kwargs: Any) -> None:
+        self.dictionaries: List[str] = (
             kwargs.get("dictionaries")
             if kwargs.get("dictionaries")
             else defaults.SEARCH["Dictionary"].split()
@@ -32,10 +69,9 @@ class Searcher(ABC):
 
     def perform_search(
         self,
-        patterns: Iterable[Tuple[T, Pattern]],
+        patterns: Iterable[Tuple[IT, Pattern[str]]],
         starting_letters: Set[str],
-        metric: Callable[[T, Match], int],
-    ) -> Iterable[str]:
+    ) -> Iterable[SearchResult[IT]]:
         """Performs a search of a Grascii Dictionary.
 
         :param patterns: A collection of compiled regular expression patterns
@@ -50,52 +86,58 @@ class Searcher(ABC):
         :returns: A collection strings of the form "[grascii] [translation]"
             sorted by the results of metric.
         """
-        sorted_results: List[Tuple[str, int]] = []
         for dict_name in self.dictionaries:
             for item in sorted(starting_letters):
                 try:
-                    with get_dict_file(dict_name, item) as dictionary:
-                        for line in dictionary:
-                            found_match = False
-                            diff = None
-                            for interp, pattern in patterns:
-                                match = pattern.search(line)
-                                if match:
-                                    found_match = True
-                                    distance = metric(interp, match)
-                                    if diff is None or distance < diff:
-                                        diff = distance
-                            if found_match:
-                                i = len(sorted_results)
-                                sorted_results.append((line, diff))
-                                while i > 0:
-                                    if sorted_results[i][1] < sorted_results[i - 1][1]:
-                                        tmp = sorted_results[i - 1]
-                                        sorted_results[i - 1] = sorted_results[i]
-                                        sorted_results[i] = tmp
-                                    i -= 1
+                    dict_file = get_dict_file(dict_name, item)
                 except FileNotFoundError:
-                    pass
-                    # print("Error: Could not find", dict_path + item)
-        for tup in sorted_results:
-            yield tup[0].strip()
+                    continue
+                with dict_file as dictionary:
+                    for line in dictionary:
+                        matches = []
+                        for interp, pattern in patterns:
+                            match = pattern.search(line)
+                            if match:
+                                matches.append((interp, match))
+                        if matches:
+                            grascii, translation = line.strip().split(maxsplit=1)
+                            entry = DictionaryEntry(grascii, translation)
+                            yield SearchResult(matches, entry, dict_name)
 
     @abstractmethod
-    def search(self, **kwargs):
+    def search(self, **kwargs: Any) -> Optional[Iterable[SearchResult[IT]]]:
         """An abstract method that runs a search with the given search
         options and returns the results."""
         ...
 
+    def sorted_search(
+        self,
+        metric: Callable[[SearchResult[IT]], Comparable] = metrics.trivial,
+        **kwargs: Any,
+    ) -> Sequence[SearchResult[IT]]:
 
-class GrasciiSearcher(Searcher):
+        results = []
+        search_results = self.search(**kwargs)
+        if search_results:
+            for result in search_results:
+                results.append((result, metric(result)))
+                i = len(results) - 1
+                while i > 0:
+                    if results[i][1] < results[i - 1][1]:
+                        results[i - 1], results[i] = results[i], results[i - 1]
+                    i -= 1
+        return [result for result, _ in results]
+
+
+class GrasciiSearcher(Searcher[Interpretation]):
 
     """A subclass of Searcher that performs a search given a Grascii string"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self._parser = GrasciiParser()
 
-    def extract_search_args(self, **kwargs):
+    def extract_search_args(self, **kwargs: Any) -> None:
         """Get the relevant arguments for search."""
 
         self.uncertainty = kwargs.get(
@@ -139,7 +181,7 @@ class GrasciiSearcher(Searcher):
             "interpretation", defaults.SEARCH["Interpretation"]
         )
 
-    def search(self, **kwargs):
+    def search(self, **kwargs: Any) -> Optional[Iterable[SearchResult[Interpretation]]]:
         """
         :param grascii: [Required] The grascii string to use in the search.
         :param uncertainty: The uncertainty of the grascii string.
@@ -169,7 +211,7 @@ class GrasciiSearcher(Searcher):
         except UnexpectedInput as e:
             print("Invalid Grascii String", file=sys.stderr)
             print(e.get_context(grascii), file=sys.stderr)
-            return
+            return None
 
         builder = regen.RegexBuilder(
             uncertainty=self.uncertainty,
@@ -188,19 +230,27 @@ class GrasciiSearcher(Searcher):
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
 
-        results = self.perform_search(patterns, starting_letters, metrics.standard)
-        return list(results)
+        return self.perform_search(patterns, starting_letters)
+
+    def sorted_search(
+        self,
+        metric: Callable[
+            [SearchResult[Interpretation]], Comparable
+        ] = metrics.grascii_standard,
+        **kwargs: Any,
+    ) -> Sequence[SearchResult[Interpretation]]:
+        return super().sorted_search(metric, **kwargs)
 
 
-class RegexSearcher(Searcher):
+class RegexSearcher(Searcher[str]):
 
     """A subclass of Searcher that searches a grascii dictionary given
     a raw regular expression."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
 
-    def search(self, **kwargs):
+    def search(self, **kwargs: Any) -> Iterable[SearchResult[str]]:
         """
         :param regexp: [Required] A regular expression to use in a search.
         :returns: A list of search results.
@@ -211,16 +261,8 @@ class RegexSearcher(Searcher):
         pattern = re.compile(regex)
         patterns = [(pattern.pattern, pattern)]
 
-        if "metric" in kwargs:
-            metric = kwargs["metric"]
-        else:
-
-            def metric(s: str, m: Match):
-                return 0
-
         starting_letters = grammar.HARD_CHARACTERS
-        results = self.perform_search(patterns, starting_letters, metric)
-        return list(results)
+        return self.perform_search(patterns, starting_letters)
 
 
 class ReverseSearcher(RegexSearcher):
@@ -228,10 +270,10 @@ class ReverseSearcher(RegexSearcher):
     """A subclass of RegexSearcher that searches a grascii dictionary
     given a word."""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
 
-    def search(self, **kwargs):
+    def search(self, **kwargs: Any) -> Iterable[SearchResult[str]]:
         """
         :param reverse: [Required] A word to search for.
         :returns: A list of search results.
@@ -244,9 +286,13 @@ class ReverseSearcher(RegexSearcher):
             + f"(?P<translation>(.*\\s)?(?P<word>{word}).*)(\\s|\\Z)"
         )
 
-        def metric(s: str, match: Match):
-            word_start = match.start("word") - match.end("grascii")
-            return word_start, len(match.group("translation"))
-
-        kwargs["metric"] = metric
         return super().search(**kwargs)
+
+    def sorted_search(
+        self,
+        metric: Callable[
+            [SearchResult[str]], Comparable
+        ] = metrics.translation_standard,
+        **kwargs: Any,
+    ) -> Sequence[SearchResult[str]]:
+        return super().sorted_search(metric, **kwargs)

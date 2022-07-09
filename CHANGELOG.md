@@ -3,9 +3,22 @@
 
 ## Unreleased
 
+### Added
+
+- `SearchResult` class to group together relevant data from matches.
+- `Searcher.sorted_search` to obtain a list of sorted `SearchResult`s.
+
+### Changed
+
+- `Searcher.search` no longer sorts results.
+
 ### Removed
 
-- Dropped Python 3.6 support
+- Dropped Python 3.6 support.
+
+### Fixed
+
+- Typing issues with searchers and metrics.
 
 ## 0.4.1 - 2022-06-29
 

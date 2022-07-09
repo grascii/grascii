@@ -261,17 +261,17 @@ class InteractiveSearcher(GrasciiSearcher):
         count = 0
         display_all = False
         for result in results:
-            count += 1
             action = "Next"
             if not display_all:
                 action = questionary.select(
                     "Search Results", ["Next", "Display All", "End Search"]
                 ).ask()
-            print(result.strip())
             if action is None or action == "End Search":
                 break
             elif action == "Display All":
                 display_all = True
+            print(result.strip())
+            count += 1
 
         print("Results:", count)
         print()

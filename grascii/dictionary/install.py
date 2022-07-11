@@ -8,15 +8,11 @@ from typing import Optional
 
 from grascii.appdirs import user_data_dir
 from grascii.config import APP_NAME
+from grascii.dictionary.common import DictionaryAlreadyExists
 
 description = "Install a Grascii Dictionary"
 
 DICTIONARY_PATH = Path(user_data_dir(APP_NAME), "dictionaries")
-
-
-class DictionaryAlreadyExists(Exception):
-    def __init__(self, name: str) -> None:
-        self.name = name
 
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:

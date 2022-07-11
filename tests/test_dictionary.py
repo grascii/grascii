@@ -7,6 +7,10 @@ from pathlib import Path
 import pytest
 
 from grascii.dictionary.build import DictionaryBuilder
+from grascii.dictionary.common import (
+    get_dictionary_installed_name,
+    get_dictionary_path_name,
+)
 from grascii.dictionary.install import DictionaryAlreadyExists, install_dict
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.dictionary.uninstall import uninstall_dict
@@ -199,3 +203,21 @@ class TestInstall:
         with pytest.raises(DictionaryAlreadyExists):
             install_dict(tmp_build_path, tmp_dict_path)
         assert install_dict(tmp_build_path, tmp_dict_path, force=True) == ":search"
+
+
+class TestCommon:
+    def test_installed_name(self):
+        assert get_dictionary_installed_name(":preanniversary") == ":preanniversary"
+        assert get_dictionary_installed_name("preanniversary") == ":preanniversary"
+        with pytest.raises(ValueError):
+            get_dictionary_installed_name("")
+        with pytest.raises(ValueError):
+            get_dictionary_installed_name(":")
+
+    def test_path_name(self):
+        assert get_dictionary_path_name(":preanniversary") == "preanniversary"
+        assert get_dictionary_path_name("preanniversary") == "preanniversary"
+        with pytest.raises(ValueError):
+            get_dictionary_path_name("")
+        with pytest.raises(ValueError):
+            get_dictionary_path_name(":")

@@ -6,8 +6,7 @@ from typing import Collection
 
 from pkg_resources import resource_isdir, resource_listdir
 
-from grascii.dictionary.common import get_dictionary_installed_name
-from grascii.dictionary.install import DICTIONARY_PATH
+from grascii.dictionary.common import INSTALLATION_DIR, get_dictionary_installed_name
 
 description = "List built-in and installed dictionaries."
 
@@ -17,6 +16,10 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
 
 
 def get_built_ins() -> Collection[str]:
+    """Get a collection of the installed names of all built-in dictionaries.
+
+    :returns: A collection of built-in dictionary names.
+    """
     files = resource_listdir("grascii", "dictionary")
     built_ins = filter(
         lambda f: resource_isdir("grascii.dictionary", f) and f[0] != "_", files
@@ -25,8 +28,12 @@ def get_built_ins() -> Collection[str]:
 
 
 def get_installed() -> Collection[str]:
-    if DICTIONARY_PATH.exists():
-        files = filter(lambda f: f.is_dir(), DICTIONARY_PATH.iterdir())
+    """Get a collection of the installed names of all user-installed dictionaries.
+
+    :returns: A collection of installed dictionary names.
+    """
+    if INSTALLATION_DIR.exists():
+        files = filter(lambda f: f.is_dir(), INSTALLATION_DIR.iterdir())
         installed = map(lambda f: f.name, files)
         return list(map(get_dictionary_installed_name, installed))
     return []

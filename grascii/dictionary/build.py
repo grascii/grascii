@@ -3,7 +3,7 @@ Acts as the main entry point for the grascii build command and contains the
 dictionary builder implementation.
 
 This can be invoked as a standalone program:
-$ python -m grascii.build --help
+$ python -m grascii.dictionary.build --help
 """
 
 from __future__ import annotations

@@ -125,6 +125,7 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
         self.assertEqual(entry_count, 7)
 
 
+@pytest.mark.slow
 class TestBuiltins(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -142,7 +143,7 @@ class TestBuiltins(unittest.TestCase):
 class TestList:
     @pytest.fixture
     def tmp_dict_path(self, tmp_path, monkeypatch):
-        monkeypatch.setattr("grascii.dictionary.list.DICTIONARY_PATH", tmp_path)
+        monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", tmp_path)
 
     def test_list_no_installed(self, tmp_dict_path):
         assert len(get_installed()) == 0
@@ -158,9 +159,9 @@ class TestInstall:
     def tmp_dict_path(self, tmp_path, monkeypatch):
         dict_path = tmp_path / "installed"
         dict_path.mkdir()
-        monkeypatch.setattr("grascii.dictionary.install.DICTIONARY_PATH", dict_path)
-        monkeypatch.setattr("grascii.dictionary.uninstall.DICTIONARY_PATH", dict_path)
-        monkeypatch.setattr("grascii.dictionary.list.DICTIONARY_PATH", dict_path)
+        monkeypatch.setattr("grascii.dictionary.install.INSTALLATION_DIR", dict_path)
+        monkeypatch.setattr("grascii.dictionary.uninstall.INSTALLATION_DIR", dict_path)
+        monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", dict_path)
         return dict_path
 
     @pytest.fixture(scope="class")

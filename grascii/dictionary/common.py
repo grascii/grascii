@@ -1,7 +1,16 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+from grascii import APP_NAME
+from grascii.appdirs import user_data_dir
+
+INSTALLATION_DIR = Path(user_data_dir(APP_NAME), "dictionaries")
+
 
 class DictionaryException(Exception):
+    """The base class for all dictionary-related exceptions."""
+
     pass
 
 

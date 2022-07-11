@@ -5,8 +5,11 @@ import sys
 from pathlib import Path
 from shutil import rmtree
 
-from grascii.dictionary.common import DictionaryNotFound, get_dictionary_path_name
-from grascii.dictionary.install import DICTIONARY_PATH
+from grascii.dictionary.common import (
+    INSTALLATION_DIR,
+    DictionaryNotFound,
+    get_dictionary_path_name,
+)
 
 description = "Uninstall a Grascii Dictionary"
 
@@ -20,10 +23,18 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
-def uninstall_dictionary(
-    name: str, directory: Path = DICTIONARY_PATH, force: bool = False
-) -> None:
-    dictionary_path = directory / get_dictionary_path_name(name)
+def uninstall_dictionary(name: str, install_dir: Path, force: bool = False) -> None:
+    """Uninstall a dictionary from an installation directory.
+
+    :param name: The name of the dictionary to uninstall.
+    :param install_dir: A path to uninstall the dictionary from.
+    :param force: If True, forces the uninstallation of a dictionary even in the
+    case of corruption.
+    :type name: Path
+    :type install_dir: Path
+    :type force: bool
+    """
+    dictionary_path = install_dir / get_dictionary_path_name(name)
     if not dictionary_path.exists():
         raise DictionaryNotFound(get_dictionary_path_name(name))
     if force:
@@ -36,7 +47,7 @@ def uninstall_dictionary(
 
 def cli_uninstall(args: argparse.Namespace) -> None:
     try:
-        uninstall_dictionary(args.name, force=args.force)
+        uninstall_dictionary(args.name, INSTALLATION_DIR, force=args.force)
     except DictionaryNotFound:
         print(args.name, "does not exist.", file=sys.stderr)
     except OSError:

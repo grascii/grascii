@@ -10,3 +10,19 @@ add_imports=["from __future__ import annotations"]
 markers = [
   "slow: mark test as slow."
 ]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+  "grascii/appdirs.py",
+  "tests/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "@(abc\\.)?abstractmethod",
+]

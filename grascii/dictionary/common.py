@@ -10,6 +10,11 @@ class DictionaryAlreadyExists(DictionaryException):
         self.name = name
 
 
+class DictionaryNotFound(DictionaryException):
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+
 def get_dictionary_installed_name(name: str) -> str:
     if not name:
         raise ValueError("name cannot be the empty string")

@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 from shutil import rmtree
 
+from grascii.dictionary.common import DictionaryNotFound, get_dictionary_path_name
 from grascii.dictionary.install import DICTIONARY_PATH
 
 description = "Uninstall a Grascii Dictionary"
@@ -18,31 +20,31 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
-def uninstall_dict(name: str, force: bool = False) -> None:
-    dictionary = DICTIONARY_PATH / name
+def uninstall_dictionary(
+    name: str, directory: Path = DICTIONARY_PATH, force: bool = False
+) -> None:
+    dictionary_path = directory / get_dictionary_path_name(name)
+    if not dictionary_path.exists():
+        raise DictionaryNotFound(get_dictionary_path_name(name))
     if force:
-        rmtree(dictionary)
+        rmtree(dictionary_path)
     else:
-        for f in dictionary.iterdir():
+        for f in dictionary_path.iterdir():
             f.unlink()
-        dictionary.rmdir()
+        dictionary_path.rmdir()
 
 
 def cli_uninstall(args: argparse.Namespace) -> None:
-    dictionary = DICTIONARY_PATH / args.name
-    if not dictionary.exists():
-        print(args.name, "does not exist.", file=sys.stderr)
-        return
-    if not dictionary.is_dir():
-        return
-
     try:
-        uninstall_dict(args.name, args.force)
-        print("Successfully uninstalled", args.name)
-    except Exception:
+        uninstall_dictionary(args.name, force=args.force)
+    except DictionaryNotFound:
+        print(args.name, "does not exist.", file=sys.stderr)
+    except OSError:
         print("An error occurred during uninstallation.", file=sys.stderr)
         print("The dictionary may be corrupted.", file=sys.stderr)
         print("To force removal, run with --force.", file=sys.stderr)
+    else:
+        print("Successfully uninstalled", args.name)
 
 
 def main() -> None:

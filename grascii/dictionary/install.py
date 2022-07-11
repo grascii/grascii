@@ -8,7 +8,11 @@ from typing import Optional
 
 from grascii.appdirs import user_data_dir
 from grascii.config import APP_NAME
-from grascii.dictionary.common import DictionaryAlreadyExists
+from grascii.dictionary.common import (
+    DictionaryAlreadyExists,
+    get_dictionary_installed_name,
+    get_dictionary_path_name,
+)
 
 description = "Install a Grascii Dictionary"
 
@@ -36,27 +40,31 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
-def install_dict(
-    src: Path,
-    dest: Path = DICTIONARY_PATH,
+def install_dictionary(
+    dictionary: Path,
+    install_dir: Path = DICTIONARY_PATH,
     name: Optional[str] = None,
     force: bool = False,
 ) -> str:
     if name is None:
-        name = src.name
-    installation_dir = dest / name
-    if installation_dir.exists() and not force:
+        name = dictionary.name
+    else:
+        name = get_dictionary_path_name(name)
+    destination = install_dir / name
+    if destination.exists() and not force:
         raise DictionaryAlreadyExists(name)
-    installation_dir.mkdir(parents=True, exist_ok=True)
-    files = src.glob("[A-Z]")
+    destination.mkdir(parents=True, exist_ok=True)
+    files = dictionary.glob("[A-Z]")
     for f in files:
-        copy(f, installation_dir)
-    return ":" + name
+        copy(f, destination)
+    return get_dictionary_installed_name(name)
 
 
 def cli_install(args: argparse.Namespace) -> None:
     try:
-        name = install_dict(args.dictionary, DICTIONARY_PATH, args.name, args.force)
+        name = install_dictionary(
+            args.dictionary, DICTIONARY_PATH, args.name, args.force
+        )
     except DictionaryAlreadyExists as e:
         print("A dictionary named", e.name, "already exists.", file=sys.stderr)
         print("Provide a different name with --name.", file=sys.stderr)

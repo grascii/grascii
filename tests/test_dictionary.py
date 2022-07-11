@@ -8,12 +8,14 @@ import pytest
 
 from grascii.dictionary.build import DictionaryBuilder
 from grascii.dictionary.common import (
+    DictionaryAlreadyExists,
+    DictionaryNotFound,
     get_dictionary_installed_name,
     get_dictionary_path_name,
 )
-from grascii.dictionary.install import DictionaryAlreadyExists, install_dict
+from grascii.dictionary.install import install_dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
-from grascii.dictionary.uninstall import uninstall_dict
+from grascii.dictionary.uninstall import uninstall_dictionary
 
 
 class TestDictionaryBuildWarnings(unittest.TestCase):
@@ -172,37 +174,44 @@ class TestInstall:
 
     def test_install(self, tmp_dict_path, tmp_build_path):
         assert len(get_installed()) == 0
-        assert install_dict(tmp_build_path, tmp_dict_path) == ":search"
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
         assert len(get_installed()) == 1
         assert ":search" in get_installed()
 
     def test_uninstall(self, tmp_dict_path, tmp_build_path):
         assert len(get_installed()) == 0
-        assert install_dict(tmp_build_path, tmp_dict_path) == ":search"
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
         assert len(get_installed()) == 1
-        uninstall_dict("search")
+        uninstall_dictionary("search", tmp_dict_path)
         assert len(get_installed()) == 0
+
+    def test_uninstall_nonexistent(self, tmp_dict_path):
+        assert len(get_installed()) == 0
+        with pytest.raises(DictionaryNotFound):
+            uninstall_dictionary("search", tmp_dict_path)
 
     def test_install_name(self, tmp_dict_path, tmp_build_path):
         assert len(get_installed()) == 0
-        assert install_dict(tmp_build_path, tmp_dict_path, name="two") == ":two"
+        assert install_dictionary(tmp_build_path, tmp_dict_path, name="two") == ":two"
         assert len(get_installed()) == 1
         assert ":two" in get_installed()
 
     def test_install_twice(self, tmp_dict_path, tmp_build_path):
         assert len(get_installed()) == 0
-        assert install_dict(tmp_build_path, tmp_dict_path) == ":search"
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
         assert len(get_installed()) == 1
         with pytest.raises(DictionaryAlreadyExists):
-            install_dict(tmp_build_path, tmp_dict_path)
+            install_dictionary(tmp_build_path, tmp_dict_path)
 
     def test_install_force(self, tmp_dict_path, tmp_build_path):
         assert len(get_installed()) == 0
-        assert install_dict(tmp_build_path, tmp_dict_path) == ":search"
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
         assert len(get_installed()) == 1
         with pytest.raises(DictionaryAlreadyExists):
-            install_dict(tmp_build_path, tmp_dict_path)
-        assert install_dict(tmp_build_path, tmp_dict_path, force=True) == ":search"
+            install_dictionary(tmp_build_path, tmp_dict_path)
+        assert (
+            install_dictionary(tmp_build_path, tmp_dict_path, force=True) == ":search"
+        )
 
 
 class TestCommon:

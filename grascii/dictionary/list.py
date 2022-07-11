@@ -20,14 +20,14 @@ def get_built_ins() -> Collection[str]:
     built_ins = filter(
         lambda f: resource_isdir("grascii.dictionary", f) and f[0] != "_", files
     )
-    return list(built_ins)
+    return list(map(lambda s: ":" + s, built_ins))
 
 
 def get_installed() -> Collection[str]:
     if DICTIONARY_PATH.exists():
         files = filter(lambda f: f.is_dir(), DICTIONARY_PATH.iterdir())
         installed = map(lambda f: f.name, files)
-        return list(installed)
+        return list(map(lambda s: ":" + s, installed))
     return []
 
 

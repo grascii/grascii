@@ -4,6 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 from shutil import copy
+from typing import Optional
 
 from grascii.appdirs import user_data_dir
 from grascii.config import APP_NAME
@@ -11,6 +12,11 @@ from grascii.config import APP_NAME
 description = "Install a Grascii Dictionary"
 
 DICTIONARY_PATH = Path(user_data_dir(APP_NAME), "dictionaries")
+
+
+class DictionaryAlreadyExists(Exception):
+    def __init__(self, name: str) -> None:
+        self.name = name
 
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
@@ -34,31 +40,33 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
-def install_dict(src: Path, dest: Path) -> None:
+def install_dict(
+    src: Path,
+    dest: Path = DICTIONARY_PATH,
+    name: Optional[str] = None,
+    force: bool = False,
+) -> str:
+    if name is None:
+        name = src.name
+    installation_dir = dest / name
+    if installation_dir.exists() and not force:
+        raise DictionaryAlreadyExists(name)
+    installation_dir.mkdir(parents=True, exist_ok=True)
     files = src.glob("[A-Z]")
     for f in files:
-        copy(f, dest)
+        copy(f, installation_dir)
+    return ":" + name
 
 
 def cli_install(args: argparse.Namespace) -> None:
-    if args.name:
-        name = args.name
-    else:
-        name = args.dictionary.name
-
-    dest = DICTIONARY_PATH / name
-    if dest.exists() and not args.force:
-        if not dest.is_dir():
-            print()
-            return
-        print("A dictionary named", name, "already exists.", file=sys.stderr)
+    try:
+        name = install_dict(args.dictionary, DICTIONARY_PATH, args.name, args.force)
+    except DictionaryAlreadyExists as e:
+        print("A dictionary named", e.name, "already exists.", file=sys.stderr)
         print("Provide a different name with --name.", file=sys.stderr)
         print("If you would like to overwrite it, run with --force.", file=sys.stderr)
-        return
-
-    dest.mkdir(parents=True, exist_ok=True)
-    install_dict(args.dictionary, dest)
-    print("Successfully installed", args.dictionary, "as", name)
+    else:
+        print("Successfully installed", args.dictionary, "as", name)
 
 
 def main() -> None:

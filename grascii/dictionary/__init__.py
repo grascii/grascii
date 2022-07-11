@@ -11,7 +11,10 @@ from pkg_resources import resource_exists, resource_stream
 from grascii.dictionary import build, install
 from grascii.dictionary import list as list_dict
 from grascii.dictionary import uninstall
-from grascii.dictionary.install import DICTIONARY_PATH
+from grascii.dictionary.common import INSTALLATION_DIR
+from grascii.dictionary.install import install_dictionary  # noqa: F401
+from grascii.dictionary.list import get_built_ins, get_installed  # noqa: F401
+from grascii.dictionary.uninstall import uninstall_dictionary  # noqa: F401
 
 description = "Create and manage Grascii dictionaries"
 
@@ -59,7 +62,7 @@ def get_dict_file(dictionary: str, name: str) -> TextIO:
         if resource_exists("grascii.dictionary", dictionary[1:]):
             module = "grascii.dictionary." + dictionary[1:]
             return io.TextIOWrapper(resource_stream(module, name), encoding="utf-8")
-        directory = DICTIONARY_PATH.joinpath(dictionary[1:])
+        directory = INSTALLATION_DIR.joinpath(dictionary[1:])
         if not directory.exists():
             print(dictionary, "does not exist.", file=sys.stderr)
         return directory.joinpath(name).open()

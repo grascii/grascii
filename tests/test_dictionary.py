@@ -4,7 +4,18 @@ import logging
 import unittest
 from pathlib import Path
 
+import pytest
+
 from grascii.dictionary.build import DictionaryBuilder
+from grascii.dictionary.common import (
+    DictionaryAlreadyExists,
+    DictionaryNotFound,
+    get_dictionary_installed_name,
+    get_dictionary_path_name,
+)
+from grascii.dictionary.install import install_dictionary
+from grascii.dictionary.list import get_built_ins, get_installed
+from grascii.dictionary.uninstall import uninstall_dictionary
 
 
 class TestDictionaryBuildWarnings(unittest.TestCase):
@@ -114,6 +125,7 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
         self.assertEqual(entry_count, 7)
 
 
+@pytest.mark.slow
 class TestBuiltins(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -126,3 +138,96 @@ class TestBuiltins(unittest.TestCase):
         )
         builder.build()
         self.assertEqual(len(builder.errors), 0)
+
+
+class TestList:
+    @pytest.fixture
+    def tmp_dict_path(self, tmp_path, monkeypatch):
+        monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", tmp_path)
+
+    def test_list_no_installed(self, tmp_dict_path):
+        assert len(get_installed()) == 0
+
+    def test_list_builtins(self, tmp_dict_path):
+        builtins = get_built_ins()
+        assert len(builtins) == 1
+        assert ":preanniversary" in builtins
+
+
+class TestInstall:
+    @pytest.fixture
+    def tmp_dict_path(self, tmp_path, monkeypatch):
+        dict_path = tmp_path / "installed"
+        dict_path.mkdir()
+        monkeypatch.setattr("grascii.dictionary.install.INSTALLATION_DIR", dict_path)
+        monkeypatch.setattr("grascii.dictionary.uninstall.INSTALLATION_DIR", dict_path)
+        monkeypatch.setattr("grascii.dictionary.list.INSTALLATION_DIR", dict_path)
+        return dict_path
+
+    @pytest.fixture(scope="class")
+    def tmp_build_path(self, tmp_path_factory):
+        build_path = tmp_path_factory.mktemp("search", numbered=False)
+        builder = DictionaryBuilder(
+            infiles=Path("tests/dictionaries/search.txt"), output=build_path
+        )
+        builder.build()
+        return build_path
+
+    def test_install(self, tmp_dict_path, tmp_build_path):
+        assert len(get_installed()) == 0
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
+        assert len(get_installed()) == 1
+        assert ":search" in get_installed()
+
+    def test_uninstall(self, tmp_dict_path, tmp_build_path):
+        assert len(get_installed()) == 0
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
+        assert len(get_installed()) == 1
+        uninstall_dictionary("search", tmp_dict_path)
+        assert len(get_installed()) == 0
+
+    def test_uninstall_nonexistent(self, tmp_dict_path):
+        assert len(get_installed()) == 0
+        with pytest.raises(DictionaryNotFound):
+            uninstall_dictionary("search", tmp_dict_path)
+
+    def test_install_name(self, tmp_dict_path, tmp_build_path):
+        assert len(get_installed()) == 0
+        assert install_dictionary(tmp_build_path, tmp_dict_path, name="two") == ":two"
+        assert len(get_installed()) == 1
+        assert ":two" in get_installed()
+
+    def test_install_twice(self, tmp_dict_path, tmp_build_path):
+        assert len(get_installed()) == 0
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
+        assert len(get_installed()) == 1
+        with pytest.raises(DictionaryAlreadyExists):
+            install_dictionary(tmp_build_path, tmp_dict_path)
+
+    def test_install_force(self, tmp_dict_path, tmp_build_path):
+        assert len(get_installed()) == 0
+        assert install_dictionary(tmp_build_path, tmp_dict_path) == ":search"
+        assert len(get_installed()) == 1
+        with pytest.raises(DictionaryAlreadyExists):
+            install_dictionary(tmp_build_path, tmp_dict_path)
+        assert (
+            install_dictionary(tmp_build_path, tmp_dict_path, force=True) == ":search"
+        )
+
+
+class TestCommon:
+    def test_installed_name(self):
+        assert get_dictionary_installed_name(":preanniversary") == ":preanniversary"
+        assert get_dictionary_installed_name("preanniversary") == ":preanniversary"
+        with pytest.raises(ValueError):
+            get_dictionary_installed_name("")
+        with pytest.raises(ValueError):
+            get_dictionary_installed_name(":")
+
+    def test_path_name(self):
+        assert get_dictionary_path_name(":preanniversary") == "preanniversary"
+        assert get_dictionary_path_name("preanniversary") == "preanniversary"
+        with pytest.raises(ValueError):
+            get_dictionary_path_name("")
+        with pytest.raises(ValueError):
+            get_dictionary_path_name(":")

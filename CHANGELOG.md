@@ -7,10 +7,16 @@
 
 - `SearchResult` class to group together relevant data from matches.
 - `Searcher.sorted_search` to obtain a list of sorted `SearchResult`s.
+- `grascii.dictionary.common` module to contain `DictionaryException`s and utility functions.
 
 ### Changed
 
 - `Searcher.search` no longer sorts results.
+- `grascii.dictionary.list`: `get_installed` and `get_built_ins` return a collection of
+installed dictionary names (prefixed with `:`).
+- `grascii.dictionary.install.install_dict` renamed to `install_dictionary` and accepts more options.
+- `grascii.dictionary.uninstall.uninstall_dict` renamed to `uninstall_dictionary` and accepts more options.
+- `DICTIONARY_PATH` renamed to `INSTALLATION_DIR`.
 
 ### Removed
 

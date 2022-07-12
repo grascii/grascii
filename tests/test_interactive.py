@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import unittest
 
+import pytest
+
 try:
     import pexpect
 except ImportError:
@@ -19,6 +21,7 @@ DOWN = "j"
 UP = "k"
 
 
+@pytest.mark.slow
 @unittest.skipIf(pexpect is None, "pexpect is not installed")
 @unittest.skipUnless(SUPPORTS_INTERACTIVE, "interactive extra is not installed")
 class InteractiveTester(unittest.TestCase):
@@ -64,6 +67,12 @@ class TestMenus(InteractiveTester):
         self.assertGreater(self.expect(["- Modify Search"]), 0)
         self.assertGreater(self.expect(["Edit Settings"]), 0)
         self.assertGreater(self.expect(["Exit"]), 0)
+
+    def test_exit(self):
+        self.c.sendline(UP)
+        self.c.sendline()
+        self.assertGreater(self.expect([pexpect.EOF]), 0)
+        self.assertFalse(self.c.isalive())
 
     def test_new_search(self):
         self.c.sendline()

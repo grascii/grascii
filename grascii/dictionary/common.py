@@ -7,6 +7,8 @@ from grascii.appdirs import user_data_dir
 
 INSTALLATION_DIR = Path(user_data_dir(APP_NAME), "dictionaries")
 
+BUILTINS_PACKAGE = "grascii.dictionary"
+
 
 class DictionaryException(Exception):
     """The base class for all dictionary-related exceptions."""
@@ -42,3 +44,7 @@ def get_dictionary_path_name(name: str) -> str:
             raise ValueError("name cannot be ':'")
         return name[1:]
     return name
+
+
+def is_dictionary_installed_name(name: str) -> bool:
+    return len(name) > 1 and name[0] == ":"

@@ -8,6 +8,7 @@
 - `SearchResult` class to group together relevant data from matches.
 - `Searcher.sorted_search` to obtain a list of sorted `SearchResult`s.
 - `grascii.dictionary.common` module to contain `DictionaryException`s and utility functions.
+- `Dictionary` class to work with grascii dictionaries.
 
 ### Changed
 
@@ -21,6 +22,7 @@ installed dictionary names (prefixed with `:`).
 ### Removed
 
 - Dropped Python 3.6 support.
+- `grascii.dictionary.get_dict_file`: Use `grascii.dictionary.Dictionary.open` instead.
 
 ### Fixed
 

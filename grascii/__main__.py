@@ -3,12 +3,20 @@
 from __future__ import annotations
 
 import argparse
+import signal
 import sys
 
 from grascii import config, dictionary, search
 
 
 def main() -> None:
+    try:
+        from pytest_cov.embed import cleanup_on_signal
+    except ImportError:
+        pass
+    else:
+        cleanup_on_signal(signal.SIGHUP)
+
     argparser = argparse.ArgumentParser(prog="grascii")
     subparsers = argparser.add_subparsers(title="subcommands")
     argparser.set_defaults(func=None)

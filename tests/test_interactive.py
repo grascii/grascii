@@ -31,7 +31,7 @@ class InteractiveTester(unittest.TestCase):
         )
 
     def tearDown(self):
-        self.c.close(force=True)
+        self.c.terminate(force=True)
 
     def expect(self, patterns):
         return self.c.expect([pexpect.TIMEOUT] + patterns, timeout=5)

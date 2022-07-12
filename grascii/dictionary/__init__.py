@@ -1,14 +1,11 @@
 from __future__ import annotations
 
 import argparse
-import io
 import os
 import sys
 from enum import Enum
 from pathlib import Path
 from typing import Optional, TextIO, Union
-
-from pkg_resources import resource_exists, resource_stream
 
 from grascii.dictionary import build, install
 from grascii.dictionary import list as list_dict
@@ -103,15 +100,3 @@ class Dictionary:
         if dictionary_path.is_dir():
             return Dictionary(dictionary_path, DictionaryType.LOCAL)
         raise DictionaryNotFound(name)
-
-
-def get_dict_file(dictionary: str, name: str) -> TextIO:
-    if dictionary[0] == ":":
-        if resource_exists("grascii.dictionary", dictionary[1:]):
-            module = "grascii.dictionary." + dictionary[1:]
-            return io.TextIOWrapper(resource_stream(module, name), encoding="utf-8")
-        directory = INSTALLATION_DIR.joinpath(dictionary[1:])
-        if not directory.exists():
-            print(dictionary, "does not exist.", file=sys.stderr)
-        return directory.joinpath(name).open()
-    return Path(dictionary, name).open()

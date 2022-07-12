@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import unittest
 
+import pytest
+
 try:
     import pexpect
 except ImportError:
@@ -19,6 +21,7 @@ DOWN = "j"
 UP = "k"
 
 
+@pytest.mark.slow
 @unittest.skipIf(pexpect is None, "pexpect is not installed")
 @unittest.skipUnless(SUPPORTS_INTERACTIVE, "interactive extra is not installed")
 class InteractiveTester(unittest.TestCase):

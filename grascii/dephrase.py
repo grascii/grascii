@@ -86,10 +86,10 @@ class PhraseFlattener(Transformer):
 
     @lru_cache(maxsize=32)
     def _search_grascii(self, grascii_str):
-        results = self._grascii_searcher.search(grascii=grascii_str)
+        results = self._grascii_searcher.sorted_search(grascii=grascii_str)
         if not results:
             raise NoWordFound()
-        words = [result.split()[1].upper() for result in results]
+        words = (result.entry.translation.upper() for result in results)
         string = "(" + "|".join(words) + ")"
         return self.create_token(string)
 
@@ -136,7 +136,7 @@ def dephrase(**kwargs) -> Set[str]:
         except VisitError as e:
             if isinstance(e.orig_exc, NoWordFound):
                 continue
-            raise e
+            raise e  # no cov
         else:
             parses.add(" ".join(tokens))
     return parses

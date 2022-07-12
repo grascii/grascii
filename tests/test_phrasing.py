@@ -6,7 +6,7 @@ import unittest
 from lark import Lark
 from lark.visitors import CollapseAmbiguities
 
-from grascii.dephrase import PhraseFlattener
+from grascii.dephrase import PhraseFlattener, dephrase
 from grascii.grammars import get_grammar
 
 
@@ -109,6 +109,10 @@ class TestLessonPhrases(unittest.TestCase):
     @unittest.skip("fix these later")
     def test_lesson19a(self):
         self._test_lesson("19a")
+
+
+def test_aggressive():
+    dephrase(phrase="thlnbg", aggressive=True)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ import argparse
 import signal
 import sys
 
-from grascii import config, dictionary, search
+from grascii import APP_NAME, __version__, config, dictionary, search
 
 
 def main() -> None:
@@ -17,9 +17,13 @@ def main() -> None:
     else:
         cleanup_on_signal(signal.SIGHUP)
 
-    argparser = argparse.ArgumentParser(prog="grascii")
+    argparser = argparse.ArgumentParser(prog=APP_NAME)
     subparsers = argparser.add_subparsers(title="subcommands")
     argparser.set_defaults(func=None)
+
+    argparser.add_argument(
+        "-V", "--version", action="version", version=f"%(prog)s {__version__}"
+    )
 
     search_parser = subparsers.add_parser(
         "search", description=search.description, help=search.description, aliases=["s"]

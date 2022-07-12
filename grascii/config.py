@@ -10,13 +10,13 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path, PurePath
-from shutil import copyfile
 
 from grascii import APP_NAME
 from grascii.appdirs import user_config_dir
 
 CONF_DIRECTORY = user_config_dir(APP_NAME)
 CONF_FILE_NAME = APP_NAME + ".conf"
+DEFAULTS_CONF_NAME = "defaults.conf"
 
 description = "Manage Grascii configuration"
 
@@ -52,6 +52,18 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
+def get_default_config() -> str:
+    """Get the text of the default configuration file.
+
+    :returns: A string containing the default configuration.
+    """
+    if sys.version_info >= (3, 9):
+        from importlib.resources import files
+    else:
+        from importlib_resources import files
+    return files("grascii").joinpath(DEFAULTS_CONF_NAME).read_text()
+
+
 def config_exists() -> bool:
     """Check whether the user configuration file exists.
 
@@ -75,8 +87,8 @@ def create_config() -> None:
     """Create a configuration file with the default settings."""
 
     Path(CONF_DIRECTORY).mkdir(parents=True, exist_ok=True)
-    src = Path(__file__).with_name("defaults.conf")
-    copyfile(src, get_config_file_path())
+    with Path(get_config_file_path()).open("w") as config:
+        config.write(get_default_config())
 
 
 def delete_config() -> None:

@@ -70,6 +70,11 @@ class DictionaryType(Enum):
 
 
 class Dictionary:
+    """
+    A class that represents a grascii dictionary and provides methods for reading
+    entries from the dictionary.
+    """
+
     def __init__(
         self, path: os.PathLike, dtype: DictionaryType, name: Optional[str] = None
     ) -> None:
@@ -80,6 +85,14 @@ class Dictionary:
         self.type = dtype
 
     def open(self, name: str) -> TextIO:
+        """Open a file from the dictionary with the given name for reading. The caller is
+        responsible for closing the file.
+
+        :param name: The name of the file to open.
+        :type name: str
+
+        :returns: A text stream.
+        """
         return Path(self.path, name).open()
 
     def __eq__(self, other: Any) -> bool:
@@ -90,6 +103,14 @@ class Dictionary:
 
     @classmethod
     def new(cls, name: Union[str, os.PathLike]) -> Dictionary:
+        """Create a new dictionary from its installed name or a file path.
+
+        :param name: The name of an installed dictionary (starting with ':') or \
+                a path to a dictionary.
+        :type name: Union[str, os.PathLike]
+
+        :returns: A new Dictionary for the given name.
+        """
         if isinstance(name, str) and is_dictionary_installed_name(name):
             if sys.version_info >= (3, 9):
                 from importlib.resources import files

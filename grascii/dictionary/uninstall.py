@@ -28,11 +28,12 @@ def uninstall_dictionary(name: str, install_dir: Path, force: bool = False) -> N
 
     :param name: The name of the dictionary to uninstall.
     :param install_dir: A path to uninstall the dictionary from.
-    :param force: If True, forces the uninstallation of a dictionary even in the
-    case of corruption.
+    :param force: If True, forces the uninstallation of a dictionary even in the \
+            case of corruption.
     :type name: Path
     :type install_dir: Path
     :type force: bool
+
     """
     dictionary_path = install_dir / get_dictionary_path_name(name)
     if not dictionary_path.exists():

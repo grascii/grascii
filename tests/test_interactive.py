@@ -68,6 +68,12 @@ class TestMenus(InteractiveTester):
         self.assertGreater(self.expect(["Edit Settings"]), 0)
         self.assertGreater(self.expect(["Exit"]), 0)
 
+    def test_exit(self):
+        self.c.sendline(UP)
+        self.c.sendline()
+        self.assertGreater(self.expect([pexpect.EOF]), 0)
+        self.assertFalse(self.c.isalive())
+
     def test_new_search(self):
         self.c.sendline()
         self.assertGreater(self.expect(["Enter Search:"]), 0)

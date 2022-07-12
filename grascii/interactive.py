@@ -17,6 +17,7 @@ from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 from lark import UnexpectedInput
 
 from grascii import regen
+from grascii.dictionary import Dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.parser import Interpretation, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
@@ -33,8 +34,8 @@ class InteractiveSearcher(GrasciiSearcher):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.available_dicts = set(self.dictionaries)
-        installed = map(lambda s: ":" + s, get_installed())
-        built_ins = map(lambda s: ":" + s, get_built_ins())
+        installed = map(lambda s: Dictionary.new(s), get_installed())
+        built_ins = map(lambda s: Dictionary.new(s), get_built_ins())
         self.available_dicts.update(installed, built_ins)
 
     def search(self, **kwargs):
@@ -217,9 +218,11 @@ class InteractiveSearcher(GrasciiSearcher):
 
     def select_dictionaries(self) -> None:
         choices = []
-        for dict_name in self.available_dicts:
-            selected = dict_name in self.dictionaries
-            choices.append(Choice(title=dict_name, value=dict_name, checked=selected))
+        for dictionary in self.available_dicts:
+            selected = dictionary in self.dictionaries
+            choices.append(
+                Choice(title=dictionary.name, value=dictionary, checked=selected)
+            )
         title = "Choose Dictionaries"
         dictionaries = questionary.checkbox(
             title,

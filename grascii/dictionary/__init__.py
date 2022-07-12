@@ -5,7 +5,7 @@ import os
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import Optional, TextIO, Union
+from typing import Any, Optional, TextIO, Union
 
 from grascii.dictionary import build, install
 from grascii.dictionary import list as list_dict
@@ -81,6 +81,12 @@ class Dictionary:
 
     def open(self, name: str) -> TextIO:
         return Path(self.path, name).open()
+
+    def __eq__(self, other: Any) -> bool:
+        return isinstance(other, Dictionary) and self.path == other.path
+
+    def __hash__(self) -> int:
+        return hash(self.path)
 
     @classmethod
     def new(cls, name: Union[str, os.PathLike]) -> Dictionary:

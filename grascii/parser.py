@@ -110,13 +110,23 @@ class GrasciiValidator:
             return False
 
 
+class InvalidGrascii(Exception):
+    def __init__(self, grascii: str, unexpected_input: UnexpectedInput) -> None:
+        self.grascii = grascii
+        self.unexpected_input = unexpected_input
+        self.context = unexpected_input.get_context(grascii)
+
+
 class GrasciiParser:
     def __init__(self) -> None:
         grammar = get_grammar("grascii")
         self._parser: Lark = Lark.open(grammar, parser="earley", ambiguity="explicit")
 
     def parse(self, grascii: str) -> Tree:
-        return self._parser.parse(grascii)
+        try:
+            return self._parser.parse(grascii)
+        except UnexpectedInput as ui:
+            raise InvalidGrascii(grascii, ui)
 
     def interpret(
         self, grascii: str, preserve_boundaries: bool = False

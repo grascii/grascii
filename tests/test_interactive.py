@@ -241,6 +241,12 @@ class TestSearch(InteractiveTester):
         self.c.sendline()
         self.assertGreater(self.expect(["AB"]), 0)
 
+    def test_invalid_grascii(self):
+        self.new_search()
+        self.assertGreater(self.expect(["Enter Search:"]), 0)
+        self.c.sendline("rac")
+        self.assertGreater(self.expect(["Invalid Grascii"]), 0)
+
 
 class TestCancel(InteractiveTester):
     def test_main_menu(self):

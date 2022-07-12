@@ -10,7 +10,8 @@
 - `grascii.dictionary.common` module to contain `DictionaryException`s and utility functions.
 - `Dictionary` class to work with grascii dictionaries.
 - `config.get_default_config` to get the text of the default configuration file.
-- `-V` and `--version` command line options
+- `-V` and `--version` command line options.
+- `InvalidGrascii` exception which is produced by a parser.
 
 ### Changed
 

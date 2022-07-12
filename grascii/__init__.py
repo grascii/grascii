@@ -8,6 +8,7 @@ from grascii.parser import (
     GrasciiParser,
     GrasciiValidator,
     Interpretation,
+    InvalidGrascii,
     interpretation_to_string,
 )
 from grascii.regen import SearchMode, Strictness

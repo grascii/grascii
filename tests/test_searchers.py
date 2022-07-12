@@ -5,6 +5,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from grascii.dictionary.build import DictionaryBuilder
+from grascii.parser import InvalidGrascii
 from grascii.searchers import GrasciiSearcher, ReverseSearcher
 
 output_dir = "tests/dictionaries/tosearch"
@@ -65,6 +66,15 @@ class TestGrasciiSearcher(unittest.TestCase):
         )
         self.assertGreater(start_count, match_count)
         self.assertGreater(contain_count, start_count)
+
+    def test_invalid_grascii(self):
+        searcher = GrasciiSearcher(dictionaries=[output_dir])
+        with self.assertRaises(InvalidGrascii):
+            searcher.sorted_search(grascii="RAC")
+        with self.assertRaises(InvalidGrascii):
+            searcher.sorted_search(grascii="WAY")
+        with self.assertRaises(InvalidGrascii):
+            searcher.sorted_search(grascii="YES")
 
 
 class TestReverseSearcher(unittest.TestCase):

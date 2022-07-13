@@ -119,17 +119,10 @@ class Searcher(ABC, Generic[IT]):
         **kwargs: Any,
     ) -> Sequence[SearchResult[IT]]:
 
-        results = []
         search_results = self.search(**kwargs)
         if search_results:
-            for result in search_results:
-                results.append((result, metric(result)))
-                i = len(results) - 1
-                while i > 0:
-                    if results[i][1] < results[i - 1][1]:
-                        results[i - 1], results[i] = results[i], results[i - 1]
-                    i -= 1
-        return [result for result, _ in results]
+            return sorted(search_results, key=lambda r: metric(r))
+        return []
 
 
 class GrasciiSearcher(Searcher[Interpretation]):

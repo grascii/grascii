@@ -13,7 +13,13 @@ from typing import Iterable, Optional
 
 from grascii import regen
 from grascii.parser import InvalidGrascii
-from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
+from grascii.searchers import (
+    GrasciiSearcher,
+    RegexSearcher,
+    ReverseSearcher,
+    Searcher,
+    SearchResult,
+)
 
 SUPPORTS_INTERACTIVE = False
 try:
@@ -93,9 +99,14 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
         action="append",
         help="add a dictionary to be searched",
     )
+    argparser.add_argument(
+        "--no-sort",
+        action="store_true",
+        help="do not sort the search results",
+    )
 
 
-def search(**kwargs) -> Optional[Iterable[str]]:
+def search(**kwargs) -> Optional[Iterable[SearchResult]]:
     """Run a grascii dictionary search. Parameters can consist of
     any parameters used by the search method of any subclass of
     Searcher. One, and only one, of the parameters list below
@@ -119,12 +130,14 @@ def search(**kwargs) -> Optional[Iterable[str]]:
     elif kwargs.get("interactive"):
         if not SUPPORTS_INTERACTIVE:
             print("The interactive extra is not installed", file=sys.stderr)
-            return
+            return None
         searcher = InteractiveSearcher(**kwargs)
     elif kwargs.get("reverse"):
         searcher = ReverseSearcher(**kwargs)
     else:
         searcher = RegexSearcher(**kwargs)
+    if kwargs.get("no_sort"):
+        return searcher.search(**kwargs)
     return searcher.sorted_search(**kwargs)
 
 
@@ -142,9 +155,11 @@ def cli_search(args: argparse.Namespace) -> None:
         return
     else:
         if results is not None:
+            count = 0
             for result in results:
                 print(result.entry.grascii, result.entry.translation)
-            print("Results:", len(results))
+                count += 1
+            print("Results:", count)
 
 
 def main() -> None:

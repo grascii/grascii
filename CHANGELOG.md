@@ -12,6 +12,7 @@
 - `config.get_default_config` to get the text of the default configuration file.
 - `-V` and `--version` command line options.
 - `InvalidGrascii` exception which is produced by a parser.
+- `--no-sort` option for `grascii search`.
 
 ### Changed
 
@@ -21,6 +22,7 @@ installed dictionary names (prefixed with `:`).
 - `grascii.dictionary.install.install_dict` renamed to `install_dictionary` and accepts more options.
 - `grascii.dictionary.uninstall.uninstall_dict` renamed to `uninstall_dictionary` and accepts more options.
 - `DICTIONARY_PATH` renamed to `INSTALLATION_DIR`.
+- Using builtin `sorted` function speeds up general grascii searches.
 
 ### Removed
 

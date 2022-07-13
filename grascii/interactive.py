@@ -14,7 +14,7 @@ except ImportError:
 import sys
 from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 
-from grascii import regen
+from grascii import metrics, regen
 from grascii.dictionary import Dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.parser import Interpretation, InvalidGrascii, interpretation_to_string
@@ -57,6 +57,7 @@ class InteractiveSearcher(GrasciiSearcher):
         """
 
         self.extract_search_args(**kwargs)
+        self.sort = not kwargs.get("no_sort")
         self.run_interactive()
 
     def choose_interpretation(
@@ -259,6 +260,8 @@ class InteractiveSearcher(GrasciiSearcher):
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
         results = self.perform_search(patterns, starting_letters)
+        if self.sort:
+            results = sorted(results, key=lambda r: metrics.grascii_standard(r))
         count = 0
         display_all = False
         for result in results:

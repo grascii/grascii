@@ -112,7 +112,8 @@ class TestLessonPhrases(unittest.TestCase):
 
 
 def test_aggressive():
-    dephrase(phrase="thlnbg", aggressive=True)
+    dephrase(phrase="thl-nbg", aggressive=True)
+    dephrase(phrase="O(,^TH,TM", aggressive=True)
 
 
 if __name__ == "__main__":

@@ -48,8 +48,11 @@ class GrasciiFlattener(Transformer):
     but sequences of annotation terminals are grouped into their own sublist.
     """
 
-    def __init__(self, preserve_boundaries: bool = False) -> None:
+    def __init__(
+        self, preserve_boundaries: bool = False, start_rule: str = "start"
+    ) -> None:
         super().__init__()
+        setattr(self, start_rule, self.start)
         self.preserve_boundaries = preserve_boundaries
 
     def start(self, children) -> Interpretation:

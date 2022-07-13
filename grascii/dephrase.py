@@ -9,7 +9,7 @@ from lark import Lark, Token, Transformer, UnexpectedInput
 from lark.visitors import CollapseAmbiguities, VisitError, v_args
 
 from grascii.grammars import get_grammar
-from grascii.parser import GrasciiFlattener
+from grascii.parser import GrasciiFlattener, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
 
 description = "Decipher a shorthand phrase."
@@ -55,7 +55,7 @@ class PhraseFlattener(Transformer):
         "opt_your": "YOUR",
     }
 
-    _grascii_flattener = GrasciiFlattener()
+    _grascii_flattener = GrasciiFlattener(start_rule="word")
 
     _grascii_searcher = GrasciiSearcher()
 
@@ -96,9 +96,7 @@ class PhraseFlattener(Transformer):
     @v_args(tree=True)
     def word(self, tree):
         interp = self._grascii_flattener.transform(tree)
-        interp = [item for item in interp if isinstance(item, Token)]
-        grascii_str = "-".join(interp)
-        return self._search_grascii(grascii_str)
+        return self._search_grascii(interpretation_to_string(interp))
 
     def __default__(self, data, children, meta):
         result = []
@@ -115,13 +113,14 @@ class PhraseFlattener(Transformer):
 
 
 def dephrase(**kwargs) -> Set[str]:
-    grammar_name = "phrases_extended" if kwargs["aggressive"] else "phrases"
+    aggressive = kwargs.get("aggressive", False)
+    grammar_name = "phrases_extended" if aggressive else "phrases"
     g = get_grammar(grammar_name)
     parser = Lark.open(
         g, parser="earley", ambiguity="explicit", lexer="dynamic_complete"
     )
     trans = PhraseFlattener()
-    if kwargs["aggressive"]:
+    if aggressive:
         trans = StripNameSpace("phrases") * trans
     parses: Set[str] = set()
     try:

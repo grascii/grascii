@@ -30,6 +30,7 @@ installed dictionary names (prefixed with `:`).
 ### Fixed
 
 - Typing issues with searchers and metrics.
+- Errors when passing a grascii string with boundaries or disjoiners to the aggressive dephraser.
 
 ## 0.4.1 - 2022-06-29
 

@@ -5,7 +5,6 @@ implementations of it.
 from __future__ import annotations
 
 import re
-import sys
 from abc import ABC, abstractmethod
 from typing import (
     TYPE_CHECKING,
@@ -23,8 +22,6 @@ from typing import (
     Tuple,
     TypeVar,
 )
-
-from lark.exceptions import UnexpectedInput
 
 from grascii import defaults, grammar, metrics, regen
 from grascii.dictionary import Dictionary, DictionaryNotFound
@@ -212,12 +209,7 @@ class GrasciiSearcher(Searcher[Interpretation]):
         grascii = kwargs["grascii"].upper()
         self.extract_search_args(**kwargs)
 
-        try:
-            interpretations = self._parser.interpret(grascii)
-        except UnexpectedInput as e:
-            print("Invalid Grascii String", file=sys.stderr)
-            print(e.get_context(grascii), file=sys.stderr)
-            return None
+        interpretations = self._parser.interpret(grascii)
 
         builder = regen.RegexBuilder(
             uncertainty=self.uncertainty,

@@ -14,12 +14,10 @@ except ImportError:
 import sys
 from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 
-from lark import UnexpectedInput
-
 from grascii import regen
 from grascii.dictionary import Dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
-from grascii.parser import Interpretation, interpretation_to_string
+from grascii.parser import Interpretation, InvalidGrascii, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
 
 T = TypeVar("T")
@@ -302,9 +300,9 @@ class InteractiveSearcher(GrasciiSearcher):
             search = search.upper()
             try:
                 interpretations = self._parser.interpret(search)
-            except UnexpectedInput as e:
+            except InvalidGrascii as e:
                 print("Invalid Grascii String", file=sys.stderr)
-                print(e.get_context(search), file=sys.stderr)
+                print(e.context, file=sys.stderr)
                 previous = search
                 continue
             return search, interpretations

@@ -12,6 +12,7 @@ import sys
 from typing import Iterable, Optional
 
 from grascii import regen
+from grascii.parser import InvalidGrascii
 from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
 
 SUPPORTS_INTERACTIVE = False
@@ -133,11 +134,17 @@ def cli_search(args: argparse.Namespace) -> None:
     :param args: A namespace of parsed arguments.
     """
 
-    results = search(**{k: v for k, v in vars(args).items() if v is not None})
-    if results is not None:
-        for result in results:
-            print(result.entry.grascii, result.entry.translation)
-        print("Results:", len(results))
+    try:
+        results = search(**{k: v for k, v in vars(args).items() if v is not None})
+    except InvalidGrascii as e:
+        print("Invalid Grascii String", file=sys.stderr)
+        print(e.context, file=sys.stderr)
+        return
+    else:
+        if results is not None:
+            for result in results:
+                print(result.entry.grascii, result.entry.translation)
+            print("Results:", len(results))
 
 
 def main() -> None:

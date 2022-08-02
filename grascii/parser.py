@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-from functools import reduce
-from pathlib import Path
+import re
+from functools import lru_cache, reduce
 from typing import List, Union
 
 from lark import Lark, Token, Transformer, Tree, UnexpectedInput
 from lark.visitors import CollapseAmbiguities
 
-from grascii import APP_NAME, __version__, grammar
-from grascii.appdirs import user_cache_dir
+from grascii import grammar
 from grascii.grammars import get_grammar
 
 Interpretation = List[Union[str, List[str]]]
@@ -91,26 +90,19 @@ class GrasciiFlattener(Transformer):
         return result
 
 
-_LALR_CACHE_DIR = (
-    Path(user_cache_dir(appname=APP_NAME, version=__version__)) / "grammars"
-)
-_LALR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-_LALR_CACHE_FILE = _LALR_CACHE_DIR / "grascii.lark.cache"
+@lru_cache(maxsize=1)
+def get_grascii_regex_str() -> str:
+    grammar = get_grammar("grascii_regex")
+    parser = Lark.open(grammar)
+    return parser.get_terminal("GRASCII").pattern.value
 
 
 class GrasciiValidator:
-    def __init__(self, use_cache: bool = False) -> None:
-        grammar = get_grammar("grascii")
-        self._validator: Lark = Lark.open(
-            grammar, parser="lalr", cache=str(_LALR_CACHE_FILE) if use_cache else False
-        )
+    def __init__(self) -> None:
+        self._regex = re.compile(get_grascii_regex_str())
 
     def validate(self, grascii: str) -> bool:
-        try:
-            self._validator.parse(grascii)
-            return True
-        except UnexpectedInput:
-            return False
+        return bool(self._regex.fullmatch(grascii))
 
 
 class InvalidGrascii(Exception):

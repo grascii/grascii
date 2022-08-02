@@ -236,7 +236,7 @@ class DictionaryBuilder:
             # Disable cache for now
             # It could be enabled, but we have to be careful about clearing the
             # cache after grammar changes
-            self.parser = GrasciiValidator(use_cache=False)
+            self.parser = GrasciiValidator()
             logger.info("Created GrasciiValidator")
 
     def _load_word_set(self) -> None:

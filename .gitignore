@@ -9,3 +9,4 @@ grascii.conf
 build/
 dist/
 grascii.egg-info/
+grascii/grammars/grascii_regex.lark

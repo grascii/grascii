@@ -70,6 +70,8 @@ def create_grascii_regex():
     reconstructor = Reconstructor(parser)
     grammar = reconstructor.reconstruct(tree, postproc)
     Path("grascii/grammars/grascii_regex.lark").write_text(grammar)
+    print("Created grascii/grammars/grascii_regex.lark")
+    print(grammar)
 
 
 if __name__ == "__main__":

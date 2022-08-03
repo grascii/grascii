@@ -1,4 +1,5 @@
 recursive-include grascii *.lark
+exclude grascii/grammars/grascii_regex.lark
 include grascii/defaults.conf
 prune grascii/dictionary/preanniversary
 
@@ -11,6 +12,7 @@ recursive-include docs/images *.png
 prune docs/reference
 include docs/conf.py docs/make.bat
 
+recursive-include scripts *.py
 recursive-include tests *.py *.txt
 include *.md
 include *.yaml

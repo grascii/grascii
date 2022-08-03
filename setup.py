@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 from setuptools import setup
 from setuptools.command.build_py import build_py
 
-from scripts.build_dictionaries import build_dictionaries
-from scripts.create_grascii_regex import create_grascii_regex
+sys.path.insert(0, str(Path(__file__).parent))
+
+from scripts.build_dictionaries import build_dictionaries  # noqa: E402
+from scripts.create_grascii_regex import create_grascii_regex  # noqa: E402
 
 
 class PreBuild(build_py):

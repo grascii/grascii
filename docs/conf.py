@@ -32,7 +32,7 @@ master_doc = "index"
 # ones.
 extensions = ["sphinx_rtd_theme", "sphinx.ext.autodoc", "sphinxcontrib.apidoc"]
 apidoc_module_dir = "../grascii"
-apidoc_excluded_paths = ["../grascii/appdirs.py"]
+apidoc_excluded_paths = ["../grascii/appdirs.py", "../grascii/lark_ambig_tools.py"]
 apidoc_output_dir = "reference"
 
 # Add any paths that contain templates here, relative to this directory.

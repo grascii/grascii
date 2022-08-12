@@ -3,6 +3,8 @@
 
 ## Unreleased
 
+## 0.5.0 - 2022-08-12
+
 ### Added
 
 - `SearchResult` class to group together relevant data from matches.

@@ -13,9 +13,9 @@ class TestInferredDirections(unittest.TestCase):
     def run_tests(self, tests):
         for test in tests:
             with self.subTest(word=test[0], expected=test[1]):
-                interpretation = self.parser.interpret(
-                    test[0], preserve_boundaries=True
-                )[0]
+                interpretation = next(
+                    self.parser.interpret(test[0], preserve_boundaries=True)
+                )
                 outline = Outline(interpretation)
                 self.assertEqual(str(outline), test[1])
 
@@ -341,9 +341,9 @@ class TestToInterpretation(unittest.TestCase):
         ]
         for test in tests:
             with self.subTest(word=test[0], expected=test[1]):
-                interpretation = self.parser.interpret(
-                    test[0], preserve_boundaries=True
-                )[0]
+                interpretation = next(
+                    self.parser.interpret(test[0], preserve_boundaries=True)
+                )
                 outline = Outline(interpretation)
                 self.assertEqual(
                     interpretation_to_string(outline.to_interpretation()), test[1]

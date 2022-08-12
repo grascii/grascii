@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import re
 from functools import lru_cache, reduce
-from typing import List, Union
+from typing import Iterator, List, Union
 
 from lark import Lark, Token, Transformer, Tree, UnexpectedInput
-from lark.visitors import CollapseAmbiguities
 
 from grascii import grammar
 from grascii.grammars import get_grammar
+from grascii.lark_ambig_tools import Disambiguator
 
 Interpretation = List[Union[str, List[str]]]
 
@@ -125,12 +125,8 @@ class GrasciiParser:
 
     def interpret(
         self, grascii: str, preserve_boundaries: bool = False
-    ) -> List[Interpretation]:
+    ) -> Iterator[Interpretation]:
         tree = self.parse(grascii)
-        trees = CollapseAmbiguities().transform(tree)
+        trees = Disambiguator().visit(tree)
         flattener = GrasciiFlattener(preserve_boundaries)
-        interpretations = [flattener.transform(tree) for tree in trees]
-        unique_interpretations = {
-            interpretation_to_string(interp): interp for interp in interpretations
-        }
-        return list(unique_interpretations.values())
+        return map(flattener.transform, trees)

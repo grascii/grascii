@@ -6,9 +6,10 @@ from functools import lru_cache
 from typing import Set
 
 from lark import Lark, Token, Transformer, UnexpectedInput
-from lark.visitors import CollapseAmbiguities, VisitError, v_args
+from lark.visitors import VisitError, v_args
 
 from grascii.grammars import get_grammar
+from grascii.lark_ambig_tools import Disambiguator
 from grascii.parser import GrasciiFlattener, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
 
@@ -128,7 +129,7 @@ def dephrase(**kwargs) -> Set[str]:
     except UnexpectedInput:
         return parses
 
-    trees = CollapseAmbiguities().transform(tree)
+    trees = Disambiguator().visit(tree)
     for t in trees:
         try:
             tokens = (token.type for token in trans.transform(t))
@@ -148,7 +149,7 @@ def cli_dephrase(args: argparse.Namespace) -> None:
             "an excessively long time to process and produce many",
             "irrelevant results.",
         )
-        print("To ignore this warning use '--ignore_limit'.")
+        print("To ignore this warning use '--ignore-limit'.")
         return
     results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
     if results:

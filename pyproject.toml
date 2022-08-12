@@ -16,6 +16,7 @@ branch = true
 parallel = true
 omit = [
   "grascii/appdirs.py",
+  "grascii/lark_ambig_tools.py",
   "tests/*",
 ]
 

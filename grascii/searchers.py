@@ -214,9 +214,9 @@ class GrasciiSearcher(Searcher[Interpretation]):
         )
 
         interps = (
-            interpretations[0:1]
+            [next(interpretations)]
             if self.interpretation_mode == "best"
-            else interpretations
+            else list(interpretations)
         )
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)

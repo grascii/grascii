@@ -302,7 +302,7 @@ class InteractiveSearcher(GrasciiSearcher):
                 continue
             search = search.upper()
             try:
-                interpretations = self._parser.interpret(search)
+                interpretations = list(self._parser.interpret(search))
             except InvalidGrascii as e:
                 print("Invalid Grascii String", file=sys.stderr)
                 print(e.context, file=sys.stderr)

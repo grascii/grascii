@@ -75,19 +75,13 @@ class Searcher(ABC, Generic[IT]):
         patterns: Iterable[Tuple[IT, Pattern[str]]],
         starting_letters: Set[str],
     ) -> Iterable[SearchResult[IT]]:
-        """Performs a search of a Grascii Dictionary.
+        """Perform a search of a Grascii Dictionary.
 
-        :param patterns: A collection of compiled regular expression patterns
-            with a corresponding interpretation.
+        :param patterns: An iterable of interpretations and corresponding compiled
+            regular expression patterns.
         :param starting_letters: A set of letters used to index the search in
             a Grascii Dictionary.
-        :param metric: A function taking an interpretation and a regular
-            expression match that returns a positive integer signifying the
-            difference between the interpretation and the match. 0 means the
-            two are equivalent. The greater the value, the more different
-            they are.
-        :returns: A collection strings of the form "[grascii] [translation]"
-            sorted by the results of metric.
+        :returns: An iterable of search results
         """
         for dictionary in self.dictionaries:
             for item in sorted(starting_letters):
@@ -118,6 +112,9 @@ class Searcher(ABC, Generic[IT]):
         metric: Callable[[SearchResult[IT]], Comparable] = metrics.trivial,
         **kwargs: Any,
     ) -> Sequence[SearchResult[IT]]:
+        """Run a search with the given args and sort the search results by the
+        given metric.
+        """
 
         search_results = self.search(**kwargs)
         if search_results:

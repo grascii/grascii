@@ -33,6 +33,8 @@ class StrokeType(NamedTuple):
 
 
 class Stroke:
+    """The building block of an ``Outline``"""
+
     def __init__(
         self,
         stroke: str,
@@ -111,7 +113,7 @@ class Stroke:
 class Outline:
 
     """
-    An Outline is an alternative to Interpretation as a representation of a
+    An alternative to ``Interpretation`` as a representation of a
     Grascii string. It is structured as a linked list and is better for
     contextual processing of strokes. Outlines infer the directions of
     directional characters and explicitly add direction annotations.
@@ -400,6 +402,7 @@ class Outline:
         return "".join(builder)
 
     def to_interpretation(self) -> Interpretation:
+        """Convert this ``Outline`` to an ``Interpretation``"""
         interpretation: Interpretation = []
         current_stroke = self.first
         while current_stroke:

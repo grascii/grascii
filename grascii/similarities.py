@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Dict, Hashable, Iterable, List, Set, Tuple, cast
 
-equiv_nodes: Dict[str, Tuple[str, ...]] = {
+_equiv_nodes: Dict[str, Tuple[str, ...]] = {
     "S": ("S", "Z"),
     "Z": ("S", "Z"),
     "TD": ("TD", "DT", "DD"),
@@ -31,12 +31,13 @@ equiv_nodes: Dict[str, Tuple[str, ...]] = {
 
 
 def get_node(stroke: str) -> Tuple[str, ...]:
-    return equiv_nodes.get(stroke, (stroke,))
+    """Get a tuple of all strokes equivalent to the given stroke."""
+    return _equiv_nodes.get(stroke, (stroke,))
 
 
-disconnected_nodes: List[Hashable] = [("O",), ("U",), get_node("PNT"), get_node("DF")]
+_disconnected_nodes: List[Hashable] = [("O",), ("U",), get_node("PNT"), get_node("DF")]
 
-edges: List[Tuple[str, str]] = [
+_edges: List[Tuple[str, str]] = [
     ("K", "G"),
     ("R", "L"),
     ("L", "LD"),
@@ -74,12 +75,12 @@ edges: List[Tuple[str, str]] = [
     ("TH", "NT"),
 ]
 
-trans_edges: List[Tuple[Hashable, Hashable]] = [
-    (get_node(edge[0]), get_node(edge[1])) for edge in edges
+_trans_edges: List[Tuple[Hashable, Hashable]] = [
+    (get_node(edge[0]), get_node(edge[1])) for edge in _edges
 ]
 
 
-class SimilarityGraph:
+class _SimilarityGraph:
     """Implements a basic graph with the capability of doing an n-layered
     breadth-first search."""
 
@@ -131,7 +132,7 @@ class SimilarityGraph:
         given node.
 
         :param node: The node to get similars for.
-        :param similarity: How different... uncertainty.
+        :param similarity: A distance
         :returns: A set of nodes
         """
 
@@ -147,9 +148,9 @@ class SimilarityGraph:
         return similars
 
 
-sg = SimilarityGraph()
-sg.add_edges(trans_edges)
-sg.add_nodes(disconnected_nodes)
+_sg = _SimilarityGraph()
+_sg.add_edges(_trans_edges)
+_sg.add_nodes(_disconnected_nodes)
 
 
 def get_similar(stroke: str, distance: int) -> Set[Tuple]:
@@ -157,8 +158,8 @@ def get_similar(stroke: str, distance: int) -> Set[Tuple]:
     given node.
 
     :param stroke: The stroke to get similars for.
-    :param distance: How different... uncertainty.
-    :returns: A set of strokes.
+    :param distance: The maximum distance of similar strokes.
+    :returns: A set of strokes grouped by equivalency.
     """
 
-    return cast(Set[Tuple], sg.get_similar(get_node(stroke), distance))
+    return cast(Set[Tuple], _sg.get_similar(get_node(stroke), distance))

@@ -11,6 +11,7 @@ Welcome to Grascii's documentation!
    dictionary
    configuration
    similarity
+   CHANGELOG
 
 Indices and tables
 ==================

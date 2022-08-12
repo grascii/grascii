@@ -42,7 +42,7 @@ def interpretation_to_string(interpretation: Interpretation) -> str:
 class GrasciiFlattener(Transformer):
 
     """This is a Lark Transformer that converts a parsed Grascii string
-    into an Interpretation. An Interpretation is a list of terminals and
+    into an ``Interpretation``. An ``Interpretation`` is a list of terminals and
     annotation lists. Each terminal is its own element in the interpretation,
     but sequences of annotation terminals are grouped into their own sublist.
     """
@@ -92,20 +92,32 @@ class GrasciiFlattener(Transformer):
 
 @lru_cache(maxsize=1)
 def get_grascii_regex_str() -> str:
+    """Get a string that can be compiled into a regular expression that matches
+    Grascii strings.
+    """
     grammar = get_grammar("grascii_regex")
     parser = Lark.open(grammar)
     return parser.get_terminal("GRASCII").pattern.value
 
 
 class GrasciiValidator:
+    """Validates Grascii strings."""
+
     def __init__(self) -> None:
         self._regex = re.compile(get_grascii_regex_str())
 
     def validate(self, grascii: str) -> bool:
+        """Check whether the given string is valid Grascii.
+
+        :param grascii: A string to check
+        :returns: bool
+        """
         return bool(self._regex.fullmatch(grascii))
 
 
 class InvalidGrascii(Exception):
+    """Exception thrown by the ``GrasciiParser`` when provided an invalid string."""
+
     def __init__(self, grascii: str, unexpected_input: UnexpectedInput) -> None:
         self.grascii = grascii
         self.unexpected_input = unexpected_input
@@ -113,11 +125,18 @@ class InvalidGrascii(Exception):
 
 
 class GrasciiParser:
+    """Parses and interprets Grascii strings."""
+
     def __init__(self) -> None:
         grammar = get_grammar("grascii")
         self._parser: Lark = Lark.open(grammar, parser="earley", ambiguity="explicit")
 
     def parse(self, grascii: str) -> Tree:
+        """Parse the given string into a ``Tree``.
+
+        :param grascii: A Grascii string to parse.
+        :returns: An ambiguous parse tree of the Grascii string.
+        """
         try:
             return self._parser.parse(grascii)
         except UnexpectedInput as ui:
@@ -126,6 +145,13 @@ class GrasciiParser:
     def interpret(
         self, grascii: str, preserve_boundaries: bool = False
     ) -> Iterator[Interpretation]:
+        """Interpret a Grascii string.
+
+        :param grascii: A Grascii string to interpret
+        :param preserve_boundaries: When ``False``, boundaries in the string ('-')
+            are not included in the resulting interpretations.
+        :returns: An iterator over interpretations.
+        """
         tree = self.parse(grascii)
         trees = Disambiguator().visit(tree)
         flattener = GrasciiFlattener(preserve_boundaries)

@@ -67,10 +67,10 @@ def interpretation_to_gsequence(interp: Interpretation) -> GrasciiSequence:
 
 
 def match_to_gsequence(match: Match[str]) -> GrasciiSequence:
-    """Convert an match into a GrasciiSequence
+    """Convert a match into a ``GrasciiSequence``
 
     :param match: The match to convert.
-    :returns: A GrasciiSequence.
+    :returns: A ``GrasciiSequence``.
     """
 
     sequence: GrasciiSequence = []
@@ -91,8 +91,8 @@ def gsequence_distance(seq1: GrasciiSequence, seq2: GrasciiSequence) -> int:
     """Compute a weighed Levenshtein distance between two sequences of annotated
     strokes.
 
-    :param seq1: A GrasciiSequence
-    :param seq2: A second GrasciiSequence
+    :param seq1: A ``GrasciiSequence``
+    :param seq2: A second ``GrasciiSequence``
     :returns: A distance between seq1 and seq2.
     """
 
@@ -185,6 +185,9 @@ IT = TypeVar("IT")
 def determine_shortest_distance(
     matches: List[Tuple[IT, Match[str]]], func: Callable[[IT, Match[str]], CT]
 ) -> CT:
+    """Determine the minimum value produced by a function on pairs of interpretations
+    and matches. Utility for building metrics.
+    """
     distance: Optional[CT] = None
     for interp, match in matches:
         new_distance = func(interp, match)
@@ -197,9 +200,8 @@ def determine_shortest_distance(
 def grascii_standard(result: SearchResult[Interpretation]) -> int:
     """Compute the standard metric for a grascii search.
 
-    :param interp: The interpretation to compare to the match
-    :param match: The search match.
-    :returns: A distance.
+    :param result: A ``SearchResult``
+    :returns: A distance between an ``Interpretation`` and a ``Match``
     """
 
     def distance(interp: Interpretation, match: Match[str]) -> int:
@@ -211,6 +213,13 @@ def grascii_standard(result: SearchResult[Interpretation]) -> int:
 
 
 def translation_standard(result: SearchResult[str]) -> Tuple[int, int]:
+    """Compute the standard metric for a reverse search.
+
+    :param result: A ``SearchResult``
+    :returns: A comparable key representing the distance between a translation
+        and a ``Match``
+    """
+
     def distance(s: str, match: Match[str]) -> Tuple[int, int]:
         word_start = match.start("word") - match.end("grascii")
         return word_start, len(match.group("translation"))
@@ -219,4 +228,9 @@ def translation_standard(result: SearchResult[str]) -> Tuple[int, int]:
 
 
 def trivial(result: SearchResult[IT]) -> int:
+    """The trivial metric.
+
+    :param result: A ``SearchResult``
+    :returns: 0
+    """
     return 0

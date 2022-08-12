@@ -58,9 +58,9 @@ class InteractiveSearcher(GrasciiSearcher):
 
         self.extract_search_args(**kwargs)
         self.sort = not kwargs.get("no_sort")
-        self.run_interactive()
+        self._run_interactive()
 
-    def choose_interpretation(
+    def _choose_interpretation(
         self, interpretations: Sequence[Interpretation]
     ) -> Optional[int]:
         """Prompt the user to choose an interpretation(s).
@@ -78,7 +78,7 @@ class InteractiveSearcher(GrasciiSearcher):
             choices.append(Choice(title=interpretation_to_string(interp), value=i + 1))
         return questionary.select(prompt, choices).ask()
 
-    def run_interactive(self) -> None:
+    def _run_interactive(self) -> None:
         """Run an interactive search loop."""
 
         previous_search = None
@@ -96,9 +96,9 @@ class InteractiveSearcher(GrasciiSearcher):
             if action is None or action == "Exit":
                 exit()
             elif action == "New Search":
-                previous_search = self.interactive_search()
+                previous_search = self._interactive_search()
             elif action == "Modify Search":
-                previous_search = self.interactive_search(previous_search)
+                previous_search = self._interactive_search(previous_search)
             elif action == "Edit Settings":
                 while True:
                     action = questionary.select(
@@ -146,48 +146,48 @@ class InteractiveSearcher(GrasciiSearcher):
                     if action is None or action == "Back":
                         break
                     elif action == 1:
-                        self.change_arg(
+                        self._change_arg(
                             "uncertainty", range(3), display_name="Uncertainty"
                         )
                     elif action == 2:
-                        self.change_arg(
+                        self._change_arg(
                             "search_mode",
                             list(regen.SearchMode),
-                            convert=self.get_enum_value,
+                            convert=self._get_enum_value,
                             display_name="Search mode",
                         )
                     elif action == 3:
-                        self.change_arg(
+                        self._change_arg(
                             "annotation_mode",
                             list(regen.Strictness),
-                            convert=self.get_enum_value,
+                            convert=self._get_enum_value,
                             display_name="Annotation mode",
                         )
                     elif action == 4:
-                        self.change_arg(
+                        self._change_arg(
                             "aspirate_mode",
                             list(regen.Strictness),
-                            convert=self.get_enum_value,
+                            convert=self._get_enum_value,
                             display_name="Aspirate mode",
                         )
                     elif action == 5:
-                        self.change_arg(
+                        self._change_arg(
                             "disjoiner_mode",
                             list(regen.Strictness),
-                            convert=self.get_enum_value,
+                            convert=self._get_enum_value,
                             display_name="Disjoiner mode",
                         )
                     elif action == 6:
-                        self.change_arg(
+                        self._change_arg(
                             "fix_first", [True, False], display_name="Fix First"
                         )
                     elif action == 7:
-                        self.select_dictionaries()
+                        self._select_dictionaries()
 
-    def get_enum_value(self, enum):
+    def _get_enum_value(self, enum):
         return enum.value
 
-    def change_arg(
+    def _change_arg(
         self,
         arg_name,
         options: Iterable[T],
@@ -215,7 +215,7 @@ class InteractiveSearcher(GrasciiSearcher):
         if setting is not None:
             setattr(self, arg_name, setting)
 
-    def select_dictionaries(self) -> None:
+    def _select_dictionaries(self) -> None:
         choices = []
         for dictionary in self.available_dicts:
             selected = dictionary in self.dictionaries
@@ -231,7 +231,7 @@ class InteractiveSearcher(GrasciiSearcher):
         if dictionaries:
             self.dictionaries = dictionaries
 
-    def interactive_search(self, previous: str = None) -> Optional[str]:
+    def _interactive_search(self, previous: str = None) -> Optional[str]:
         """Run an interactive search.
 
         :param previous: The previous search performed in this interactive
@@ -239,10 +239,10 @@ class InteractiveSearcher(GrasciiSearcher):
         :returns: The search string used.
         """
 
-        search, interpretations = self.get_grascii_search(previous)
+        search, interpretations = self._get_grascii_search(previous)
         if search is None:
             return previous
-        index = self.choose_interpretation(interpretations)
+        index = self._choose_interpretation(interpretations)
         if index is None:
             return search
         builder = regen.RegexBuilder(
@@ -281,7 +281,7 @@ class InteractiveSearcher(GrasciiSearcher):
         print()
         return search
 
-    def get_grascii_search(
+    def _get_grascii_search(
         self, previous: Optional[str] = None
     ) -> Tuple[Optional[str], Optional[List[Interpretation]]]:
         """Prompt the user for a grascii string.

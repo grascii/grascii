@@ -343,8 +343,6 @@ class DictionaryBuilder:
     def print_build_summary(self) -> None:
         """Print a summary of the build including warning, error, and entry counts
         as well as the time taken.
-
-        :param time: The time in seconds taken to run the build.
         """
 
         if self.warnings or self.errors:

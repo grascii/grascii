@@ -13,6 +13,8 @@
 - `-V` and `--version` command line options.
 - `InvalidGrascii` exception which is produced by a parser.
 - `--no-sort` option for `grascii search`.
+- `grascii.parser.get_grascii_regex_str()` to get a string that can be compiled into
+  a regular expression that recognizes grascii strings.
 
 ### Changed
 
@@ -23,11 +25,13 @@ installed dictionary names (prefixed with `:`).
 - `grascii.dictionary.uninstall.uninstall_dict` renamed to `uninstall_dictionary` and accepts more options.
 - `DICTIONARY_PATH` renamed to `INSTALLATION_DIR`.
 - Using builtin `sorted` function speeds up general grascii searches.
+- `GrasciiParser.interpret` returns an iterator instead of a list.
 
 ### Removed
 
 - Dropped Python 3.6 support.
 - `grascii.dictionary.get_dict_file`: Use `grascii.dictionary.Dictionary.open` instead.
+- `GrasciiValidator.__init__` `use_cache` option
 
 ### Fixed
 

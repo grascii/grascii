@@ -27,6 +27,10 @@ class DictionaryNotFound(DictionaryException):
 
 
 def get_dictionary_installed_name(name: str) -> str:
+    """Get the installed name of a dictionary.
+
+    i.e. Prefixed with ':'
+    """
     if not name:
         raise ValueError("name cannot be the empty string")
     if name[0] == ":":
@@ -37,6 +41,10 @@ def get_dictionary_installed_name(name: str) -> str:
 
 
 def get_dictionary_path_name(name: str) -> str:
+    """Get the path name of a dictionary.
+
+    i.e. Not prefixed with ':'
+    """
     if not name:
         raise ValueError("name cannot be the empty string")
     if name[0] == ":":
@@ -47,4 +55,5 @@ def get_dictionary_path_name(name: str) -> str:
 
 
 def is_dictionary_installed_name(name: str) -> bool:
+    """Check whether the given name represents an installed dictionary."""
     return len(name) > 1 and name[0] == ":"

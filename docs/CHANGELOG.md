@@ -26,6 +26,7 @@ installed dictionary names (prefixed with `:`).
 - `DICTIONARY_PATH` renamed to `INSTALLATION_DIR`.
 - Using builtin `sorted` function speeds up general grascii searches.
 - `GrasciiParser.interpret` returns an iterator instead of a list.
+- Updated preanniversary dictionary to [2022.07.26](https://github.com/grascii/dictionaries/tree/2022.07.26).
 
 ### Removed
 

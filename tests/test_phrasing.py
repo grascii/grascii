@@ -7,28 +7,16 @@ from lark import Lark
 from lark.visitors import CollapseAmbiguities
 
 from grascii.dephrase import PhraseFlattener, dephrase
-from grascii.grammars import get_grammar
 
 
 class TestLessonPhrases(unittest.TestCase):
 
-    # def __init__(self):
-    # super.__init__(self)
-    # self.parser = Lark.open("phrases.lark",
-    # parser="earley")
-
-    # parser = Lark.open("../grammars/phrases.lark",
-    # rel_to=__file__,
-    # parser="earley")
-
-    # aparser = Lark.open("../grammars/phrases.lark",
-    # rel_to=__file__,
-    # parser="earley",
-    # ambiguity="explicit")
-
-    g = get_grammar("phrases")
-    parser = Lark.open(g, parser="earley", ambiguity="resolve")
-    aparser = Lark.open(g, parser="earley", ambiguity="explicit")
+    parser = Lark.open_from_package(
+        "grascii.grammars", "phrases.lark", parser="earley", ambiguity="resolve"
+    )
+    aparser = Lark.open_from_package(
+        "grascii.grammars", "phrases.lark", parser="earley", ambiguity="explicit"
+    )
 
     trans = PhraseFlattener()
 

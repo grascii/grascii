@@ -95,6 +95,12 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
         default=0,
         help="increase output verbosity",
     )
+    argparser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="suppress output",
+    )
 
 
 class NoMatchingOutputFile(Exception):
@@ -314,21 +320,30 @@ class DictionaryBuilder:
     :param words_file: A Path to a words file for spell checking
     :param count_words: Whether to enable word count validation.
     :param verbosity: Increase the output verbosity
+    :param quiet: Suppress output
     :type parse: bool
     :type words_file: pathlib.Path
     :type count_words: bool
     :type verbosity: int
+    :type quiet: bool
     """
 
     def __init__(self, **kwargs) -> None:
         self.pipeline: List[PipelineFunc] = kwargs.get("pipeline", DEFAULT_PIPELINE)
         self.count_words: bool = kwargs.get("count_words", False)
         self._logger = _BuilderLoggerAdapter(logger)
+        quiet: bool = kwargs.get("quiet", False)
         verbosity: int = kwargs.get("verbosity", 0)
-        levels = [logging.WARNING, logging.INFO, logging.DEBUG]
-        verbosity = min(verbosity, len(levels))
-        if verbosity > 0:
-            self._logger.setLevel(levels[verbosity])
+        self._set_logging_level(quiet, verbosity)
+
+    def _set_logging_level(self, quiet: bool, verbosity: int):
+        if quiet:
+            logger.setLevel(logging.CRITICAL)
+        else:
+            levels = [logging.WARNING, logging.INFO, logging.DEBUG]
+            verbosity = min(verbosity, len(levels))
+            if verbosity > 0:
+                logger.setLevel(levels[verbosity])
 
     def _parse_line(self, line: str) -> Optional[Tuple[str, str]]:
         """Parse a dictionary source file line into a Grascii string and its
@@ -456,14 +471,17 @@ def cli_build(args: argparse.Namespace) -> None:
         pipeline=pipeline,
         count_words=args.count_words,
         verbosity=args.verbosity,
+        quiet=args.quiet,
     )
     output_options = (
         DictionaryOutputOptions(args.output, args.clean) if args.output else None
     )
     summary = builder.build(args.infiles, output_options)
-    if summary.warnings or summary.errors:
-        print()
-    print(summary)
+
+    if not args.quiet:
+        if summary.warnings or summary.errors:
+            print()
+        print(summary)
 
 
 def main() -> None:

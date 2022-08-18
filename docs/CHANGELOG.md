@@ -3,6 +3,10 @@
 
 ## Unreleased
 
+### Added
+
+- `-q` and `--quiet` options for `grascii dictionary build`.
+
 ## 0.5.0 - 2022-08-12
 
 ### Added

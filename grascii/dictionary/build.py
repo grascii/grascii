@@ -92,6 +92,12 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
         default=0,
         help="increase output verbosity",
     )
+    argparser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="suppress output",
+    )
 
 
 class NoMatchingOutputFile(Exception):
@@ -119,6 +125,7 @@ class DictionaryBuilder:
     :param check_only: Check source files without generating output.
     :param output: The directory where to output the dictionary files.
     :param verbosity: Increase the output verbosity
+    :param quiet: Suppress output
     :type infiles: Iterable[Union[Path, str]]
     :type clean: bool
     :type parse: bool
@@ -127,6 +134,7 @@ class DictionaryBuilder:
     :type check_only: bool
     :type output: Union[Path, str]
     :type verbosity: int
+    :type quiet: bool
     """
 
     def __init__(self, **kwargs) -> None:
@@ -146,11 +154,18 @@ class DictionaryBuilder:
         )
         self.src_files: List[os.PathLike] = kwargs["infiles"]
         self.time: float = -1
+        quiet: bool = kwargs.get("quiet", False)
         verbosity: int = kwargs.get("verbosity", 0)
-        levels = [logging.WARNING, logging.INFO, logging.DEBUG]
-        verbosity = min(verbosity, len(levels))
-        if verbosity > 0:
-            logger.setLevel(levels[verbosity])
+        self._set_logging_level(quiet, verbosity)
+
+    def _set_logging_level(self, quiet: bool, verbosity: int):
+        if quiet:
+            logger.setLevel(logging.CRITICAL)
+        else:
+            levels = [logging.WARNING, logging.INFO, logging.DEBUG]
+            verbosity = min(verbosity, len(levels))
+            if verbosity > 0:
+                logger.setLevel(levels[verbosity])
 
     def _get_output_file(self, grascii: str) -> TextIO:
         """Get an output file corresponding to the first alphabetic characters

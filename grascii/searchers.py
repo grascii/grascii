@@ -34,7 +34,6 @@ IT = TypeVar("IT")
 
 
 class DictionaryEntry(NamedTuple):
-
     grascii: str
     translation: str
 

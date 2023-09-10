@@ -11,7 +11,6 @@ from grascii.grammars import get_grammar
 
 
 class TestLessonPhrases(unittest.TestCase):
-
     # def __init__(self):
     # super.__init__(self)
     # self.parser = Lark.open("phrases.lark",

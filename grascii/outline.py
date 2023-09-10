@@ -8,7 +8,6 @@ from grascii.parser import Interpretation
 
 
 class Direction(Enum):
-
     NORTH = "N"
     EAST = "E"
     SOUTH = "S"
@@ -20,7 +19,6 @@ class Direction(Enum):
 
 
 class Curve(Enum):
-
     LINE = 1
     CLOCKWISE = 2
     COUNTER_CLOCKWISE = 3

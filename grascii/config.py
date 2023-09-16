@@ -11,11 +11,6 @@ import argparse
 import sys
 from pathlib import Path, PurePath
 
-if sys.version_info >= (3, 9):
-    from importlib.resources import files
-else:
-    from importlib_resources import files
-
 from grascii import APP_NAME
 from grascii.appdirs import user_config_dir
 
@@ -62,6 +57,10 @@ def get_default_config() -> str:
 
     :returns: A string containing the default configuration.
     """
+    if sys.version_info >= (3, 9):
+        from importlib.resources import files
+    else:
+        from importlib_resources import files
     return files("grascii").joinpath(DEFAULTS_CONF_NAME).read_text()
 
 

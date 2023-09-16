@@ -7,6 +7,11 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Optional, TextIO, Union
 
+if sys.version_info >= (3, 9):
+    from importlib.resources import files
+else:
+    from importlib_resources import files
+
 from grascii.dictionary import build, install
 from grascii.dictionary import list as list_dict
 from grascii.dictionary import uninstall
@@ -112,10 +117,6 @@ class Dictionary:
         :returns: A new Dictionary for the given name.
         """
         if isinstance(name, str) and is_dictionary_installed_name(name):
-            if sys.version_info >= (3, 9):
-                from importlib.resources import files
-            else:
-                from importlib_resources import files
             path_name = get_dictionary_path_name(name)
             dictionary_path = files(BUILTINS_PACKAGE).joinpath(path_name)
             if dictionary_path.is_dir():

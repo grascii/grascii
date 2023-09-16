@@ -4,7 +4,10 @@ import argparse
 import sys
 from typing import Collection
 
-from pkg_resources import resource_isdir, resource_listdir
+if sys.version_info >= (3, 9):
+    from importlib.resources import files
+else:
+    from importlib_resources import files
 
 from grascii.dictionary.common import INSTALLATION_DIR, get_dictionary_installed_name
 
@@ -20,11 +23,11 @@ def get_built_ins() -> Collection[str]:
 
     :returns: A collection of built-in dictionary names.
     """
-    files = resource_listdir("grascii", "dictionary")
+    entries = files("grascii.dictionary").iterdir()
     built_ins = filter(
-        lambda f: resource_isdir("grascii.dictionary", f) and f[0] != "_", files
+        lambda e: e.is_dir() and e.name[0] != "_", entries
     )
-    return list(map(get_dictionary_installed_name, built_ins))
+    return list(map(lambda e: get_dictionary_installed_name(e.name), built_ins))
 
 
 def get_installed() -> Collection[str]:

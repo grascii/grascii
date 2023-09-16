@@ -8,7 +8,6 @@ from typing import Set
 from lark import Lark, Token, Transformer, UnexpectedInput
 from lark.visitors import VisitError, v_args
 
-from grascii.grammars import get_grammar
 from grascii.lark_ambig_tools import Disambiguator
 from grascii.parser import GrasciiFlattener, interpretation_to_string
 from grascii.searchers import GrasciiSearcher
@@ -114,10 +113,13 @@ class PhraseFlattener(Transformer):
 
 def dephrase(**kwargs) -> Set[str]:
     aggressive = kwargs.get("aggressive", False)
-    grammar_name = "phrases_extended" if aggressive else "phrases"
-    g = get_grammar(grammar_name)
-    parser = Lark.open(
-        g, parser="earley", ambiguity="explicit", lexer="dynamic_complete"
+    grammar_name = "phrases_extended.lark" if aggressive else "phrases.lark"
+    parser = Lark.open_from_package(
+        "grascii.grammars",
+        grammar_name,
+        parser="earley",
+        ambiguity="explicit",
+        lexer="dynamic_complete",
     )
     trans = PhraseFlattener()
     if aggressive:

@@ -7,7 +7,6 @@ from typing import Iterator, List, Union
 from lark import Lark, Token, Transformer, Tree, UnexpectedInput
 
 from grascii import grammar
-from grascii.grammars import get_grammar
 from grascii.lark_ambig_tools import Disambiguator
 
 Interpretation = List[Union[str, List[str]]]
@@ -95,8 +94,7 @@ def get_grascii_regex_str() -> str:
     """Get a string that can be compiled into a regular expression that matches
     Grascii strings.
     """
-    grammar = get_grammar("grascii_regex")
-    parser = Lark.open(grammar)
+    parser = Lark.open_from_package("grascii.grammars", "grascii_regex.lark")
     return parser.get_terminal("GRASCII").pattern.value
 
 
@@ -128,8 +126,9 @@ class GrasciiParser:
     """Parses and interprets Grascii strings."""
 
     def __init__(self) -> None:
-        grammar = get_grammar("grascii")
-        self._parser: Lark = Lark.open(grammar, parser="earley", ambiguity="explicit")
+        self._parser: Lark = Lark.open_from_package(
+            "grascii.grammars", "grascii.lark", parser="earley", ambiguity="explicit"
+        )
 
     def parse(self, grascii: str) -> Tree:
         """Parse the given string into a ``Tree``.

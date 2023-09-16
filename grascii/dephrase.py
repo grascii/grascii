@@ -47,7 +47,6 @@ class StripNameSpace(Transformer):
 
 
 class PhraseFlattener(Transformer):
-
     optionals = {
         "opt_to": "TO",
         "opt_in": "IN",

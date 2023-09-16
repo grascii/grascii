@@ -10,7 +10,6 @@ from grascii.dephrase import PhraseFlattener, dephrase
 
 
 class TestLessonPhrases(unittest.TestCase):
-
     parser = Lark.open_from_package(
         "grascii.grammars", "phrases.lark", parser="earley", ambiguity="resolve"
     )

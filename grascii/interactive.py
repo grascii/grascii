@@ -226,7 +226,7 @@ class InteractiveSearcher(GrasciiSearcher):
         dictionaries = questionary.checkbox(
             title,
             choices,
-            validate=lambda l: True if len(l) > 0 else "Select at least one dictionary",
+            validate=lambda d: True if len(d) > 0 else "Select at least one dictionary",
         ).ask()
         if dictionaries:
             self.dictionaries = dictionaries

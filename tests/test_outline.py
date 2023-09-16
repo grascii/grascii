@@ -7,7 +7,6 @@ from grascii.parser import GrasciiParser, interpretation_to_string
 
 
 class TestInferredDirections(unittest.TestCase):
-
     parser = GrasciiParser()
 
     def run_tests(self, tests):
@@ -323,7 +322,6 @@ class TestInferredDirections(unittest.TestCase):
 
 
 class TestToInterpretation(unittest.TestCase):
-
     parser = GrasciiParser()
 
     def test_to_interpretation(self):

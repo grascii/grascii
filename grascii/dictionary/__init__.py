@@ -85,8 +85,8 @@ class Dictionary:
         self.type = dtype
 
     def open(self, name: str) -> TextIO:
-        """Open a file from the dictionary with the given name for reading. The caller is
-        responsible for closing the file.
+        """Open a file from the dictionary with the given name for reading.
+        The caller is responsible for closing the file.
 
         :param name: The name of the file to open.
         :type name: str

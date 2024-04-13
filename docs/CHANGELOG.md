@@ -3,6 +3,11 @@
 
 ## Unreleased
 
+### Changed
+
+- `Searcher.__init__` does not handle `DictionaryNotFound` exceptions
+- `grascii search` prints an error if a dictionary cannot be found
+
 ### Removed
 
 - `grascii.grammars.get_grammar`: Use

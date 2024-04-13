@@ -4,9 +4,10 @@ import unittest
 from pathlib import Path
 from shutil import rmtree
 
+from grascii.dictionary import DictionaryNotFound
 from grascii.dictionary.build import DictionaryBuilder
 from grascii.parser import InvalidGrascii
-from grascii.searchers import GrasciiSearcher, ReverseSearcher
+from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher
 
 output_dir = "tests/dictionaries/tosearch"
 
@@ -76,6 +77,10 @@ class TestGrasciiSearcher(unittest.TestCase):
         with self.assertRaises(InvalidGrascii):
             searcher.sorted_search(grascii="YES")
 
+    def test_dictionary_not_found(self):
+        with self.assertRaises(DictionaryNotFound):
+            GrasciiSearcher(dictionaries=[":should-not-exist"])
+
 
 class TestReverseSearcher(unittest.TestCase):
     def test_results(self):
@@ -87,3 +92,13 @@ class TestReverseSearcher(unittest.TestCase):
         searcher = ReverseSearcher(dictionaries=[output_dir])
         result_count = len(searcher.sorted_search(reverse="'ABT"))
         self.assertEqual(result_count, 0)
+
+    def test_dictionary_not_found(self):
+        with self.assertRaises(DictionaryNotFound):
+            ReverseSearcher(dictionaries=["does-not-exist"])
+
+
+class TestRegexSeacrher(unittest.TestCase):
+    def test_dictionary_not_found(self):
+        with self.assertRaises(DictionaryNotFound):
+            RegexSearcher(dictionaries=[":preanniversary", ":cannot-exist"])

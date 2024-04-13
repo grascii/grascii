@@ -24,7 +24,7 @@ from typing import (
 )
 
 from grascii import defaults, grammar, metrics, regen
-from grascii.dictionary import Dictionary, DictionaryNotFound
+from grascii.dictionary import Dictionary
 from grascii.parser import GrasciiParser, Interpretation
 
 if TYPE_CHECKING:
@@ -52,7 +52,11 @@ class SearchResult(Generic[IT]):
 
 class Searcher(ABC, Generic[IT]):
 
-    """An abstract base class for objects that search Grascii dictionaries."""
+    """An abstract base class for objects that search Grascii dictionaries.
+
+    :param dictionaries: The dictionaries to search.
+    :type dictionaries: List[str]
+    """
 
     def __init__(self, **kwargs: Any) -> None:
         dictionaries = (
@@ -60,14 +64,7 @@ class Searcher(ABC, Generic[IT]):
             if kwargs.get("dictionaries")
             else defaults.SEARCH["Dictionary"].split()
         )
-        self.dictionaries = []
-        for name in dictionaries:
-            try:
-                dictionary = Dictionary.new(name)
-            except DictionaryNotFound:
-                pass
-            else:
-                self.dictionaries.append(dictionary)
+        self.dictionaries = [Dictionary.new(name) for name in dictionaries]
 
     def perform_search(
         self,
@@ -123,7 +120,11 @@ class Searcher(ABC, Generic[IT]):
 
 class GrasciiSearcher(Searcher[Interpretation]):
 
-    """A subclass of Searcher that performs a search given a Grascii string"""
+    """A subclass of Searcher that performs a search given a Grascii string.
+
+    :param dictionaries: The dictionaries to search.
+    :type dictionaries: List[str]
+    """
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
@@ -232,7 +233,11 @@ class GrasciiSearcher(Searcher[Interpretation]):
 class RegexSearcher(Searcher[str]):
 
     """A subclass of Searcher that searches a grascii dictionary given
-    a raw regular expression."""
+    a raw regular expression.
+
+    :param dictionaries: The dictionaries to search.
+    :type dictionaries: List[str]
+    """
 
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
@@ -255,7 +260,11 @@ class RegexSearcher(Searcher[str]):
 class ReverseSearcher(RegexSearcher):
 
     """A subclass of RegexSearcher that searches a grascii dictionary
-    given a word."""
+    given a word.
+
+    :param dictionaries: The dictionaries to search.
+    :type dictionaries: List[str]
+    """
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)

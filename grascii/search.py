@@ -12,6 +12,7 @@ import sys
 from typing import Iterable, Optional
 
 from grascii import regen
+from grascii.dictionary import DictionaryNotFound
 from grascii.parser import InvalidGrascii
 from grascii.searchers import (
     GrasciiSearcher,
@@ -152,6 +153,10 @@ def cli_search(args: argparse.Namespace) -> None:
     except InvalidGrascii as e:
         print("Invalid Grascii String", file=sys.stderr)
         print(e.context, file=sys.stderr)
+        return
+    except DictionaryNotFound as e:
+        print("Dictionary Not Found", file=sys.stderr)
+        print(e.name, file=sys.stderr)
         return
     else:
         if results is not None:

@@ -20,10 +20,6 @@ from grascii.dictionary.uninstall import uninstall_dictionary
 
 
 class TestDictionaryBuildWarnings(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        logging.getLogger("grascii.dictionary.build").setLevel(logging.CRITICAL)
-
     output_dir = Path("tests/dictionaries/outputs")
 
     def setUp(self):

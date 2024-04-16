@@ -16,10 +16,11 @@ import re
 import sys
 import time
 from contextlib import nullcontext
+from dataclasses import dataclass
 from fileinput import FileInput
-from typing import Dict, List, NamedTuple, Optional, Set, TextIO
+from typing import Dict, Iterable, List, NamedTuple, Optional, Set, TextIO
 
-from grascii import defaults, grammar
+from grascii import grammar
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -45,45 +46,47 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     """
 
     argparser.add_argument(
-        "infiles", nargs="+", type=pathlib.Path, help="the files to package"
+        "infiles", nargs="+", type=pathlib.Path, help="the files to process"
     )
-    argparser.add_argument(
+    output_group = argparser.add_argument_group("output")
+    exclusive_output_group = output_group.add_mutually_exclusive_group(required=True)
+    exclusive_output_group.add_argument(
         "-o",
         "--output",
         type=os.path.abspath,
         help="path to a directory to output dictionary files",
     )
-    argparser.add_argument(
+    exclusive_output_group.add_argument(
+        "--no-output",
+        action="store_true",
+        help="do not output files and only perform validation",
+    )
+    output_group.add_argument(
         "-c",
         "--clean",
         action="store_true",
         help="clean the output directory before building",
     )
-    argparser.add_argument(
+    validation_group = argparser.add_argument_group("validation")
+    validation_group.add_argument(
         "-p",
         "--parse",
         action="store_true",
         help="enable syntax checking on grascii strings",
     )
-    argparser.add_argument(
+    validation_group.add_argument(
         "-w",
         "--words",
         dest="words_file",
         type=pathlib.Path,
         help="path to a words file for spell checking",
     )
-    argparser.add_argument(
+    validation_group.add_argument(
         "-n",
         "--count",
         dest="count_words",
         action="store_true",
         help="enable word count validation",
-    )
-    argparser.add_argument(
-        "-k",
-        "--check-only",
-        action="store_true",
-        help="only check input; no output is generated",
     )
     argparser.add_argument(
         "-v",
@@ -160,18 +163,33 @@ class _BuilderLoggerAdapter(logging.LoggerAdapter):
         self.logger.error(message, *args, **kwargs)
 
 
+@dataclass
+class DictionaryOutputOptions:
+    """Options for dictionary build output.
+
+    :param output_dir: The directory where to output the dictionary files.
+    :param clean: Whether to delete all files in the output directory before
+        building.
+    :param package: Whether to make the output directory a Python package by
+        outputing an `__init__.py` file.
+    :type output_dir: os.PathLike
+    :type clean: bool
+    :type package: bool
+    """
+
+    out_dir: os.PathLike
+    clean: bool = False
+    package: bool = False
+
+
 class _OutputManager:
     def __init__(
         self,
-        out_dir: os.PathLike,
-        logger: logging.Logger,
-        clean: bool = False,
-        package: bool = False,
+        options: DictionaryOutputOptions,
+        logger: logging.LoggerAdapter,
     ):
-        self.out_dir = out_dir
+        self.options = options
         self._logger = logger
-        self.clean: bool = clean
-        self.package: bool = package
         self.entry_counts: Dict[str, int] = {}
         self._out_files: Dict[str, TextIO] = {}
 
@@ -185,13 +203,13 @@ class _OutputManager:
     def _prepare_output_dir(self) -> None:
         """Make and clean the output directory if necessary."""
 
-        out_dir = pathlib.Path(self.out_dir)
+        out_dir = pathlib.Path(self.options.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
-        if self.clean:
+        if self.options.clean:
             self._logger.info("Cleaning output directory: %s", out_dir)
             for entry in out_dir.iterdir():
                 entry.unlink()
-        if self.package:
+        if self.options.package:
             self._logger.info("Creating __init__.py in %s", out_dir)
             out_dir.joinpath("__init__.py").touch()
 
@@ -215,7 +233,7 @@ class _OutputManager:
             self.entry_counts[char] += 1
             return result
         except KeyError:
-            out_file = pathlib.Path(self.out_dir, char)
+            out_file = pathlib.Path(self.options.out_dir, char)
             self._out_files[char] = out_file.open("w")
             self._logger.info("Opened output file: %s", out_file)
             self.entry_counts[char] = 1
@@ -244,39 +262,21 @@ class DictionaryBuilder:
 
     """A class that runs the build process for a grascii dictionary.
 
-    :param infiles: [Required] A list of files from which to generate the dictionary.
-    :param clean: Whether to delete all files in the output directory before
-        building.
     :param parse: Whether to enable parse checking of grascii strings.
     :param words_file: A Path to a words file for spell checking
     :param count_words: Whether to enable word count validation.
-    :param check_only: Check source files without generating output.
-    :param output: The directory where to output the dictionary files.
     :param verbosity: Increase the output verbosity
-    :type infiles: Iterable[Union[Path, str]]
-    :type clean: bool
     :type parse: bool
     :type words_file: pathlib.Path
     :type count_words: bool
-    :type check_only: bool
-    :type output: Union[Path, str]
     :type verbosity: int
     """
 
     def __init__(self, **kwargs) -> None:
-        self.out_files: Dict[str, TextIO] = {}
-        self.entry_counts: Dict[str, int] = {}
-        self.clean: bool = kwargs.get("clean", False)
         self.parse: bool = kwargs.get("parse", False)
         self.words_file: Optional[pathlib.Path] = kwargs.get("words_file")
         self.words: Set[str] = set()
         self.count_words: bool = kwargs.get("count_words", False)
-        self.check_only: bool = kwargs.get("check_only", False)
-        self.package: bool = kwargs.get("package", False)
-        self.output: os.PathLike = kwargs.get(
-            "output", defaults.BUILD["BuildDirectory"]
-        )
-        self.src_files: List[os.PathLike] = kwargs["infiles"]
         self.time: float = -1
         self._logger = _BuilderLoggerAdapter(logger)
         verbosity: int = kwargs.get("verbosity", 0)
@@ -382,19 +382,21 @@ class DictionaryBuilder:
         if self.warnings or self.errors:
             print()
         total = 0
-        for key, val in self.entry_counts.items():
-            total += val
-            print("Wrote", val, "entries to", os.path.join(self.output, key))
+        # for key, val in self.entry_counts.items():
+        # total += val
+        # print("Wrote", val, "entries to", os.path.join(self.output, key))
         if total > 0:
             print()
         formatted_time = f"{self.time:.5f}"
         print("Finished Build in", formatted_time, "seconds")
-        if not self.check_only:
-            print("Entries:", total)
+        # if not self.check_only:
+        # print("Entries:", total)
         print("Warnings:", len(self.warnings))
         print("Errors:", len(self.errors))
 
-    def build(self):
+    def build(
+        self, infiles: Iterable[os.PathLike], output: Optional[DictionaryOutputOptions]
+    ):
         """Run the build based on the build settings given in the constructor."""
 
         # reset warnings and errors
@@ -405,24 +407,22 @@ class DictionaryBuilder:
 
         self._logger.info("Starting build")
 
-        if self.check_only:
+        if not output:
             self._logger.info(
                 "Only checking source files. Output files will not be generated."
             )
 
-        output = (
-            nullcontext(lambda x, y: None)
-            if self.check_only
-            else _OutputManager(
-                self.output, self._logger, clean=self.clean, package=self.package
-            )
+        out = (
+            _OutputManager(output, self._logger)
+            if output
+            else nullcontext(lambda x, y: None)
         )
 
         self._load_word_set()
         self._load_parser()
 
-        with output as write_entry:
-            with FileInput(self.src_files) as f:
+        with out as write_entry:
+            with FileInput(infiles) as f:
                 for line in f:
                     self._logger.set_context(f.filename(), line, f.filelineno())
                     tokens = self._check_line(line)
@@ -447,22 +447,12 @@ class DictionaryBuilder:
                         self._logger.error(f"No output file for {grascii} {word}")
                         continue
 
-        if not self.check_only:
-            self.entry_counts = output.entry_counts
+        if isinstance(out, _OutputManager):
+            self.entry_counts = out.entry_counts
 
         end_time = time.perf_counter()
         self.time = end_time - start_time
         self._logger.info("Build completed in %s seconds", self.time)
-
-
-def build(**kwargs) -> None:
-    """Run a dictionary build.
-
-    For available arguments, see DictionaryBuilder.
-    """
-
-    builder = DictionaryBuilder(**kwargs)
-    builder.build()
 
 
 def cli_build(args: argparse.Namespace) -> None:
@@ -474,7 +464,10 @@ def cli_build(args: argparse.Namespace) -> None:
     builder = DictionaryBuilder(
         **{k: v for k, v in vars(args).items() if v is not None}
     )
-    builder.build()
+    output_options = (
+        DictionaryOutputOptions(args.output, args.clean) if args.output else None
+    )
+    builder.build(args.infiles, output_options)
     builder.print_build_summary()
 
 

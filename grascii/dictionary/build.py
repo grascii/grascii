@@ -15,6 +15,7 @@ import pathlib
 import re
 import sys
 import time
+from contextlib import nullcontext
 from fileinput import FileInput
 from typing import Dict, List, NamedTuple, Optional, Set, TextIO
 
@@ -112,7 +113,7 @@ class _BuilderLoggerAdapter(logging.LoggerAdapter):
     for warnings and errors that occur during a build.
     """
 
-    def __init__(self, logger: logger.Logger):
+    def __init__(self, logger: logging.Logger):
         super().__init__(logger, {})
         self._file_name: str = ""
         self._line: str = ""
@@ -157,6 +158,86 @@ class _BuilderLoggerAdapter(logging.LoggerAdapter):
             )
         )
         self.logger.error(message, *args, **kwargs)
+
+
+class _OutputManager:
+    def __init__(
+        self,
+        out_dir: os.PathLike,
+        logger: logging.Logger,
+        clean: bool = False,
+        package: bool = False,
+    ):
+        self.out_dir = out_dir
+        self._logger = logger
+        self.clean: bool = clean
+        self.package: bool = package
+        self.entry_counts: Dict[str, int] = {}
+        self._out_files: Dict[str, TextIO] = {}
+
+    def __enter__(self):
+        self._prepare_output_dir()
+        return self._write_entry
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._close_output_files()
+
+    def _prepare_output_dir(self) -> None:
+        """Make and clean the output directory if necessary."""
+
+        out_dir = pathlib.Path(self.out_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        if self.clean:
+            self._logger.info("Cleaning output directory: %s", out_dir)
+            for entry in out_dir.iterdir():
+                entry.unlink()
+        if self.package:
+            self._logger.info("Creating __init__.py in %s", out_dir)
+            out_dir.joinpath("__init__.py").touch()
+
+    def _get_output_file(self, grascii: str) -> TextIO:
+        """Get an output file corresponding to the first alphabetic characters
+        in a grascii string.
+
+        :param grascii: A grascii string to get an output file for.
+        :returns: A text stream.
+        """
+
+        index = 0
+        while index < len(grascii) and grascii[index] not in grammar.HARD_CHARACTERS:
+            index += 1
+        if index == len(grascii):
+            raise NoMatchingOutputFile()
+
+        char = grascii[index]
+        try:
+            result = self._out_files[char]
+            self.entry_counts[char] += 1
+            return result
+        except KeyError:
+            out_file = pathlib.Path(self.out_dir, char)
+            self._out_files[char] = out_file.open("w")
+            self._logger.info("Opened output file: %s", out_file)
+            self.entry_counts[char] = 1
+            return self._out_files[char]
+
+    def _write_entry(self, grascii: str, word: str) -> None:
+        """Write an entry to an output file.
+
+        :param grascii: The grascii string to write.
+        :param word: The grascii string's corresponding word to write.
+        """
+
+        out = self._get_output_file(grascii)
+        out.write(grascii + " ")
+        out.write(word + "\n")
+
+    def _close_output_files(self) -> None:
+        """Close all output files."""
+
+        for f in self._out_files.values():
+            f.close()
+        self._logger.info("Closed output files")
 
 
 class DictionaryBuilder:
@@ -213,46 +294,6 @@ class DictionaryBuilder:
     def errors(self) -> List[BuildMessage]:
         """A list of errors that occurred during the last call to ``build``"""
         return self._logger.errors
-
-    def _get_output_file(self, grascii: str) -> TextIO:
-        """Get an output file corresponding to the first alphabetic characters
-        in a grascii string.
-
-        :param grascii: A grascii string to get an output file for.
-        :returns: A text stream.
-        """
-
-        index = 0
-        while index < len(grascii) and grascii[index] not in grammar.HARD_CHARACTERS:
-            index += 1
-        if index == len(grascii):
-            raise NoMatchingOutputFile()
-
-        char = grascii[index]
-        try:
-            result = self.out_files[char]
-            self.entry_counts[char] += 1
-            return result
-        except KeyError:
-            out_file = pathlib.Path(self.output, char)
-            self.out_files[char] = out_file.open("w")
-            self._logger.info("Opened output file: %s", out_file)
-            self.entry_counts[char] = 1
-            return self.out_files[char]
-
-    def _prepare_output_dir(self) -> None:
-        """Make and clean the output directory if necessary."""
-
-        if not self.check_only:
-            out_dir = pathlib.Path(self.output)
-            out_dir.mkdir(parents=True, exist_ok=True)
-            if self.clean:
-                self._logger.info("Cleaning output directory: %s", out_dir)
-                for entry in out_dir.iterdir():
-                    entry.unlink()
-            if self.package:
-                self._logger.info("Creating __init__.py in %s", out_dir)
-                out_dir.joinpath("__init__.py").touch()
 
     def _load_parser(self) -> None:
         """Load a parser to check grascii strings."""
@@ -333,25 +374,6 @@ class DictionaryBuilder:
                 return False
         return True
 
-    def _write_entry(self, grascii: str, word: str) -> None:
-        """Write an entry to an output file.
-
-        :param grascii: The grascii string to write.
-        :param word: The grascii string's corresponding word to write.
-        """
-
-        if not self.check_only:
-            out = self._get_output_file(grascii)
-            out.write(grascii + " ")
-            out.write(word + "\n")
-
-    def _close_output_files(self) -> None:
-        """Close all output files."""
-
-        for f in self.out_files.values():
-            f.close()
-        self._logger.info("Closed output files")
-
     def print_build_summary(self) -> None:
         """Print a summary of the build including warning, error, and entry counts
         as well as the time taken.
@@ -388,11 +410,18 @@ class DictionaryBuilder:
                 "Only checking source files. Output files will not be generated."
             )
 
+        output = (
+            nullcontext(lambda x, y: None)
+            if self.check_only
+            else _OutputManager(
+                self.output, self._logger, clean=self.clean, package=self.package
+            )
+        )
+
         self._load_word_set()
         self._load_parser()
-        self._prepare_output_dir()
 
-        try:
+        with output as write_entry:
             with FileInput(self.src_files) as f:
                 for line in f:
                     self._logger.set_context(f.filename(), line, f.filelineno())
@@ -413,12 +442,13 @@ class DictionaryBuilder:
                         continue
 
                     try:
-                        self._write_entry(grascii, word)
+                        write_entry(grascii, word)
                     except NoMatchingOutputFile:
                         self._logger.error(f"No output file for {grascii} {word}")
                         continue
-        finally:
-            self._close_output_files()
+
+        if not self.check_only:
+            self.entry_counts = output.entry_counts
 
         end_time = time.perf_counter()
         self.time = end_time - start_time

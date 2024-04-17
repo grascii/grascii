@@ -36,32 +36,32 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
         builder = DictionaryBuilder(
             count_words=True,
         )
-        builder.build(
+        summary = builder.build(
             infiles=[Path("tests/dictionaries/uncertainty.txt")],
             output=DictionaryOutputOptions(self.output_dir),
         )
-        self.assertEqual(len(builder.warnings), 9)
-        self.assertEqual(len(builder.errors), 0)
-        for warning in builder.warnings:
+        self.assertEqual(len(summary.warnings), 9)
+        self.assertEqual(len(summary.errors), 0)
+        for warning in summary.warnings:
             self.assertEqual(warning.level, logging.WARNING)
             self.assertRegex(warning.message, "Uncertainty")
-        entry_count = sum(val for val in builder.entry_counts.values())
+        entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 9)
 
     def test_count(self):
         builder = DictionaryBuilder(
             count_words=True,
         )
-        builder.build(
+        summary = builder.build(
             infiles=[Path("tests/dictionaries/count.txt")],
             output=DictionaryOutputOptions(self.output_dir),
         )
-        self.assertEqual(len(builder.warnings), 10)
-        self.assertEqual(len(builder.errors), 0)
-        for warning in builder.warnings:
+        self.assertEqual(len(summary.warnings), 10)
+        self.assertEqual(len(summary.errors), 0)
+        for warning in summary.warnings:
             self.assertEqual(warning.level, logging.WARNING)
             self.assertRegex(warning.message, "Too many")
-        entry_count = sum(val for val in builder.entry_counts.values())
+        entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 12)
 
     def test_spelling(self):
@@ -69,62 +69,62 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
             count_words=True,
             words_file=Path("tests/dictionaries/words.txt"),
         )
-        builder.build(
+        summary = builder.build(
             infiles=[Path("tests/dictionaries/spell.txt")],
             output=DictionaryOutputOptions(self.output_dir),
         )
-        self.assertEqual(len(builder.warnings), 5)
-        self.assertEqual(len(builder.errors), 0)
-        for warning in builder.warnings:
+        self.assertEqual(len(summary.warnings), 5)
+        self.assertEqual(len(summary.errors), 0)
+        for warning in summary.warnings:
             self.assertEqual(warning.level, logging.WARNING)
             self.assertRegex(warning.message, "not in words")
-        entry_count = sum(val for val in builder.entry_counts.values())
+        entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 9)
 
     def test_too_few_words(self):
         builder = DictionaryBuilder(
             count_words=True,
         )
-        builder.build(
+        summary = builder.build(
             infiles=[Path("tests/dictionaries/too_few_words.txt")],
             output=DictionaryOutputOptions(self.output_dir),
         )
-        self.assertEqual(len(builder.warnings), 0)
-        self.assertEqual(len(builder.errors), 9)
-        for error in builder.errors:
+        self.assertEqual(len(summary.warnings), 0)
+        self.assertEqual(len(summary.errors), 9)
+        for error in summary.errors:
             self.assertEqual(error.level, logging.ERROR)
             self.assertRegex(error.message, "Too few")
-        entry_count = sum(val for val in builder.entry_counts.values())
+        entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 0)
 
     def test_not_grascii(self):
         builder = DictionaryBuilder(
             parse=True,
         )
-        builder.build(
+        summary = builder.build(
             infiles=[Path("tests/dictionaries/not_grascii.txt")],
             output=DictionaryOutputOptions(self.output_dir),
         )
-        self.assertEqual(len(builder.warnings), 0)
-        self.assertEqual(len(builder.errors), 10)
-        for error in builder.errors:
+        self.assertEqual(len(summary.warnings), 0)
+        self.assertEqual(len(summary.errors), 10)
+        for error in summary.errors:
             self.assertEqual(error.level, logging.ERROR)
             self.assertRegex(error.message, "Failed to parse")
-        entry_count = sum(val for val in builder.entry_counts.values())
+        entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 1)
 
     def test_comments_and_whitespace(self):
         builder = DictionaryBuilder()
-        builder.build(
+        summary = builder.build(
             infiles=[Path("tests/dictionaries/comments.txt")],
             output=DictionaryOutputOptions(self.output_dir),
         )
-        self.assertEqual(len(builder.warnings), 6)
-        self.assertEqual(len(builder.errors), 0)
-        for warning in builder.warnings:
+        self.assertEqual(len(summary.warnings), 6)
+        self.assertEqual(len(summary.errors), 0)
+        for warning in summary.warnings:
             self.assertEqual(warning.level, logging.WARNING)
             self.assertRegex(warning.message, "Uncertainty")
-        entry_count = sum(val for val in builder.entry_counts.values())
+        entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 7)
 
 

@@ -177,7 +177,7 @@ class DictionaryOutputOptions:
     :type package: bool
     """
 
-    out_dir: os.PathLike
+    output_dir: os.PathLike
     clean: bool = False
     package: bool = False
 
@@ -203,7 +203,7 @@ class _OutputManager:
     def _prepare_output_dir(self) -> None:
         """Make and clean the output directory if necessary."""
 
-        out_dir = pathlib.Path(self.options.out_dir)
+        out_dir = pathlib.Path(self.options.output_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         if self.options.clean:
             self._logger.info("Cleaning output directory: %s", out_dir)
@@ -233,7 +233,7 @@ class _OutputManager:
             self.entry_counts[char] += 1
             return result
         except KeyError:
-            out_file = pathlib.Path(self.options.out_dir, char)
+            out_file = pathlib.Path(self.options.output_dir, char)
             self._out_files[char] = out_file.open("w")
             self._logger.info("Opened output file: %s", out_file)
             self.entry_counts[char] = 1
@@ -258,6 +258,51 @@ class _OutputManager:
         self._logger.info("Closed output files")
 
 
+@dataclass
+class BuildSummary:
+    """Results of a dictionary build.
+
+    :param time: The duration of the build in seconds.
+    :param warnings: A list of warnings that occurred during the build.
+    :param errors: A list of errors that occurred during the build.
+    :param output_dir: The output directory of the dictionary.
+    :param entry_counts: A dictionary of file names in the output directory to
+        the number of entries written to that file.
+    :type time: float
+    :type warnings: List[BuildMessage]
+    :type errors: List[BuildMessage]
+    :type output_dir: Optional[os.PathLike]
+    :type entry_counts: Optional[Dict[str, int]]
+    """
+
+    time: float
+    warnings: List[BuildMessage]
+    errors: List[BuildMessage]
+    output_dir: Optional[os.PathLike]
+    entry_counts: Optional[Dict[str, int]]
+
+    def __str__(self):
+        builder = []
+
+        total = 0
+        if self.entry_counts is not None:
+            for key, val in self.entry_counts.items():
+                total += val
+                builder.append(
+                    f"Wrote {val} entries to {os.path.join(self.output_dir, key)})"
+                )
+        if total > 0:
+            builder.append("")
+
+        builder.append(f"Finished Build in {self.time:.5f} seconds")
+        if self.entry_counts is not None:
+            builder.append(f"Entries: {total}")
+        builder.append(f"Warnings: {len(self.warnings)}")
+        builder.append(f"Errors: {len(self.errors)}")
+
+        return "\n".join(builder)
+
+
 class DictionaryBuilder:
 
     """A class that runs the build process for a grascii dictionary.
@@ -277,23 +322,12 @@ class DictionaryBuilder:
         self.words_file: Optional[pathlib.Path] = kwargs.get("words_file")
         self.words: Set[str] = set()
         self.count_words: bool = kwargs.get("count_words", False)
-        self.time: float = -1
         self._logger = _BuilderLoggerAdapter(logger)
         verbosity: int = kwargs.get("verbosity", 0)
         levels = [logging.WARNING, logging.INFO, logging.DEBUG]
         verbosity = min(verbosity, len(levels))
         if verbosity > 0:
             self._logger.setLevel(levels[verbosity])
-
-    @property
-    def warnings(self) -> List[BuildMessage]:
-        """A list of warnings that occurred during the last call to ``build``"""
-        return self._logger.warnings
-
-    @property
-    def errors(self) -> List[BuildMessage]:
-        """A list of errors that occurred during the last call to ``build``"""
-        return self._logger.errors
 
     def _load_parser(self) -> None:
         """Load a parser to check grascii strings."""
@@ -374,30 +408,17 @@ class DictionaryBuilder:
                 return False
         return True
 
-    def print_build_summary(self) -> None:
-        """Print a summary of the build including warning, error, and entry counts
-        as well as the time taken.
-        """
-
-        if self.warnings or self.errors:
-            print()
-        total = 0
-        # for key, val in self.entry_counts.items():
-        # total += val
-        # print("Wrote", val, "entries to", os.path.join(self.output, key))
-        if total > 0:
-            print()
-        formatted_time = f"{self.time:.5f}"
-        print("Finished Build in", formatted_time, "seconds")
-        # if not self.check_only:
-        # print("Entries:", total)
-        print("Warnings:", len(self.warnings))
-        print("Errors:", len(self.errors))
-
     def build(
         self, infiles: Iterable[os.PathLike], output: Optional[DictionaryOutputOptions]
-    ):
-        """Run the build based on the build settings given in the constructor."""
+    ) -> BuildSummary:
+        """Run the build based on the build settings given in the constructor.
+
+        :param infiles: A collection of file paths to dictionary source files.
+        :param output: Options for dictionary output.
+        :type infiles: Iterable[os.PathLike]
+        :type output: Optional[DictionaryOutputOptions]
+        :returns: A BuildSummary
+        """
 
         # reset warnings and errors
         self._logger = _BuilderLoggerAdapter(logger)
@@ -447,12 +468,17 @@ class DictionaryBuilder:
                         self._logger.error(f"No output file for {grascii} {word}")
                         continue
 
-        if isinstance(out, _OutputManager):
-            self.entry_counts = out.entry_counts
-
         end_time = time.perf_counter()
-        self.time = end_time - start_time
-        self._logger.info("Build completed in %s seconds", self.time)
+        total_time = end_time - start_time
+        self._logger.info("Build completed in %s seconds", total_time)
+
+        return BuildSummary(
+            time=total_time,
+            warnings=self._logger.warnings,
+            errors=self._logger.errors,
+            output_dir=output.output_dir if output else None,
+            entry_counts=out.entry_counts if isinstance(out, _OutputManager) else None,
+        )
 
 
 def cli_build(args: argparse.Namespace) -> None:
@@ -467,8 +493,10 @@ def cli_build(args: argparse.Namespace) -> None:
     output_options = (
         DictionaryOutputOptions(args.output, args.clean) if args.output else None
     )
-    builder.build(args.infiles, output_options)
-    builder.print_build_summary()
+    summary = builder.build(args.infiles, output_options)
+    if summary.warnings or summary.errors:
+        print()
+    print(summary)
 
 
 def main() -> None:

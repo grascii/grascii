@@ -13,4 +13,3 @@ DEFAULTS = ConfigParser()
 DEFAULTS.read_file(Path(__file__).with_name("defaults.conf").open())
 
 SEARCH = _CONFIG["Search"]
-BUILD = _CONFIG["Build"]

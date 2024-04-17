@@ -3,15 +3,28 @@
 
 ## Unreleased
 
+### Added
+
+- Dictionary build `--no-output` option
+- `DictionaryOutputOptions` class for `DictionaryBuilder.build`
+- `BuildSummary` class for results of `DictionaryBuilder.build`
+
 ### Changed
 
 - `Searcher.__init__` does not handle `DictionaryNotFound` exceptions
 - `grascii search` prints an error if a dictionary cannot be found
+- Many `DictionaryBuilder.__init__` options moved to `DictionaryBuilder.build`
+  or were removed
+- `DictionaryBuilder.build` takes `infiles` and `output` arguments and returns
+  a `BuildSummary`
 
 ### Removed
 
 - `grascii.grammars.get_grammar`: Use
   `Lark.open_from_package("grascii.grammars", grammar_name)` instead.
+- `BuildDirectory` configuration file option
+- Dictionary build `--check-only` option: Use `--no-output` instead
+- `grascii.dictionary.build.build` function: Use `DictionaryBuilder.build` instead
 
 ## 0.5.0 - 2022-08-12
 

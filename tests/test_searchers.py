@@ -5,7 +5,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from grascii.dictionary import DictionaryNotFound
-from grascii.dictionary.build import DictionaryBuilder
+from grascii.dictionary.build import DictionaryBuilder, DictionaryOutputOptions
 from grascii.parser import InvalidGrascii
 from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher
 
@@ -15,8 +15,8 @@ output_dir = "tests/dictionaries/tosearch"
 def setUpModule():
     rmtree(output_dir, ignore_errors=True)
     infiles = [Path("tests/dictionaries/search.txt")]
-    builder = DictionaryBuilder(infiles=infiles, output=output_dir)
-    builder.build()
+    builder = DictionaryBuilder()
+    builder.build(infiles=infiles, output=DictionaryOutputOptions(output_dir))
 
 
 def tearDownModule():

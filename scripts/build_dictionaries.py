@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from grascii import dictionary
+from grascii import DictionaryBuilder, DictionaryOutputOptions
 
 
 def check_submodule():
@@ -18,10 +18,13 @@ def check_submodule():
 
 def build_dictionaries():
     check_submodule()
-    dictionary.build.build(
+    builder = DictionaryBuilder()
+    builder.build(
         infiles=Path("dictionaries/builtins/preanniversary").glob("*.txt"),
-        output=Path("grascii/dictionary/preanniversary"),
-        package=True,
+        output=DictionaryOutputOptions(
+            output_dir=Path("grascii/dictionary/preanniversary"),
+            package=True,
+        ),
     )
 
 

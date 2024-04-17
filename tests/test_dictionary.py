@@ -137,8 +137,8 @@ class TestBuiltins(unittest.TestCase):
     def test_preanniversary(self):
         inputs = Path("dictionaries/builtins/preanniversary/").glob("*.txt")
         builder = DictionaryBuilder(count_words=True, parse=True)
-        builder.build(inputs)
-        self.assertEqual(len(builder.errors), 0)
+        summary = builder.build(inputs, None)
+        self.assertEqual(len(summary.errors), 0)
 
 
 @pytest.fixture

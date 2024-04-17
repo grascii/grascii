@@ -22,7 +22,7 @@ def build_dictionaries():
     builder.build(
         infiles=Path("dictionaries/builtins/preanniversary").glob("*.txt"),
         output=DictionaryOutputOptions(
-            out_dir=Path("grascii/dictionary/preanniversary"),
+            output_dir=Path("grascii/dictionary/preanniversary"),
             package=True,
         ),
     )

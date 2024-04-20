@@ -7,7 +7,11 @@ from pathlib import Path
 import pytest
 
 from grascii.dictionary import Dictionary
-from grascii.dictionary.build import DictionaryBuilder, DictionaryOutputOptions
+from grascii.dictionary.build import (
+    DEFAULT_PIPELINE,
+    DictionaryBuilder,
+    DictionaryOutputOptions,
+)
 from grascii.dictionary.common import (
     DictionaryAlreadyExists,
     DictionaryNotFound,
@@ -16,6 +20,7 @@ from grascii.dictionary.common import (
 )
 from grascii.dictionary.install import install_dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
+from grascii.dictionary.pipeline import create_grascii_check, create_spell_check
 from grascii.dictionary.uninstall import uninstall_dictionary
 
 
@@ -66,8 +71,13 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
 
     def test_spelling(self):
         builder = DictionaryBuilder(
+            pipeline=[
+                *DEFAULT_PIPELINE,
+                create_spell_check(
+                    words_file=Path("tests/dictionaries/words.txt"),
+                ),
+            ],
             count_words=True,
-            words_file=Path("tests/dictionaries/words.txt"),
         )
         summary = builder.build(
             infiles=[Path("tests/dictionaries/spell.txt")],
@@ -99,7 +109,7 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
 
     def test_not_grascii(self):
         builder = DictionaryBuilder(
-            parse=True,
+            pipeline=[*DEFAULT_PIPELINE, create_grascii_check()]
         )
         summary = builder.build(
             infiles=[Path("tests/dictionaries/not_grascii.txt")],
@@ -130,13 +140,11 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
 
 @pytest.mark.slow
 class TestBuiltins(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        logging.getLogger("grascii.dictionary.build").setLevel(logging.CRITICAL)
-
     def test_preanniversary(self):
         inputs = Path("dictionaries/builtins/preanniversary/").glob("*.txt")
-        builder = DictionaryBuilder(count_words=True, parse=True)
+        builder = DictionaryBuilder(
+            count_words=True, pipeline=[*DEFAULT_PIPELINE, create_grascii_check()]
+        )
         summary = builder.build(inputs, None)
         self.assertEqual(len(summary.errors), 0)
 

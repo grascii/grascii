@@ -18,21 +18,20 @@ import time
 from contextlib import nullcontext
 from dataclasses import dataclass
 from fileinput import FileInput
-from typing import Dict, Iterable, List, NamedTuple, Optional, Set, TextIO
+from typing import Dict, Iterable, List, NamedTuple, Optional, TextIO, Tuple
 
 from grascii import grammar
+from grascii.dictionary.pipeline import (
+    CancelPipeline,
+    PipelineFunc,
+    create_grascii_check,
+    create_spell_check,
+    remove_boundaries,
+    standardize_case,
+)
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
-
-_VALIDATOR_AVAILABLE = False
-try:
-    from grascii.parser import GrasciiValidator
-
-    _VALIDATOR_AVAILABLE = True
-except ImportError:
-    # Builds can still be run if Lark is not available
-    logger.warning("Failed to import GrasciiValidator. Is lark installed?")
 
 
 description = "Build a Grascii Dictionary"
@@ -239,16 +238,16 @@ class _OutputManager:
             self.entry_counts[char] = 1
             return self._out_files[char]
 
-    def _write_entry(self, grascii: str, word: str) -> None:
+    def _write_entry(self, grascii: str, translation: str) -> None:
         """Write an entry to an output file.
 
         :param grascii: The grascii string to write.
-        :param word: The grascii string's corresponding word to write.
+        :param translation: The grascii string's corresponding translation to write.
         """
 
         out = self._get_output_file(grascii)
         out.write(grascii + " ")
-        out.write(word + "\n")
+        out.write(translation + "\n")
 
     def _close_output_files(self) -> None:
         """Close all output files."""
@@ -289,7 +288,7 @@ class BuildSummary:
             for key, val in self.entry_counts.items():
                 total += val
                 builder.append(
-                    f"Wrote {val} entries to {os.path.join(self.output_dir, key)})"
+                    f"Wrote {val} entries to {os.path.join(self.output_dir, key)}"
                 )
         if total > 0:
             builder.append("")
@@ -301,6 +300,10 @@ class BuildSummary:
         builder.append(f"Errors: {len(self.errors)}")
 
         return "\n".join(builder)
+
+
+DEFAULT_PIPELINE: List[PipelineFunc] = [remove_boundaries, standardize_case]
+"""The default pipeline used for dictionary builds."""
 
 
 class DictionaryBuilder:
@@ -318,9 +321,7 @@ class DictionaryBuilder:
     """
 
     def __init__(self, **kwargs) -> None:
-        self.parse: bool = kwargs.get("parse", False)
-        self.words_file: Optional[pathlib.Path] = kwargs.get("words_file")
-        self.words: Set[str] = set()
+        self.pipeline: List[PipelineFunc] = kwargs.get("pipeline", DEFAULT_PIPELINE)
         self.count_words: bool = kwargs.get("count_words", False)
         self._logger = _BuilderLoggerAdapter(logger)
         verbosity: int = kwargs.get("verbosity", 0)
@@ -329,84 +330,42 @@ class DictionaryBuilder:
         if verbosity > 0:
             self._logger.setLevel(levels[verbosity])
 
-    def _load_parser(self) -> None:
-        """Load a parser to check grascii strings."""
+    def _parse_line(self, line: str) -> Optional[Tuple[str, str]]:
+        """Parse a dictionary source file line into a Grascii string and its
+        translation.
 
-        if self.parse:
-            if not _VALIDATOR_AVAILABLE:
-                self._logger.warning("lark is unavailable. --parse will be ignored")
-                return
-            # Disable cache for now
-            # It could be enabled, but we have to be careful about clearing the
-            # cache after grammar changes
-            self.parser = GrasciiValidator()
-            self._logger.info("Created GrasciiValidator")
-
-    def _load_word_set(self) -> None:
-        """Load a set of words to check the spelling of words."""
-
-        if self.words_file:
-            self.words = set()
-            with self.words_file.open("r") as words:
-                self.words |= set(line.strip().capitalize() for line in words)
-            self._logger.info("Loaded words from %s", self.words_file)
-
-    def _check_line(self, line: str) -> Optional[List[str]]:
-        """Check a dictionary source file line for comments, uncertainty,
-        and incorrect token counts.
-
-        :returns: A list of tokens from the line or None if the line contains
-            an error."""
+        :returns: A Grascii string and a translation or None if the line is a
+            comment or contains an error."""
 
         tokens = line.split()
-        if tokens:
-            if tokens[0][0] == "#":
-                return None
-            if tokens[0] == "?":
-                self._logger.warning("Uncertainty")
-                tokens = tokens[1:]
-            match = re.match(r"\*(\d+)", tokens[0])
-            count = 1
-            if match:
-                tokens = tokens[1:]
-                assert match[1], match
-                count = int(match[1])
-            if len(tokens) < count + 1:
-                self._logger.error(
-                    f"Too few words: Expected: {count} Got: {len(tokens) - 1}",
+        if not tokens:
+            return None
+
+        if tokens[0][0] == "#":
+            return None
+
+        if tokens[0] == "?":
+            self._logger.warning("Uncertainty")
+            tokens = tokens[1:]
+
+        match = re.match(r"\*(\d+)", tokens[0])
+        count = 1
+        if match:
+            tokens = tokens[1:]
+            assert match[1], match
+            count = int(match[1])
+        if len(tokens) < count + 1:
+            self._logger.error(
+                f"Too few words: Expected: {count} Got: {len(tokens) - 1}",
+            )
+            return None
+        if count and len(tokens) > count + 1:
+            if self.count_words:
+                self._logger.warning(
+                    f"Too many words: Expected: {count} Got: {len(tokens) - 1}"
                 )
-                return None
-            if count and len(tokens) > count + 1:
-                if self.count_words:
-                    self._logger.warning(
-                        f"Too many words: Expected: {count} Got: {len(tokens) - 1}"
-                    )
-        return tokens
 
-    def _check_grascii(self, grascii: str) -> bool:
-        """Check the parsabliity of a grascii string.
-
-        :returns: False if parse checking is enabled and a parse fails.
-        """
-
-        if self.parse and _VALIDATOR_AVAILABLE:
-            if not self.parser.validate(grascii):
-                self._logger.error(f"Failed to parse {grascii}")
-                return False
-        return True
-
-    def _check_word(self, word: str) -> bool:
-        """Check the existence of a word in the word set.
-
-        :returns: False if spell checking is enabled and the word does not
-            exist in the word set.
-        """
-
-        if self.words:
-            if word not in self.words:
-                self._logger.warning(f"{word} not in words file")
-                return False
-        return True
+        return tokens[0], " ".join(tokens[1:])
 
     def build(
         self, infiles: Iterable[os.PathLike], output: Optional[DictionaryOutputOptions]
@@ -439,33 +398,32 @@ class DictionaryBuilder:
             else nullcontext(lambda x, y: None)
         )
 
-        self._load_word_set()
-        self._load_parser()
-
         with out as write_entry:
             with FileInput(infiles) as f:
                 for line in f:
                     self._logger.set_context(f.filename(), line, f.filelineno())
-                    tokens = self._check_line(line)
-                    if not tokens:
+                    parsed = self._parse_line(line)
+                    if not parsed:
                         continue
+                    grascii, translation = parsed
 
-                    grascii = tokens[0].upper()
-                    # remove '-' characters
-                    grascii = "".join(grascii.split("-"))
-                    word_list = []
-                    for word in tokens[1:]:
-                        word_list.append(word.capitalize())
-                        self._check_word(word_list[-1])
-                    word = " ".join(word_list)
-
-                    if not self._check_grascii(grascii):
+                    try:
+                        for func in self.pipeline:
+                            grascii, translation = func(
+                                grascii, translation, self._logger
+                            )
+                    except CancelPipeline:
+                        self._logger.info(
+                            "Pipeline aborted for {grascii}, {translation}"
+                        )
                         continue
 
                     try:
-                        write_entry(grascii, word)
+                        write_entry(grascii, translation)
                     except NoMatchingOutputFile:
-                        self._logger.error(f"No output file for {grascii} {word}")
+                        self._logger.error(
+                            f"No output file for {grascii} {translation}"
+                        )
                         continue
 
         end_time = time.perf_counter()
@@ -487,8 +445,17 @@ def cli_build(args: argparse.Namespace) -> None:
     :param args: A namespace of parsed arguments.
     """
 
+    pipeline: List[PipelineFunc] = []
+    pipeline.extend(DEFAULT_PIPELINE)
+    if args.words_file:
+        pipeline.append(create_spell_check(args.words_file))
+    if args.parse:
+        pipeline.append(create_grascii_check())
+
     builder = DictionaryBuilder(
-        **{k: v for k, v in vars(args).items() if v is not None}
+        pipeline=pipeline,
+        count_words=args.count_words,
+        verbosity=args.verbosity,
     )
     output_options = (
         DictionaryOutputOptions(args.output, args.clean) if args.output else None

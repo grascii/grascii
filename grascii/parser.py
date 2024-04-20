@@ -99,10 +99,15 @@ def get_grascii_regex_str() -> str:
 
 
 class GrasciiValidator:
-    """Validates Grascii strings."""
+    """Validates Grascii strings.
 
-    def __init__(self) -> None:
-        self._regex = re.compile(get_grascii_regex_str())
+    :param ignore_case: Whether to ignore the case of the Grascii string. If
+        ``False``, the Grascii string must be uppercase.
+    :type ignore_case: bool
+    """
+
+    def __init__(self, ignore_case: bool = False) -> None:
+        self._regex = re.compile(get_grascii_regex_str(), re.I if ignore_case else 0)
 
     def validate(self, grascii: str) -> bool:
         """Check whether the given string is valid Grascii.

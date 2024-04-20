@@ -9,6 +9,7 @@ from grascii.dictionary.build import (
     DictionaryBuilder,
     DictionaryOutputOptions,
 )
+from grascii.dictionary.pipeline import PipelineFunc
 from grascii.parser import (
     GrasciiParser,
     GrasciiValidator,

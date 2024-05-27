@@ -132,7 +132,7 @@ Building
 Usage
 =====
 
-.. describe:: grascii dictionary build [-h] [-o OUTPUT] [-c] [-p] [-s] infiles [infiles ...]
+.. describe:: grascii dictionary build [-h] (-o OUTPUT | --no-output) [-c] [-p] [-w WORDS_FILE] [-n] [-v] [-q] infiles [infiles ...]
 
 .. option:: <infiles>
 
@@ -145,6 +145,10 @@ Usage
 .. option:: -o, --output
 
   Set the directory in which compiled files will be output.
+
+.. option:: --no-output
+
+  Do not output files and only perform validation.
 
 .. option:: -c, --clean
 
@@ -172,13 +176,13 @@ Usage
   number of words, a warning will be reported, but the corresponding entry will
   still be included in the output.
 
-.. option:: -k, --check-only
-
-  Only check the input. No output is generated.
-
 .. option:: -v, --verbose
 
-  Increase the output verbosity. May be specified up to two times.
+  Increase the console output verbosity. May be specified up to two times.
+
+.. option:: -q, --quiet
+
+  Suppress console output.
 
 
 Warnings and Errors

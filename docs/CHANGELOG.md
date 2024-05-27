@@ -9,6 +9,7 @@
 - `BuildSummary` class for results of `DictionaryBuilder.build`
 - Experimental pipelines for dictionary builds
 - `ignore_case` option to `GrasciiValidator`
+- `-q` and `--quiet` options for `grascii dictionary build`.
 
 ### Changed
 

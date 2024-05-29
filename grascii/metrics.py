@@ -74,7 +74,11 @@ def match_to_gsequence(match: Match[str]) -> GrasciiSequence:
     """
 
     sequence: GrasciiSequence = []
-    for group in match.groups():
+    adjusted_matched_grascii_index = match.re.groupindex["matched_grascii"] - 1
+    for index, group in enumerate(match.groups()):
+        if index == adjusted_matched_grascii_index:
+            # the matched_grascii group is not a leaf group
+            continue
         if group is None:
             continue
         i = 0
@@ -201,7 +205,8 @@ def grascii_standard(result: SearchResult[Interpretation]) -> int:
     """Compute the standard metric for a grascii search.
 
     :param result: A ``SearchResult``
-    :returns: A distance between an ``Interpretation`` and a ``Match``
+    :returns: A comparable key representing the distance between an ``Interpretation``
+        and a ``Match``
     """
 
     def distance(interp: Interpretation, match: Match[str]) -> int:
@@ -209,7 +214,16 @@ def grascii_standard(result: SearchResult[Interpretation]) -> int:
         seq2 = match_to_gsequence(match)
         return gsequence_distance(seq1, seq2)
 
-    return determine_shortest_distance(result.matches, distance)
+    min_start = min(r[1].start("matched_grascii") for r in result.matches)
+    shortest_distance = determine_shortest_distance(result.matches, distance)
+
+    # calculate an adjusted distance that will put "off-by-one" matches in the
+    # same overall group as exact matches
+    adjusted_distance = (
+        shortest_distance if shortest_distance % 4 == 0 else shortest_distance - 1
+    )
+
+    return adjusted_distance, min_start, shortest_distance, len(result.entry.grascii)
 
 
 def translation_standard(result: SearchResult[str]) -> Tuple[int, int]:

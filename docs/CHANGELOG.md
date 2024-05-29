@@ -19,6 +19,8 @@
   or were removed
 - `DictionaryBuilder.build` takes `infiles` and `output` arguments and returns
   a `BuildSummary`
+- Updated the `grascii_standard` metric to incorporate the position and length
+  of the matched grascii
 
 ### Removed
 

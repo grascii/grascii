@@ -138,6 +138,9 @@ class RegexBuilder:
         builder = list("^")
         i = 0
         if self.search_mode is SearchMode.MATCH or self.search_mode is SearchMode.START:
+            # start the matched_grascii group
+            builder.append("(?P<matched_grascii>")
+
             # match up to two aspirates at the beginning of a word
             if self.aspirate_mode is Strictness.LOW:
                 for j in range(2):
@@ -155,6 +158,9 @@ class RegexBuilder:
         elif self.search_mode is SearchMode.CONTAIN:
             # match any characters up to the end of the grascii word
             builder.append(r"\S*")
+
+            # start the matched_grascii group
+            builder.append("(?P<matched_grascii>")
 
         found_first = False
 
@@ -241,6 +247,9 @@ class RegexBuilder:
             ):
                 builder.append(disjoiner)
                 builder.append("?")
+
+        # end the matched_grascii group
+        builder.append(")")
 
         if self.search_mode is SearchMode.MATCH:
             # match the end of the word/line

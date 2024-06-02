@@ -30,6 +30,10 @@
 - Dictionary build `--check-only` option: Use `--no-output` instead
 - `grascii.dictionary.build.build` function: Use `DictionaryBuilder.build` instead
 
+### Fixed
+
+- Regex metacharacters in reverse search inputs are escaped
+
 ## 0.5.0 - 2022-08-12
 
 ### Added

@@ -203,6 +203,11 @@ class TestReverseSearcher(unittest.TestCase):
         with self.assertRaises(DictionaryNotFound):
             ReverseSearcher(dictionaries=["does-not-exist"])
 
+    def test_regex_escape(self):
+        searcher = ReverseSearcher(dictionaries=[output_dir])
+        result_count = len(searcher.sorted_search(reverse="ag+.*"))
+        self.assertEqual(result_count, 0)
+
 
 class TestRegexSeacrher(unittest.TestCase):
     def test_dictionary_not_found(self):

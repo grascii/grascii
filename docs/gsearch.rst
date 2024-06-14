@@ -10,7 +10,7 @@ search the Grascii dictionary for potential translations.
 Usage
 *****
 
-.. object:: grascii search ...
+.. object:: grascii search [-h] (-g GRASCII | -e REGEXP | -r REVERSE | -i) [-u {0,1,2}] [-s {match,start,contain}] [-a {discard,retain,strict}] [-p {discard,retain,strict}] [-j {discard,retain,strict}] [-n {best,all}] [-f] [-d DICTIONARIES] [--no-sort]
 
 .. option:: -h, --help
 
@@ -20,7 +20,7 @@ Print a help message and exit.
 
 Set a Grascii String to use as a query.
 
-.. option:: -e <regex>, --regex <regex>
+.. option:: -e <regex>, --regexp <regex>
 
 Set a regular expression to use as a query.
 
@@ -31,12 +31,13 @@ Search by word instead of Grascii.
 .. option:: -i, --interactive
 
 Run searches in interactive mode. This is the recommended mode for general
-use, as :option`--grascii` and :option:`--regex` may require using shell escape sequences.
+use, as :option:`--grascii` and :option:`--regex` may require using shell escape sequences.
 
 .. option:: -u {0, 1, 2}, --uncertainty {0, 1, 2}
 
 Set the uncertainty level of a Grascii string. 2 represents the greatest
-uncertainty.
+uncertainty. For a more in-depth explanation of uncertainty, see
+:doc:`similarity`.
 
 .. option:: -s {match, start, contain}, --search-mode {match, start, contain}
 
@@ -103,6 +104,9 @@ search multiple dictionaries at the same time.
 dictionary, or a colon followed by the name of an installed dictionary.
 Ex: ``:preanniversary``.
 
+.. option:: --no-sort
+
+Do not sort the search results.
 
 Suggestions
 ===========

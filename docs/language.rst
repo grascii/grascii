@@ -23,8 +23,7 @@ It aims to describe the shorthand forms accurately and succinctly. It also
 has many additional symbols enabling it to describe some of the lesser used
 features of the system.
 
-For a summary of what the language does not currently support, see the list
-below.
+For language limitations, see `Unsupported Language Features`_.
 
 +-----------------------------------+---------------------------+---------------+
 | Shorthand Form                    | Grascii Representation(s) | Annotation(s) |
@@ -267,7 +266,7 @@ Examples
 Unsupported Language Features
 *****************************
 
-- Grascii does provide a way of distinguishing between smooth and sharp
+- Grascii does not provide a way of distinguishing between smooth and sharp
   joinings. There is no plan to make it possible to make this distinction in
   the future.
 - Intersection is currently not implemented. Proposed symbol to denote two

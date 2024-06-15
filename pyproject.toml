@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "wheel", "lark~=1.0"]
+requires = ["setuptools", "wheel", "lark~=1.0", "platformdirs~=4.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.isort]
@@ -15,7 +15,6 @@ markers = [
 branch = true
 parallel = true
 omit = [
-  "grascii/appdirs.py",
   "grascii/lark_ambig_tools.py",
   "tests/*",
 ]

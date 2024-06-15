@@ -21,6 +21,8 @@
   a `BuildSummary`
 - Updated the `grascii_standard` metric to incorporate the position and length
   of the matched grascii
+- Migrated to `platformdirs`: The location for the configuration file on MacOS
+  changed from `~/Library/Preferences` to `~/Library/Application Support`
 
 ### Removed
 

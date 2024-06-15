@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from pathlib import Path
+from platformdirs import user_data_path
 
 from grascii import APP_NAME
-from grascii.appdirs import user_data_dir
 
-INSTALLATION_DIR = Path(user_data_dir(APP_NAME), "dictionaries")
+INSTALLATION_DIR = user_data_path(APP_NAME) / "dictionaries"
 
 BUILTINS_PACKAGE = "grascii.dictionary"
 

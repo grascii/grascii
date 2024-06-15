@@ -11,8 +11,9 @@ import argparse
 import sys
 from pathlib import Path, PurePath
 
+from platformdirs import user_config_dir
+
 from grascii import APP_NAME
-from grascii.appdirs import user_config_dir
 
 CONF_DIRECTORY = user_config_dir(APP_NAME)
 CONF_FILE_NAME = APP_NAME + ".conf"
@@ -74,7 +75,7 @@ def config_exists() -> bool:
 
 
 def get_config_file_path() -> PurePath:
-    """Get a path object representating the location of the configuration
+    """Get a path object representing the location of the configuration
     file.
 
     :returns: A path object.

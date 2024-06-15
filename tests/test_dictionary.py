@@ -146,7 +146,8 @@ class TestBuiltins(unittest.TestCase):
             count_words=True, pipeline=[*DEFAULT_PIPELINE, create_grascii_check()]
         )
         summary = builder.build(inputs, None)
-        self.assertEqual(len(summary.errors), 0)
+        # Expecting one intentional error for "foyer"
+        self.assertEqual(len(summary.errors), 1)
 
 
 @pytest.fixture

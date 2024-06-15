@@ -23,6 +23,7 @@
   of the matched grascii
 - Migrated to `platformdirs`: The location for the configuration file on MacOS
   changed from `~/Library/Preferences` to `~/Library/Application Support`
+- Updated preanniversary dictionary to [2024.06.14](https://github.com/grascii/dictionaries/tree/2024.06.14).
 
 ### Removed
 

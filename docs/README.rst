@@ -179,20 +179,4 @@ and create more dictionaries.
 License
 *******
 
-This project is under the `MIT License <https://github.com/grascii/grascii/blob/master/LICENSE.txt>`_.
-
-Acknowledgements
-****************
-
-Many thanks to the developers of `Lark <https://github.com/lark-parser/lark>`_, `Questionary <https://github.com/tmbo/questionary>`_, `appdirs <https://github.com/ActiveState/appdirs>`_ and `Qwertigraphy <https://github.com/codepoke-kk/qwertigraphy>`_.
-
-Maintainer's Note
-*****************
-
-Grascii is not completely stable, but I hope others find the project useful. I
-try to open draft pull requests with task lists to keep the community informed
-of upcoming features and the direction of the project. If you notice that there
-has not been any activity for a couple of weeks, feel free to leave a comment
-requesting a status update.
-
--- chanicpanic
+This project is under the `MIT License <https://github.com/grascii/grascii/blob/master/LICENSE>`_.

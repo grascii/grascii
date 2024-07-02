@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.6.0 - 2024-07-01
+
 ### Added
 
 - Dictionary build `--no-output` option

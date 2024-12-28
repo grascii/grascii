@@ -20,7 +20,7 @@ Print a help message and exit.
 
 Set a Grascii String to use as a query.
 
-.. option:: -e <regex>, --regexp <regex>
+.. option:: -e <regexp>, --regexp <regexp>
 
 Set a regular expression to use as a query.
 
@@ -31,7 +31,7 @@ Search by word instead of Grascii.
 .. option:: -i, --interactive
 
 Run searches in interactive mode. This is the recommended mode for general
-use, as :option:`--grascii` and :option:`--regex` may require using shell escape sequences.
+use, as :option:`--grascii` and :option:`--regexp` may require using shell escape sequences.
 
 .. option:: -u {0, 1, 2}, --uncertainty {0, 1, 2}
 
@@ -112,11 +112,11 @@ Suggestions
 ===========
 
 * use interactive mode
-* :option:`--regex` is intended for advanced users and advanced searches. Regexes
+* :option:`--regexp` is intended for advanced users and advanced searches. Regexes
   can be difficult to deal with manually, and most users should use
   :option:`--grascii` instead as it handles many of these complications. Using
-  :option:`--regex` is effectively equivalent to
-  ``$ grep [regex] dict/*``
+  :option:`--regexp` is effectively equivalent to
+  ``$ grep [regexp] dict/*``
 
 Implementation
 **************
@@ -129,13 +129,13 @@ The search procedure when given a Grascii query is as follows:
    generated.
 3. Choose an interpretation (parse).
    For each interpretation a regular expression is constructed.
-4. Each token is replaced with a string of regex alternatives among
+4. Each token is replaced with a string of regexp alternatives among
    its equivalent forms and similar forms based on the uncertainty level. To
    learn how uncertainty is resolved, see similarity.md.
 5. In standard mode, modifiers are preserved. Or all possible modifiers
-   for each token are built into the regex which may or may not occur.
+   for each token are built into the regexp which may or may not occur.
 6. A set of starting letters is tracked which are the first alphabetic
-   characters required to be accepted by any regex.
+   characters required to be accepted by any regexp.
 7. The dictionary files corresponding to these letters are opened and
-   each line is searched with each regex.
-8. Any lines that have a matching regex are returned.
+   each line is searched with each regexp.
+8. Any lines that have a matching regexp are returned.

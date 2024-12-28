@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Updated similarity graph to include edges connecting circle diphthongs
+
 ## 0.6.0 - 2024-07-01
 
 ### Added

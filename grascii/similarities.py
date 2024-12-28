@@ -1,4 +1,4 @@
-"""Contains methods for detemining the similarity of grascii strokes."""
+"""Contains methods for determining the similarity of grascii strokes."""
 
 from __future__ import annotations
 
@@ -44,14 +44,19 @@ _edges: List[Tuple[str, str]] = [
     ("T", "D"),
     ("D", "DT"),
     ("I", "A"),
+    ("I", "A&'"),
+    ("I", "A&E"),
     ("A", "E"),
+    ("A", "A&'"),
+    ("A", "A&E"),
+    ("A&'", "A&E"),
     ("NK", "N"),
     ("N", "M"),
     ("M", "MN"),
     ("N", "NG"),
     ("M", "NK"),
     ("NG", "NK"),
-    ("M", "NG"),  # add to graph
+    ("M", "NG"),
     ("NK", "MN"),
     ("SH", "S"),
     ("S", "SS"),

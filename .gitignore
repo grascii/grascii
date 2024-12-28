@@ -5,7 +5,6 @@
 dict/
 myenv
 grascii.conf
-*.graphml
 build/
 dist/
 grascii.egg-info/

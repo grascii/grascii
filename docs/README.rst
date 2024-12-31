@@ -16,7 +16,9 @@ Useful Links
 
 - `Full Documentation (readthedocs) <https://grascii.readthedocs.io>`_
 - `Additional Dictionaries <https://github.com/grascii/dictionaries>`_
-- `grascii-gui (graphical interface for Grascii Search) <https://github.com/grascii/gui>`_
+- `grascii on HuggingFace <https://huggingface.co/grascii>`_
+- `Grascii Search Space (web interface for Grascii Search) <https://huggingface.co/spaces/grascii/search>`_
+- `grascii-gui (local graphical interface for Grascii Search) <https://github.com/grascii/gui>`_
 
 Made With
 *********
@@ -38,9 +40,10 @@ Install the package::
   $ python -m pip install grascii[interactive]
 
 Note: We recommend the interactive extra for the majority of users. You may
-omit the interactive extra when using the package as a library to
-reduce dependencies. Also see `grascii-gui <https://github.com/grascii/gui>`_
-for a graphical interface for Grascii Search.
+omit the interactive extra when using the package as a library to reduce
+dependencies. Also see `Grascii Search Space
+<https://huggingface.co/spaces/grascii/search>`_ or `grascii-gui
+<https://github.com/grascii/gui>`_ for graphical Grascii Search interfaces.
 
 
 Verify the installation::

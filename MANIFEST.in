@@ -2,10 +2,10 @@ recursive-include grascii *.lark
 exclude grascii/grammars/grascii_regex.lark
 include grascii/defaults.conf
 prune grascii/dictionary/preanniversary
+prune grascii/dictionary/preanniversary-phrases
 
 prune dictionaries
 recursive-include dictionaries/builtins *.txt
-prune dictionaries/builtins/preanniversary-phrases-preview
 
 recursive-include docs *.rst *.md Makefile
 recursive-include docs/images *.png *.graphml

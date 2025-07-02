@@ -149,6 +149,14 @@ class TestBuiltins(unittest.TestCase):
         # Expecting one intentional error for "foyer"
         self.assertEqual(len(summary.errors), 1)
 
+    def test_preanniversary_phrases(self):
+        inputs = Path("dictionaries/builtins/preanniversary-phrases/").glob("*.txt")
+        builder = DictionaryBuilder(
+            count_words=True, pipeline=[*DEFAULT_PIPELINE, create_grascii_check()]
+        )
+        summary = builder.build(inputs, None)
+        self.assertEqual(len(summary.errors), 0)
+
 
 @pytest.fixture
 def tmp_dict_path(tmp_path, monkeypatch):
@@ -205,8 +213,9 @@ class TestList:
 
     def test_list_builtins(self, tmp_dict_path):
         builtins = get_built_ins()
-        assert len(builtins) == 1
+        assert len(builtins) == 2
         assert ":preanniversary" in builtins
+        assert ":preanniversary-phrases" in builtins
 
 
 class TestInstall:

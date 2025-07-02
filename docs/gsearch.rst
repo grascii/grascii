@@ -104,6 +104,10 @@ search multiple dictionaries at the same time.
 dictionary, or a colon followed by the name of an installed dictionary.
 Ex: ``:preanniversary``.
 
+.. option:: --show-dictionary
+
+Show the dictionary containing each search result.
+
 .. option:: --no-sort
 
 Do not sort the search results.

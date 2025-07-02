@@ -101,6 +101,11 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
         help="add a dictionary to be searched",
     )
     argparser.add_argument(
+        "--show-dictionary",
+        action="store_true",
+        help="show the dictionary containing each search result",
+    )
+    argparser.add_argument(
         "--no-sort",
         action="store_true",
         help="do not sort the search results",
@@ -162,7 +167,14 @@ def cli_search(args: argparse.Namespace) -> None:
         if results is not None:
             count = 0
             for result in results:
-                print(result.entry.grascii, result.entry.translation)
+                if args.show_dictionary:
+                    print(
+                        result.entry.grascii,
+                        result.entry.translation,
+                        f"({result.dictionary.name})",
+                    )
+                else:
+                    print(result.entry.grascii, result.entry.translation)
                 count += 1
             print("Results:", count)
 

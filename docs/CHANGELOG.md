@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- `preanniversary-phrases` as a builtin dictionary and default search dictionary
+
+### Changed
+
+- Updated dictionaries to [2025.06.30](https://github.com/grascii/dictionaries/tree/2025.06.30).
+
 ## 0.6.1 - 2024-12-27
 
 ### Changed

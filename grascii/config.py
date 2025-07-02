@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from importlib.resources import files
 from pathlib import Path, PurePath
 
 from platformdirs import user_config_dir
@@ -58,10 +59,6 @@ def get_default_config() -> str:
 
     :returns: A string containing the default configuration.
     """
-    if sys.version_info >= (3, 9):
-        from importlib.resources import files
-    else:
-        from importlib_resources import files
     return files("grascii").joinpath(DEFAULTS_CONF_NAME).read_text()
 
 

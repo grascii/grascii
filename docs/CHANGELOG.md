@@ -10,6 +10,10 @@
 
 - Updated dictionaries to [2025.06.30](https://github.com/grascii/dictionaries/tree/2025.06.30).
 
+### Removed
+
+- Dropped Python 3.7 and 3.8 support
+
 ## 0.6.1 - 2024-12-27
 
 ### Changed

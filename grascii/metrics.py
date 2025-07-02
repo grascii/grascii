@@ -5,7 +5,6 @@ Contains metrics for comparing search queries to regular expression matches.
 from __future__ import annotations
 
 import string
-import sys
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -14,6 +13,7 @@ from typing import (
     Match,
     NamedTuple,
     Optional,
+    Protocol,
     Set,
     Tuple,
     TypeVar,
@@ -24,10 +24,6 @@ from grascii.parser import Interpretation
 from grascii.similarities import get_similar
 
 if TYPE_CHECKING:
-    if sys.version_info >= (3, 8):
-        from typing import Protocol
-    else:
-        from typing_extensions import Protocol
     from grascii.searchers import SearchResult
 
     class Comparable(Protocol):

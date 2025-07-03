@@ -207,6 +207,18 @@ class TestNewDictionary:
             Dictionary.new("unknown")
 
 
+class TestDictionaryDump:
+    def test_preanniversary_dump(self):
+        dictionary = Dictionary.new(Path("grascii/dictionary/preanniversary"))
+        entries = dictionary.dump()
+        assert len(entries) > 15000
+
+    def test_preanniversary_phrases_dump(self):
+        dictionary = Dictionary.new(Path("grascii/dictionary/preanniversary-phrases"))
+        entries = dictionary.dump()
+        assert len(entries) > 3000
+
+
 class TestList:
     def test_list_no_installed(self, tmp_dict_path):
         assert len(get_installed()) == 0

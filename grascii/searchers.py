@@ -14,7 +14,6 @@ from typing import (
     Iterable,
     List,
     Match,
-    NamedTuple,
     Optional,
     Pattern,
     Sequence,
@@ -24,18 +23,13 @@ from typing import (
 )
 
 from grascii import defaults, grammar, metrics, regen
-from grascii.dictionary import Dictionary
+from grascii.dictionary import Dictionary, DictionaryEntry
 from grascii.parser import GrasciiParser, Interpretation
 
 if TYPE_CHECKING:
     from grascii.metrics import Comparable
 
 IT = TypeVar("IT")
-
-
-class DictionaryEntry(NamedTuple):
-    grascii: str
-    translation: str
 
 
 class SearchResult(Generic[IT]):

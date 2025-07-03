@@ -5,7 +5,7 @@ import os
 from enum import Enum
 from importlib.resources import files
 from pathlib import Path
-from typing import Any, Optional, TextIO, Union
+from typing import Any, List, NamedTuple, Optional, TextIO, Union
 
 from grascii.dictionary import build, install
 from grascii.dictionary import list as list_dict
@@ -21,6 +21,7 @@ from grascii.dictionary.common import (
 from grascii.dictionary.install import install_dictionary  # noqa: F401
 from grascii.dictionary.list import get_built_ins, get_installed  # noqa: F401
 from grascii.dictionary.uninstall import uninstall_dictionary  # noqa: F401
+from grascii.grammar import HARD_CHARACTERS
 
 description = "Create and manage Grascii dictionaries"
 
@@ -63,6 +64,11 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     list_parser.set_defaults(func=list_dict.cli_list)
 
 
+class DictionaryEntry(NamedTuple):
+    grascii: str
+    translation: str
+
+
 class DictionaryType(Enum):
     BUILTIN = 0
     INSTALLED = 1
@@ -94,6 +100,24 @@ class Dictionary:
         :returns: A text stream.
         """
         return Path(self.path, name).open()
+
+    def dump(self) -> List[DictionaryEntry]:
+        """Get all the entries in this dictionary.
+
+        :returns: A list of all entries in this dictionary.
+        """
+        entries = []
+
+        for c in HARD_CHARACTERS:
+            try:
+                with self.open(c) as f:
+                    for line in f:
+                        grascii, translation = line.strip().split(maxsplit=1)
+                        entries.append(DictionaryEntry(grascii, translation))
+            except FileNotFoundError:
+                continue
+
+        return entries
 
     def __eq__(self, other: Any) -> bool:
         return isinstance(other, Dictionary) and self.path == other.path

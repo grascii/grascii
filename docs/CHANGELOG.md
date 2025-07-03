@@ -6,6 +6,7 @@
 
 - `preanniversary-phrases` as a builtin dictionary and default search dictionary
 - `--show-dictionary` option for `grascii search`
+- `Dictionary.dump` method to get all the entries in a dictionary
 
 ### Changed
 

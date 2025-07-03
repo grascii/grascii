@@ -175,16 +175,12 @@ class DictionaryOutputOptions:
     :param output_dir: The directory where to output the dictionary files.
     :param clean: Whether to delete all files in the output directory before
         building.
-    :param package: Whether to make the output directory a Python package by
-        outputing an `__init__.py` file.
     :type output_dir: os.PathLike
     :type clean: bool
-    :type package: bool
     """
 
     output_dir: os.PathLike
     clean: bool = False
-    package: bool = False
 
 
 class _OutputManager:
@@ -214,9 +210,6 @@ class _OutputManager:
             self._logger.info("Cleaning output directory: %s", out_dir)
             for entry in out_dir.iterdir():
                 entry.unlink()
-        if self.options.package:
-            self._logger.info("Creating __init__.py in %s", out_dir)
-            out_dir.joinpath("__init__.py").touch()
 
     def _get_output_file(self, grascii: str) -> TextIO:
         """Get an output file corresponding to the first alphabetic characters

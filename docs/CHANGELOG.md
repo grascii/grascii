@@ -15,6 +15,7 @@
 ### Removed
 
 - Dropped Python 3.7 and 3.8 support
+- `DictionaryOutputOptions.package`
 
 ## 0.6.1 - 2024-12-27
 

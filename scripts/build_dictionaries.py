@@ -23,14 +23,12 @@ def build_dictionaries():
         infiles=Path("dictionaries/builtins/preanniversary").glob("*.txt"),
         output=DictionaryOutputOptions(
             output_dir=Path("grascii/dictionary/preanniversary"),
-            package=True,
         ),
     )
     builder.build(
         infiles=Path("dictionaries/builtins/preanniversary-phrases").glob("*.txt"),
         output=DictionaryOutputOptions(
             output_dir=Path("grascii/dictionary/preanniversary-phrases"),
-            package=True,
         ),
     )
 

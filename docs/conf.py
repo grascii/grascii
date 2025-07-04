@@ -37,7 +37,7 @@ extensions = [
     "myst_parser",
 ]
 apidoc_module_dir = "../grascii"
-apidoc_excluded_paths = ["../grascii/appdirs.py", "../grascii/lark_ambig_tools.py"]
+apidoc_excluded_paths = ["lark_ambig_tools.py"]
 apidoc_output_dir = "reference"
 
 # Add any paths that contain templates here, relative to this directory.

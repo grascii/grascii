@@ -60,7 +60,7 @@ For language limitations, see `Unsupported Language Features`_.
 +-----------------------------------+---------------------------+---------------+
 | .. image:: images/strokes/s.png   |S                          | ( ) ,         |
 +-----------------------------------+---------------------------+---------------+
-| .. image:: images/strokes/x.png   |X                          |               |
+| .. image:: images/strokes/x.png   |X                          | ( )           |
 +-----------------------------------+---------------------------+---------------+
 | .. image:: images/strokes/sh.png  |SH                         | ,             |
 +-----------------------------------+---------------------------+---------------+
@@ -108,9 +108,9 @@ For language limitations, see `Unsupported Language Features`_.
 +-----------------------------------+---------------------------+---------------+
 | .. image:: images/strokes/jnt.png |JNT, JND, PNT, PND         |               |
 +-----------------------------------+---------------------------+---------------+
-| .. image:: images/strokes/ss.png  |SS                         |               |
+| .. image:: images/strokes/ss.png  |SS                         | ) (           |
 +-----------------------------------+---------------------------+---------------+
-| .. image:: images/strokes/xs.png  |XS                         |               |
+| .. image:: images/strokes/xs.png  |XS                         | ) (           |
 +-----------------------------------+---------------------------+---------------+
 
 Annotations
@@ -164,8 +164,8 @@ Annotations
 |             |                            |                                 |
 |             |                            |                                 |
 +-------------+----------------------------+---------------------------------+
-|)            |S, Z, TH                    |When following an S/Z,           |
-|             |                            |denotes a right S/Z.             |
+|)            |S, Z, X, SS, XS, TH         |When following an S/Z/X/SS/XS,   |
+|             |                            |denotes a right S/Z/X/SS/XS.     |
 |             |                            |When following an TH,            |
 |             |                            |denotes an under TH.             |
 |             |                            |                                 |
@@ -173,8 +173,8 @@ Annotations
 |             |                            |                                 |
 |             |                            |                                 |
 +-------------+----------------------------+---------------------------------+
-|(            |S, Z, TH                    |When following an S/Z,           |
-|             |                            |denotes a left S/Z.              |
+|(            |S, Z, X, SS, XS, TH         |When following an S/Z/X/SS/XS,   |
+|             |                            |denotes a left S/Z/X/SS/XS.      |
 |             |                            |When following an TH,            |
 |             |                            |denotes an over TH.              |
 |             |                            |                                 |
@@ -209,6 +209,10 @@ Annotations
 |             |                            |                                 |
 |             |                            |                                 |
 +-------------+----------------------------+---------------------------------+
+
+.. note::
+   The direction of a SS/XS is based on the direction of the tail S. That is,
+   a right SS resembles a longhand "s" whereas a left SS is flipped.
 
 Other Symbols
 *************

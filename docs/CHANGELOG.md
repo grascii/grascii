@@ -7,6 +7,7 @@
 - `preanniversary-phrases` as a builtin dictionary and default search dictionary
 - `--show-dictionary` option for `grascii search`
 - `Dictionary.dump` method to get all the entries in a dictionary
+- Direction annotations for `X`
 
 ### Changed
 
@@ -16,6 +17,10 @@
 
 - Dropped Python 3.7 and 3.8 support
 - `DictionaryOutputOptions.package`
+
+### Fixed
+
+- Missing entries for `SS` and `XS` in `grammar.ANNOTATIONS`
 
 ## 0.6.1 - 2024-12-27
 

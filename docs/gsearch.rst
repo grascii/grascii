@@ -10,7 +10,7 @@ search the Grascii dictionary for potential translations.
 Usage
 *****
 
-.. object:: grascii search [-h] (-g GRASCII | -e REGEXP | -r REVERSE | -i) [-u {0,1,2}] [-s {match,start,contain}] [-a {discard,retain,strict}] [-p {discard,retain,strict}] [-j {discard,retain,strict}] [-n {best,all}] [-f] [-d DICTIONARIES] [--no-sort]
+.. object:: grascii search [-h] (-g GRASCII | -e REGEXP | -r REVERSE | -i) [-u {0,1,2}] [-s {match,start,contain}] [-a {discard,retain,strict}] [-p {discard,retain,strict}] [-j {discard,retain,strict}] [-n {best,all}] [-f] [-d DICTIONARIES] [--show-dictionary] [--no-sort]
 
 .. option:: -h, --help
 
@@ -87,9 +87,9 @@ disjoiners in any location.
 
 How to handle ambiguous Grascii strings.
 
-``best``: Only search with the best interpretation.
+``best``: Only search using the :ref:`canonical interpretation <canonical-interpretation>`.
 
-``all``: Search with all interpretations.
+``all``: Search using all possible interpretations.
 
 .. option:: -f, --fix-first
 
@@ -122,24 +122,36 @@ Suggestions
   :option:`--regexp` is effectively equivalent to
   ``$ grep [regexp] dict/*``
 
-Implementation
-**************
+Algorithm
+*********
 
-The search procedure when given a Grascii query is as follows:
+The Grascii search procedure is as follows:
 
-1. Convert the Grascii string to uppercase. Parse the Grascii string into
-   tokens and sets of annotations on those tokens.
-2. As the Grascii language is ambiguous, all possible parsings are
-   generated.
-3. Choose an interpretation (parse).
-   For each interpretation a regular expression is constructed.
-4. Each token is replaced with a string of regexp alternatives among
-   its equivalent forms and similar forms based on the uncertainty level. To
-   learn how uncertainty is resolved, see similarity.md.
-5. In standard mode, modifiers are preserved. Or all possible modifiers
-   for each token are built into the regexp which may or may not occur.
-6. A set of starting letters is tracked which are the first alphabetic
-   characters required to be accepted by any regexp.
-7. The dictionary files corresponding to these letters are opened and
-   each line is searched with each regexp.
-8. Any lines that have a matching regexp are returned.
+1. Convert the Grascii string to uppercase.
+
+2. Split the Grascii string into strokes, sets of annotations on those strokes,
+   and other symbols. Each possible way of splitting the string is an
+   interpretation.
+
+3. For each selected interpretation, construct a regular expression (regexp):
+
+   a. Replace each stroke with a string of regexp alternatives among
+      its equivalent forms and similar forms based on the uncertainty level. To
+      learn how uncertainty is resolved, see :doc:`similarity`.
+
+   b. For each stroke, insert characters into the regexp to match possible
+      annotations according to the annotation mode.
+
+   c. Insert characters around/between strokes to match possible aspirates
+      according to the aspirate mode.
+
+   d. Insert characters between strokes to match possible disjoiners according
+      to the disjoiner mode.
+
+4. Determine the set of starting letters: the first alphabetic characters that
+   may be matched by any constructed regexp.
+
+5. Open the dictionary files corresponding to the starting letters and search
+   each line with each regexp.
+
+6. Return a result for every line that matches a regexp.

@@ -5,25 +5,31 @@ Language
 What is Grascii?
 ****************
 
-Grascii is a language designed to represent Gregg Shorthand forms using the
-ASCII character set.
+Grascii is a language for representing Gregg Shorthand forms using the ASCII
+character set.
 
-It is designed to be intuitive to those already familiar with the system.
+Philosophy and Goals
+====================
 
-Grascii is a context free grammar, and it's implementation can be viewed
-in grascii.lark.
+Grascii strives to:
 
-Grascii is moderately ambiguous. However, as the shorthand system is also
-ambiguous, it is reasonable that Grascii inherits this attribute.
+- be intuitive to those already familiar with the Gregg system
+- describe shorthand forms accurately and succinctly
+- prioritize ease of reading and writing for humans over ease of processing for
+  computers
 
-The current definition of Grascii is based on the Pre-anniversary (1916)
-version of Gregg Shorthand.
+Gregg Editions
+==============
 
-It aims to describe the shorthand forms accurately and succinctly. It also
-has many additional symbols enabling it to describe some of the lesser used
-features of the system.
+The current definition of Grascii is based on the Preanniversary (1916)
+edition of Gregg Shorthand.
 
-For language limitations, see `Unsupported Language Features`_.
+Given that Preanniversary is almost a superset of all later editions of Gregg,
+Grascii is capable of representing the majority of shorthand forms across
+all editions.
+
+Strokes
+*******
 
 +-----------------------------------+---------------------------+---------------+
 | Shorthand Form                    | Grascii Representation(s) | Annotation(s) |
@@ -266,6 +272,15 @@ Examples
 +------------------------------------------------+-----------+---------------+
 | .. image:: images/examples/voyage.png          | VOEJ      | Voyage        |
 +------------------------------------------------+-----------+---------------+
+
+Ambiguity
+*********
+
+Grascii is moderately ambiguous. However, as the shorthand system is also
+ambiguous, it is reasonable that Grascii inherits this attribute.
+
+Being ambiguous raises the question of how to interpret Grascii strings. See
+:doc:`interpretation` for a discussion on this topic.
 
 Unsupported Language Features
 *****************************

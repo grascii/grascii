@@ -1,50 +1,18 @@
 from __future__ import annotations
 
-import re
-from functools import lru_cache, reduce
-from typing import Iterator, List, Union
+from typing import Iterator, List
 
 from lark import Lark, Token, Transformer, Tree, UnexpectedInput
 
 from grascii import grammar
+from grascii.interpreter import Interpretation
 from grascii.lark_ambig_tools import Disambiguator
-
-Interpretation = List[Union[str, List[str]]]
-
-
-def interpretation_to_string(interpretation: Interpretation) -> str:
-    """Generate a string representation of an Interpretation.
-
-    :param interpretation: An Interpretation to generate a string for.
-    :returns: A string representation of an Interpretation
-    """
-
-    def reducer(builder, token):
-        if isinstance(token, list):
-            builder += token
-        else:
-            if (
-                builder
-                and builder[-1] != grammar.DISJOINER
-                and token != grammar.DISJOINER
-                and builder[-1] != grammar.BOUNDARY
-                and token != grammar.BOUNDARY
-            ):
-                builder.append(grammar.BOUNDARY)
-            if token != grammar.BOUNDARY:
-                builder.append(token)
-        return builder
-
-    return "".join(reduce(reducer, interpretation, []))
 
 
 class GrasciiFlattener(Transformer):
 
-    """This is a Lark Transformer that converts a parsed Grascii string
-    into an ``Interpretation``. An ``Interpretation`` is a list of terminals and
-    annotation lists. Each terminal is its own element in the interpretation,
-    but sequences of annotation terminals are grouped into their own sublist.
-    """
+    """A Lark Transformer that converts a parsed Grascii string into an
+    ``Interpretation``."""
 
     def __init__(
         self, preserve_boundaries: bool = False, start_rule: str = "start"
@@ -87,35 +55,6 @@ class GrasciiFlattener(Transformer):
                 for token in child:
                     result.append(token)
         return result
-
-
-@lru_cache(maxsize=1)
-def get_grascii_regex_str() -> str:
-    """Get a string that can be compiled into a regular expression that matches
-    Grascii strings.
-    """
-    parser = Lark.open_from_package("grascii.grammars", "grascii_regex.lark")
-    return parser.get_terminal("GRASCII").pattern.value
-
-
-class GrasciiValidator:
-    """Validates Grascii strings.
-
-    :param ignore_case: Whether to ignore the case of the Grascii string. If
-        ``False``, the Grascii string must be uppercase.
-    :type ignore_case: bool
-    """
-
-    def __init__(self, ignore_case: bool = False) -> None:
-        self._regex = re.compile(get_grascii_regex_str(), re.I if ignore_case else 0)
-
-    def validate(self, grascii: str) -> bool:
-        """Check whether the given string is valid Grascii.
-
-        :param grascii: A string to check
-        :returns: bool
-        """
-        return bool(self._regex.fullmatch(grascii))
 
 
 class InvalidGrascii(Exception):

@@ -29,11 +29,8 @@ def create_grascii_check(ignore_case: bool = True) -> PipelineFunc:
         ``False``, the Grascii string must be uppercase.
     :type ignore_case: bool
     """
-    from grascii.parser import GrasciiValidator
+    from grascii.validator import GrasciiValidator
 
-    # Disable cache for now
-    # It could be enabled, but we have to be careful about clearing the
-    # cache after grammar changes
     validator = GrasciiValidator(ignore_case=ignore_case)
 
     def check_grascii(grascii: str, translation: str, logger: logging.LoggerAdapter):

@@ -309,13 +309,9 @@ class DictionaryBuilder:
 
     """A class that runs the build process for a grascii dictionary.
 
-    :param parse: Whether to enable parse checking of grascii strings.
-    :param words_file: A Path to a words file for spell checking
     :param count_words: Whether to enable word count validation.
     :param verbosity: Increase the output verbosity
     :param quiet: Suppress output
-    :type parse: bool
-    :type words_file: pathlib.Path
     :type count_words: bool
     :type verbosity: int
     :type quiet: bool

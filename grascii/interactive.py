@@ -17,7 +17,8 @@ from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
 from grascii import metrics, regen
 from grascii.dictionary import Dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
-from grascii.parser import Interpretation, InvalidGrascii, interpretation_to_string
+from grascii.interpreter import Interpretation, interpretation_to_string
+from grascii.parser import InvalidGrascii
 from grascii.searchers import GrasciiSearcher
 
 T = TypeVar("T")

@@ -10,12 +10,8 @@ from grascii.dictionary.build import (
     DictionaryOutputOptions,
 )
 from grascii.dictionary.pipeline import PipelineFunc
-from grascii.parser import (
-    GrasciiParser,
-    GrasciiValidator,
-    Interpretation,
-    InvalidGrascii,
-    interpretation_to_string,
-)
+from grascii.interpreter import GrasciiInterpreter, interpretation_to_string
+from grascii.parser import GrasciiParser, InvalidGrascii
 from grascii.regen import SearchMode, Strictness
 from grascii.searchers import GrasciiSearcher, RegexSearcher, ReverseSearcher, Searcher
+from grascii.validator import GrasciiValidator

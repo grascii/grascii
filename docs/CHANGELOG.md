@@ -8,6 +8,7 @@
 - `--show-dictionary` option for `grascii search`
 - `Dictionary.dump` method to get all the entries in a dictionary
 - Direction annotations for `X`
+- `GrasciiInterpreter` for faster interpretations of Grascii strings
 
 ### Changed
 
@@ -17,10 +18,13 @@
 
 - Dropped Python 3.7 and 3.8 support
 - `DictionaryOutputOptions.package`
+- LALR compatibility for `grascii.lark`
 
 ### Fixed
 
 - Missing entries for `SS` and `XS` in `grammar.ANNOTATIONS`
+- Instances in which ``GrasciiParser`` would not generate the canonical
+  interpretation first
 
 ## 0.6.1 - 2024-12-27
 

@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import unittest
 
+from grascii.interpreter import GrasciiInterpreter, interpretation_to_string
 from grascii.outline import Outline
-from grascii.parser import GrasciiParser, interpretation_to_string
 
 
 class TestInferredDirections(unittest.TestCase):
-    parser = GrasciiParser()
+    interpreter = GrasciiInterpreter()
 
     def run_tests(self, tests):
         for test in tests:
             with self.subTest(word=test[0], expected=test[1]):
-                interpretation = next(
-                    self.parser.interpret(test[0], preserve_boundaries=True)
+                interpretation = self.interpreter.interpret(
+                    test[0], preserve_boundaries=True
                 )
                 outline = Outline(interpretation)
                 self.assertEqual(str(outline), test[1])
@@ -322,7 +322,7 @@ class TestInferredDirections(unittest.TestCase):
 
 
 class TestToInterpretation(unittest.TestCase):
-    parser = GrasciiParser()
+    interpreter = GrasciiInterpreter()
 
     def test_to_interpretation(self):
         tests = [
@@ -339,8 +339,8 @@ class TestToInterpretation(unittest.TestCase):
         ]
         for test in tests:
             with self.subTest(word=test[0], expected=test[1]):
-                interpretation = next(
-                    self.parser.interpret(test[0], preserve_boundaries=True)
+                interpretation = self.interpreter.interpret(
+                    test[0], preserve_boundaries=True
                 )
                 outline = Outline(interpretation)
                 self.assertEqual(

@@ -80,8 +80,8 @@ canonical interpretation:
 
    **Example**: ``NTN`` is ``N-TN``, not ``NT-N``.
 
-   **Why**: Gregg Shorthand Preanniversary Manual (1916), Lesson 8, General
-   Exercise, Note (b):
+   **Why**: Gregg Shorthand Preanniversary Manual (1916), Seventh Lesson,
+   General Exercise, Note (b):
 
      Where it is possble to use either *ten*, *den*, or *ent*, *end*, the *ten*,
      *den* blend is given the preference.

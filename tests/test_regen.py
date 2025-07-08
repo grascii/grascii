@@ -39,7 +39,7 @@ class TestAnnotationRegex(unittest.TestCase):
         self.check_strictness_low(annotations_o, texts_o)
         self.check_strictness_low(annotations_u, texts_u)
 
-    def test_strictness_low_circle_diphthong(self):
+    def test_strictness_low_i(self):
         annotations = [
             [],
             ["~"],
@@ -51,14 +51,24 @@ class TestAnnotationRegex(unittest.TestCase):
             ("I", "~"),
             ("I", "_"),
             ("I~|_"),
+        ]
+        self.check_strictness_low(annotations, texts)
+
+    def test_strictness_low_circle_diphthong(self):
+        annotations = [
+            [],
+            ["~"],
+            ["_"],
+        ]
+        texts = [
             ("A&E", ""),
             ("A&E", "~"),
             ("A&E", "_"),
-            ("A&E~|_"),
+            ("A&E~_"),
             ("A'E", ""),
             ("A'E", "~"),
             ("A'E", "_"),
-            ("A'E~|_"),
+            ("A'E~_"),
         ]
         self.check_strictness_low(annotations, texts)
 
@@ -89,6 +99,21 @@ class TestAnnotationRegex(unittest.TestCase):
             ("TH", ""),
             ("TH", "("),
             ("TH", "),"),
+        ]
+        self.check_strictness_low(annotations, texts)
+
+    def test_strictness_low_directed_consonant2(self):
+        annotations = [[], ["("], [")"]]
+        texts = [
+            ("X", ""),
+            ("X", "("),
+            ("X", ")"),
+            ("SS", ""),
+            ("SS", "("),
+            ("SS", ")"),
+            ("XS", ""),
+            ("XS", "("),
+            ("XS", ")"),
         ]
         self.check_strictness_low(annotations, texts)
 
@@ -145,8 +170,8 @@ class TestAnnotationRegex(unittest.TestCase):
         self.check_strictness_medium(["O"], tests1)
         self.check_strictness_medium(["U"], tests2)
 
-    def test_strictness_medium_circle_diphthong(self):
-        strokes = ["I", "A&E", "A&'"]
+    def test_strictness_medium_i(self):
+        strokes = ["I"]
         tests = [
             ([], [("", True), ("~", True), ("|", True), ("_", True), ("~|_", True)]),
             (
@@ -164,6 +189,25 @@ class TestAnnotationRegex(unittest.TestCase):
             (
                 ["~", "|", "_"],
                 [("", False), ("~", False), ("|", False), ("_", False), ("~|_", True)],
+            ),
+        ]
+        self.check_strictness_medium(strokes, tests)
+
+    def test_strictness_medium_circle_diphthong(self):
+        strokes = ["A&E", "A&'"]
+        tests = [
+            ([], [("", True), ("~", True), ("_", True), ("~_", True)]),
+            (
+                ["~"],
+                [("", False), ("~", True), ("_", False), ("~_", True)],
+            ),
+            (
+                ["_"],
+                [("", False), ("~", False), ("_", True), ("~_", True)],
+            ),
+            (
+                ["~", "_"],
+                [("", False), ("~", False), ("_", False), ("~_", True)],
             ),
         ]
         self.check_strictness_medium(strokes, tests)
@@ -237,6 +281,36 @@ class TestAnnotationRegex(unittest.TestCase):
         ]
         self.check_strictness_medium(strokes, tests)
 
+    def test_strictness_medium_directed_consonant2(self):
+        strokes = ["X", "SS", "XS"]
+        tests = [
+            (
+                [],
+                [
+                    ("", True),
+                    ("(", True),
+                    (")", True),
+                ],
+            ),
+            (
+                ["("],
+                [
+                    ("", False),
+                    ("(", True),
+                    (")", False),
+                ],
+            ),
+            (
+                [")"],
+                [
+                    ("", False),
+                    ("(", False),
+                    (")", True),
+                ],
+            ),
+        ]
+        self.check_strictness_medium(strokes, tests)
+
     def test_strictness_medium_oblique_consonant(self):
         tests = [
             ([], [("", True), (",", True)]),
@@ -292,8 +366,8 @@ class TestAnnotationRegex(unittest.TestCase):
         self.check_strictness_high(["O"], tests1)
         self.check_strictness_high(["U"], tests2)
 
-    def test_strictness_high_circle_diphthong(self):
-        strokes = ["I", "A&E", "A&'"]
+    def test_strictness_high_i(self):
+        strokes = ["I"]
         tests = [
             (
                 [],
@@ -314,6 +388,28 @@ class TestAnnotationRegex(unittest.TestCase):
             (
                 ["~", "|", "_"],
                 [("", False), ("~", False), ("|", False), ("_", False), ("~|_", True)],
+            ),
+        ]
+        self.check_strictness_high(strokes, tests)
+
+    def test_strictness_high_circle_diphthong(self):
+        strokes = ["A&E", "A&'"]
+        tests = [
+            (
+                [],
+                [("", True), ("~", False), ("_", False), ("~_", False)],
+            ),
+            (
+                ["~"],
+                [("", False), ("~", True), ("_", False), ("~_", False)],
+            ),
+            (
+                ["_"],
+                [("", False), ("~", False), ("_", True), ("~_", False)],
+            ),
+            (
+                ["~", "_"],
+                [("", False), ("~", False), ("_", False), ("~_", True)],
             ),
         ]
         self.check_strictness_high(strokes, tests)
@@ -382,6 +478,36 @@ class TestAnnotationRegex(unittest.TestCase):
                     (",", False),
                     ("(,", False),
                     ("),", True),
+                ],
+            ),
+        ]
+        self.check_strictness_high(strokes, tests)
+
+    def test_strictness_high_directed_consonant2(self):
+        strokes = ["X", "SS", "XS"]
+        tests = [
+            (
+                [],
+                [
+                    ("", True),
+                    ("(", False),
+                    (")", False),
+                ],
+            ),
+            (
+                ["("],
+                [
+                    ("", False),
+                    ("(", True),
+                    (")", False),
+                ],
+            ),
+            (
+                [")"],
+                [
+                    ("", False),
+                    ("(", False),
+                    (")", True),
                 ],
             ),
         ]

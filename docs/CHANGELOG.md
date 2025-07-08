@@ -23,6 +23,7 @@
 ### Fixed
 
 - Missing entries for `SS` and `XS` in `grammar.ANNOTATIONS`
+- Incorrect loop annotation for `A&'` and `A&E` in `grammar.ANNOTATIONS`
 - Instances in which ``GrasciiParser`` would not generate the canonical
   interpretation first
 

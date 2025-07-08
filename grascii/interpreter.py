@@ -8,9 +8,10 @@
 
 from __future__ import annotations
 
+import re
 from functools import reduce
 from itertools import chain
-from typing import List, Optional, Set, Tuple, Union
+from typing import List, Optional, Set, Union
 
 from grascii import grammar
 from grascii.validator import GrasciiValidator
@@ -25,55 +26,25 @@ def _get_annotation_set(stroke: str) -> Set[str]:
 
 
 """
-A list of prioritized groups of character replacements. Each element in a group
-contains a list of characters that make up a multi-character token and a set of
-exception annotations. A matching sequence of characters in the Grascii string
-is replaced by the corresponding multi-character token unless the following
-character is contained in the exception set.
+A dictionary of multi-character strokes to exception patterns.
+A matching sequence of characters in the Grascii string is treated as the
+corresponding multi-character stroke unless following characters match the
+exception pattern.
 """
-_replacements: List[List[Tuple[List[str], Set[str]]]] = [
-    [
-        (["C", "H"], set()),
-        (["S", "H"], set()),
-        (["T", "H"], set()),
-        (["A", "&", "'"], set()),
-        (["A", "&", "E"], set()),
-        (["M", "N"], set()),
-        (["M", "M"], set()),
-        (["E", "U"], _get_annotation_set("U") - _get_annotation_set("EU")),
-        (["A", "U"], _get_annotation_set("U") - _get_annotation_set("AU")),
-        (["O", "E"], _get_annotation_set("E") - _get_annotation_set("OE")),
-    ],
-    [
-        (["J", "N", "T"], set()),
-        (["J", "N", "D"], set()),
-        (["P", "N", "T"], set()),
-        (["P", "N", "D"], set()),
-        (["S", "S"], _get_annotation_set("S") - _get_annotation_set("SS")),
-        (["X", "S"], _get_annotation_set("S") - _get_annotation_set("XS")),
-    ],
-    [
-        (["T", "N"], set()),
-        (["D", "N"], set()),
-        (["T", "M"], set()),
-        (["D", "M"], set()),
-        (["N", "G"], set()),
-        (["N", "K"], set()),
-    ],
-    [
-        (["N", "T"], set()),
-        (["N", "D"], set()),
-        (["M", "T"], set()),
-        (["M", "D"], set()),
-        (["T", "D"], set()),
-        (["D", "T"], set()),
-        (["D", "D"], set()),
-        (["D", "F"], set()),
-        (["D", "V"], set()),
-        (["T", "V"], set()),
-        (["L", "D"], set()),
-    ],
-]
+_EXCEPTIONS = {
+    "EU": "[).,]",
+    "AU": "[).,]",
+    "OE": "[~|,.]",
+    "NT": "[HNM]",
+    "ND": "[NM]",
+    "MT": "[HNM]",
+    "MD": "[NM]",
+    "JNT": "[H]",
+    "PNT": "[H]",
+    "DT": "[H]",
+    "SS": "H|[)(]?,",
+    "XS": "H|[)(]?,",
+}
 
 
 class GrasciiInterpreter:
@@ -108,34 +79,38 @@ class GrasciiInterpreter:
         # For instance, we don't need to check for invalid characters or
         # invalid usages of annotations.
 
-        current = list(grascii)
+        tokens = []
+        i = 0
+        while i < len(grascii):
+            matched = False
+            # try matching 3-character strokes and then 2-character strokes
+            for size in range(3, 1, -1):
+                if i + size <= len(grascii):
+                    candidate = grascii[i : i + size]
+                    if candidate in grammar.STROKES:
+                        exception = _EXCEPTIONS.get(candidate)
+                        # Make sure the following characters do not prevent a match
+                        if (
+                            not exception
+                            or re.match(exception, grascii[i + size :]) is None
+                        ):
+                            matched = True
+                            tokens.append(candidate)
+                            i += size
+                            break
 
-        for group in _replacements:
-            next = []
+            if not matched:
+                # single-character stroke or other annotation or symbol
+                if grascii[i] != grammar.BOUNDARY or preserve_boundaries:
+                    tokens.append(grascii[i])
+                i += 1
 
-            i = 0
-            while i < len(current):
-                matched = False
-                for replacement, exceptions in group:
-                    end = i + len(replacement)
-                    is_match = end <= len(current) and replacement == current[i:end]
-                    no_exception = end >= len(current) or current[end] not in exceptions
-                    matched = is_match and no_exception
-                    if matched:
-                        next.append("".join(replacement))
-                        i += len(replacement)
-                        break
+        return self._tokens_to_interpretation(tokens)
 
-                if not matched:
-                    if preserve_boundaries or current[i] != grammar.BOUNDARY:
-                        next.append(current[i])
-                    i += 1
-
-            current = next
-
-        return self._tokens_to_interpretation(current)
-
-    def _tokens_to_interpretation(self, tokens: List[str]) -> Interpretation:
+    def _tokens_to_interpretation(
+        self,
+        tokens: List[str],
+    ) -> Interpretation:
         interpretation: Interpretation = []
         annotations: List[str] = []
 

@@ -13,27 +13,17 @@ consonant : standard_consonant
 
 standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
-	| CH | J | X
+	| CH | J
 
-blended_consonant.20 : _over_blend
-	| _men
-	| _gent
-	| _def
-	| _ses
+blended_consonant.20 : TN | DN | TM | DM
 	| NT | MT | ND | MD
+	| DF | DV | TV
+	| JNT | JND | PND | PNT
+	| MN | MM
 	| DT | TD | DD
+	| ( SS | XS ) direction?
 	| NG | NK
 	| LD
-
-_over_blend.20 : TN | DN | TM | DM
-_men.30 : MN | MM
-_gent.30 : JNT | JND | PND | PNT
-
-_ses : ( SS | XS ) direction?
-
-// this priority? ex. individual NDV
-// what about -ntive? NTV
-_def.-10 : DF | DV | TV
 
 annotatable_consonant : ( directed_consonant | SH ) OBLIQUE? | X direction?
 
@@ -84,10 +74,11 @@ TN : "TN"
 DN : "DN"
 TM : "TM"
 DM : "DM"
-NT : "NT"
-MT : "MT"
-ND : "ND"
-MD : "MD"
+// Prevent matching before N/M so that over blends are preferred
+NT : /NT(?![NM])/
+MT : /MT(?![NM])/
+ND : /ND(?![NM])/
+MD : /MD(?![NM])/
 DF : "DF"
 DV : "DV"
 TV : "TV"

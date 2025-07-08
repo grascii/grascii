@@ -18,8 +18,9 @@ class TestGrasciiInterpreter:
     @pytest.mark.parametrize(
         "grascii,expected,preserve_boundaries",
         [
-            ("DTN", ["D", "TN"], False),
+            ("DTN", ["DT", "N"], False),
             ("NDM", ["N", "DM"], False),
+            ("ND-M", ["ND", "M"], False),
             ("TMD", ["TM", "D"], False),
             ("SSH", ["S", "SH"], False),
             ("DTH", ["D", "TH"], False),
@@ -41,10 +42,16 @@ class TestGrasciiInterpreter:
             ("SS", ["SS"], False),
             ("SS)", ["SS", [")"]], False),
             ("SS,", ["S", "S", [","]], False),
+            ("SS),", ["S", "S", [")", ","]], False),
             ("AU)", ["A", "U", [")"]], False),
             ("OE~", ["O", "E", ["~"]], False),
             ("NDT", ["ND", "T"], False),
             ("MMN", ["MM", "N"], False),
+            ("LDN", ["LD", "N"], False),
+            ("TMN", ["TM", "N"], False),
+            ("DDN", ["DD", "N"], False),
+            ("NDV", ["ND", "V"], False),
+            ("NTDN", ["NT", "DN"], False),
         ],
     )
     def test_interpreter(
@@ -58,3 +65,32 @@ class TestGrasciiInterpreter:
         except InvalidGrascii:
             parser_result = None
         assert parser_result == expected
+
+    # def test_dictionary(self, interpreter, parser):
+    #     from grascii.dictionary.build import DictionaryBuilder
+    #     from pathlib import Path
+    #
+    #     def inter(grascii, transalation, _):
+    #         interpreter_result = interpreter.interpret(grascii, True)
+    #
+    #         try:
+    #             parser_result = next(parser.interpret(grascii, True))
+    #         except InvalidGrascii:
+    #             parser_result = None
+    #
+    #         if interpreter_result != parser_result:
+    #             failures.append([interpreter_result, parser_result])
+    #
+    #         return grascii, transalation
+    #
+    #     failures = []
+    #
+    #     builder = DictionaryBuilder()
+    #     builder = DictionaryBuilder(
+    #         pipeline=[inter]
+    #     )
+    #     inputs = Path("dictionaries/builtins/preanniversary-phrases/").glob("*.txt")
+    #     builder.build(inputs, None)
+    #
+    #     print(failures)
+    #     assert not failures

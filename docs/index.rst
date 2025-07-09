@@ -9,6 +9,7 @@ Welcome to Grascii's documentation!
    language
    interpretation
    gsearch
+   dephrase
    dictionary
    configuration
    similarity

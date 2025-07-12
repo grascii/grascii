@@ -16,6 +16,7 @@
 - `grascii dephrase` is a first-class command
 - `dephrase` streams results in a more logical order
 - Added `AU`, `EU`, and `OE` to similarity graph with edge between `AU` and `EU`
+- Reverse search to consider hyphens as word boundaries
 
 ### Removed
 

@@ -208,6 +208,11 @@ class TestReverseSearcher(unittest.TestCase):
         result_count = len(searcher.sorted_search(reverse="ag+.*"))
         self.assertEqual(result_count, 0)
 
+    def test_hyphen(self):
+        searcher = ReverseSearcher(dictionaries=[output_dir])
+        result_count = len(searcher.sorted_search(reverse="law"))
+        self.assertEqual(result_count, 3)
+
 
 class TestRegexSeacrher(unittest.TestCase):
     def test_dictionary_not_found(self):

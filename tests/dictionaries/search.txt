@@ -13,6 +13,7 @@ SABTASH Sabotage
 IN Iron
 FTH Forth
 STN Stun
+SNLO Son-in-law
 SHNT Shunt
 ABTL Abuttal
 BF'ND Beforehand
@@ -33,6 +34,7 @@ CHEPMNK Chipmunk
 A~MAM Armament
 TID Tide
 JENRATR Generator
+LOL Lawless
 FND Found
 'ABT A Habit
 'ABT A Habit Time
@@ -50,3 +52,4 @@ APE~TR Aperture
 ABTM Abutment
 SABTH Sabbath
 FBDN Forbidden
+SVLO Civil Law

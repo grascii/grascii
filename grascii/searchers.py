@@ -274,7 +274,7 @@ class ReverseSearcher(RegexSearcher):
         escaped_word = re.escape(word)
         kwargs["regexp"] = (
             r"(?i)(?P<grascii>.+?\s+)"
-            + f"(?P<translation>(.*\\s)?(?P<word>{escaped_word}).*)(\\s|\\Z)"
+            + rf"(?P<translation>(.*(\s|-))?(?P<word>{escaped_word}).*)(\s|\Z)"
         )
 
         return super().search(**kwargs)

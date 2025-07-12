@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from typing import Dict, Hashable, Iterable, List, Set, Tuple, cast
+
+from grascii import grammar
 
 _equiv_nodes: Dict[str, Tuple[str, ...]] = {
     "S": ("S", "Z"),
@@ -35,7 +38,13 @@ def get_node(stroke: str) -> Tuple[str, ...]:
     return _equiv_nodes.get(stroke, (stroke,))
 
 
-_disconnected_nodes: List[Hashable] = [("O",), ("U",), get_node("PNT"), get_node("DF")]
+_disconnected_nodes: List[Hashable] = [
+    ("O",),
+    ("U",),
+    ("OE",),
+    get_node("PNT"),
+    get_node("DF"),
+]
 
 _edges: List[Tuple[str, str]] = [
     ("K", "G"),
@@ -50,6 +59,7 @@ _edges: List[Tuple[str, str]] = [
     ("A", "A&'"),
     ("A", "A&E"),
     ("A&'", "A&E"),
+    ("AU", "EU"),
     ("NK", "N"),
     ("N", "M"),
     ("M", "MN"),
@@ -158,6 +168,8 @@ _sg.add_edges(_trans_edges)
 _sg.add_nodes(_disconnected_nodes)
 
 
+# cache # of strokes * the number of uncertainty values
+@lru_cache(maxsize=len(grammar.STROKES) * 3)
 def get_similar(stroke: str, distance: int) -> Set[Tuple]:
     """Get a set of all strokes within a distance to the
     given node.

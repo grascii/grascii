@@ -16,6 +16,7 @@ class TestLessonPhrases(unittest.TestCase):
         "phrases.lark",
         parser="earley",
         ambiguity="explicit",
+        lexer="dynamic_complete",
         tree_class=CountedTree,
     )
 
@@ -80,7 +81,6 @@ class TestLessonPhrases(unittest.TestCase):
     def test_lesson11d(self):
         self._test_lesson("11d")
 
-    @unittest.skip("fix these later")
     def test_lesson11e(self):
         self._test_lesson("11e")
 

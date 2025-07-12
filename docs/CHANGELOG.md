@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.7.0 - 2025-07-12
+
 ### Added
 
 - `preanniversary-phrases` as a builtin dictionary and default search dictionary

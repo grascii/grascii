@@ -4,7 +4,7 @@ conjunction : AND | THAT
 common_verb : BE | HAVE | PAY | FAVOR | PLEASE | BELIEVE | HONOR
 	| RECEIVE | LOOK | SEE | SHIP | REACH | LIKE | REPRESENT | SELL | FIND
 	| SAY | TOLD | WIRE | WRITE | INCLOSE | THINK | WANT | SEND | THANK
-  | DRAW | REPORT | HEAR | LEARN | ACKNOWLEDGE
+  | DRAW | REPORT | HEAR | LEARN | ACKNOWLEDGE | KNOW
 
 unit : MINUTES | HOURS| DAYS | WEEKS | MONTHS | YEARS
 
@@ -79,6 +79,7 @@ HEAR: ASPIRATE? "E"? "R"
 LEARN: "LEN"
 ACKNOWLEDGE: "AK"
 TOLD : "TO"
+KNOW : /(?<=N)O|NO/
 
 // common units
 MINUTES : "MNET" "S"?
@@ -233,7 +234,7 @@ TWO : "TU"
 THREE : "TH)E"
 
 // miscellaneous
-NOT : "N"
+NOT : "N" "T"?
 THAT : "THA"
 ASPIRATE : "'"
 SUCH : "SCH"
@@ -255,3 +256,4 @@ to_do : DO | DOES
 DO : "D" "U"?
 DOES : "DUS"
 IF : "EF"
+DONT: "DON"

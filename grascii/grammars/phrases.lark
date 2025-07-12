@@ -16,7 +16,10 @@ start : subject_phrase
 subject_phrase : conditional? ((pronoun (aux_phrase
 	| (to_be NOT? (adjective* | adjective+ opt_to verb?))
 	| (to_have | auxiliary | to_do) NOT?))
-	| (pronoun verb to? verb? noun?))
+	| (pronoun verb to? verb? noun?)
+	| (pronoun (do_not | DONT) verb?))
+
+do_not: DO NOT?
 
 prep_phrase : preposition ( adjective+ | noun | adverb )
 
@@ -78,6 +81,6 @@ command_phrase : command ( DO? NOT? verb noun? | noun )
 conjunctive_phrase : conjunction ( subject_phrase
 	| adverb_phrase | to_be | preposition | adjective)
 
-%import .vocab (DO, NOT, IN, RECEIPT, AS, MY, DEAR, YOURS, VERY, BE, BEEN, ABLE, SUCH, POSSIBLE, AGO, HAVE, YOUR, OF)
+%import .vocab (DO, NOT, IN, RECEIPT, AS, MY, DEAR, YOURS, VERY, BE, BEEN, ABLE, SUCH, POSSIBLE, AGO, HAVE, YOUR, OF, DONT)
 
 %import .vocab (common_verb, conjunction, unit, common_noun, pronoun, to_be, auxiliary, common_adjective, preposition, article, as_adj, omitted_to_verb, omitted_to_noun, title, sal_adverb, interrogative, adverb, conditional, quantifier, to_have, to_do, to, command)

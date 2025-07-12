@@ -112,6 +112,9 @@ class PhraseFlattener(Transformer):
         interp = self._grascii_flattener.transform(tree)
         return self._search_grascii(interpretation_to_string(interp))
 
+    def DONT(self, token):
+        return self.create_token("DON'T", token.value)
+
     def __default__(self, data, children, meta):
         result = []
         for child in children:

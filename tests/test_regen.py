@@ -1272,7 +1272,17 @@ class TestUncertaintyRegex(unittest.TestCase):
 
     def test_uncertainty_zero(self):
         tests = [
-            ("A", [("A", True), ("E", False), ("I", False)]),
+            (
+                "A",
+                [
+                    ("A", True),
+                    ("E", False),
+                    ("I", False),
+                    ("A&'", False),
+                    ("A&E", False),
+                ],
+            ),
+            ("AU", [("AU", True), ("EU", False)]),
             (
                 "NT",
                 [
@@ -1305,7 +1315,11 @@ class TestUncertaintyRegex(unittest.TestCase):
 
     def test_uncertainty_one(self):
         tests = [
-            ("A", [("A", True), ("E", True), ("I", True)]),
+            (
+                "A",
+                [("A", True), ("E", True), ("I", True), ("A&'", True), ("A&E", True)],
+            ),
+            ("AU", [("AU", True), ("EU", True)]),
             (
                 "NT",
                 [("NT", True), ("ND", True), ("TH", True), ("MT", True), ("MD", True)],
@@ -1332,7 +1346,11 @@ class TestUncertaintyRegex(unittest.TestCase):
 
     def test_uncertainty_two(self):
         tests = [
-            ("A", [("A", True), ("E", True), ("I", True)]),
+            (
+                "A",
+                [("A", True), ("E", True), ("I", True), ("A&'", True), ("A&E", True)],
+            ),
+            ("AU", [("AU", True), ("EU", True)]),
             (
                 "NT",
                 [("NT", True), ("ND", True), ("TH", True), ("MT", True), ("MD", True)],

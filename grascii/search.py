@@ -31,7 +31,7 @@ except ImportError:
     pass
 
 
-description = "Search a Grascii Dictionary"
+description = "Search Grascii dictionaries"
 
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:

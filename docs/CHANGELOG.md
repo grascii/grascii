@@ -13,6 +13,8 @@
 ### Changed
 
 - Updated dictionaries to [2025.06.30](https://github.com/grascii/dictionaries/tree/2025.06.30).
+- `grascii dephrase` is a first-class command
+- `dephrase` streams results in a more logical order
 
 ### Removed
 

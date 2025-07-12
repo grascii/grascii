@@ -144,16 +144,18 @@ You can also write, build, and install your own custom dictionaries.
 
 For more information, see `dictionary <https://grascii.readthedocs.io/en/latest/dictionary.html>`_.
 
-Grascii Dephrase (Experimental)
-*******************************
+Grascii Dephrase
+****************
 
-Grascii includes an experimental phrase parsing module.
+Grascii also includes a phrase parsing tool.
 
 It attempts to give the phrase for the most common phrase constructions in
 Gregg Shorthand and provide suggestions for never before seen phrases::
 
-    $ python -m grascii.dephrase AVNBA
+    $ grascii dephrase AVNBA
     I HAVE NOT BEEN ABLE
+
+For more examples and usage, see `dephrase <https://grascii.readthedocs.io/en/latest/dephrase.html>`_.
 
 Documentation
 *************

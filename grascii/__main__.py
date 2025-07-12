@@ -6,7 +6,7 @@ import argparse
 import signal
 import sys
 
-from grascii import APP_NAME, __version__, config, dictionary, search
+from grascii import APP_NAME, __version__, config, dephrase, dictionary, search
 
 
 def main() -> None:
@@ -30,6 +30,12 @@ def main() -> None:
     )
     search.build_argparser(search_parser)
     search_parser.set_defaults(func=search.cli_search)
+
+    dephrase_parser = subparsers.add_parser(
+        "dephrase", description=dephrase.description, help=dephrase.description
+    )
+    dephrase.build_argparser(dephrase_parser)
+    dephrase_parser.set_defaults(func=dephrase.cli_dephrase)
 
     dictionary_parser = subparsers.add_parser(
         "dictionary",

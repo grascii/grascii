@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import sys
 from functools import lru_cache
-from typing import Set
+from typing import Iterable, Set
 
 from lark import Lark, Token, Transformer, UnexpectedInput
 from lark.visitors import VisitError, v_args
@@ -13,11 +13,18 @@ from grascii.lark_ambig_tools import Disambiguator
 from grascii.parser import GrasciiFlattener
 from grascii.searchers import GrasciiSearcher
 
-description = "Decipher a shorthand phrase."
+description = "Decipher shorthand phrases"
 
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
-    argparser.add_argument("phrase", action="store", help="The phrase to decipher")
+    """Configure an ArgumentParser parser to parse the dephrase command-line
+    options.
+
+    :param argparser: A fresh ArgumentParser to configure.
+    """
+    argparser.add_argument(
+        "phrase", action="store", help="A Grascii phrase to decipher"
+    )
     argparser.add_argument(
         "-a",
         "--aggressive",
@@ -34,10 +41,14 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
 
 
 class NoWordFound(Exception):
+    """Exception thrown by PhraseFlattener when a Grascii search produces no results"""
+
     pass
 
 
 class StripNameSpace(Transformer):
+    """A Lark transformer that removes a namespace prefix from rules"""
+
     def __init__(self, namespace):
         self.namespace = namespace + "__"
 
@@ -48,6 +59,9 @@ class StripNameSpace(Transformer):
 
 
 class PhraseFlattener(Transformer):
+    """A Lark transformer that converts a tree from a phrase grammar into a
+    possible translation of the phrase."""
+
     optionals = {
         "opt_to": "TO",
         "opt_in": "IN",
@@ -112,7 +126,16 @@ class PhraseFlattener(Transformer):
         return result
 
 
-def dephrase(**kwargs) -> Set[str]:
+def dephrase(**kwargs) -> Iterable[str]:
+    """Decipher a shorthand phrase.
+
+    :param phrase: A Grascii string to dephrase. (Required)
+    :param aggressive: A flag enabling a more intense dephrasing strategy.
+    :type phrase: str
+    :type aggressive: bool
+
+    :returns: A generator of possible dephrasings
+    """
     aggressive = kwargs.get("aggressive", False)
     grammar_name = "phrases_extended.lark" if aggressive else "phrases.lark"
     parser = Lark.open_from_package(
@@ -125,12 +148,12 @@ def dephrase(**kwargs) -> Set[str]:
     trans = PhraseFlattener()
     if aggressive:
         trans = StripNameSpace("phrases") * trans
-    parses: Set[str] = set()
     try:
         tree = parser.parse(kwargs["phrase"].upper())
     except UnexpectedInput:
-        return parses
+        return
 
+    parses: Set[str] = set()
     trees = Disambiguator().visit(tree)
     for t in trees:
         try:
@@ -140,11 +163,17 @@ def dephrase(**kwargs) -> Set[str]:
                 continue
             raise e  # no cov
         else:
-            parses.add(" ".join(tokens))
-    return parses
+            parse = " ".join(tokens)
+            if parse not in parses:
+                yield parse
+            parses.add(parse)
 
 
 def cli_dephrase(args: argparse.Namespace) -> None:
+    """Run dephrase using arguments parsed from the command line.
+
+    :param args: A namespace of parsed arguments.
+    """
     if len(args.phrase) > 8 and args.aggressive and not args.ignore_limit:
         print(
             "Phrases more than 8 characters in length may take",
@@ -153,17 +182,22 @@ def cli_dephrase(args: argparse.Namespace) -> None:
         )
         print("To ignore this warning use '--ignore-limit'.")
         return
+
     results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
-    if results:
-        for result in results:
-            print(result)
-    else:
+    has_result = False
+    for result in results:
+        has_result = True
+        print(result)
+
+    if not has_result:
         print("No results")
         if not args.aggressive:
             print("You may try again with --aggressive to consider more possibilities.")
 
 
 def main() -> None:
+    """Run dephrase using arguments retrieved from sys.argv."""
+
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])

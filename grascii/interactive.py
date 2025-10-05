@@ -8,8 +8,10 @@ from __future__ import annotations
 try:
     import questionary
     from questionary.prompts.common import Choice
-except ImportError:
-    raise ImportError("Grascii: interactive extra dependencies are not installed")
+except ImportError as e:
+    raise ImportError(
+        "Grascii: interactive extra dependencies are not installed"
+    ) from e
 
 import sys
 from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
@@ -254,10 +256,7 @@ class InteractiveSearcher(GrasciiSearcher):
             aspirate_mode=self.aspirate_mode,
             disjoiner_mode=self.disjoiner_mode,
         )
-        if index == 0:
-            interps = interpretations
-        else:
-            interps = interpretations[index - 1 : index]
+        interps = interpretations if index == 0 else interpretations[index - 1 : index]
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
         results = self.perform_search(patterns, starting_letters)

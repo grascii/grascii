@@ -7,11 +7,13 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-from typing import Iterable, List, Pattern, Set, Tuple
+from typing import TYPE_CHECKING, Iterable, List, Pattern, Set, Tuple
 
 from grascii import grammar
-from grascii.parser import Interpretation
 from grascii.similarities import get_similar
+
+if TYPE_CHECKING:
+    from grascii.interpreter import Interpretation
 
 
 class SearchMode(Enum):
@@ -98,7 +100,7 @@ class RegexBuilder:
         return stroke + "".join([pack(tup) for tup in possible])
 
     def make_uncertainty_regex(
-        self, stroke: str, uncertainty: int, annotations: list = []
+        self, stroke: str, uncertainty: int, annotations: Iterable[str] = ()
     ) -> str:
         """Create a regular expression that matches a stroke within a given
         uncertainty while applying provided annotations.
@@ -143,7 +145,7 @@ class RegexBuilder:
 
             # match up to two aspirates at the beginning of a word
             if self.aspirate_mode is Strictness.LOW:
-                for j in range(2):
+                for _ in range(2):
                     builder.append(aspirate)
                     builder.append("?")
             elif self.aspirate_mode is Strictness.MEDIUM:
@@ -152,7 +154,7 @@ class RegexBuilder:
                     builder.append(aspirate)
                     i += 1
                 if i < 2:
-                    for j in range(2 - i):
+                    for _ in range(2 - i):
                         builder.append(aspirate)
                         builder.append("?")
         elif self.search_mode is SearchMode.CONTAIN:
@@ -232,7 +234,7 @@ class RegexBuilder:
                 or self.aspirate_mode is Strictness.MEDIUM
             ):
                 if builder[-1] != aspirate:
-                    for j in range(2):
+                    for _ in range(2):
                         builder.append(aspirate)
                         builder.append("?")
                 elif builder[-2] != aspirate:

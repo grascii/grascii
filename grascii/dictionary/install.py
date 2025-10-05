@@ -56,10 +56,7 @@ def install_dictionary(
 
     :returns: The installed name of the dictionary.
     """
-    if name is None:
-        name = dictionary.name
-    else:
-        name = get_dictionary_path_name(name)
+    name = dictionary.name if name is None else get_dictionary_path_name(name)
     destination = install_dir / name
     if destination.exists() and not force:
         raise DictionaryAlreadyExists(name)

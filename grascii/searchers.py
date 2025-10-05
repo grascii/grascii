@@ -2,6 +2,7 @@
 Contains the base class for Searchers as well as multiple concrete
 implementations of it.
 """
+
 from __future__ import annotations
 
 import re
@@ -24,7 +25,8 @@ from typing import (
 
 from grascii import defaults, grammar, metrics, regen
 from grascii.dictionary import Dictionary, DictionaryEntry
-from grascii.parser import GrasciiParser, Interpretation
+from grascii.interpreter import Interpretation
+from grascii.parser import GrasciiParser
 
 if TYPE_CHECKING:
     from grascii.metrics import Comparable
@@ -45,7 +47,6 @@ class SearchResult(Generic[IT]):
 
 
 class Searcher(ABC, Generic[IT]):
-
     """An abstract base class for objects that search Grascii dictionaries.
 
     :param dictionaries: The dictionaries to search.
@@ -113,7 +114,6 @@ class Searcher(ABC, Generic[IT]):
 
 
 class GrasciiSearcher(Searcher[Interpretation]):
-
     """A subclass of Searcher that performs a search given a Grascii string.
 
     :param dictionaries: The dictionaries to search.
@@ -225,7 +225,6 @@ class GrasciiSearcher(Searcher[Interpretation]):
 
 
 class RegexSearcher(Searcher[str]):
-
     """A subclass of Searcher that searches a grascii dictionary given
     a raw regular expression.
 
@@ -252,7 +251,6 @@ class RegexSearcher(Searcher[str]):
 
 
 class ReverseSearcher(RegexSearcher):
-
     """A subclass of RegexSearcher that searches a grascii dictionary
     given a word.
 

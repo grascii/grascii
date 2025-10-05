@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
 from shutil import rmtree
+from typing import TYPE_CHECKING
 
 from grascii.dictionary.common import (
     INSTALLATION_DIR,
     DictionaryNotFound,
     get_dictionary_path_name,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 description = "Uninstall a Grascii Dictionary"
 

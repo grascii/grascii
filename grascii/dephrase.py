@@ -98,7 +98,7 @@ class PhraseFlattener(Transformer):
     def short_to(self, children):
         return [self.create_token("TO")]
 
-    @lru_cache(maxsize=32)
+    @lru_cache(maxsize=32)  # noqa: B019
     def _search_grascii(self, grascii_str):
         results = self._grascii_searcher.sorted_search(grascii=grascii_str)
         if not results:

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List, NamedTuple, Optional
+from typing import TYPE_CHECKING, List, NamedTuple, Optional
 
 from grascii import grammar
-from grascii.parser import Interpretation
+
+if TYPE_CHECKING:
+    from grascii.interpreter import Interpretation
 
 
 class Direction(Enum):
@@ -109,7 +111,6 @@ class Stroke:
 
 
 class Outline:
-
     """
     An alternative to ``Interpretation`` as a representation of a
     Grascii string. It is structured as a linked list and is better for

@@ -179,4 +179,4 @@ def get_similar(stroke: str, distance: int) -> Set[Tuple]:
     :returns: A set of strokes grouped by equivalency.
     """
 
-    return cast(Set[Tuple], _sg.get_similar(get_node(stroke), distance))
+    return cast("Set[Tuple]", _sg.get_similar(get_node(stroke), distance))

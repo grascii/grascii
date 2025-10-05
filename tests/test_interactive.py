@@ -109,7 +109,7 @@ class TestMenus(InteractiveTester):
 
     def test_annotation_mode(self):
         self.navigate_to_settings()
-        for i in range(2):
+        for _i in range(2):
             self.c.send(DOWN)
         self.c.sendline()
         self.assertGreater(self.expect(["Annotation Mode"]), 0)
@@ -119,7 +119,7 @@ class TestMenus(InteractiveTester):
 
     def test_aspirate_mode(self):
         self.navigate_to_settings()
-        for i in range(3):
+        for _i in range(3):
             self.c.send(DOWN)
         self.c.sendline()
         self.assertGreater(self.expect(["Aspirate Mode"]), 0)
@@ -129,7 +129,7 @@ class TestMenus(InteractiveTester):
 
     def test_disjoiner_mode(self):
         self.navigate_to_settings()
-        for i in range(4):
+        for _i in range(4):
             self.c.send(DOWN)
         self.c.sendline()
         self.assertGreater(self.expect(["Disjoiner Mode"]), 0)
@@ -139,7 +139,7 @@ class TestMenus(InteractiveTester):
 
     def test_fix_first(self):
         self.navigate_to_settings()
-        for i in range(5):
+        for _i in range(5):
             self.c.send(DOWN)
         self.c.sendline()
         self.assertGreater(self.expect(["Fix First"]), 0)
@@ -148,7 +148,7 @@ class TestMenus(InteractiveTester):
 
     def test_dictionaries(self):
         self.navigate_to_settings()
-        for i in range(6):
+        for _i in range(6):
             self.c.send(DOWN)
         self.c.sendline()
         self.assertGreater(self.expect(["Choose Dictionaries"]), 0)
@@ -165,7 +165,7 @@ class TestMenus(InteractiveTester):
 class TestSearch(InteractiveTester):
     def test_no_search_input(self):
         self.new_search()
-        for i in range(4):
+        for _i in range(4):
             self.c.sendline()
             self.assertGreater(self.expect(["Enter Search:"]), 0)
 
@@ -323,7 +323,7 @@ class TestCancel(InteractiveTester):
     def test_annotation_mode(self):
         self.navigate_to_settings()
         self.assert_on_settings()
-        for i in range(2):
+        for _i in range(2):
             self.c.send(DOWN)
         self.c.sendline()
         self.cancel()
@@ -332,7 +332,7 @@ class TestCancel(InteractiveTester):
     def test_aspirate_mode(self):
         self.navigate_to_settings()
         self.assert_on_settings()
-        for i in range(3):
+        for _i in range(3):
             self.c.send(DOWN)
         self.c.sendline()
         self.cancel()
@@ -341,7 +341,7 @@ class TestCancel(InteractiveTester):
     def test_disjoiner_mode(self):
         self.navigate_to_settings()
         self.assert_on_settings()
-        for i in range(4):
+        for _i in range(4):
             self.c.send(DOWN)
         self.c.sendline()
         self.cancel()
@@ -350,7 +350,7 @@ class TestCancel(InteractiveTester):
     def test_fix_first(self):
         self.navigate_to_settings()
         self.assert_on_settings()
-        for i in range(5):
+        for _i in range(5):
             self.c.send(DOWN)
         self.c.sendline()
         self.cancel()
@@ -359,7 +359,7 @@ class TestCancel(InteractiveTester):
     def test_dictionaries(self):
         self.navigate_to_settings()
         self.assert_on_settings()
-        for i in range(6):
+        for _i in range(6):
             self.c.send(DOWN)
         self.c.sendline()
         self.cancel()

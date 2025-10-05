@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import logging
-import os
 from pathlib import Path
-from typing import Callable, Tuple
+from typing import TYPE_CHECKING, Callable, Tuple
+
+if TYPE_CHECKING:
+    import os
 
 PipelineFunc = Callable[[str, str, logging.LoggerAdapter], Tuple[str, str]]
 """A function for dictionary builds that checks and/or

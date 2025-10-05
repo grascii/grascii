@@ -276,14 +276,14 @@ class BuildSummary:
     time: float
     warnings: List[BuildMessage]
     errors: List[BuildMessage]
-    output_dir: Optional[os.PathLike]
+    output_dir: Optional[os.PathLike[str]]
     entry_counts: Optional[Dict[str, int]]
 
     def __str__(self):
         builder = []
 
         total = 0
-        if self.entry_counts is not None:
+        if self.entry_counts is not None and self.output_dir is not None:
             for key, val in self.entry_counts.items():
                 total += val
                 builder.append(
@@ -306,7 +306,6 @@ DEFAULT_PIPELINE: List[PipelineFunc] = [remove_boundaries, standardize_case]
 
 
 class DictionaryBuilder:
-
     """A class that runs the build process for a grascii dictionary.
 
     :param count_words: Whether to enable word count validation.
@@ -402,33 +401,26 @@ class DictionaryBuilder:
             else nullcontext(lambda x, y: None)
         )
 
-        with out as write_entry:
-            with FileInput(infiles) as f:
-                for line in f:
-                    self._logger.set_context(f.filename(), line, f.filelineno())
-                    parsed = self._parse_line(line)
-                    if not parsed:
-                        continue
-                    grascii, translation = parsed
+        with out as write_entry, FileInput(infiles) as f:
+            for line in f:
+                self._logger.set_context(f.filename(), line, f.filelineno())
+                parsed = self._parse_line(line)
+                if not parsed:
+                    continue
+                grascii, translation = parsed
 
-                    try:
-                        for func in self.pipeline:
-                            grascii, translation = func(
-                                grascii, translation, self._logger
-                            )
-                    except CancelPipeline:
-                        self._logger.info(
-                            "Pipeline aborted for {grascii}, {translation}"
-                        )
-                        continue
+                try:
+                    for func in self.pipeline:
+                        grascii, translation = func(grascii, translation, self._logger)
+                except CancelPipeline:
+                    self._logger.info("Pipeline aborted for {grascii}, {translation}")
+                    continue
 
-                    try:
-                        write_entry(grascii, translation)
-                    except NoMatchingOutputFile:
-                        self._logger.error(
-                            f"No output file for {grascii} {translation}"
-                        )
-                        continue
+                try:
+                    write_entry(grascii, translation)
+                except NoMatchingOutputFile:
+                    self._logger.error(f"No output file for {grascii} {translation}")
+                    continue
 
         end_time = time.perf_counter()
         total_time = end_time - start_time

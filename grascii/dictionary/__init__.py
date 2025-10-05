@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-import argparse
-import os
 from enum import Enum
 from importlib.resources import files
 from pathlib import Path
-from typing import Any, List, NamedTuple, Optional, TextIO, Union
+from typing import TYPE_CHECKING, Any, List, NamedTuple, Optional, TextIO, Union
 
-from grascii.dictionary import build, install
+from grascii.dictionary import build, install, uninstall
 from grascii.dictionary import list as list_dict
-from grascii.dictionary import uninstall
 from grascii.dictionary.common import (
     BUILTINS_PACKAGE,
     INSTALLATION_DIR,
@@ -22,6 +19,10 @@ from grascii.dictionary.install import install_dictionary  # noqa: F401
 from grascii.dictionary.list import get_built_ins, get_installed  # noqa: F401
 from grascii.dictionary.uninstall import uninstall_dictionary  # noqa: F401
 from grascii.grammar import HARD_CHARACTERS
+
+if TYPE_CHECKING:
+    import argparse
+    import os
 
 description = "Create and manage Grascii dictionaries"
 

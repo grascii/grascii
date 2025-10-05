@@ -20,10 +20,10 @@ from typing import (
 )
 
 from grascii import grammar
-from grascii.parser import Interpretation
 from grascii.similarities import get_similar
 
 if TYPE_CHECKING:
+    from grascii.interpreter import Interpretation
     from grascii.searchers import SearchResult
 
     class Comparable(Protocol):

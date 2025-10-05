@@ -1,16 +1,17 @@
 from __future__ import annotations
 
-from typing import Iterator, List
+from typing import TYPE_CHECKING, Iterator, List
 
 from lark import Lark, Token, Transformer, Tree, UnexpectedInput
 
 from grascii import grammar
-from grascii.interpreter import Interpretation
 from grascii.lark_ambig_tools import Disambiguator
+
+if TYPE_CHECKING:
+    from grascii.interpreter import Interpretation
 
 
 class GrasciiFlattener(Transformer):
-
     """A Lark Transformer that converts a parsed Grascii string into an
     ``Interpretation``."""
 
@@ -83,7 +84,7 @@ class GrasciiParser:
         try:
             return self._parser.parse(grascii)
         except UnexpectedInput as ui:
-            raise InvalidGrascii(grascii, ui)
+            raise InvalidGrascii(grascii, ui) from ui
 
     def interpret(
         self, grascii: str, preserve_boundaries: bool = False

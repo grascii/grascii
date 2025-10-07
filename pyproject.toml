@@ -2,6 +2,80 @@
 requires = ["setuptools", "wheel", "lark~=1.0", "platformdirs~=4.0"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "grascii"
+dynamic = ["version"]
+dependencies = [
+  "lark>=1.1.8, ==1.*",
+  "platformdirs~=4.0",
+]
+requires-python = ">= 3.9"
+authors = [{name = "chanicpanic"}]
+description = "A language with tools to facilitate the study of Gregg Shorthand."
+readme = "docs/README.rst"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["shorthand", "gregg shorthand", "dictionary"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: End Users/Desktop",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Text Processing :: General",
+  "Topic :: Text Processing :: Linguistic",
+]
+
+[project.optional-dependencies]
+interactive = ["questionary>=1.5.1"]
+docs = [
+  "Sphinx==7.4.7",
+  "sphinx-rtd-theme==3.0.2",
+  "sphinxcontrib-apidoc==0.6.0",
+  "myst-parser==3.0.1",
+]
+tests = [
+  "pexpect~=4.0; platform_system!='Windows'",
+  "pytest~=8.4",
+  "pytest-cov~=6.0",
+  "pytest-subtests~=0.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/grascii/grascii"
+Documentation = "https://grascii.readthedocs.org"
+Repository = "https://github.com/grascii/grascii.git"
+Issues = "https://github.com/grascii/grascii/issues"
+Changelog = "https://github.com/grascii/grascii/blob/master/docs/CHANGELOG.md"
+
+[project.scripts]
+grascii = "grascii.__main__:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "grascii.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["grascii*"]
+
+[tool.setuptools.package-data]
+grascii = [
+  "defaults.conf",
+  "grammars/*.lark",
+]
+"grascii.dictionary" = [
+  "preanniversary/*",
+  "preanniversary-phrases/*"
+]
+
 [tool.pytest.ini_options]
 markers = [
   "slow: mark test as slow."

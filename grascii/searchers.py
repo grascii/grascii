@@ -54,11 +54,9 @@ class Searcher(ABC, Generic[IT]):
     """
 
     def __init__(self, **kwargs: Any) -> None:
-        dictionaries = (
-            kwargs.get("dictionaries")
-            if kwargs.get("dictionaries")
-            else defaults.SEARCH["Dictionary"].split()
-        )
+        dictionaries = kwargs.get("dictionaries")
+        if not dictionaries:
+            dictionaries = defaults.SEARCH["Dictionary"].split()
         self.dictionaries = [Dictionary.new(name) for name in dictionaries]
 
     def perform_search(

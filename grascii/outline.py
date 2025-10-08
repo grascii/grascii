@@ -119,15 +119,15 @@ class Outline:
     """
 
     def __init__(self, interpretation: Interpretation) -> None:
-        self.first = None
-        self.last = None
+        self.first: Optional[Stroke] = None
+        self.last: Optional[Stroke] = None
         self._build(interpretation)
         self._infer_directions()
 
     def _build(self, interpretation: Interpretation) -> None:
-        needs_next_consonant = []
-        needs_next_vowel = []
-        needs_next_char = []
+        needs_next_consonant: List[Stroke] = []
+        needs_next_vowel: List[Stroke] = []
+        needs_next_char: List[Stroke] = []
         prev_stroke = None
         prev_vowel = None
         prev_consonant = None
@@ -170,6 +170,7 @@ class Outline:
                 self.last = stroke
                 prev_stroke = stroke
             else:
+                assert prev_stroke is not None
                 prev_stroke.annotations = item.copy()
 
     def _infer_directions(self) -> None:

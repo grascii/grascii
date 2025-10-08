@@ -10,19 +10,12 @@ from __future__ import annotations
 
 import re
 from functools import reduce
-from itertools import chain
-from typing import List, Optional, Set, Union
+from typing import List, Optional, Union
 
 from grascii import grammar
 from grascii.validator import GrasciiValidator
 
 Interpretation = List[Union[str, List[str]]]
-
-
-def _get_annotation_set(stroke: str) -> Set[str]:
-    """Get a set of all annotations allowed on the given stroke."""
-    annotations = grammar.ANNOTATIONS.get(stroke, [])
-    return set(chain(*annotations))
 
 
 """

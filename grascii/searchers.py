@@ -7,19 +7,11 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
+from re import Match, Pattern
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Generic,
-    Iterable,
-    List,
-    Match,
-    Optional,
-    Pattern,
-    Sequence,
-    Set,
-    Tuple,
     TypeVar,
 )
 
@@ -29,6 +21,8 @@ from grascii.interpreter import Interpretation
 from grascii.parser import GrasciiParser
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Sequence
+
     from grascii.metrics import Comparable
 
 IT = TypeVar("IT")
@@ -37,7 +31,7 @@ IT = TypeVar("IT")
 class SearchResult(Generic[IT]):
     def __init__(
         self,
-        matches: List[Tuple[IT, Match[str]]],
+        matches: list[tuple[IT, Match[str]]],
         entry: DictionaryEntry,
         dictionary: Dictionary,
     ) -> None:
@@ -61,8 +55,8 @@ class Searcher(ABC, Generic[IT]):
 
     def perform_search(
         self,
-        patterns: Iterable[Tuple[IT, Pattern[str]]],
-        starting_letters: Set[str],
+        patterns: Iterable[tuple[IT, Pattern[str]]],
+        starting_letters: set[str],
     ) -> Iterable[SearchResult[IT]]:
         """Perform a search of a Grascii Dictionary.
 
@@ -91,7 +85,7 @@ class Searcher(ABC, Generic[IT]):
                             yield SearchResult(matches, entry, dictionary)
 
     @abstractmethod
-    def search(self, **kwargs: Any) -> Optional[Iterable[SearchResult[IT]]]:
+    def search(self, **kwargs: Any) -> Iterable[SearchResult[IT]] | None:
         """An abstract method that runs a search with the given search
         options and returns the results."""
         ...
@@ -166,7 +160,7 @@ class GrasciiSearcher(Searcher[Interpretation]):
             "interpretation", defaults.SEARCH["Interpretation"]
         )
 
-    def search(self, **kwargs: Any) -> Optional[Iterable[SearchResult[Interpretation]]]:
+    def search(self, **kwargs: Any) -> Iterable[SearchResult[Interpretation]] | None:
         """
         :param grascii: [Required] The grascii string to use in the search.
         :param uncertainty: The uncertainty of the grascii string.

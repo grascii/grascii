@@ -10,12 +10,11 @@ from __future__ import annotations
 
 import re
 from functools import reduce
-from typing import List, Optional, Union
 
 from grascii import grammar
 from grascii.validator import GrasciiValidator
 
-Interpretation = List[Union[str, List[str]]]
+Interpretation = list[str | list[str]]
 
 
 """
@@ -55,7 +54,7 @@ class GrasciiInterpreter:
 
     def interpret(
         self, grascii: str, preserve_boundaries: bool = False
-    ) -> Optional[Interpretation]:
+    ) -> Interpretation | None:
         """Determine the canonical interpretation of the provided Grascii string.
 
         :param grascii: A Grascii string to interpret
@@ -102,10 +101,10 @@ class GrasciiInterpreter:
 
     def _tokens_to_interpretation(
         self,
-        tokens: List[str],
+        tokens: list[str],
     ) -> Interpretation:
         interpretation: Interpretation = []
-        annotations: List[str] = []
+        annotations: list[str] = []
 
         for token in tokens:
             if token in grammar.ANNOTATION_CHARACTERS:

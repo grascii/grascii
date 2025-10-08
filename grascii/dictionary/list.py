@@ -3,9 +3,12 @@ from __future__ import annotations
 import argparse
 import sys
 from importlib.resources import files
-from typing import Collection
+from typing import TYPE_CHECKING
 
 from grascii.dictionary.common import INSTALLATION_DIR, get_dictionary_installed_name
+
+if TYPE_CHECKING:
+    from collections.abc import Collection
 
 description = "List built-in and installed dictionaries."
 

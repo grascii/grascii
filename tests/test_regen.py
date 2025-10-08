@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import re
 import unittest
-from typing import List, Tuple
 
 from grascii import grammar, regen
 
 
 class TestAnnotationRegex(unittest.TestCase):
     def check_strictness_low(
-        self, annotations: List[str], texts: List[Tuple[str, str]]
+        self, annotations: list[str], texts: list[tuple[str, str]]
     ):
         builder = regen.RegexBuilder(annotation_mode=regen.Strictness.LOW)
         for a in annotations:

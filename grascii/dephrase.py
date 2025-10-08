@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import sys
 from functools import lru_cache
-from typing import Iterable, Set
+from typing import TYPE_CHECKING
 
 from lark import Lark, Token, Transformer, UnexpectedInput
 from lark.exceptions import VisitError
@@ -13,6 +13,9 @@ from grascii.interpreter import interpretation_to_string
 from grascii.lark_ambig_tools import Disambiguator
 from grascii.parser import GrasciiFlattener
 from grascii.searchers import GrasciiSearcher
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 description = "Decipher shorthand phrases"
 
@@ -157,7 +160,7 @@ def dephrase(**kwargs) -> Iterable[str]:
     except UnexpectedInput:
         return
 
-    parses: Set[str] = set()
+    parses: set[str] = set()
     trees = Disambiguator().visit(tree)
     for t in trees:
         try:

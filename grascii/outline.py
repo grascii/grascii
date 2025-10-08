@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import TYPE_CHECKING, List, NamedTuple, Optional
+from typing import TYPE_CHECKING, NamedTuple
 
 from grascii import grammar
 
@@ -28,8 +28,8 @@ class Curve(Enum):
 
 
 class StrokeType(NamedTuple):
-    direction: Optional[Direction]
-    curve: Optional[Curve]
+    direction: Direction | None
+    curve: Curve | None
 
 
 class Stroke:
@@ -38,25 +38,25 @@ class Stroke:
     def __init__(
         self,
         stroke: str,
-        head_direction: Optional[Direction] = None,
-        head_curve: Optional[Curve] = None,
-        tail_direction: Optional[Direction] = None,
-        tail_curve: Optional[Curve] = None,
+        head_direction: Direction | None = None,
+        head_curve: Curve | None = None,
+        tail_direction: Direction | None = None,
+        tail_curve: Curve | None = None,
     ) -> None:
         self.stroke = stroke
         self.head_type = StrokeType(head_direction, head_curve)
         td = tail_direction if tail_direction else head_direction
         tc = tail_curve if tail_curve else head_curve
         self.tail_type = StrokeType(td, tc)
-        self.annotations: List[str] = []
-        self.next: Optional[Stroke] = None
-        self.prev: Optional[Stroke] = None
-        self.next_consonant: Optional[Stroke] = None
-        self.prev_consonant: Optional[Stroke] = None
-        self.next_vowel: Optional[Stroke] = None
-        self.prev_vowel: Optional[Stroke] = None
-        self.next_char: Optional[Stroke] = None
-        self.prev_char: Optional[Stroke] = None
+        self.annotations: list[str] = []
+        self.next: Stroke | None = None
+        self.prev: Stroke | None = None
+        self.next_consonant: Stroke | None = None
+        self.prev_consonant: Stroke | None = None
+        self.next_vowel: Stroke | None = None
+        self.prev_vowel: Stroke | None = None
+        self.next_char: Stroke | None = None
+        self.prev_char: Stroke | None = None
 
     def has_annotation(self, annotation: str) -> bool:
         return annotation in self.annotations
@@ -68,7 +68,7 @@ class Stroke:
         self.annotations.insert(0, annotation)
 
     @classmethod
-    def create(cls, stroke: str) -> "Stroke":
+    def create(cls, stroke: str) -> Stroke:
         if stroke in {"A", "E", "I", "A&'", "A&E"}:
             return cls(stroke, None, Curve.LOOP)
         if stroke in {"K", "G"}:
@@ -119,15 +119,15 @@ class Outline:
     """
 
     def __init__(self, interpretation: Interpretation) -> None:
-        self.first: Optional[Stroke] = None
-        self.last: Optional[Stroke] = None
+        self.first: Stroke | None = None
+        self.last: Stroke | None = None
         self._build(interpretation)
         self._infer_directions()
 
     def _build(self, interpretation: Interpretation) -> None:
-        needs_next_consonant: List[Stroke] = []
-        needs_next_vowel: List[Stroke] = []
-        needs_next_char: List[Stroke] = []
+        needs_next_consonant: list[Stroke] = []
+        needs_next_vowel: list[Stroke] = []
+        needs_next_char: list[Stroke] = []
         prev_stroke = None
         prev_vowel = None
         prev_consonant = None

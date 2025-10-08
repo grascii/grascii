@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Dict, Hashable, Iterable, List, Set, Tuple, cast
+from typing import TYPE_CHECKING, cast
 
 from grascii import grammar
 
-_equiv_nodes: Dict[str, Tuple[str, ...]] = {
+if TYPE_CHECKING:
+    from collections.abc import Hashable, Iterable
+
+_equiv_nodes: dict[str, tuple[str, ...]] = {
     "S": ("S", "Z"),
     "Z": ("S", "Z"),
     "TD": ("TD", "DT", "DD"),
@@ -33,12 +36,12 @@ _equiv_nodes: Dict[str, Tuple[str, ...]] = {
 }
 
 
-def get_node(stroke: str) -> Tuple[str, ...]:
+def get_node(stroke: str) -> tuple[str, ...]:
     """Get a tuple of all strokes equivalent to the given stroke."""
     return _equiv_nodes.get(stroke, (stroke,))
 
 
-_disconnected_nodes: List[Hashable] = [
+_disconnected_nodes: list[Hashable] = [
     ("O",),
     ("U",),
     ("OE",),
@@ -46,7 +49,7 @@ _disconnected_nodes: List[Hashable] = [
     get_node("DF"),
 ]
 
-_edges: List[Tuple[str, str]] = [
+_edges: list[tuple[str, str]] = [
     ("K", "G"),
     ("R", "L"),
     ("L", "LD"),
@@ -90,7 +93,7 @@ _edges: List[Tuple[str, str]] = [
     ("TH", "NT"),
 ]
 
-_trans_edges: List[Tuple[Hashable, Hashable]] = [
+_trans_edges: list[tuple[Hashable, Hashable]] = [
     (get_node(edge[0]), get_node(edge[1])) for edge in _edges
 ]
 
@@ -111,7 +114,7 @@ class _SimilarityGraph:
         if node not in self.nodes:
             self.nodes[node] = set()
 
-    def add_edge(self, edge: Tuple[Hashable, Hashable]) -> None:
+    def add_edge(self, edge: tuple[Hashable, Hashable]) -> None:
         """Add an edge to the graph. If either node does not exist
         in the graph, it is added.
 
@@ -133,7 +136,7 @@ class _SimilarityGraph:
         for node in nodes:
             self.add_node(node)
 
-    def add_edges(self, edges: Iterable[Tuple[Hashable, Hashable]]) -> None:
+    def add_edges(self, edges: Iterable[tuple[Hashable, Hashable]]) -> None:
         """Add a collection of edges to the graph.
 
         :param nodes: A collection of edges.
@@ -142,7 +145,7 @@ class _SimilarityGraph:
         for edge in edges:
             self.add_edge(edge)
 
-    def get_similar(self, node: Hashable, similarity: int) -> Set[Hashable]:
+    def get_similar(self, node: Hashable, similarity: int) -> set[Hashable]:
         """Get a set of all nodes within a distance of similarity to the
         given node.
 
@@ -170,7 +173,7 @@ _sg.add_nodes(_disconnected_nodes)
 
 # cache # of strokes * the number of uncertainty values
 @lru_cache(maxsize=len(grammar.STROKES) * 3)
-def get_similar(stroke: str, distance: int) -> Set[Tuple]:
+def get_similar(stroke: str, distance: int) -> set[tuple]:
     """Get a set of all strokes within a distance to the
     given node.
 
@@ -179,4 +182,4 @@ def get_similar(stroke: str, distance: int) -> Set[Tuple]:
     :returns: A set of strokes grouped by equivalency.
     """
 
-    return cast("Set[Tuple]", _sg.get_similar(get_node(stroke), distance))
+    return cast("set[tuple]", _sg.get_similar(get_node(stroke), distance))

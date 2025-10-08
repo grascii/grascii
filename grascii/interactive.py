@@ -14,7 +14,7 @@ except ImportError as e:
     ) from e
 
 import sys
-from typing import Callable, Iterable, List, Optional, Sequence, Tuple, TypeVar
+from typing import TYPE_CHECKING, TypeVar
 
 from grascii import metrics, regen
 from grascii.dictionary import Dictionary
@@ -22,6 +22,9 @@ from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.interpreter import Interpretation, interpretation_to_string
 from grascii.parser import InvalidGrascii
 from grascii.searchers import GrasciiSearcher
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Sequence
 
 T = TypeVar("T")
 
@@ -65,7 +68,7 @@ class InteractiveSearcher(GrasciiSearcher):
 
     def _choose_interpretation(
         self, interpretations: Sequence[Interpretation]
-    ) -> Optional[int]:
+    ) -> int | None:
         """Prompt the user to choose an interpretation(s).
 
         :param interpretations: A collection of Interpretations to present
@@ -108,38 +111,28 @@ class InteractiveSearcher(GrasciiSearcher):
                         "Search Settings",
                         [
                             Choice(
-                                title="Uncertainty [{}]".format(self.uncertainty),
+                                title=f"Uncertainty [{self.uncertainty}]",
                                 value=1,
                             ),
                             Choice(
-                                title="Search Mode [{}]".format(self.search_mode.value),
+                                title=f"Search Mode [{self.search_mode.value}]",
                                 value=2,
                             ),
                             Choice(
-                                title="Annotation Mode [{}]".format(
-                                    self.annotation_mode.value
-                                ),
+                                title=f"Annotation Mode [{self.annotation_mode.value}]",
                                 value=3,
                             ),
                             Choice(
-                                title="Aspirate Mode [{}]".format(
-                                    self.aspirate_mode.value
-                                ),
+                                title=f"Aspirate Mode [{self.aspirate_mode.value}]",
                                 value=4,
                             ),
                             Choice(
-                                title="Disjoiner Mode [{}]".format(
-                                    self.disjoiner_mode.value
-                                ),
+                                title=f"Disjoiner Mode [{self.disjoiner_mode.value}]",
                                 value=5,
                             ),
+                            Choice(title=f"Fix First [{self.fix_first}]", value=6),
                             Choice(
-                                title="Fix First [{}]".format(self.fix_first), value=6
-                            ),
-                            Choice(
-                                title="Dictionaries [{} selected]".format(
-                                    len(self.dictionaries)
-                                ),
+                                title=f"Dictionaries [{len(self.dictionaries)} selected]",
                                 value=7,
                             ),
                             "Back",
@@ -194,7 +187,7 @@ class InteractiveSearcher(GrasciiSearcher):
         self,
         arg_name,
         options: Iterable[T],
-        display_name: Optional[str] = None,
+        display_name: str | None = None,
         convert: Callable[[T], str] = str,
     ) -> None:
         """Prompt the user to select the value of a search parameter and set
@@ -234,7 +227,7 @@ class InteractiveSearcher(GrasciiSearcher):
         if dictionaries:
             self.dictionaries = dictionaries
 
-    def _interactive_search(self, previous: Optional[str] = None) -> Optional[str]:
+    def _interactive_search(self, previous: str | None = None) -> str | None:
         """Run an interactive search.
 
         :param previous: The previous search performed in this interactive
@@ -283,8 +276,8 @@ class InteractiveSearcher(GrasciiSearcher):
         return search
 
     def _get_grascii_search(
-        self, previous: Optional[str] = None
-    ) -> Tuple[str, List[Interpretation]] | Tuple[None, None]:
+        self, previous: str | None = None
+    ) -> tuple[str, list[Interpretation]] | tuple[None, None]:
         """Prompt the user for a grascii string.
 
         :param previous: The previous grascii string used in a search.

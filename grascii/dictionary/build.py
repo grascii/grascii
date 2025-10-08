@@ -18,7 +18,7 @@ import time
 from contextlib import nullcontext
 from dataclasses import dataclass
 from fileinput import FileInput
-from typing import Dict, Iterable, List, NamedTuple, Optional, TextIO, Tuple
+from typing import TYPE_CHECKING, NamedTuple, TextIO
 
 from grascii import grammar
 from grascii.dictionary.pipeline import (
@@ -29,6 +29,9 @@ from grascii.dictionary.pipeline import (
     remove_boundaries,
     standardize_case,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -126,8 +129,8 @@ class _BuilderLoggerAdapter(logging.LoggerAdapter):
         self._file_name: str = ""
         self._line: str = ""
         self._line_number: int = 0
-        self.warnings: List[BuildMessage] = []
-        self.errors: List[BuildMessage] = []
+        self.warnings: list[BuildMessage] = []
+        self.errors: list[BuildMessage] = []
 
     def set_context(self, file_name: str, line: str, line_number: int):
         """Sets the context of the entry being processed.
@@ -191,8 +194,8 @@ class _OutputManager:
     ):
         self.options = options
         self._logger = logger
-        self.entry_counts: Dict[str, int] = {}
-        self._out_files: Dict[str, TextIO] = {}
+        self.entry_counts: dict[str, int] = {}
+        self._out_files: dict[str, TextIO] = {}
 
     def __enter__(self):
         self._prepare_output_dir()
@@ -274,10 +277,10 @@ class BuildSummary:
     """
 
     time: float
-    warnings: List[BuildMessage]
-    errors: List[BuildMessage]
-    output_dir: Optional[os.PathLike[str]]
-    entry_counts: Optional[Dict[str, int]]
+    warnings: list[BuildMessage]
+    errors: list[BuildMessage]
+    output_dir: os.PathLike[str] | None
+    entry_counts: dict[str, int] | None
 
     def __str__(self):
         builder = []
@@ -301,7 +304,7 @@ class BuildSummary:
         return "\n".join(builder)
 
 
-DEFAULT_PIPELINE: List[PipelineFunc] = [remove_boundaries, standardize_case]
+DEFAULT_PIPELINE: list[PipelineFunc] = [remove_boundaries, standardize_case]
 """The default pipeline used for dictionary builds."""
 
 
@@ -317,7 +320,7 @@ class DictionaryBuilder:
     """
 
     def __init__(self, **kwargs) -> None:
-        self.pipeline: List[PipelineFunc] = kwargs.get("pipeline", DEFAULT_PIPELINE)
+        self.pipeline: list[PipelineFunc] = kwargs.get("pipeline", DEFAULT_PIPELINE)
         self.count_words: bool = kwargs.get("count_words", False)
         self._logger = _BuilderLoggerAdapter(logger)
         quiet: bool = kwargs.get("quiet", False)
@@ -333,7 +336,7 @@ class DictionaryBuilder:
             if verbosity > 0:
                 logger.setLevel(levels[verbosity])
 
-    def _parse_line(self, line: str) -> Optional[Tuple[str, str]]:
+    def _parse_line(self, line: str) -> tuple[str, str] | None:
         """Parse a dictionary source file line into a Grascii string and its
         translation.
 
@@ -371,7 +374,7 @@ class DictionaryBuilder:
         return tokens[0], " ".join(tokens[1:])
 
     def build(
-        self, infiles: Iterable[os.PathLike], output: Optional[DictionaryOutputOptions]
+        self, infiles: Iterable[os.PathLike], output: DictionaryOutputOptions | None
     ) -> BuildSummary:
         """Run the build based on the build settings given in the constructor.
 
@@ -441,7 +444,7 @@ def cli_build(args: argparse.Namespace) -> None:
     :param args: A namespace of parsed arguments.
     """
 
-    pipeline: List[PipelineFunc] = []
+    pipeline: list[PipelineFunc] = []
     pipeline.extend(DEFAULT_PIPELINE)
     if args.words_file:
         pipeline.append(create_spell_check(args.words_file))

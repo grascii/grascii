@@ -7,12 +7,15 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-from typing import TYPE_CHECKING, Iterable, List, Pattern, Set, Tuple
+from re import Pattern
+from typing import TYPE_CHECKING
 
 from grascii import grammar
 from grascii.similarities import get_similar
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from grascii.interpreter import Interpretation
 
 
@@ -261,7 +264,7 @@ class RegexBuilder:
 
         return "".join(builder)
 
-    def get_starting_letters(self, interpretations: List[Interpretation]) -> Set[str]:
+    def get_starting_letters(self, interpretations: list[Interpretation]) -> set[str]:
         """Get a set of starting letters based on the given interpretations
         factoring in uncertainty.
 
@@ -291,8 +294,8 @@ class RegexBuilder:
         return letters
 
     def generate_patterns_map(
-        self, interpretations: List[Interpretation]
-    ) -> List[Tuple[Interpretation, Pattern]]:
+        self, interpretations: list[Interpretation]
+    ) -> list[tuple[Interpretation, Pattern]]:
         """Generates a set of compiled regular expressions from a list
         of interpretations.
 

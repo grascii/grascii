@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import Iterable, Optional
+from typing import TYPE_CHECKING
 
 from grascii import regen
 from grascii.dictionary import DictionaryNotFound
@@ -21,6 +21,9 @@ from grascii.searchers import (
     Searcher,
     SearchResult,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 SUPPORTS_INTERACTIVE = False
 try:
@@ -112,7 +115,7 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
-def search(**kwargs) -> Optional[Iterable[SearchResult]]:
+def search(**kwargs) -> Iterable[SearchResult] | None:
     """Run a grascii dictionary search. Parameters can consist of
     any parameters used by the search method of any subclass of
     Searcher. One, and only one, of the parameters list below

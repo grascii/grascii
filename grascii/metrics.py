@@ -8,14 +8,8 @@ import string
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    List,
-    Match,
     NamedTuple,
-    Optional,
     Protocol,
-    Set,
-    Tuple,
     TypeVar,
 )
 
@@ -23,6 +17,9 @@ from grascii import grammar
 from grascii.similarities import get_similar
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+    from re import Match
+
     from grascii.interpreter import Interpretation
     from grascii.searchers import SearchResult
 
@@ -34,10 +31,10 @@ if TYPE_CHECKING:
 
 class AnnotatedStroke(NamedTuple):
     stroke: str
-    annotations: Set[str]
+    annotations: set[str]
 
 
-GrasciiSequence = List[AnnotatedStroke]
+GrasciiSequence = list[AnnotatedStroke]
 
 
 def interpretation_to_gsequence(interp: Interpretation) -> GrasciiSequence:
@@ -182,12 +179,12 @@ IT = TypeVar("IT")
 
 
 def determine_shortest_distance(
-    matches: List[Tuple[IT, Match[str]]], func: Callable[[IT, Match[str]], CT]
+    matches: list[tuple[IT, Match[str]]], func: Callable[[IT, Match[str]], CT]
 ) -> CT:
     """Determine the minimum value produced by a function on pairs of interpretations
     and matches. Utility for building metrics.
     """
-    distance: Optional[CT] = None
+    distance: CT | None = None
     for interp, match in matches:
         new_distance = func(interp, match)
         if distance is None or new_distance < distance:
@@ -196,7 +193,7 @@ def determine_shortest_distance(
     return distance
 
 
-def grascii_standard(result: SearchResult[Interpretation]) -> Tuple[int, int, int, int]:
+def grascii_standard(result: SearchResult[Interpretation]) -> tuple[int, int, int, int]:
     """Compute the standard metric for a grascii search.
 
     :param result: A ``SearchResult``
@@ -221,7 +218,7 @@ def grascii_standard(result: SearchResult[Interpretation]) -> Tuple[int, int, in
     return adjusted_distance, min_start, shortest_distance, len(result.entry.grascii)
 
 
-def translation_standard(result: SearchResult[str]) -> Tuple[int, int]:
+def translation_standard(result: SearchResult[str]) -> tuple[int, int]:
     """Compute the standard metric for a reverse search.
 
     :param result: A ``SearchResult``
@@ -229,7 +226,7 @@ def translation_standard(result: SearchResult[str]) -> Tuple[int, int]:
         and a ``Match``
     """
 
-    def distance(s: str, match: Match[str]) -> Tuple[int, int]:
+    def distance(s: str, match: Match[str]) -> tuple[int, int]:
         word_start = match.start("word") - match.end("grascii")
         return word_start, len(match.group("translation"))
 

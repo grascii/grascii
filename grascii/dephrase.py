@@ -6,7 +6,8 @@ from functools import lru_cache
 from typing import Iterable, Set
 
 from lark import Lark, Token, Transformer, UnexpectedInput
-from lark.visitors import VisitError, v_args
+from lark.exceptions import VisitError
+from lark.visitors import v_args
 
 from grascii.interpreter import interpretation_to_string
 from grascii.lark_ambig_tools import Disambiguator

@@ -129,3 +129,6 @@ required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.format]
 line-ending = "lf"
+
+[tool.basedpyright]
+typeCheckingMode = "standard"

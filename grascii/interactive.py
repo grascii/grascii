@@ -194,7 +194,7 @@ class InteractiveSearcher(GrasciiSearcher):
         self,
         arg_name,
         options: Iterable[T],
-        display_name: str = None,
+        display_name: Optional[str] = None,
         convert: Callable[[T], str] = str,
     ) -> None:
         """Prompt the user to select the value of a search parameter and set
@@ -234,7 +234,7 @@ class InteractiveSearcher(GrasciiSearcher):
         if dictionaries:
             self.dictionaries = dictionaries
 
-    def _interactive_search(self, previous: str = None) -> Optional[str]:
+    def _interactive_search(self, previous: Optional[str] = None) -> Optional[str]:
         """Run an interactive search.
 
         :param previous: The previous search performed in this interactive
@@ -245,6 +245,7 @@ class InteractiveSearcher(GrasciiSearcher):
         search, interpretations = self._get_grascii_search(previous)
         if search is None:
             return previous
+        assert interpretations is not None
         index = self._choose_interpretation(interpretations)
         if index is None:
             return search
@@ -283,7 +284,7 @@ class InteractiveSearcher(GrasciiSearcher):
 
     def _get_grascii_search(
         self, previous: Optional[str] = None
-    ) -> Tuple[Optional[str], Optional[List[Interpretation]]]:
+    ) -> Tuple[str, List[Interpretation]] | Tuple[None, None]:
         """Prompt the user for a grascii string.
 
         :param previous: The previous grascii string used in a search.

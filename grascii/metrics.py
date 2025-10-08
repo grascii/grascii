@@ -27,8 +27,7 @@ if TYPE_CHECKING:
     from grascii.searchers import SearchResult
 
     class Comparable(Protocol):
-        def __lt__(self, other: Any) -> bool:
-            pass
+        def __lt__(self, other: Any) -> bool: ...
 
     CT = TypeVar("CT", bound=Comparable)
 
@@ -163,7 +162,7 @@ def gsequence_distance(seq1: GrasciiSequence, seq2: GrasciiSequence) -> int:
     vec0 = [0]
     for stroke in seq2:
         vec0.append(vec0[-1] + compute_ins_del_cost(stroke))
-    vec1 = [0 for i in range(len(seq2) + 1)]
+    vec1 = [0 for _ in range(len(seq2) + 1)]
 
     for stroke1 in seq1:
         vec1[0] = vec0[0] + compute_ins_del_cost(stroke1)
@@ -197,7 +196,7 @@ def determine_shortest_distance(
     return distance
 
 
-def grascii_standard(result: SearchResult[Interpretation]) -> int:
+def grascii_standard(result: SearchResult[Interpretation]) -> Tuple[int, int, int, int]:
     """Compute the standard metric for a grascii search.
 
     :param result: A ``SearchResult``

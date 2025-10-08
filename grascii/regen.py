@@ -215,6 +215,7 @@ class RegexBuilder:
                     if i + 1 < len(interpretation) and isinstance(
                         interpretation[i + 1], list
                     ):
+                        assert not isinstance(token, list)
                         builder.append(
                             self.make_uncertainty_regex(
                                 token, uncertainty, interpretation[i + 1]
@@ -223,6 +224,7 @@ class RegexBuilder:
                         i += 2
                         continue
 
+            assert not isinstance(token, list)
             builder.append(self.make_uncertainty_regex(token, uncertainty))
             i += 1
 
@@ -275,6 +277,7 @@ class RegexBuilder:
         for interp in interpretations:
             for token in interp:
                 if token[0] in grammar.HARD_CHARACTERS:
+                    assert not isinstance(token, list)
                     if self.fix_first:
                         strokes = get_similar(token, 0)
                     else:

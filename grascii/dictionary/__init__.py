@@ -3,7 +3,15 @@ from __future__ import annotations
 from enum import Enum
 from importlib.resources import files
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, List, NamedTuple, Optional, TextIO, Union
+from typing import (
+    IO,
+    TYPE_CHECKING,
+    Any,
+    List,
+    NamedTuple,
+    Optional,
+    Union,
+)
 
 from grascii.dictionary import build, install, uninstall
 from grascii.dictionary import list as list_dict
@@ -23,6 +31,7 @@ from grascii.grammar import HARD_CHARACTERS
 if TYPE_CHECKING:
     import argparse
     import os
+    from importlib.resources.abc import Traversable
 
 description = "Create and manage Grascii dictionaries"
 
@@ -83,7 +92,7 @@ class Dictionary:
     """
 
     def __init__(
-        self, path: os.PathLike, dtype: DictionaryType, name: Optional[str] = None
+        self, path: Traversable, dtype: DictionaryType, name: Optional[str] = None
     ) -> None:
         self.path = path
         self.name = name if name is not None else path.name
@@ -91,7 +100,7 @@ class Dictionary:
             self.name = get_dictionary_installed_name(self.name)
         self.type = dtype
 
-    def open(self, name: str) -> TextIO:
+    def open(self, name: str) -> IO[str]:
         """Open a file from the dictionary with the given name for reading.
         The caller is responsible for closing the file.
 
@@ -100,7 +109,7 @@ class Dictionary:
 
         :returns: A text stream.
         """
-        return Path(self.path, name).open()
+        return self.path.joinpath(name).open()
 
     def dump(self) -> List[DictionaryEntry]:
         """Get all the entries in this dictionary.
@@ -147,4 +156,4 @@ class Dictionary:
         dictionary_path = Path(name)
         if dictionary_path.is_dir():
             return Dictionary(dictionary_path, DictionaryType.LOCAL)
-        raise DictionaryNotFound(name)
+        raise DictionaryNotFound(str(name))

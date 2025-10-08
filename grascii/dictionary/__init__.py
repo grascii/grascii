@@ -7,10 +7,7 @@ from typing import (
     IO,
     TYPE_CHECKING,
     Any,
-    List,
     NamedTuple,
-    Optional,
-    Union,
 )
 
 from grascii.dictionary import build, install, uninstall
@@ -92,7 +89,7 @@ class Dictionary:
     """
 
     def __init__(
-        self, path: Traversable, dtype: DictionaryType, name: Optional[str] = None
+        self, path: Traversable, dtype: DictionaryType, name: str | None = None
     ) -> None:
         self.path = path
         self.name = name if name is not None else path.name
@@ -111,7 +108,7 @@ class Dictionary:
         """
         return self.path.joinpath(name).open()
 
-    def dump(self) -> List[DictionaryEntry]:
+    def dump(self) -> list[DictionaryEntry]:
         """Get all the entries in this dictionary.
 
         :returns: A list of all entries in this dictionary.
@@ -136,7 +133,7 @@ class Dictionary:
         return hash(self.path)
 
     @classmethod
-    def new(cls, name: Union[str, os.PathLike]) -> Dictionary:
+    def new(cls, name: str | os.PathLike) -> Dictionary:
         """Create a new dictionary from its installed name or a file path.
 
         :param name: The name of an installed dictionary (starting with ':') or \

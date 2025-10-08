@@ -29,8 +29,6 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Tuple
-
 _STROKES = "A AU A&' A&E B CH D DD DF DM DN DT DV E EU F G I J JND JNT K L LD \
     M MD MM MN MT N ND NG NK NT O OE P PND PNT R S SH SS T TD TH TM TN TV U V X XS Z"
 _VOWELS = "A AU A&' A&E E EU I O OE U"
@@ -57,24 +55,24 @@ INTERSECTION = "\\"
 
 ALPHABET = set("ABCDEFGIJKLMNOPRSTUVXZ'.,|~_()^-&\\")
 
-_CIRCLE_VOWEL_ANNOTATIONS: List[Tuple[str, ...]] = [
+_CIRCLE_VOWEL_ANNOTATIONS: list[tuple[str, ...]] = [
     (REVERSE,),
     (LOOP,),
     (MEDIUM_SOUND, LONG_SOUND),
     (WUNDERBAR,),
 ]
-_CIRCLE_DIPHTHONG_ANNOTATIONS: List[Tuple[str, ...]] = [
+_CIRCLE_DIPHTHONG_ANNOTATIONS: list[tuple[str, ...]] = [
     (REVERSE,),
     (WUNDERBAR,),
 ]
-_HOOK_DIPHTHONG_ANNOTATIONS: List[Tuple[str, ...]] = [(WUNDERBAR,)]
-_DIRECTED_CONSONANT_ANNOTATIONS: List[Tuple[str, ...]] = [(LEFT, RIGHT)]
-_DIRECTED_CONSONANT_ANNOTATIONS_WITH_OBLIQUE: List[Tuple[str, ...]] = [
+_HOOK_DIPHTHONG_ANNOTATIONS: list[tuple[str, ...]] = [(WUNDERBAR,)]
+_DIRECTED_CONSONANT_ANNOTATIONS: list[tuple[str, ...]] = [(LEFT, RIGHT)]
+_DIRECTED_CONSONANT_ANNOTATIONS_WITH_OBLIQUE: list[tuple[str, ...]] = [
     (LEFT, RIGHT),
     (OBLIQUE,),
 ]
 
-ANNOTATIONS: Dict[str, List[Tuple[str, ...]]] = {
+ANNOTATIONS: dict[str, list[tuple[str, ...]]] = {
     "A": _CIRCLE_VOWEL_ANNOTATIONS,
     "E": _CIRCLE_VOWEL_ANNOTATIONS,
     "O": [(LEFT,), (MEDIUM_SOUND, LONG_SOUND), (WUNDERBAR,)],

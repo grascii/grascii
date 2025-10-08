@@ -112,7 +112,7 @@ select = [
   # Pyflakes
   "F",
   # pyupgrade
-  # "UP",
+  "UP",
   # flake8-bugbear
   "B",
   # flake8-simplify
@@ -123,6 +123,9 @@ select = [
   "TC",
 ]
 ignore = ["SIM102"]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 96
 
 [tool.ruff.lint.isort]
 required-imports = ["from __future__ import annotations"]

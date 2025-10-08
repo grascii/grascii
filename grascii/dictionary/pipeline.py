@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Tuple
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     import os
 
-PipelineFunc = Callable[[str, str, logging.LoggerAdapter], Tuple[str, str]]
+PipelineFunc = Callable[[str, str, logging.LoggerAdapter], tuple[str, str]]
 """A function for dictionary builds that checks and/or
 transforms a Grascii string and its translation in a dictionary entry.
 

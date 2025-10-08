@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Iterator, List
+from typing import TYPE_CHECKING
 
 from lark import Lark, Token, Transformer, Tree, UnexpectedInput
 
@@ -8,6 +8,8 @@ from grascii import grammar
 from grascii.lark_ambig_tools import Disambiguator
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from grascii.interpreter import Interpretation
 
 
@@ -43,11 +45,11 @@ class GrasciiFlattener(Transformer):
                     result.append(token)
         return result
 
-    def __default__(self, data, children, meta) -> List[str]:
+    def __default__(self, data, children, meta) -> list[str]:
         """The default visitor function for nodes in the parse tree.
         Returns a flat list of strings."""
 
-        result: List[str] = []
+        result: list[str] = []
         for child in children:
             if isinstance(child, Token):
                 result.append(child)

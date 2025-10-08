@@ -4,7 +4,6 @@ import argparse
 import sys
 from pathlib import Path
 from shutil import copy
-from typing import Optional
 
 from grascii.dictionary.common import (
     INSTALLATION_DIR,
@@ -40,7 +39,7 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
 def install_dictionary(
     dictionary: Path,
     install_dir: Path,
-    name: Optional[str] = None,
+    name: str | None = None,
     force: bool = False,
 ) -> str:
     """Install a dictionary to an installation directory.

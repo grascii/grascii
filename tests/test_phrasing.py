@@ -25,7 +25,7 @@ class TestLessonPhrases(unittest.TestCase):
     def _test_lesson(self, number):
         dirname = os.path.dirname(__file__)
         path = os.path.join(dirname, "./phrasing/L" + str(number) + ".txt")
-        with open(path, "r") as tests:
+        with open(path) as tests:
             for test in tests:
                 phrase, expected = test.strip().split(maxsplit=1)
                 with self.subTest(phrase=phrase, expected=expected):

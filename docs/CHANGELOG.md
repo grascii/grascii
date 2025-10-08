@@ -6,6 +6,10 @@
 
 - Dropped Python 3.9 support
 
+### Fixed
+
+- Added `py.typed` file to be PEP 561-compliant for type checking
+
 ## 0.7.0 - 2025-07-12
 
 ### Added

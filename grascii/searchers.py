@@ -12,6 +12,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Generic,
+    Literal,
+    TypedDict,
     TypeVar,
 )
 
@@ -21,7 +23,13 @@ from grascii.interpreter import Interpretation
 from grascii.parser import GrasciiParser
 
 if TYPE_CHECKING:
+    import sys
     from collections.abc import Callable, Iterable, Sequence
+
+    if sys.version_info >= (3, 11):
+        from typing import Unpack
+    else:
+        from typing_extensions import Unpack
 
     from grascii.metrics import Comparable
 
@@ -40,14 +48,17 @@ class SearchResult(Generic[IT]):
         self.dictionary = dictionary
 
 
+class SearcherOptions(TypedDict, total=False):
+    """Options for Searchers"""
+
+    dictionaries: list[str]
+    """The dictionaries to search"""
+
+
 class Searcher(ABC, Generic[IT]):
-    """An abstract base class for objects that search Grascii dictionaries.
+    """An abstract base class for objects that search Grascii dictionaries."""
 
-    :param dictionaries: The dictionaries to search.
-    :type dictionaries: List[str]
-    """
-
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Unpack[SearcherOptions]) -> None:
         dictionaries = kwargs.get("dictionaries")
         if not dictionaries:
             dictionaries = defaults.SEARCH["Dictionary"].split()
@@ -85,7 +96,7 @@ class Searcher(ABC, Generic[IT]):
                             yield SearchResult(matches, entry, dictionary)
 
     @abstractmethod
-    def search(self, **kwargs: Any) -> Iterable[SearchResult[IT]] | None:
+    def search(self, **kwargs) -> Iterable[SearchResult[IT]] | None:
         """An abstract method that runs a search with the given search
         options and returns the results."""
         ...
@@ -94,7 +105,7 @@ class Searcher(ABC, Generic[IT]):
         self,
         metric: Callable[[SearchResult[IT]], Comparable] = metrics.trivial,
         **kwargs: Any,
-    ) -> Sequence[SearchResult[IT]]:
+    ) -> Sequence[SearchResult[IT]] | None:
         """Run a search with the given args and sort the search results by the
         given metric.
         """
@@ -105,18 +116,39 @@ class Searcher(ABC, Generic[IT]):
         return []
 
 
+class GrasciiSearchOptions(TypedDict, total=False):
+    """Options for ``GrasciiSearcher.search``."""
+
+    uncertainty: Literal[0, 1, 2]
+    """The uncertainty of the grascii string."""
+
+    search_mode: regen.SearchMode
+    """The search mode to use."""
+
+    annotation_mode: regen.Strictness
+    """How to handle annotations in the search."""
+
+    aspirate_mode: regen.Strictness
+    """How to handle aspirates in the search."""
+
+    disjoiner_mode: regen.Strictness
+    """How to handle annotations in the search."""
+
+    fix_first: bool
+    """Apply an uncertainty of 0 to the first token."""
+
+    interpretation: Literal["best", "all"]
+    """How to handle ambiguous grascii strings."""
+
+
 class GrasciiSearcher(Searcher[Interpretation]):
-    """A subclass of Searcher that performs a search given a Grascii string.
+    """A subclass of Searcher that performs a search given a Grascii string."""
 
-    :param dictionaries: The dictionaries to search.
-    :type dictionaries: List[str]
-    """
-
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Unpack[SearcherOptions]) -> None:
         super().__init__(**kwargs)
         self._parser = GrasciiParser()
 
-    def extract_search_args(self, **kwargs: Any) -> None:
+    def _extract_search_args(self, **kwargs: Unpack[GrasciiSearchOptions]) -> None:
         """Get the relevant arguments for search."""
 
         self.uncertainty = kwargs.get(
@@ -160,30 +192,16 @@ class GrasciiSearcher(Searcher[Interpretation]):
             "interpretation", defaults.SEARCH["Interpretation"]
         )
 
-    def search(self, **kwargs: Any) -> Iterable[SearchResult[Interpretation]] | None:
+    def search(
+        self, *, grascii: str, **kwargs: Unpack[GrasciiSearchOptions]
+    ) -> Iterable[SearchResult[Interpretation]] | None:
         """
-        :param grascii: [Required] The grascii string to use in the search.
-        :param uncertainty: The uncertainty of the grascii string.
-        :param search_mode: The search mode to use.
-        :param annotation_mode: How to handle annotations in the search.
-        :param aspirate_mode: How to handle annotations in the search.
-        :param disjoiner_mode: How to handle annotations in the search.
-        :param fix_first: Apply an uncertainty of 0 to the first token.
-        :param interpretation: How to handle ambiguous grascii strings.
-        :type grascii: str
-        :type uncertainty: int: 0, 1, or 2
-        :type search_mode: str: one of regen.SearchMode values
-        :type annotation_mode: str: one of regen.Strictness values
-        :type aspirate_mode: str: one of regen.Strictness values
-        :type disjoiner_mode: str: one of regen.Strictness values
-        :type fix_first: bool
-        :type interpretation: "best" or "all"
-        :returns: A list of search results.
-        :rtype: List[str]
+        :param grascii: The grascii string to use in the search.
+        :returns: An iterable of search results.
         """
 
-        grascii = kwargs["grascii"].upper()
-        self.extract_search_args(**kwargs)
+        grascii = grascii.upper()
+        self._extract_search_args(**kwargs)
 
         interpretations = self._parser.interpret(grascii)
 
@@ -211,31 +229,28 @@ class GrasciiSearcher(Searcher[Interpretation]):
         metric: Callable[
             [SearchResult[Interpretation]], Comparable
         ] = metrics.grascii_standard,
-        **kwargs: Any,
-    ) -> Sequence[SearchResult[Interpretation]]:
-        return super().sorted_search(metric, **kwargs)
+        *,
+        grascii: str,
+        **kwargs: Unpack[GrasciiSearchOptions],
+    ) -> Sequence[SearchResult[Interpretation]] | None:
+        return super().sorted_search(metric, grascii=grascii, **kwargs)
 
 
 class RegexSearcher(Searcher[str]):
     """A subclass of Searcher that searches a grascii dictionary given
     a raw regular expression.
-
-    :param dictionaries: The dictionaries to search.
-    :type dictionaries: List[str]
     """
 
-    def __init__(self, **kwargs: Any):
+    def __init__(self, **kwargs: Unpack[SearcherOptions]):
         super().__init__(**kwargs)
 
-    def search(self, **kwargs: Any) -> Iterable[SearchResult[str]]:
+    def search(self, *, regexp: str, **kwargs: Any) -> Iterable[SearchResult[str]]:
         """
-        :param regexp: [Required] A regular expression to use in a search.
-        :returns: A list of search results.
-        :rtype: List[str]
+        :param regexp: A regular expression to use in a search.
+        :returns: An iterable of search results.
         """
 
-        regex = kwargs["regexp"]
-        pattern = re.compile(regex)
+        pattern = re.compile(regexp)
         patterns = [(pattern.pattern, pattern)]
 
         starting_letters = grammar.HARD_CHARACTERS
@@ -245,35 +260,32 @@ class RegexSearcher(Searcher[str]):
 class ReverseSearcher(RegexSearcher):
     """A subclass of RegexSearcher that searches a grascii dictionary
     given a word.
-
-    :param dictionaries: The dictionaries to search.
-    :type dictionaries: List[str]
     """
 
-    def __init__(self, **kwargs: Any) -> None:
+    def __init__(self, **kwargs: Unpack[SearcherOptions]) -> None:
         super().__init__(**kwargs)
 
-    def search(self, **kwargs: Any) -> Iterable[SearchResult[str]]:
+    def search(self, *, reverse: str, **kwargs: Any) -> Iterable[SearchResult[str]]:
         """
-        :param reverse: [Required] A word to search for.
-        :returns: A list of search results.
-        :rtype: List[str]
+        :param reverse: A word to search for.
+        :returns: An iterable of search results.
         """
 
-        word = kwargs["reverse"]
-        escaped_word = re.escape(word)
-        kwargs["regexp"] = (
+        escaped_word = re.escape(reverse)
+        regexp = (
             r"(?i)(?P<grascii>.+?\s+)"
             + rf"(?P<translation>(.*(\s|-))?(?P<word>{escaped_word}).*)(\s|\Z)"
         )
 
-        return super().search(**kwargs)
+        return super().search(regexp=regexp, **kwargs)
 
     def sorted_search(
         self,
         metric: Callable[
             [SearchResult[str]], Comparable
         ] = metrics.translation_standard,
+        *,
+        reverse: str,
         **kwargs: Any,
     ) -> Sequence[SearchResult[str]]:
-        return super().sorted_search(metric, **kwargs)
+        return super().sorted_search(metric, reverse=reverse, **kwargs)

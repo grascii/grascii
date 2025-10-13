@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Improved typings for `search` and `dephrase` related functions
+
 ### Removed
 
 - Dropped Python 3.9 support
@@ -9,6 +13,9 @@
 ### Fixed
 
 - Added `py.typed` file to be PEP 561-compliant for type checking
+- `grascii search` unnecessarily searching twice
+- `InteractiveSearcher.sorted_search` not sorting and not respecting the
+  provided metric
 
 ## 0.7.0 - 2025-07-12
 

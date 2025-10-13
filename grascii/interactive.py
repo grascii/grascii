@@ -21,10 +21,20 @@ from grascii.dictionary import Dictionary
 from grascii.dictionary.list import get_built_ins, get_installed
 from grascii.interpreter import Interpretation, interpretation_to_string
 from grascii.parser import InvalidGrascii
-from grascii.searchers import GrasciiSearcher
+from grascii.searchers import (
+    GrasciiSearcher,
+    GrasciiSearchOptions,
+    SearcherOptions,
+    SearchResult,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Sequence
+
+    if sys.version_info >= (3, 11):
+        from typing import Unpack
+    else:
+        from typing_extensions import Unpack
 
 T = TypeVar("T")
 
@@ -35,35 +45,37 @@ class InteractiveSearcher(GrasciiSearcher):
     search parameters.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Unpack[SearcherOptions]):
         super().__init__(**kwargs)
         self.available_dicts = set(self.dictionaries)
         installed = map(lambda s: Dictionary.new(s), get_installed())
         built_ins = map(lambda s: Dictionary.new(s), get_built_ins())
         self.available_dicts.update(installed, built_ins)
 
-    def search(self, **kwargs):
+    def search(
+        self, *, grascii: str | None = None, **kwargs: Unpack[GrasciiSearchOptions]
+    ) -> None:
         """
-        :param grascii: [Required] The grascii string to use in the search.
-        :param uncertainty: The uncertainty of the grascii string.
-        :param search_mode: The search mode to use.
-        :param annotation_mode: How to handle annotations in the search.
-        :param aspirate_mode: How to handle annotations in the search.
-        :param disjoiner_mode: How to handle annotations in the search.
-        :param fix_first: Apply an uncertainty of 0 to the first token.
-        :type grascii: str
-        :type uncertainty: int: 0, 1, or 2
-        :type search_mode: str: one of regen.SearchMode values
-        :type annotation_mode: one of regen.Strictness values
-        :type aspirate_mode: one of regen.Strictness values
-        :type disjoiner_mode: one of regen.Strictness values
-        :type fix_first: bool
-        :returns: None
-        :rtype: None
+        :param grascii: Ignored
         """
+        self._extract_search_args(**kwargs)
+        self._metric = None
+        self._run_interactive()
 
-        self.extract_search_args(**kwargs)
-        self.sort = not kwargs.get("no_sort")
+    def sorted_search(
+        self,
+        metric: Callable[
+            [SearchResult[Interpretation]], metrics.Comparable
+        ] = metrics.grascii_standard,
+        *,
+        grascii: str | None = None,
+        **kwargs: Unpack[GrasciiSearchOptions],
+    ) -> None:
+        """
+        :param grascii: Ignored
+        """
+        self._extract_search_args(**kwargs)
+        self._metric = metric
         self._run_interactive()
 
     def _choose_interpretation(
@@ -254,8 +266,8 @@ class InteractiveSearcher(GrasciiSearcher):
         patterns = builder.generate_patterns_map(interps)
         starting_letters = builder.get_starting_letters(interps)
         results = self.perform_search(patterns, starting_letters)
-        if self.sort:
-            results = sorted(results, key=lambda r: metrics.grascii_standard(r))
+        if self._metric:
+            results = sorted(results, key=self._metric)
         count = 0
         display_all = False
         for result in results:

@@ -133,17 +133,14 @@ class PhraseFlattener(Transformer):
         return result
 
 
-def dephrase(**kwargs) -> Iterable[str]:
+def dephrase(phrase: str, aggressive: bool = False) -> Iterable[str]:
     """Decipher a shorthand phrase.
 
-    :param phrase: A Grascii string to dephrase. (Required)
+    :param phrase: A Grascii string to dephrase.
     :param aggressive: A flag enabling a more intense dephrasing strategy.
-    :type phrase: str
-    :type aggressive: bool
 
     :returns: A generator of possible dephrasings
     """
-    aggressive = kwargs.get("aggressive", False)
     grammar_name = "phrases_extended.lark" if aggressive else "phrases.lark"
     parser = Lark.open_from_package(
         "grascii.grammars",
@@ -156,7 +153,7 @@ def dephrase(**kwargs) -> Iterable[str]:
     if aggressive:
         trans = StripNameSpace("phrases") * trans
     try:
-        tree = parser.parse(kwargs["phrase"].upper())
+        tree = parser.parse(phrase.upper())
     except UnexpectedInput:
         return
 
@@ -190,7 +187,7 @@ def cli_dephrase(args: argparse.Namespace) -> None:
         print("To ignore this warning use '--ignore-limit'.")
         return
 
-    results = dephrase(**{k: v for k, v in vars(args).items() if v is not None})
+    results = dephrase(args.phrase, args.aggressive)
     has_result = False
     for result in results:
         has_result = True

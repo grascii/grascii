@@ -2,28 +2,35 @@
 Acts as the main entry point for the grascii search command.
 
 This can be invoked as a standalone program:
-$ python -m grascii.search --help
+``$ python -m grascii.search --help``
 """
 
 from __future__ import annotations
 
 import argparse
 import sys
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, overload
 
 from grascii import regen
 from grascii.dictionary import DictionaryNotFound
 from grascii.parser import InvalidGrascii
 from grascii.searchers import (
     GrasciiSearcher,
+    GrasciiSearchOptions,
     RegexSearcher,
     ReverseSearcher,
     Searcher,
+    SearcherOptions,
     SearchResult,
 )
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+    if sys.version_info >= (3, 11):
+        from typing import Unpack
+    else:
+        from typing_extensions import Unpack
 
 SUPPORTS_INTERACTIVE = False
 try:
@@ -115,22 +122,38 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
+class GrasciiSearchOptionsCombined(GrasciiSearchOptions, SearcherOptions):
+    pass
+
+
+@overload
+def search(
+    *, grascii: str, **kwargs: Unpack[GrasciiSearchOptionsCombined]
+) -> Iterable[SearchResult]: ...
+@overload
+def search(
+    *, interactive: bool, **kwargs: Unpack[SearcherOptions]
+) -> Iterable[SearchResult]: ...
+@overload
+def search(
+    *, reverse: str, **kwargs: Unpack[SearcherOptions]
+) -> Iterable[SearchResult]: ...
+@overload
+def search(
+    *, regexp: str, **kwargs: Unpack[SearcherOptions]
+) -> Iterable[SearchResult]: ...
 def search(**kwargs) -> Iterable[SearchResult] | None:
     """Run a grascii dictionary search. Parameters can consist of
     any parameters used by the search method of any subclass of
-    Searcher. One, and only one, of the parameters list below
+    Searcher. One, and only one, of the parameters listed below
     is required.
 
     :param grascii: A grascii string to use in a search.
     :param interactive: A flag enabling an interactive search.
     :param reverse: A word to search for in the dictionary.
     :param regexp: A regular expression to use in a search.
-    :type grascii: str
-    :type interactive: bool
-    :type reverse: str
-    :type regexp: str
 
-    :returns: A list of search results, or None if run in interactive mode
+    :returns: An iterable of search results, or ``None`` if run in interactive mode
     """
 
     searcher: Searcher
@@ -189,7 +212,6 @@ def main() -> None:
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     cli_search(args)
-    search(**{k: v for k, v in vars(args).items() if v is not None})
 
 
 if __name__ == "__main__":

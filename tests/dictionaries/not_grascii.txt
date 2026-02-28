@@ -4,7 +4,6 @@ u( under
 high low
 yes no
 win lose
-^i hyper
 valid valid
 away away
 o~, o

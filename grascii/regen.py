@@ -25,6 +25,7 @@ class SearchMode(Enum):
     MATCH = "match"
     START = "start"
     CONTAIN = "contain"
+    END = "end"
 
 
 class Strictness(Enum):
@@ -160,7 +161,9 @@ class RegexBuilder:
                     for _ in range(2 - i):
                         builder.append(aspirate)
                         builder.append("?")
-        elif self.search_mode is SearchMode.CONTAIN:
+        elif (
+            self.search_mode is SearchMode.CONTAIN or self.search_mode is SearchMode.END
+        ):
             # match any characters up to the end of the grascii word
             builder.append(r"\S*")
 
@@ -258,7 +261,7 @@ class RegexBuilder:
         # end the matched_grascii group
         builder.append(")")
 
-        if self.search_mode is SearchMode.MATCH:
+        if self.search_mode is SearchMode.MATCH or self.search_mode is SearchMode.END:
             # match the end of the word/line
             builder.append(r"(?:\Z|\s)")
 
@@ -273,7 +276,7 @@ class RegexBuilder:
         :returns: A set of characters.
         """
 
-        if self.search_mode is SearchMode.CONTAIN:
+        if self.search_mode is SearchMode.CONTAIN or self.search_mode is SearchMode.END:
             return grammar.HARD_CHARACTERS
 
         letters = set()

@@ -72,8 +72,11 @@ class TestGrasciiSearcher(unittest.TestCase):
         contain_count = len(
             searcher.sorted_search(grascii="ABT", search_mode="contain")
         )
+        end_count = len(searcher.sorted_search(grascii="ABT", search_mode="end"))
         self.assertGreater(start_count, match_count)
         self.assertGreater(contain_count, start_count)
+        self.assertGreater(end_count, match_count)
+        self.assertGreater(contain_count, end_count)
 
     def test_invalid_grascii(self):
         searcher = GrasciiSearcher(dictionaries=[output_dir])

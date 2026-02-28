@@ -10,7 +10,7 @@ search the Grascii dictionary for potential translations.
 Usage
 *****
 
-.. object:: grascii search [-h] (-g GRASCII | -e REGEXP | -r REVERSE | -i) [-u {0,1,2}] [-s {match,start,contain}] [-a {discard,retain,strict}] [-p {discard,retain,strict}] [-j {discard,retain,strict}] [-n {best,all}] [-f] [-d DICTIONARIES] [--show-dictionary] [--no-sort]
+.. object:: grascii search [-h] (-g GRASCII | -e REGEXP | -r REVERSE | -i) [-u {0,1,2}] [-s {match,start,contain,end}] [-a {discard,retain,strict}] [-p {discard,retain,strict}] [-j {discard,retain,strict}] [-n {best,all}] [-f] [-d DICTIONARIES] [--show-dictionary] [--no-sort]
 
 .. option:: -h, --help
 
@@ -39,16 +39,17 @@ Set the uncertainty level of a Grascii string. 2 represents the greatest
 uncertainty. For a more in-depth explanation of uncertainty, see
 :doc:`similarity`.
 
-.. option:: -s {match, start, contain}, --search-mode {match, start, contain}
+.. option:: -s {match, start, contain, end}, --search-mode {match, start, contain, end}
 
 Set the type of search to perform.
 
-``match``: Search for words that
-closely match the input.
+``match``: Search for words that closely match the input.
 
-``start``; Search for words that start with the input.
+``start``: Search for words that start with the input.
 
-``contain``; Search for words that contain the input.
+``contain``: Search for words that contain the input.
+
+``end``: Search for words that end with the input.
 
 .. option:: -a {discard, retain, strict}, --annotation-mode {discard, retain, strict}
 

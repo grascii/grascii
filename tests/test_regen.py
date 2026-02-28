@@ -1405,6 +1405,11 @@ class TestSearchMode(RegexBuilderTester):
         ]
         self.run_tests(builder, tests)
 
+    def test_end(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.END)
+        tests = [(["A", "B"], [("AB", True), ("ABU", False), ("DAB", True)])]
+        self.run_tests(builder, tests)
+
 
 class TestFixFirst(RegexBuilderTester):
     def test_fix_first_off(self):

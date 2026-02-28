@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- "end" search mode for `grascii search`
+
 ### Changed
 
 - Improved typings for `search` and `dephrase` related functions

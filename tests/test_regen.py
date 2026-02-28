@@ -1489,5 +1489,22 @@ class TestStartingLetters(unittest.TestCase):
         self.run_tests(builder, tests)
 
 
+class TestNegativeLookaheads(RegexBuilderTester):
+    def test_negative_lookaheads(self):
+        builder = regen.RegexBuilder(search_mode=regen.SearchMode.CONTAIN)
+        tests = [
+            ([["S"], [("S", True), ("AST", True), ("ASH", False)]]),
+            ([["SS"], [("SS", True), ("ASST", True), ("ASSH", False)]]),
+            ([["XS"], [("XS", True), ("AXST", True), ("AXSH", False)]]),
+            ([["T"], [("T", True), ("ETS", True), ("ETH", False)]]),
+            ([["NT"], [("NT", True), ("ENTS", True), ("ENTH", False)]]),
+            ([["MT"], [("MT", True), ("EMTS", True), ("EMTH", False)]]),
+            ([["DT"], [("DT", True), ("EDTS", True), ("EDTH", False)]]),
+            ([["JNT"], [("JNT", True), ("EJNTS", True), ("EJNTH", False)]]),
+            ([["PNT"], [("PNT", True), ("EPNTS", True), ("EPNTH", False)]]),
+        ]
+        self.run_tests(builder, tests)
+
+
 if __name__ == "__main__":
     unittest.main()

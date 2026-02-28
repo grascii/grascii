@@ -82,6 +82,11 @@ class RegexBuilder:
 
         possible = grammar.ANNOTATIONS.get(stroke, list())
 
+        # Prevent strokes that end with S or T from matching if the next char
+        # is an H which would force the next stroke to be SH or TH instead
+        if stroke.endswith("S") or stroke.endswith("T"):
+            stroke += "(?!H)"
+
         if (
             self.annotation_mode is Strictness.MEDIUM
             or self.annotation_mode is Strictness.HIGH

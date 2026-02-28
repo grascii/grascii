@@ -116,7 +116,7 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
             output=DictionaryOutputOptions(self.output_dir),
         )
         self.assertEqual(len(summary.warnings), 0)
-        self.assertEqual(len(summary.errors), 10)
+        self.assertEqual(len(summary.errors), 9)
         for error in summary.errors:
             self.assertEqual(error.level, logging.ERROR)
             self.assertRegex(error.message, "Failed to parse")

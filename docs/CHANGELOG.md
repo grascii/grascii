@@ -9,6 +9,7 @@
 ### Changed
 
 - Improved typings for `search` and `dephrase` related functions
+- Allow Grascii strings to start with a disjoiner
 
 ### Removed
 

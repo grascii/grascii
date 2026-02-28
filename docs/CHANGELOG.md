@@ -21,6 +21,7 @@
 - `grascii search` unnecessarily searching twice
 - `InteractiveSearcher.sorted_search` not sorting and not respecting the
   provided metric
+- Potential incorrect results for start/contain searches that ended with `S`/`T`
 
 ## 0.7.0 - 2025-07-12
 

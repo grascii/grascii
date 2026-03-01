@@ -52,6 +52,7 @@ class TestGrasciiInterpreter:
             ("DDN", ["DD", "N"], False),
             ("NDV", ["ND", "V"], False),
             ("NTDN", ["NT", "DN"], False),
+            ("NTNT", ["N", "TN", "T"], False),
             ("A^B^", ["A", "^", "B", "^"], True),
             ("^K", ["^", "K"], True),
         ],

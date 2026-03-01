@@ -6,7 +6,7 @@ start: _root ( DISJOINER _root ( DISJOINER _root? )? )?
 _root : ASPIRATE~0..2 _string ASPIRATE~0..2
 _string : _letter | _string ASPIRATE? ( BOUNDARY | INTERSECTION )? _letter
 
-_letter : ( consonant | vowel )
+_letter : consonant | vowel
 
 consonant : standard_consonant
 	| blended_consonant
@@ -16,8 +16,8 @@ standard_consonant : K | G | R | L | N | M
 	| T | D | P | B | F | V
 	| CH | J
 
-blended_consonant.20 : TN | DN | TM | DM
-	| NT | MT | ND | MD
+blended_consonant.1 : TN | DN | TM | DM
+	| NT | MT | ND | MD | NT1 | MT1 | ND1 | MD1
 	| DF | DV | TV
 	| JNT | JND | PND | PNT
 	| MN | MM
@@ -40,7 +40,7 @@ sound : MEDIUM_SOUND | LONG_SOUND
 
 hook_vowel : ( O LEFT? | U RIGHT? ) sound?
 
-diphthong.20 : circle_diphthong | hook_diphthong
+diphthong.1 : circle_diphthong | hook_diphthong
 
 circle_diphthong : ( AE | EA ) REVERSE?
 	| I REVERSE? LOOP?
@@ -75,11 +75,17 @@ TN : "TN"
 DN : "DN"
 TM : "TM"
 DM : "DM"
-// Prevent matching before N/M so that over blends are preferred
+// In order to prioritize over blends, there are two terminals for under blends:
+//   1. Does not overlap with an over blend
+//   2. Does overlap with an over blend and has a negative priority
 NT : /NT(?![NM])/
 MT : /MT(?![NM])/
 ND : /ND(?![NM])/
 MD : /MD(?![NM])/
+NT1.-1 : /NT(?=[NM])/
+MT1.-1 : /MT(?=[NM])/
+ND1.-1 : /ND(?=[NM])/
+MD1.-1 : /MD(?=[NM])/
 DF : "DF"
 DV : "DV"
 TV : "TV"

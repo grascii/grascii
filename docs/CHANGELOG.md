@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.8.0 - 2026-03-03
+
 ### Added
 
 - "end" search mode for `grascii search`
@@ -10,6 +12,7 @@
 
 - Improved typings for `search` and `dephrase` related functions
 - Allow Grascii strings to start with a disjoiner
+- Updated dictionaries to [2026.02.28](https://github.com/grascii/dictionaries/tree/2026.02.28).
 
 ### Removed
 

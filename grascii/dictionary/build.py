@@ -90,6 +90,12 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
         action="store_true",
         help="enable word count validation",
     )
+    validation_group.add_argument(
+        "--no-dedup",
+        dest="dedup",
+        action="store_false",
+        help="disable duplicate entry prevention",
+    )
     argparser.add_argument(
         "-v",
         "--verbose",
@@ -143,6 +149,10 @@ class _BuilderLoggerAdapter(logging.LoggerAdapter):
         self._file_name = file_name
         self._line = line.strip()
         self._line_number = line_number
+
+    def info_with_context(self, msg, *args, **kwargs):
+        message = f"{self._file_name}:{self._line_number} {msg}\n{self._line}"
+        self.logger.info(message, *args, **kwargs)
 
     def warning(self, msg, *args, **kwargs):
         message = f"{self._file_name}:{self._line_number} {msg}\n{self._line}"
@@ -264,12 +274,14 @@ class BuildSummary:
     """Results of a dictionary build.
 
     :param time: The duration of the build in seconds.
+    :param duplicate_count: The number of duplicate entries detected.
     :param warnings: A list of warnings that occurred during the build.
     :param errors: A list of errors that occurred during the build.
     :param output_dir: The output directory of the dictionary.
     :param entry_counts: A dictionary of file names in the output directory to
         the number of entries written to that file.
     :type time: float
+    :type duplicate_count: int
     :type warnings: List[BuildMessage]
     :type errors: List[BuildMessage]
     :type output_dir: Optional[os.PathLike]
@@ -277,6 +289,7 @@ class BuildSummary:
     """
 
     time: float
+    duplicate_count: int
     warnings: list[BuildMessage]
     errors: list[BuildMessage]
     output_dir: os.PathLike[str] | None
@@ -298,6 +311,7 @@ class BuildSummary:
         builder.append(f"Finished Build in {self.time:.5f} seconds")
         if self.entry_counts is not None:
             builder.append(f"Entries: {total}")
+        builder.append(f"Duplicates: {self.duplicate_count}")
         builder.append(f"Warnings: {len(self.warnings)}")
         builder.append(f"Errors: {len(self.errors)}")
 
@@ -311,10 +325,14 @@ DEFAULT_PIPELINE: list[PipelineFunc] = [remove_boundaries, standardize_case]
 class DictionaryBuilder:
     """A class that runs the build process for a grascii dictionary.
 
-    :param count_words: Whether to enable word count validation.
-    :param verbosity: Increase the output verbosity
-    :param quiet: Suppress output
+    :param pipeline: A list of pipeline functions used to process entries. (Optional)
+    :param count_words: Whether to enable word count validation. (Default: ``False``)
+    :param dedup: Whether to enable duplicate entry prevention. (Default: ``True``)
+    :param verbosity: Increase the output verbosity. (Default: ``0``)
+    :param quiet: Suppress output. (Default: ``False``)
+    :type pipeline: List[PipelineFunc]
     :type count_words: bool
+    :type dedup: bool
     :type verbosity: int
     :type quiet: bool
     """
@@ -322,6 +340,7 @@ class DictionaryBuilder:
     def __init__(self, **kwargs) -> None:
         self.pipeline: list[PipelineFunc] = kwargs.get("pipeline", DEFAULT_PIPELINE)
         self.count_words: bool = kwargs.get("count_words", False)
+        self.dedup: bool = kwargs.get("dedup", True)
         self._logger = _BuilderLoggerAdapter(logger)
         quiet: bool = kwargs.get("quiet", False)
         verbosity: int = kwargs.get("verbosity", 0)
@@ -404,8 +423,14 @@ class DictionaryBuilder:
             else nullcontext(lambda x, y: None)
         )
 
+        seen_entries: dict[tuple[str, str], tuple[int, int]] = {}
+        seen_files: list[str] = []
+        duplicate_count = 0
+
         with out as write_entry, FileInput(infiles) as f:
             for line in f:
+                if f.isfirstline():
+                    seen_files.append(f.filename())
                 self._logger.set_context(f.filename(), line, f.filelineno())
                 parsed = self._parse_line(line)
                 if not parsed:
@@ -416,8 +441,22 @@ class DictionaryBuilder:
                     for func in self.pipeline:
                         grascii, translation = func(grascii, translation, self._logger)
                 except CancelPipeline:
-                    self._logger.info("Pipeline aborted for {grascii}, {translation}")
+                    self._logger.info_with_context("Pipeline aborted")
                     continue
+
+                if self.dedup:
+                    try:
+                        fileno, lineno = seen_entries[(grascii, translation)]
+                        self._logger.info_with_context(
+                            f"Skipping duplicate of {seen_files[fileno]}:{lineno}"
+                        )
+                        duplicate_count += 1
+                        continue
+                    except KeyError:
+                        seen_entries[(grascii, translation)] = (
+                            len(seen_files) - 1,
+                            f.filelineno(),
+                        )
 
                 try:
                     write_entry(grascii, translation)
@@ -431,6 +470,7 @@ class DictionaryBuilder:
 
         return BuildSummary(
             time=total_time,
+            duplicate_count=duplicate_count,
             warnings=self._logger.warnings,
             errors=self._logger.errors,
             output_dir=output.output_dir if output else None,
@@ -454,6 +494,7 @@ def cli_build(args: argparse.Namespace) -> None:
     builder = DictionaryBuilder(
         pipeline=pipeline,
         count_words=args.count_words,
+        dedup=args.dedup,
         verbosity=args.verbosity,
         quiet=args.quiet,
     )

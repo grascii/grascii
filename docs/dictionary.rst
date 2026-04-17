@@ -132,7 +132,7 @@ Building
 Usage
 =====
 
-.. describe:: grascii dictionary build [-h] (-o OUTPUT | --no-output) [-c] [-p] [-w WORDS_FILE] [-n] [-v] [-q] infiles [infiles ...]
+.. describe:: grascii dictionary build [-h] (-o OUTPUT | --no-output) [-c] [-p] [-w WORDS_FILE] [-n] [--no-dedup] [-v] [-q] infiles [infiles ...]
 
 .. option:: <infiles>
 
@@ -175,6 +175,14 @@ Usage
   expected number of words in the translation is less than the actual
   number of words, a warning will be reported, but the corresponding entry will
   still be included in the output.
+
+.. option:: --no-dedup
+
+  Disable duplicate entry prevention. By default, entries are checked to see if
+  their Grascii String and translation exactly match an entry already seen in
+  the source files. If a duplicate is detected, that entry will not be included
+  in the output. Duplicates are not considered a severe issue, so they are not
+  logged by default. Use :option:`-v` to see which entries were duplicated.
 
 .. option:: -v, --verbose
 

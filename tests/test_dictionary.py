@@ -137,6 +137,30 @@ class TestDictionaryBuildWarnings(unittest.TestCase):
         entry_count = sum(val for val in summary.entry_counts.values())
         self.assertEqual(entry_count, 7)
 
+    def test_dedup(self):
+        builder = DictionaryBuilder()
+        summary = builder.build(
+            infiles=[Path("tests/dictionaries/duplicates.txt")],
+            output=DictionaryOutputOptions(self.output_dir),
+        )
+        self.assertEqual(summary.duplicate_count, 4)
+        self.assertEqual(len(summary.warnings), 0)
+        self.assertEqual(len(summary.errors), 0)
+        entry_count = sum(val for val in summary.entry_counts.values())
+        self.assertEqual(entry_count, 15)
+
+    def test_no_dedup(self):
+        builder = DictionaryBuilder(dedup=False)
+        summary = builder.build(
+            infiles=[Path("tests/dictionaries/duplicates.txt")],
+            output=DictionaryOutputOptions(self.output_dir),
+        )
+        self.assertEqual(summary.duplicate_count, 0)
+        self.assertEqual(len(summary.warnings), 0)
+        self.assertEqual(len(summary.errors), 0)
+        entry_count = sum(val for val in summary.entry_counts.values())
+        self.assertEqual(entry_count, 19)
+
 
 @pytest.mark.slow
 class TestBuiltins(unittest.TestCase):

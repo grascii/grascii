@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- Duplicate entry prevention for `grascii dictionary build`. It can be disabled
+  with the new `--no-dedup` option.
+
 ## 0.8.0 - 2026-03-03
 
 ### Added

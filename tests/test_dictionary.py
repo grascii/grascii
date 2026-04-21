@@ -181,6 +181,14 @@ class TestBuiltins(unittest.TestCase):
         summary = builder.build(inputs, None)
         self.assertEqual(len(summary.errors), 0)
 
+    def test_anniversary(self):
+        inputs = Path("dictionaries/builtins/anniversary/").glob("*.txt")
+        builder = DictionaryBuilder(
+            count_words=True, pipeline=[*DEFAULT_PIPELINE, create_grascii_check()]
+        )
+        summary = builder.build(inputs, None)
+        self.assertEqual(len(summary.errors), 0)
+
 
 @pytest.fixture
 def tmp_dict_path(tmp_path, monkeypatch):
@@ -242,6 +250,11 @@ class TestDictionaryDump:
         entries = dictionary.dump()
         assert len(entries) > 3000
 
+    def test_anniversary_dump(self):
+        dictionary = Dictionary.new(Path("grascii/dictionary/anniversary"))
+        entries = dictionary.dump()
+        assert len(entries) > 17000
+
 
 class TestList:
     def test_list_no_installed(self, tmp_dict_path):
@@ -249,9 +262,10 @@ class TestList:
 
     def test_list_builtins(self, tmp_dict_path):
         builtins = get_built_ins()
-        assert len(builtins) == 2
+        assert len(builtins) == 3
         assert ":preanniversary" in builtins
         assert ":preanniversary-phrases" in builtins
+        assert ":anniversary" in builtins
 
 
 class TestInstall:

@@ -7,6 +7,10 @@
 - Duplicate entry prevention for `grascii dictionary build`. It can be disabled
   with the new `--no-dedup` option.
 
+### Changed
+
+- Updated dictionaries to [2026.04.20](https://github.com/grascii/dictionaries/tree/2026.04.20).
+
 ## 0.8.0 - 2026-03-03
 
 ### Added

@@ -6,6 +6,7 @@
 
 - Duplicate entry prevention for `grascii dictionary build`. It can be disabled
   with the new `--no-dedup` option.
+- `anniversary` as a built-in dictionary
 
 ### Changed
 
@@ -40,7 +41,7 @@
 
 ### Added
 
-- `preanniversary-phrases` as a builtin dictionary and default search dictionary
+- `preanniversary-phrases` as a built-in dictionary and default search dictionary
 - `--show-dictionary` option for `grascii search`
 - `Dictionary.dump` method to get all the entries in a dictionary
 - Direction annotations for `X`

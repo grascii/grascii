@@ -133,8 +133,9 @@ For more options, see `search <https://grascii.readthedocs.io/en/latest/gsearch.
 Grascii Dictionary
 ******************
 
-Grascii comes with dictionaries based on the 1916 Gregg Shorthand Dictionary
-and the 1924 Gregg Shorthand Phrase Book.
+Grascii comes with dictionaries based on the 1916 *Gregg Shorthand Dictionary*,
+the 1924 *Gregg Shorthand Phrase Book*, and the 1930
+*Gregg Shorthand Dictionary*.
 
 More dictionaries for other versions of Gregg and dictionaries including
 additional entries are available for installation at the `Grascii Dictionaries repository

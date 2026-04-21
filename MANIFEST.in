@@ -3,6 +3,7 @@ exclude grascii/grammars/grascii_regex.lark
 include grascii/defaults.conf
 prune grascii/dictionary/preanniversary
 prune grascii/dictionary/preanniversary-phrases
+prune grascii/dictionary/anniversary
 
 prune dictionaries
 recursive-include dictionaries/builtins *.txt

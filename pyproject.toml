@@ -73,7 +73,8 @@ grascii = [
 ]
 "grascii.dictionary" = [
   "preanniversary/*",
-  "preanniversary-phrases/*"
+  "preanniversary-phrases/*",
+  "anniversary/*",
 ]
 
 [tool.pytest.ini_options]

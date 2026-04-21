@@ -31,6 +31,12 @@ def build_dictionaries():
             output_dir=Path("grascii/dictionary/preanniversary-phrases"),
         ),
     )
+    builder.build(
+        infiles=Path("dictionaries/builtins/anniversary").glob("*.txt"),
+        output=DictionaryOutputOptions(
+            output_dir=Path("grascii/dictionary/anniversary"),
+        ),
+    )
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ from grascii.dictionary.common import INSTALLATION_DIR, get_dictionary_installed
 if TYPE_CHECKING:
     from collections.abc import Collection
 
-description = "List built-in and installed dictionaries."
+description = "List built-in and installed dictionaries"
 
 
 def build_argparser(argparser: argparse.ArgumentParser) -> None:

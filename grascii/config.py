@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from enum import Enum
 from importlib.resources import files
 from pathlib import Path, PurePath
 
@@ -23,6 +24,13 @@ DEFAULTS_CONF_NAME = "defaults.conf"
 description = "Manage Grascii configuration"
 
 
+class ConfigPreset(Enum):
+    """An enum for the available config presets."""
+
+    PREANNIVERSARY = "preanniversary"
+    ANNIVERSARY = "anniversary"
+
+
 def build_argparser(argparser: argparse.ArgumentParser) -> None:
     """Configure an ArgumentParser parser to parse the config command-line
     options
@@ -30,28 +38,50 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     :parse argparser: A fresh ArgumentParser to configure.
     """
 
-    group = argparser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
-        "--init", action="store_true", help="Create a configuration file."
+    argparser.set_defaults(func=lambda args: argparser.print_help())
+    subparsers = argparser.add_subparsers(title="subcommands")
+
+    init_description = "Create a configuration file"
+    init_parser = subparsers.add_parser(
+        "init",
+        description=init_description,
+        help=init_description,
     )
-    group.add_argument(
-        "-D",
-        "--delete",
-        action="store_true",
-        help="Delete an existing configuration file.",
+    init_parser.add_argument(
+        "preset",
+        action="store",
+        choices=[preset.value for preset in ConfigPreset],
+        help="The initial configuration to create",
     )
-    group.add_argument(
-        "-w",
-        "--where",
-        action="store_true",
-        help="Print the path to the configuration file and exit.",
-    )
-    argparser.add_argument(
+    init_parser.add_argument(
         "-f",
         "--force",
         action="store_true",
-        help="Allow overwriting of an existing configuration file.",
+        help="Allow overwriting of an existing configuration file",
     )
+    init_parser.set_defaults(func=cli_init)
+
+    delete_description = "Delete an existing configuration file"
+    delete_parser = subparsers.add_parser(
+        "delete",
+        description=delete_description,
+        help=delete_description,
+    )
+    delete_parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="Allow deleting an existing configuration file",
+    )
+    delete_parser.set_defaults(func=cli_delete)
+
+    path_description = "Print the path to the configuration file and exit"
+    path_parser = subparsers.add_parser(
+        "path",
+        description=path_description,
+        help=path_description,
+    )
+    path_parser.set_defaults(func=cli_path)
 
 
 def get_default_config() -> str:
@@ -60,6 +90,16 @@ def get_default_config() -> str:
     :returns: A string containing the default configuration.
     """
     return files("grascii").joinpath(DEFAULTS_CONF_NAME).read_text()
+
+
+def get_preset_config(preset: ConfigPreset):
+    preset_config = get_default_config()
+    if preset is ConfigPreset.ANNIVERSARY:
+        preset_config = preset_config.replace(
+            "Dictionary = :preanniversary :preanniversary-phrases",
+            "Dictionary = :anniversary",
+        )
+    return preset_config
 
 
 def config_exists() -> bool:
@@ -81,12 +121,15 @@ def get_config_file_path() -> PurePath:
     return PurePath(CONF_DIRECTORY, CONF_FILE_NAME)
 
 
-def create_config() -> None:
-    """Create a configuration file with the default settings."""
+def create_config(preset: ConfigPreset) -> None:
+    """Create a configuration file with preset settings.
+
+    :param preset: The configuration to create.
+    """
 
     Path(CONF_DIRECTORY).mkdir(parents=True, exist_ok=True)
     with Path(get_config_file_path()).open("w") as config:
-        config.write(get_default_config())
+        config.write(get_preset_config(preset))
 
 
 def delete_config() -> None:
@@ -95,44 +138,51 @@ def delete_config() -> None:
     Path(get_config_file_path()).unlink()
 
 
-def cli_config(args: argparse.Namespace) -> None:
-    """Run a search using arguments parsed from the command line.
+def cli_init(args: argparse.Namespace) -> None:
+    """Create a configuration file using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
     """
+    if config_exists() and not args.force:
+        print("Configuration file already exists.", file=sys.stderr)
+        print(
+            "If you would like to overwrite it with the specified preset",
+            "configuration, run again with --force.",
+            file=sys.stderr,
+        )
+        return
+    create_config(ConfigPreset(args.preset))
+    print("Configuration file created at", get_config_file_path())
 
-    if args.where:
-        if config_exists():
-            print(get_config_file_path())
-        else:
-            print(
-                "Configuration file does not exist. Use --init to create one.",
-                file=sys.stderr,
-            )
-    elif args.init:
-        if config_exists() and not args.force:
-            print("Configuration file already exists.", file=sys.stderr)
-            print(
-                "If you would like to overwrite it with the default",
-                "configuration, run again with --force.",
-                file=sys.stderr,
-            )
-            return
-        create_config()
-        print("Configuration file created at", get_config_file_path())
-    elif args.delete:
-        if not config_exists():
-            print("Configuration file does not exist.", file=sys.stderr)
-            return
-        if not args.force:
-            print(
-                "Are you sure you want to delete the configuration file?",
-                "If so, run with --force.",
-                file=sys.stderr,
-            )
-            return
-        delete_config()
-        print("Removed", get_config_file_path())
+
+def cli_delete(args: argparse.Namespace) -> None:
+    """Delete a configuration file using arguments parsed from the command line.
+
+    :param args: A namespace of parsed arguments.
+    """
+    if not config_exists():
+        print("Configuration file does not exist.", file=sys.stderr)
+        return
+    if not args.force:
+        print(
+            "Are you sure you want to delete the configuration file?",
+            "If so, run with --force.",
+            file=sys.stderr,
+        )
+        return
+    delete_config()
+    print("Removed", get_config_file_path())
+
+
+def cli_path(_: argparse.Namespace):
+    """Print the path to the configuration file."""
+    if config_exists():
+        print(get_config_file_path())
+    else:
+        print(
+            "Configuration file does not exist. Use init to create one.",
+            file=sys.stderr,
+        )
 
 
 def main() -> None:
@@ -141,7 +191,10 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_config(args)
+    if args.func:
+        args.func(args)
+    else:
+        argparser.print_help()
 
 
 if __name__ == "__main__":

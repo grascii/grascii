@@ -1,19 +1,25 @@
 Configuration
 #############
 
-Grascii provides a user-level configuration file to set the defaults for several
-of its tools.
+Grascii provides a user-level configuration file to set the defaults for its
+tools.
 
 Getting Started
 ***************
 
 Create a configuration file with the following command::
 
-  $ grascii config --init
+  $ grascii config init <preset>
+
+where ``<preset>`` is one of:
+
+- ``preanniversary``: Uses the ``:preanniversary`` and
+  ``:preanniversary-phrases`` dictionaries for search
+- ``anniversary``: Uses the ``:anniversary`` dictionary for search
 
 Locate the file with::
 
-  $ grascii config --where
+  $ grascii config path
 
 Editing the Configuration
 *************************

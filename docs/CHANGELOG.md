@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.9.0 - 2026-04-21
+
 ### Added
 
 - Duplicate entry prevention for `grascii dictionary build`. It can be disabled

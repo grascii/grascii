@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 APP_NAME = "grascii"
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 from grascii.dictionary.build import (
     BuildMessage,

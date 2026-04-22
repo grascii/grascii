@@ -7,10 +7,15 @@
 - Duplicate entry prevention for `grascii dictionary build`. It can be disabled
   with the new `--no-dedup` option.
 - `anniversary` as a built-in dictionary
+- Configuration file presets for preanniversary and anniversary dictionaries
 
 ### Changed
 
 - Updated dictionaries to [2026.04.20](https://github.com/grascii/dictionaries/tree/2026.04.20).
+- `grascii config --init` to `grascii config init <preset>`
+- `grascii config --delete` to `grascii config delete`
+- `grascii config --where` to `grascii config path`
+- Loading of default configuration to use `importlib.resources`
 
 ## 0.8.0 - 2026-03-03
 

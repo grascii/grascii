@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 from configparser import ConfigParser
-from pathlib import Path
+from importlib.resources import files
 
 from grascii.config import get_config_file_path
 
+_defaults = files("grascii").joinpath("defaults.conf").read_text()
+
 _CONFIG = ConfigParser()
-_CONFIG.read_file(Path(__file__).with_name("defaults.conf").open())
+_CONFIG.read_string(_defaults)
 _CONFIG.read(get_config_file_path())
 
 DEFAULTS = ConfigParser()
-DEFAULTS.read_file(Path(__file__).with_name("defaults.conf").open())
+DEFAULTS.read_string(_defaults)
 
 SEARCH = _CONFIG["Search"]

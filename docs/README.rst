@@ -56,6 +56,24 @@ You can also try::
 
   $ python -m grascii --help
 
+Configuration
+=============
+
+Grascii includes dictionaries for both the Preanniverary and the Anniversary
+series of Gregg Shorthand. Initialize the configuration file according to your
+preferred series to set the default dictionaries used for search.
+
+**Preanniverary**::
+
+  $ grascii config init preanniversary
+
+**Anniversary**::
+
+  $ grascii config init anniversary
+
+To learn more about ``grascii`` configuration, see `configuration
+<https://grascii.readthedocs.io/en/latest/configuration.html>`_.
+
 Grascii Language
 ****************
 

@@ -52,7 +52,6 @@ def main() -> None:
         aliases=["cf"],
     )
     config.build_argparser(config_parser)
-    config_parser.set_defaults(func=config.cli_config)
 
     args = argparser.parse_args(sys.argv[1:])
 

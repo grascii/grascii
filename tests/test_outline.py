@@ -46,6 +46,10 @@ class TestInferredDirections(unittest.TestCase):
             ("KAS", "KAS)"),
             ("SLA", "S(LA"),
             ("SALS", "S(ALS("),
+            ("DMASK", "DMAS)K"),
+            ("NTESTN", "NTES(TN"),
+            ("SADN", "S)ADN"),
+            ("SANT", "S)ANT"),
         ]
         self.run_tests(tests)
 
@@ -68,6 +72,23 @@ class TestInferredDirections(unittest.TestCase):
 
     def test_s_joined_to_downward_lines(self):
         tests = [("SASH", "S)ASH"), ("SAJ", "S)AJ"), ("CHES", "CHES)")]
+        self.run_tests(tests)
+
+    def test_s_joined_to_consonants(self):
+        tests = [
+            ("SKS", "S)KS)"),
+            ("SRS", "S(RS("),
+            ("SNS", "S)NS("),
+            ("STS", "S)TS("),
+            ("SPS", "S(PS("),
+            ("SFS", "S)FS)"),
+            ("SCHS", "S)CHS)"),
+            ("SNGS", "S)NGS("),
+            ("STNS", "S)TNS("),
+            ("SNTS", "S)NTS("),
+            ("SDFS", "S)DFS)"),
+            ("SJNTS", "S(JNTS("),
+        ]
         self.run_tests(tests)
 
     def test_s_o(self):

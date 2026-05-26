@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+- `Outline`'s inferred direction annotations of `S` joined to over and under
+   blends
+
 ## 0.9.0 - 2026-04-21
 
 ### Added

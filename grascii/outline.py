@@ -221,6 +221,9 @@ class Outline:
 
         3. In words beginning with IS, the left S is used.
 
+        4. When S is joined to an over blend (TN, DN, TM, DM) or an under blend
+        (NT, ND, MT, MD), the S is used which forms a sharp angle. If a circle
+        vowel occurs between an over blend and the S, the comma S is used.
         """
 
         def set_S_stroke_type(stroke: Stroke) -> None:
@@ -275,6 +278,10 @@ class Outline:
                         # Addendum 3
                         stroke.add_annotation(grammar.LEFT)
                         return
+                if stroke.prev_char.stroke in ("TN", "DN", "TM", "DM"):
+                    # Addendum 4
+                    stroke.add_annotation(grammar.LEFT)
+                    return
                 # Rule 31
                 if set_S_direction_based_on_curves(
                     stroke, stroke.prev_char.tail_type, is_before=False
@@ -305,6 +312,10 @@ class Outline:
                 stroke.add_annotation(grammar.RIGHT)
                 return True
             elif stroke_type.curve == Curve.COUNTER_CLOCKWISE:
+                if stroke_type.direction == Direction.NORTH_EAST and is_before:
+                    # Addendum 4
+                    stroke.add_annotation(grammar.RIGHT)
+                    return True
                 # Rule 30
                 stroke.add_annotation(grammar.LEFT)
                 return True

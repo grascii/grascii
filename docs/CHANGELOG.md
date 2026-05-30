@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `interpret` command to interpret Grascii strings
+
 ### Fixed
 
 - `Outline`'s inferred direction annotations of `S` joined to over and under

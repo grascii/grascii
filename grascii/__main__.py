@@ -6,7 +6,15 @@ import argparse
 import signal
 import sys
 
-from grascii import APP_NAME, __version__, config, dephrase, dictionary, search
+from grascii import (
+    APP_NAME,
+    __version__,
+    config,
+    dephrase,
+    dictionary,
+    interpret,
+    search,
+)
 
 
 def main() -> None:
@@ -30,6 +38,15 @@ def main() -> None:
     )
     search.build_argparser(search_parser)
     search_parser.set_defaults(func=search.cli_search)
+
+    interpret_parser = subparsers.add_parser(
+        "interpret",
+        description=interpret.description,
+        help=interpret.description,
+        aliases=["i"],
+    )
+    interpret.build_argparser(interpret_parser)
+    interpret_parser.set_defaults(func=interpret.cli_interpret)
 
     dephrase_parser = subparsers.add_parser(
         "dephrase", description=dephrase.description, help=dephrase.description

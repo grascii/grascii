@@ -94,3 +94,52 @@ canonical interpretation:
 
    **Why**: Assembling multi-character strokes from left-to-right is most
    natural to readers and writers.
+
+Command
+*******
+
+Grascii includes an ``interpret`` command to show how Grascii strings are
+interpreted.
+
+Usage
+=====
+
+.. object:: grascii interpret [-h] [-a] [--all] grascii
+
+.. option:: <grascii>
+
+The Grascii string to interpret.
+
+.. option:: -h, --help
+
+Print a help message and exit.
+
+.. option:: -a, --annotate
+
+Annotate strokes such as ``S`` and ``TH`` with their implied directions.
+
+**Examples**:
+
+::
+
+  $ grascii interpret --annotate THROS
+  TH)-R-O-S(
+
+::
+
+  $ grascii interpret --annotate "S(CHS"
+  S(-CH-S)
+
+.. option:: --all
+
+Print all interpretations. Without this option, only the canonical
+interpretation is provided.
+
+**Example**:
+
+::
+
+  $ grascii interpret --all NTNS
+  N-TN-S
+  NT-N-S
+  N-T-N-S

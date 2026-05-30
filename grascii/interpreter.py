@@ -1,11 +1,3 @@
-"""
-:type Interpretation:
-    Represents an interpretation of a Grascii string. An ``Interpretation`` is
-    a list of strokes and annotation lists. Each stroke is its own element in
-    the interpretation, while sequences of annotations are grouped into their
-    own sublist.
-"""
-
 from __future__ import annotations
 
 import re
@@ -15,14 +7,13 @@ from grascii import grammar
 from grascii.validator import GrasciiValidator
 
 Interpretation = list[str | list[str]]
-
-
 """
-A dictionary of multi-character strokes to exception patterns.
-A matching sequence of characters in the Grascii string is treated as the
-corresponding multi-character stroke unless following characters match the
-exception pattern.
+Represents an interpretation of a Grascii string. An ``Interpretation`` is
+a list of strokes and annotation lists. Each stroke is its own element in
+the interpretation, while sequences of annotations are grouped into their
+own sublist.
 """
+
 _EXCEPTIONS = {
     "EU": "[).,]",
     "AU": "[).,]",
@@ -37,6 +28,12 @@ _EXCEPTIONS = {
     "SS": "H|[)(]?,",
     "XS": "H|[)(]?,",
 }
+"""
+A dictionary of multi-character strokes to exception patterns.
+A matching sequence of characters in the Grascii string is treated as the
+corresponding multi-character stroke unless following characters match the
+exception pattern.
+"""
 
 
 class GrasciiInterpreter:

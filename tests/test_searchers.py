@@ -190,6 +190,20 @@ class TestSortedGrasciiSearches(unittest.TestCase):
             ],
         )
 
+    def test_exact_matches_appear_on_top_2(self):
+        searcher = GrasciiSearcher(dictionaries=[sorted_output_dir])
+        results = searcher.sorted_search(
+            grascii="RA&'NT", search_mode="end", uncertainty=1
+        )
+        self.assertListEqual(
+            [r.entry.grascii for r in results],
+            [
+                "MSKRA&'NT",
+                "RAND",
+                "TOLRANT",
+            ],
+        )
+
 
 class TestReverseSearcher(unittest.TestCase):
     def test_results(self):

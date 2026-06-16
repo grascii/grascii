@@ -34,3 +34,7 @@ POESN Poison
 POENANT Poignant
 SPOELR Spoiler
 POENANSE Poignancy
+
+TOLRANT Tolerant
+MSKRA&'NT Miscreant
+RAND Rained

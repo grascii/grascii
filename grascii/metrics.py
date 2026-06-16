@@ -4,7 +4,6 @@ Contains metrics for comparing search queries to regular expression matches.
 
 from __future__ import annotations
 
-import string
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -73,9 +72,9 @@ def match_to_gsequence(match: Match[str]) -> GrasciiSequence:
             continue
         if group is None:
             continue
-        i = 0
-        while i < len(group) and group[i] in string.ascii_uppercase:
-            i += 1
+        i = len(group)
+        while i >= 0 and group[i - 1] in grammar.ANNOTATION_CHARACTERS:
+            i -= 1
         if i > 0:
             sequence.append(AnnotatedStroke(group[:i], set(group[i:])))
         else:

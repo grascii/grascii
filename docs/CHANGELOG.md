@@ -8,6 +8,10 @@
 - Classes and types used by the public APIs as importable from the top-level
   `grascii`
 
+### Changed
+
+- CLI commands exit with non-zero exit codes for known errors
+
 ### Fixed
 
 - `Outline`'s inferred direction annotations of `S` joined to over and under

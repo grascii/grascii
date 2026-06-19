@@ -73,7 +73,7 @@ def main() -> None:
     args = argparser.parse_args(sys.argv[1:])
 
     if args.func:
-        args.func(args)
+        sys.exit(args.func(args))
     else:
         argparser.print_help()
 

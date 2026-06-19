@@ -39,7 +39,12 @@ def get_installed() -> Collection[str]:
     return []
 
 
-def cli_list(args: argparse.Namespace) -> None:
+def cli_list(args: argparse.Namespace) -> int:
+    """List dictionaries using arguments parsed from the command line.
+
+    :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
+    """
     print("Built-in Dictionaries:")
     for built_in in get_built_ins():
         print(built_in)
@@ -49,6 +54,8 @@ def cli_list(args: argparse.Namespace) -> None:
     for installed in get_installed():
         print(installed)
 
+    return 0
+
 
 def main() -> None:
     """Run the list command using arguments from sys.argv."""
@@ -56,7 +63,7 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_list(args)
+    sys.exit(cli_list(args))
 
 
 if __name__ == "__main__":

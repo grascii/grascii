@@ -173,10 +173,11 @@ def dephrase(phrase: str, aggressive: bool = False) -> Iterable[str]:
             parses.add(parse)
 
 
-def cli_dephrase(args: argparse.Namespace) -> None:
+def cli_dephrase(args: argparse.Namespace) -> int:
     """Run dephrase using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
     """
     if len(args.phrase) > 8 and args.aggressive and not args.ignore_limit:
         print(
@@ -185,7 +186,7 @@ def cli_dephrase(args: argparse.Namespace) -> None:
             "irrelevant results.",
         )
         print("To ignore this warning use '--ignore-limit'.")
-        return
+        return 1
 
     results = dephrase(args.phrase, args.aggressive)
     has_result = False
@@ -198,6 +199,8 @@ def cli_dephrase(args: argparse.Namespace) -> None:
         if not args.aggressive:
             print("You may try again with --aggressive to consider more possibilities.")
 
+    return 0
+
 
 def main() -> None:
     """Run dephrase using arguments retrieved from sys.argv."""
@@ -205,7 +208,7 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_dephrase(args)
+    sys.exit(cli_dephrase(args))
 
 
 if __name__ == "__main__":

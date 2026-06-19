@@ -5,6 +5,8 @@
 ### Added
 
 - `interpret` command to interpret Grascii strings
+- Classes and types used by the public APIs as importable from the top-level
+  `grascii`
 
 ### Fixed
 

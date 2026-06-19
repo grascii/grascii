@@ -66,7 +66,12 @@ def install_dictionary(
     return get_dictionary_installed_name(name)
 
 
-def cli_install(args: argparse.Namespace) -> None:
+def cli_install(args: argparse.Namespace) -> int:
+    """Install a dictionary using arguments parsed from the command line.
+
+    :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
+    """
     try:
         name = install_dictionary(
             args.dictionary, INSTALLATION_DIR, args.name, args.force
@@ -75,8 +80,10 @@ def cli_install(args: argparse.Namespace) -> None:
         print("A dictionary named", e.name, "already exists.", file=sys.stderr)
         print("Provide a different name with --name.", file=sys.stderr)
         print("If you would like to overwrite it, run with --force.", file=sys.stderr)
+        return 1
     else:
         print("Successfully installed", args.dictionary, "as", name)
+        return 0
 
 
 def main() -> None:
@@ -85,7 +92,7 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_install(args)
+    sys.exit(cli_install(args))
 
 
 if __name__ == "__main__":

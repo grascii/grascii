@@ -49,17 +49,25 @@ def uninstall_dictionary(name: str, install_dir: Path, force: bool = False) -> N
         dictionary_path.rmdir()
 
 
-def cli_uninstall(args: argparse.Namespace) -> None:
+def cli_uninstall(args: argparse.Namespace) -> int:
+    """Uninstall a dictionary using arguments parsed from the command line.
+
+    :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
+    """
     try:
         uninstall_dictionary(args.name, INSTALLATION_DIR, force=args.force)
     except DictionaryNotFound:
         print(args.name, "does not exist.", file=sys.stderr)
+        return 1
     except OSError:
         print("An error occurred during uninstallation.", file=sys.stderr)
         print("The dictionary may be corrupted.", file=sys.stderr)
         print("To force removal, run with --force.", file=sys.stderr)
+        return 1
     else:
         print("Successfully uninstalled", args.name)
+        return 0
 
 
 def main() -> None:
@@ -68,7 +76,7 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_uninstall(args)
+    sys.exit(cli_uninstall(args))
 
 
 if __name__ == "__main__":

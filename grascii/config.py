@@ -138,10 +138,11 @@ def delete_config() -> None:
     Path(get_config_file_path()).unlink()
 
 
-def cli_init(args: argparse.Namespace) -> None:
+def cli_init(args: argparse.Namespace) -> int:
     """Create a configuration file using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
     """
     if config_exists() and not args.force:
         print("Configuration file already exists.", file=sys.stderr)
@@ -150,39 +151,47 @@ def cli_init(args: argparse.Namespace) -> None:
             "configuration, run again with --force.",
             file=sys.stderr,
         )
-        return
+        return 1
     create_config(ConfigPreset(args.preset))
     print("Configuration file created at", get_config_file_path())
+    return 0
 
 
-def cli_delete(args: argparse.Namespace) -> None:
+def cli_delete(args: argparse.Namespace) -> int:
     """Delete a configuration file using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
     """
     if not config_exists():
         print("Configuration file does not exist.", file=sys.stderr)
-        return
+        return 1
     if not args.force:
         print(
             "Are you sure you want to delete the configuration file?",
             "If so, run with --force.",
             file=sys.stderr,
         )
-        return
+        return 1
     delete_config()
     print("Removed", get_config_file_path())
+    return 0
 
 
-def cli_path(_: argparse.Namespace):
-    """Print the path to the configuration file."""
+def cli_path(_: argparse.Namespace) -> int:
+    """Print the path to the configuration file.
+
+    :returns: A CLI exit code
+    """
     if config_exists():
         print(get_config_file_path())
+        return 0
     else:
         print(
             "Configuration file does not exist. Use init to create one.",
             file=sys.stderr,
         )
+        return 1
 
 
 def main() -> None:
@@ -192,7 +201,7 @@ def main() -> None:
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
     if args.func:
-        args.func(args)
+        sys.exit(args.func(args))
     else:
         argparser.print_help()
 

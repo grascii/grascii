@@ -173,10 +173,11 @@ def search(**kwargs) -> Iterable[SearchResult] | None:
     return searcher.sorted_search(**kwargs)
 
 
-def cli_search(args: argparse.Namespace) -> None:
+def cli_search(args: argparse.Namespace) -> int:
     """Run a search using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
     """
 
     try:
@@ -184,11 +185,11 @@ def cli_search(args: argparse.Namespace) -> None:
     except InvalidGrascii as e:
         print("Invalid Grascii String", file=sys.stderr)
         print(e.context, file=sys.stderr)
-        return
+        return 1
     except DictionaryNotFound as e:
         print("Dictionary Not Found", file=sys.stderr)
         print(e.name, file=sys.stderr)
-        return
+        return 1
     else:
         if results is not None:
             count = 0
@@ -203,6 +204,7 @@ def cli_search(args: argparse.Namespace) -> None:
                     print(result.entry.grascii, result.entry.translation)
                 count += 1
             print("Results:", count)
+    return 0
 
 
 def main() -> None:
@@ -211,7 +213,7 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_search(args)
+    sys.exit(cli_search(args))
 
 
 if __name__ == "__main__":

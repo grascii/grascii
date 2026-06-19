@@ -478,10 +478,11 @@ class DictionaryBuilder:
         )
 
 
-def cli_build(args: argparse.Namespace) -> None:
+def cli_build(args: argparse.Namespace) -> int:
     """Run a build using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
     """
 
     pipeline: list[PipelineFunc] = []
@@ -508,6 +509,8 @@ def cli_build(args: argparse.Namespace) -> None:
             print()
         print(summary)
 
+    return 0
+
 
 def main() -> None:
     """Run a build using arguments retrieved from sys.argv."""
@@ -515,7 +518,7 @@ def main() -> None:
     argparser = argparse.ArgumentParser(description)
     build_argparser(argparser)
     args = argparser.parse_args(sys.argv[1:])
-    cli_build(args)
+    sys.exit(cli_build(args))
 
 
 if __name__ == "__main__":

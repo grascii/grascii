@@ -38,10 +38,11 @@ def build_argparser(argparser: argparse.ArgumentParser) -> None:
     )
 
 
-def cli_interpret(args: argparse.Namespace) -> None:
+def cli_interpret(args: argparse.Namespace) -> int:
     """Run interpretation using arguments parsed from the command line.
 
     :param args: A namespace of parsed arguments.
+    :returns: A CLI exit code
     """
     parser = GrasciiParser()
 
@@ -50,7 +51,7 @@ def cli_interpret(args: argparse.Namespace) -> None:
     except InvalidGrascii as e:
         print("Invalid Grascii String", file=sys.stderr)
         print(e.context, file=sys.stderr)
-        return
+        return 1
 
     for interpretation in interpretations:
         if args.annotate:
@@ -59,6 +60,8 @@ def cli_interpret(args: argparse.Namespace) -> None:
         print(interpretation_to_string(interpretation))
         if not args.all:
             break
+
+    return 0
 
 
 def main() -> None:

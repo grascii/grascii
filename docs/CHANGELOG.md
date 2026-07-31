@@ -17,6 +17,7 @@
 - `Outline`'s inferred direction annotations of `S` joined to over and under
    blends
 - Ranking of search results containing `A&'` or `A&E`
+- Potential incorrect results for start/contain searches that ended with `A`
 
 ## 0.9.0 - 2026-04-21
 

@@ -87,6 +87,10 @@ class RegexBuilder:
         if stroke.endswith("S") or stroke.endswith("T"):
             stroke += "(?!H)"
 
+        # Prevent A from matching A&' or A&E
+        if stroke == "A":
+            stroke += "(?!&)"
+
         if (
             self.annotation_mode is Strictness.MEDIUM
             or self.annotation_mode is Strictness.HIGH

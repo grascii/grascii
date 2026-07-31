@@ -49,7 +49,7 @@ class TestAnnotationRegex(unittest.TestCase):
             ("I", ""),
             ("I", "~"),
             ("I", "_"),
-            ("I~|_"),
+            ("I", "~|_"),
         ]
         self.check_strictness_low(annotations, texts)
 
@@ -60,14 +60,14 @@ class TestAnnotationRegex(unittest.TestCase):
             ["_"],
         ]
         texts = [
+            ("A&'", ""),
+            ("A&'", "~"),
+            ("A&'", "_"),
+            ("A&'", "~_"),
             ("A&E", ""),
             ("A&E", "~"),
             ("A&E", "_"),
-            ("A&E~_"),
-            ("A'E", ""),
-            ("A'E", "~"),
-            ("A'E", "_"),
-            ("A'E~_"),
+            ("A&E", "~_"),
         ]
         self.check_strictness_low(annotations, texts)
 
@@ -1502,6 +1502,7 @@ class TestNegativeLookaheads(RegexBuilderTester):
             ([["DT"], [("DT", True), ("EDTS", True), ("EDTH", False)]]),
             ([["JNT"], [("JNT", True), ("EJNTS", True), ("EJNTH", False)]]),
             ([["PNT"], [("PNT", True), ("EPNTS", True), ("EPNTH", False)]]),
+            ([["A"], [("A", True), ("A&'", False), ("A&E", False)]]),
         ]
         self.run_tests(builder, tests)
 

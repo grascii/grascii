@@ -8,6 +8,7 @@
 - Classes and types used by the public APIs as importable from the top-level
   `grascii`
 - Inferred direction annotations of `SS` in `Outline`
+- Inferred direction annotations of `X` and `XS` in `Outline`
 
 ### Changed
 

@@ -197,6 +197,45 @@ class TestInferredDirections(unittest.TestCase):
         ]
         self.run_tests(tests)
 
+    def test_lone_x(self):
+        tests = [("X", "X)"), ("X)", "X)"), ("X(", "X(")]
+        self.run_tests(tests)
+
+    def test_x(self):
+        tests = [
+            ("XELUS", "X(ELUS)"),
+            ("XERO", "X(ERO"),
+            ("MAX", "MAX("),
+            ("RAX", "RAX("),
+            ("DOX", "DOX("),
+            ("LAXE", "LAX(E"),
+        ]
+        self.run_tests(tests)
+
+    def test_lone_xs(self):
+        tests = [("XS", "XS)"), ("XS)", "XS)"), ("XS(", "XS(")]
+        self.run_tests(tests)
+
+    def test_xs_joinings(self):
+        tests = [
+            ("NXS", "NXS)"),
+            ("RIXS", "RIXS)"),
+            ("PAXS", "PAXS)"),
+            ("TEXS", "TEXS)"),
+            ("AKXS", "AKXS)"),
+            ("XSL", "XS)L"),
+            ("KAXS", "KAXS("),
+            ("DUXS", "DUXS("),
+            ("XSP", "XS(P"),
+            ("JEXS", "JEXS("),
+            ("XSEP", "XS(EP"),
+            ("XSEPND", "XS(EPND"),
+            ("THEXS", "TH(EXS("),
+            ("FAXS", "FAXS("),
+            ("XSS", "XS)S)"),
+        ]
+        self.run_tests(tests)
+
     def test_lone_th(self):
         tests = [("TH", "TH("), ("TH)", "TH)"), ("TH(", "TH(")]
         self.run_tests(tests)

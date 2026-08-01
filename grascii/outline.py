@@ -102,7 +102,7 @@ class Stroke:
         if stroke in {"PNT", "PND", "JNT", "JND", "O"}:
             return cls(
                 stroke,
-                Direction.SOUTH_EAST,
+                Direction.SOUTH_WEST,
                 Curve.COUNTER_CLOCKWISE,
                 Direction.NORTH_EAST,
                 Curve.COUNTER_CLOCKWISE,
@@ -224,6 +224,16 @@ class Outline:
         4. When S is joined to an over blend (TN, DN, TM, DM) or an under blend
         (NT, ND, MT, MD), the S is used which forms a sharp angle. If a circle
         vowel occurs between an over blend and the S, the comma S is used.
+
+        5. The right SS is given the preference, but the other form is used
+        when:
+
+            a. following K, G, or TH with a circle vowel occurring at the
+            joining.
+            b. following SH, CH, J, F, V, or DF. A circle vowel occurring at the
+            joining does not affect the application of this rule.
+            c. followed by P, B, or PND. A circle vowel occurring at the joining
+            does not affect the application of this rule.
         """
 
         def set_S_stroke_type(stroke: Stroke) -> None:
@@ -251,6 +261,19 @@ class Outline:
             elif stroke.has_annotation(grammar.LEFT):
                 stroke.head_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
                 stroke.tail_type = StrokeType(Direction.NORTH_EAST, Curve.CLOCKWISE)
+
+        def set_SS_stroke_type(stroke: Stroke) -> None:
+            assert stroke.has_direction_annotation()
+            if stroke.has_annotation(grammar.RIGHT):
+                stroke.head_type = StrokeType(
+                    Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE
+                )
+                stroke.tail_type = StrokeType(Direction.SOUTH_WEST, Curve.CLOCKWISE)
+            elif stroke.has_annotation(grammar.LEFT):
+                stroke.head_type = StrokeType(Direction.SOUTH_WEST, Curve.CLOCKWISE)
+                stroke.tail_type = StrokeType(
+                    Direction.SOUTH_WEST, Curve.COUNTER_CLOCKWISE
+                )
 
         def set_S_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "S" or stroke.stroke == "Z"
@@ -333,6 +356,51 @@ class Outline:
                     return True
             return False
 
+        def set_SS_direction(stroke: Stroke) -> None:
+            assert stroke.stroke == "SS"
+            if stroke.prev_char:
+                if stroke.prev_char.tail_type.curve == Curve.LOOP:
+                    if stroke.prev_consonant:
+                        if stroke.prev_consonant.tail_type in {
+                            (Direction.EAST, Curve.CLOCKWISE),
+                            (Direction.NORTH_EAST, Curve.CLOCKWISE),
+                            (Direction.SOUTH_WEST, Curve.LINE),
+                            (Direction.SOUTH_WEST, Curve.CLOCKWISE),
+                        }:
+                            # Addendum 5a + 5b
+                            stroke.add_annotation(grammar.LEFT)
+                            return
+                if stroke.prev_char:
+                    if stroke.prev_char.tail_type in {
+                        (Direction.SOUTH_WEST, Curve.LINE),
+                        (Direction.SOUTH_WEST, Curve.CLOCKWISE),
+                    }:
+                        # Addendum 5b
+                        stroke.add_annotation(grammar.LEFT)
+                        return
+
+            if stroke.next_char:
+                if stroke.next_char.head_type.curve == Curve.LOOP:
+                    if stroke.next_consonant:
+                        if stroke.next_consonant.head_type == (
+                            Direction.SOUTH_WEST,
+                            Curve.COUNTER_CLOCKWISE,
+                        ):
+                            # Addendum 5c
+                            stroke.add_annotation(grammar.LEFT)
+                            return
+                if stroke.next_char:
+                    if stroke.next_char.head_type == (
+                        Direction.SOUTH_WEST,
+                        Curve.COUNTER_CLOCKWISE,
+                    ):
+                        # Addendum 5c
+                        stroke.add_annotation(grammar.LEFT)
+                        return
+
+            # Addendum 5
+            stroke.add_annotation(grammar.RIGHT)
+
         def set_TH_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "TH"
             if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"}) or (
@@ -391,6 +459,10 @@ class Outline:
                 if not current_stroke.has_direction_annotation():
                     set_S_direction(current_stroke)
                 set_S_stroke_type(current_stroke)
+            if current_stroke.stroke == "SS":
+                if not current_stroke.has_direction_annotation():
+                    set_SS_direction(current_stroke)
+                set_SS_stroke_type(current_stroke)
             elif current_stroke.stroke == "TH":
                 if not current_stroke.has_direction_annotation():
                     set_TH_direction(current_stroke)

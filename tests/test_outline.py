@@ -173,6 +173,30 @@ class TestInferredDirections(unittest.TestCase):
         ]
         self.run_tests(tests)
 
+    def test_lone_ss(self):
+        tests = [("SS", "SS)"), ("SS)", "SS)"), ("SS(", "SS(")]
+        self.run_tests(tests)
+
+    def test_ss_joinings(self):
+        tests = [
+            ("NSS", "NSS)"),
+            ("RISS", "RISS)"),
+            ("PASS", "PASS)"),
+            ("TESS", "TESS)"),
+            ("AKSS", "AKSS)"),
+            ("SSL", "SS)L"),
+            ("KASS", "KASS("),
+            ("DUSS", "DUSS("),
+            ("SSP", "SS(P"),
+            ("JESS", "JESS("),
+            ("SSEP", "SS(EP"),
+            ("SSEPND", "SS(EPND"),
+            ("THESS", "TH(ESS("),
+            ("FASS", "FASS("),
+            ("SSS", "SS)S)"),
+        ]
+        self.run_tests(tests)
+
     def test_lone_th(self):
         tests = [("TH", "TH("), ("TH)", "TH)"), ("TH(", "TH(")]
         self.run_tests(tests)
@@ -272,6 +296,17 @@ class TestInferredDirections(unittest.TestCase):
             ("D-SET", "D-S)ET"),
             ("OS", "OS("),
             ("O-S", "O-S)"),
+        ]
+        self.run_tests(tests)
+
+    def test_ss_boundaries(self):
+        tests = [
+            ("N-SS", "N-SS)"),
+            ("AK-SS", "AK-SS)"),
+            ("SS-L", "SS)-L"),
+            ("SS-P", "SS)-P"),
+            ("THE-SS", "TH(E-SS)"),
+            ("F-ASS", "F-ASS)"),
         ]
         self.run_tests(tests)
 

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.10.0 - 2026-08-01
+
 ### Added
 
 - `interpret` command to interpret Grascii strings

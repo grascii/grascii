@@ -19,6 +19,7 @@ Useful Links
 - `grascii on HuggingFace <https://huggingface.co/grascii>`_
 - `Grascii Search Space (web interface for Grascii Search) <https://huggingface.co/spaces/grascii/search>`_
 - `grascii-gui (local graphical interface for Grascii Search) <https://github.com/grascii/gui>`_
+- `Grascii font (Gregg Shorthand font) <https://github.com/grascii/font>`_
 
 Made With
 *********

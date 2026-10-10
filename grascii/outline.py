@@ -91,7 +91,7 @@ class Stroke:
             return cls(stroke, Direction.NORTH_EAST, Curve.CLOCKWISE)
         if stroke in {"NG", "NK"}:
             return cls(stroke, Direction.SOUTH_EAST, Curve.LINE)
-        if stroke in {"DF", "DV", "TV", "U"}:
+        if stroke in {"DF", "DV", "TV", "U", "EU", "AU"}:
             return cls(
                 stroke,
                 Direction.NORTH_EAST,
@@ -99,7 +99,7 @@ class Stroke:
                 Direction.SOUTH_WEST,
                 Curve.CLOCKWISE,
             )
-        if stroke in {"PNT", "PND", "JNT", "JND", "O"}:
+        if stroke in {"PNT", "PND", "JNT", "JND", "O", "OE"}:
             return cls(
                 stroke,
                 Direction.SOUTH_WEST,
@@ -204,6 +204,15 @@ class Outline:
 
         35. In words beginning with so, the comma S is used.
 
+        This method also sets the direction of S/Z according to the following
+        rules from the Anniversary edition of Gregg Shorthand:
+
+        51. When a circle vowel immediately precedes S between strokes, treat
+        the S as belonging to the preceding consonant; if the circle follows
+        the S, the S should be treated as if it belonged to the following
+        consonant; when S occurs between strokes and is not joined to a circle,
+        write the S with the syllable to which it belongs.
+
         Addendums
         =========
 
@@ -237,6 +246,9 @@ class Outline:
 
         6. The directions of X and XS follow the same rules as S and SS
         respectively.
+
+        7. When U and a circle vowel precede S followed by a counter-clockwise
+        downward curve, the left S is used.
         """
 
         def set_S_stroke_type(stroke: Stroke) -> None:
@@ -309,27 +321,49 @@ class Outline:
             if (
                 not stroke.prev_char
                 and stroke.next_char
-                and stroke.next_char.stroke == "O"
+                and stroke.next_char.stroke in ("O", "OE")
             ):
                 # Rule 35
                 stroke.add_annotation(grammar.RIGHT)
                 return
-            # Addendum 1
-            if stroke.prev_char:
-                if stroke.prev_char.tail_type.curve == Curve.LOOP:
-                    if stroke.prev_consonant:
-                        # Rule 30 + 31
-                        if set_S_direction_based_on_curves(
-                            stroke, stroke.prev_consonant.tail_type, is_before=False
-                        ):
-                            return
-                    elif (
-                        stroke.prev_char.stroke == "I"
-                        and not stroke.prev_char.prev_char
+
+            # Rule 51
+            if stroke.prev_char and stroke.prev_char.tail_type.curve == Curve.LOOP:
+                prev = (
+                    stroke.prev_char.prev_char
+                    if stroke.prev_char.prev_char
+                    and stroke.prev_char.prev_char.stroke == "U"
+                    else stroke.prev_consonant
+                )
+                if prev:
+                    # Addendum 7
+                    if (
+                        prev.stroke == "U"
+                        and stroke.next_char
+                        and stroke.next_char.head_type.curve == Curve.COUNTER_CLOCKWISE
+                        and stroke.next_char.head_type.direction == Direction.SOUTH_WEST
                     ):
-                        # Addendum 3
                         stroke.add_annotation(grammar.LEFT)
                         return
+                    # Rule 30 + 31
+                    if set_S_direction_based_on_curves(
+                        stroke, prev.tail_type, is_before=False
+                    ):
+                        return
+                elif stroke.prev_char.stroke == "I" and not stroke.prev_char.prev_char:
+                    # Addendum 3
+                    stroke.add_annotation(grammar.LEFT)
+                    return
+            if stroke.next_char and stroke.next_char.head_type.curve == Curve.LOOP:
+                if stroke.next_consonant:
+                    # Rule 30 + 31
+                    if set_S_direction_based_on_curves(
+                        stroke, stroke.next_consonant.head_type, is_before=True
+                    ):
+                        return
+
+            # Addendum 1
+            if stroke.prev_char:
                 if stroke.prev_char.stroke in {"TN", "DN", "TM", "DM"}:
                     # Addendum 4
                     stroke.add_annotation(grammar.LEFT)
@@ -340,13 +374,6 @@ class Outline:
                 ):
                     return
             if stroke.next_char:
-                if stroke.next_char.head_type.curve == Curve.LOOP:
-                    if stroke.next_consonant:
-                        # Rule 30 + 31
-                        if set_S_direction_based_on_curves(
-                            stroke, stroke.next_consonant.head_type, is_before=True
-                        ):
-                            return
                 # Rule 31
                 if set_S_direction_based_on_curves(
                     stroke, stroke.next_char.head_type, is_before=True

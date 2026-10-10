@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+- `Outline`'s  inferred direction annotations of `S`:
+  - joined to hook diphthongs
+  - preceded by a consonant and followed by a circle vowel and a consonant
+  - preceded by `U` and a circle vowel and followed by `P/B`
+
 ## 0.10.0 - 2026-08-01
 
 ### Added

@@ -110,6 +110,17 @@ class TestInferredDirections(unittest.TestCase):
             ("GUST", "GUS)T"),
             ("GRASHUS", "GRASHUS)"),
             ("VESHUS", "VESHUS)"),
+            ("UESL", "UES)L"),
+            ("UESP", "UES(P"),
+            ("UASBRE", "UAS(BRE"),
+        ]
+        self.run_tests(tests)
+
+    def test_s_diphthongs(self):
+        tests = [
+            ("SOES", "S)OES("),
+            ("SEUS", "S)EUS)"),
+            ("SAUS", "S)AUS)"),
         ]
         self.run_tests(tests)
 
@@ -117,7 +128,6 @@ class TestInferredDirections(unittest.TestCase):
         tests = [
             ("UOSP", "UOS(P"),
             ("PAST", "PAS(T"),
-            ("UESP", "UES(P"),
             ("UESTF", "UES)TF"),
             ("GOSEP", "GOS(EP"),
             ("TRESPAS", "TRES(PAS("),
@@ -130,6 +140,9 @@ class TestInferredDirections(unittest.TestCase):
             ("DOSEL", "DOS(EL"),
             ("FLASK", "FLAS(K"),
             ("KLASP", "KLAS(P"),
+            ("NSEK", "NS)EK"),
+            ("RSID", "RS)ID"),
+            ("DSAT", "DS)AT"),
         ]
         self.run_tests(tests)
 
@@ -329,10 +342,6 @@ class TestInferredDirections(unittest.TestCase):
             ("LE-SN", "LE-S)N"),
             ("RSN", "RS(N"),
             ("R-SN", "R-S)N"),
-            ("RSED", "RS(ED"),
-            ("R-SED", "R-S)ED"),
-            ("DSET", "DS(ET"),
-            ("D-SET", "D-S)ET"),
             ("OS", "OS("),
             ("O-S", "O-S)"),
         ]

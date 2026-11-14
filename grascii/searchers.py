@@ -23,13 +23,8 @@ from grascii.interpreter import Interpretation
 from grascii.parser import GrasciiParser
 
 if TYPE_CHECKING:
-    import sys
     from collections.abc import Callable, Iterable, Sequence
-
-    if sys.version_info >= (3, 11):
-        from typing import Unpack
-    else:
-        from typing_extensions import Unpack
+    from typing import Unpack
 
     from grascii.metrics import Comparable
 

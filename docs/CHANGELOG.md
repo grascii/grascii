@@ -9,6 +9,10 @@
   - preceded by a consonant and followed by a circle vowel and a consonant
   - preceded by `U` and a circle vowel and followed by `P/B`
 
+### Removed
+
+- Dropped Python 3.10 support
+
 ## 0.10.0 - 2026-08-01
 
 ### Added

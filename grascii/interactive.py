@@ -30,11 +30,7 @@ from grascii.searchers import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Sequence
-
-    if sys.version_info >= (3, 11):
-        from typing import Unpack
-    else:
-        from typing_extensions import Unpack
+    from typing import Unpack
 
 T = TypeVar("T")
 

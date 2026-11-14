@@ -26,11 +26,7 @@ from grascii.searchers import (
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
-
-    if sys.version_info >= (3, 11):
-        from typing import Unpack
-    else:
-        from typing_extensions import Unpack
+    from typing import Unpack
 
 SUPPORTS_INTERACTIVE = False
 try:

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.11.0 - 2026-11-14
+
 ### Added
 
 - `anniversary-phrases` as a built-in dictionary

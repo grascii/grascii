@@ -264,6 +264,7 @@ class TestInferredDirections(unittest.TestCase):
             ("MOTH", "MOTH)"),
             ("ERTH", "ERTH)"),
             ("'ELTH", "'ELTH)"),
+            ("THOE", "TH)OE"),
         ]
         self.run_tests(tests)
 

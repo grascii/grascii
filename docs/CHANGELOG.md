@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- `Outline`'s  inferred direction annotations of `TH` followed by `OE`
+
 ### Fixed
 
 - `Outline`'s  inferred direction annotations of `S`:

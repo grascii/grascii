@@ -19,24 +19,19 @@ def check_submodule():
 def build_dictionaries():
     check_submodule()
     builder = DictionaryBuilder()
-    builder.build(
-        infiles=Path("dictionaries/builtins/preanniversary").glob("*.txt"),
-        output=DictionaryOutputOptions(
-            output_dir=Path("grascii/dictionary/preanniversary"),
-        ),
-    )
-    builder.build(
-        infiles=Path("dictionaries/builtins/preanniversary-phrases").glob("*.txt"),
-        output=DictionaryOutputOptions(
-            output_dir=Path("grascii/dictionary/preanniversary-phrases"),
-        ),
-    )
-    builder.build(
-        infiles=Path("dictionaries/builtins/anniversary").glob("*.txt"),
-        output=DictionaryOutputOptions(
-            output_dir=Path("grascii/dictionary/anniversary"),
-        ),
-    )
+    builtins = [
+        "preanniversary",
+        "preanniversary-phrases",
+        "anniversary",
+        "anniversary-phrases",
+    ]
+    for name in builtins:
+        builder.build(
+            infiles=Path(f"dictionaries/builtins/{name}").glob("*.txt"),
+            output=DictionaryOutputOptions(
+                output_dir=Path(f"grascii/dictionary/{name}"),
+            ),
+        )
 
 
 if __name__ == "__main__":

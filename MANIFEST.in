@@ -4,6 +4,7 @@ include grascii/defaults.conf
 prune grascii/dictionary/preanniversary
 prune grascii/dictionary/preanniversary-phrases
 prune grascii/dictionary/anniversary
+prune grascii/dictionary/anniversary-phrases
 
 prune dictionaries
 recursive-include dictionaries/builtins *.txt

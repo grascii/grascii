@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- `anniversary-phrases` as a built-in dictionary
+
 ### Changed
 
 - `Outline`'s  inferred direction annotations of `TH` followed by `OE`

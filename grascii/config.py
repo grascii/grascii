@@ -97,7 +97,7 @@ def get_preset_config(preset: ConfigPreset):
     if preset is ConfigPreset.ANNIVERSARY:
         preset_config = preset_config.replace(
             "Dictionary = :preanniversary :preanniversary-phrases",
-            "Dictionary = :anniversary",
+            "Dictionary = :anniversary :anniversary-phrases",
         )
     return preset_config
 

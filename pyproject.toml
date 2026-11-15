@@ -75,6 +75,7 @@ grascii = [
   "preanniversary/*",
   "preanniversary-phrases/*",
   "anniversary/*",
+  "anniversary-phrases/*",
 ]
 
 [tool.pytest.ini_options]

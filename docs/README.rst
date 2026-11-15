@@ -153,8 +153,8 @@ Grascii Dictionary
 ******************
 
 Grascii comes with dictionaries based on the 1916 *Gregg Shorthand Dictionary*,
-the 1924 *Gregg Shorthand Phrase Book*, and the 1930
-*Gregg Shorthand Dictionary*.
+the 1924 *Gregg Shorthand Phrase Book*, the 1930
+*Gregg Shorthand Dictionary*, and the 1930 *Gregg Shorthand Phrase Book*.
 
 More dictionaries for other versions of Gregg and dictionaries including
 additional entries are available for installation at the `Grascii Dictionaries repository

@@ -15,7 +15,8 @@ where ``<preset>`` is one of:
 
 - ``preanniversary``: Uses the ``:preanniversary`` and
   ``:preanniversary-phrases`` dictionaries for search
-- ``anniversary``: Uses the ``:anniversary`` dictionary for search
+- ``anniversary``: Uses the ``:anniversary`` and
+  ``:anniversary-phrases`` dictionaries for search
 
 Locate the file with::
 

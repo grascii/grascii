@@ -56,4 +56,7 @@ def test_get_preset_config():
     anniversary_config = get_preset_config(ConfigPreset.ANNIVERSARY)
     anniversary_parser = ConfigParser()
     anniversary_parser.read_string(anniversary_config)
-    assert anniversary_parser["Search"]["Dictionary"] == ":anniversary"
+    assert (
+        anniversary_parser["Search"]["Dictionary"]
+        == ":anniversary :anniversary-phrases"
+    )

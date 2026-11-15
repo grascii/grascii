@@ -5,6 +5,7 @@
 ### Changed
 
 - `Outline`'s  inferred direction annotations of `TH` followed by `OE`
+- Updated dictionaries to [2026.11.12](https://github.com/grascii/dictionaries/tree/2026.11.12).
 
 ### Fixed
 

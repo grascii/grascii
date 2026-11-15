@@ -249,6 +249,8 @@ class Outline:
 
         7. When U and a circle vowel precede S followed by a counter-clockwise
         downward curve, the left S is used.
+
+        8. When TH is followed by OE, the under TH is used.
         """
 
         def set_S_stroke_type(stroke: Stroke) -> None:
@@ -459,10 +461,10 @@ class Outline:
 
         def set_TH_direction(stroke: Stroke) -> None:
             assert stroke.stroke == "TH"
-            if (stroke.next_char and stroke.next_char.stroke in {"O", "R", "L"}) or (
-                stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"}
-            ):
-                # Rule 34
+            if (
+                stroke.next_char and stroke.next_char.stroke in {"O", "R", "L", "OE"}
+            ) or (stroke.prev_char and stroke.prev_char.stroke in {"O", "R", "L"}):
+                # Rule 34 + Addendum 8
                 stroke.add_annotation(grammar.RIGHT)
             elif (
                 stroke.next_char
